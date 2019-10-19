@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_inicio">
+
+
+    <fragment
+        android:id="@+id/nav_inicio"
+        android:name="com.pacificblack.informatebuenaventura.fragments.inicio.InicioFragment"
+        android:label="@string/menu_inicio"
+        tools:layout="@layout/fragment_inicio" />
+    <fragment
+        android:id="@+id/nav_desaparecidos"
+        android:name="com.pacificblack.informatebuenaventura.fragments.desaparecidos.DesaparecidosFragment"
+        android:label="@string/menu_desaparecidos"
+        tools:layout="@layout/fragment_desaparecidos" />
+    <fragment
+        android:id="@+id/nav_clasificados"
+        android:name="com.pacificblack.informatebuenaventura.fragments.clasificados.ClasificadosFragment"
+        android:label="@string/menu_clasificados"
+        tools:layout="@layout/fragment_clasificados" />
+    <fragment
+        android:id="@+id/nav_compartir"
+        android:name="com.pacificblack.informatebuenaventura.fragments.compartir.CompartirFragment"
+        android:label="@string/menu_compartir"
+        tools:layout="@layout/fragment_compartir" />
+    <fragment
+        android:id="@+id/nav_comprayventa"
+        android:name="com.pacificblack.informatebuenaventura.fragments.comprayventa.ComprayVentaFragment"
+        android:label="@string/menu_comprayventa"
+        tools:layout="@layout/fragment_compray_venta" />
+    <fragment
+        android:id="@+id/nav_especiales"
+        android:name="com.pacificblack.informatebuenaventura.fragments.especiales.EspecialesFragment"
+        android:label="@string/menu_especiales"
+        tools:layout="@layout/fragment_especiales" />
+    <fragment
+        android:id="@+id/nav_eventos"
+        android:name="com.pacificblack.informatebuenaventura.fragments.eventos.EventosFragment"
+        android:label="@string/menu_eventos"
+        tools:layout="@layout/fragment_eventos" />
+    <fragment
+        android:id="@+id/nav_noticias"
+        android:name="com.pacificblack.informatebuenaventura.fragments.noticias.NoticiasFragment"
+        android:label="@string/menu_noticias"
+        tools:layout="@layout/fragment_noticias" />
+    <fragment
+        android:id="@+id/nav_quienes"
+        android:name="com.pacificblack.informatebuenaventura.fragments.quienes.QuienesFragment"
+        android:label="@string/menu_quienes"
+        tools:layout="@layout/fragment_quienes" />
+</navigation>
