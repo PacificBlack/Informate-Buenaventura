@@ -18,6 +18,12 @@
     <string name="menu_quienes">¿Quienes Somos?</string>
     <string name="menu_sobre">Sobre Nosotros</string>
 
+
+    <string name="titulo">Titulo</string>
+    <string name="descripcion">Descripción</string>
+    <string name="compartir">Compartir</string>
+    <string name="imagen">Imagen descripción</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_configuraciones">Configuraciones</string>
