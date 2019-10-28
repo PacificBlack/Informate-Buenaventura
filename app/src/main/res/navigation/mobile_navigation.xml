@@ -51,4 +51,9 @@
         android:name="com.pacificblack.informatebuenaventura.fragments.quienes.QuienesFragment"
         android:label="@string/menu_quienes"
         tools:layout="@layout/fragment_quienes" />
+    <fragment
+        android:id="@+id/nav_directorio"
+        android:name="com.pacificblack.informatebuenaventura.fragments.directorios.DirectoriosFragment"
+        android:label="@string/menu_directorios"
+        tools:layout="@layout/fragment_directorios" />
 </navigation>

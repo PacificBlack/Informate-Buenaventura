@@ -29,6 +29,10 @@
             android:icon="@drawable/ic_menu_send"
             android:title="@string/menu_eventos" />
         <item
+            android:id="@+id/nav_directorio"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/menu_directorios" />
+        <item
             android:id="@+id/nav_especiales"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_especiales" />
