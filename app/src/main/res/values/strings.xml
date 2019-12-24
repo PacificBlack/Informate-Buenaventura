@@ -18,6 +18,8 @@
     <string name="menu_quienes">¿Quienes Somos?</string>
     <string name="menu_sobre">Sobre Nosotros</string>
     <string name="menu_directorios">Directorios</string>
+    <string name="menu_ofertaservicios">Oferta de Servicios</string>
+    <string name="menu_bienes">Bienes a la venta</string>
 
 
     <string name="titulo">Titulo</string>

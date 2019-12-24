@@ -56,4 +56,14 @@
         android:name="com.pacificblack.informatebuenaventura.fragments.directorios.DirectoriosFragment"
         android:label="@string/menu_directorios"
         tools:layout="@layout/fragment_directorios" />
+    <fragment
+        android:id="@+id/nav_bienes"
+        android:name="com.pacificblack.informatebuenaventura.fragments.bienesraizes.BienesFragment"
+        android:label="@string/menu_bienes"
+        tools:layout="@layout/fragment_bienes" />
+    <fragment
+        android:id="@+id/nav_ofertaservicios"
+        android:name="com.pacificblack.informatebuenaventura.fragments.ofertas.OfertaServiciosFragment"
+        android:label="@string/menu_ofertaservicios"
+        tools:layout="@layout/fragment_ofertaservicios" />
 </navigation>

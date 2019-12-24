@@ -36,6 +36,12 @@
             android:id="@+id/nav_especiales"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_especiales" />
+        <item
+            android:id="@+id/nav_bienes"
+            android:title="@string/menu_bienes" />
+        <item
+            android:id="@+id/nav_ofertaservicios"
+            android:title="@string/menu_ofertaservicios" />
     </group>
 
     <item android:title="@string/menu_sobre">
