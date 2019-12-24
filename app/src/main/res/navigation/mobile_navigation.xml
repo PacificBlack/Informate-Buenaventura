@@ -66,4 +66,24 @@
         android:name="com.pacificblack.informatebuenaventura.fragments.ofertas.OfertaServiciosFragment"
         android:label="@string/menu_ofertaservicios"
         tools:layout="@layout/fragment_ofertaservicios" />
+    <fragment
+        android:id="@+id/nav_ofertaempleos"
+        android:name="com.pacificblack.informatebuenaventura.fragments.ofertas.OfertaEmpleosFragment"
+        android:label="@string/menu_ofertaempleos"
+        tools:layout="@layout/fragment_oferta_empleos" />
+    <fragment
+        android:id="@+id/nav_encuestas"
+        android:name="com.pacificblack.informatebuenaventura.fragments.especiales.encuestas.EncuestasFragment"
+        android:label="@string/menu_encuestas"
+        tools:layout="@layout/fragment_encuestas" />
+    <fragment
+        android:id="@+id/nav_donaciones"
+        android:name="com.pacificblack.informatebuenaventura.fragments.donacionesparacausas.DonacionesFragment"
+        android:label="@string/menu_donaciones"
+        tools:layout="@layout/fragment_donaciones" />
+    <fragment
+        android:id="@+id/nav_funebres"
+        android:name="com.pacificblack.informatebuenaventura.fragments.avisosfunebres.FunebresFragment"
+        android:label="@string/menu_funebres"
+        tools:layout="@layout/fragment_funebres" />
 </navigation>

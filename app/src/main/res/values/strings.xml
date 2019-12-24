@@ -14,13 +14,21 @@
     <string name="menu_comprayventa">Compra y Venta</string>
     <string name="menu_eventos">Eventos</string>
     <string name="menu_especiales">Especiales</string>
-    <string name="menu_compartir">Compartir</string>
+    <string name="menu_compartir">Terminos y Condiciones</string>
     <string name="menu_quienes">¿Quienes Somos?</string>
     <string name="menu_sobre">Sobre Nosotros</string>
     <string name="menu_directorios">Directorios</string>
     <string name="menu_ofertaservicios">Oferta de Servicios</string>
+    <string name="menu_ofertaempleos">Oferta de Empleos</string>
+    <string name="menu_encuestas">Encuestas</string>
     <string name="menu_bienes">Bienes a la venta</string>
+    <string name="menu_donaciones">Donaciones</string>
+    <string name="menu_funebres">Avisos Funebres</string>
 
+    <string name="submenu_ofertas">Ofertas</string>
+    <string name="submenu_informativos">Informativos</string>
+    <string name="submenu_servicios">Servicios</string>
+    <string name="submenu_extras">Extras</string>
 
     <string name="titulo">Titulo</string>
     <string name="descripcion">Descripción</string>
