@@ -15,12 +15,12 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imagen_row_eventos"
+                android:id="@+id/imagen_row_funebres"
+                tools:srcCompat="@tools:sample/backgrounds/scenic"
                 android:layout_width="match_parent"
-                android:layout_height="221dp"
+                android:layout_height="160dp"
                 android:contentDescription="@string/imagen"
-                android:scaleType="fitCenter"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                android:scaleType="fitCenter" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/titulo_row_eventos"
+                    android:id="@+id/titulo_row_funebres"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -39,7 +39,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/descripcion_row_eventos"
+                    android:id="@+id/descripcion_row_funebres"
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:fontFamily="@font/noto_sans"
@@ -47,7 +47,7 @@
                     android:textColor="#555" />
 
                 <TextView
-                    android:id="@+id/fecha_row_eventos"
+                    android:id="@+id/fecha_row_funebres"
                     tools:ignore="SmallSp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -64,19 +64,9 @@
 
 
                 <TextView
-                    android:id="@+id/lugar_row_eventos"
-                    android:layout_width="16dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/cabin_semibold"
-                    android:text="@string/lugar" />
-
-                <TextView
-                    android:id="@+id/vista_row_eventos"
+                    android:id="@+id/vista_row_funebres"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="120dp"
-                    android:layout_marginLeft="120dp"
                     android:layout_weight="2"
                     android:baselineAligned="false"
                     android:drawableStart="@drawable/ic_ojo_24dp"
@@ -90,4 +80,7 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+
+
 </RelativeLayout>
