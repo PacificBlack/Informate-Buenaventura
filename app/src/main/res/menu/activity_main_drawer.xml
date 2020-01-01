@@ -14,6 +14,9 @@
     <item android:title="@string/submenu_informativos">
         <menu>
             <item
+                android:id="@+id/nav_ultimahora"
+                android:title="@string/menu_ultimahora" />
+            <item
                 android:id="@+id/nav_noticias"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/menu_noticias" />
@@ -29,6 +32,9 @@
     </item>
     <item android:title="@string/submenu_servicios">
     <menu>
+        <item
+            android:id="@+id/nav_adopcion"
+            android:title="@string/menu_adopcion" />
         <item
             android:id="@+id/nav_clasificados"
             android:icon="@drawable/ic_menu_slideshow"
@@ -65,6 +71,9 @@
         <menu>
 
 
+            <item
+                android:id="@+id/nav_recetas"
+                android:title="@string/menu_recetas" />
             <item
                 android:id="@+id/nav_encuestas"
                 android:title="@string/menu_encuestas" />

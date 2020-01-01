@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="280dp"
+    android:layout_height="490dp"
     android:layout_gravity="center"
     android:background="@color/azulOscuro"
     android:orientation="vertical"
@@ -108,9 +108,91 @@
                 android:text="Whatsapp"
                 android:textColor="@color/blanco"
                 android:textSize="10sp" />
+
         </LinearLayout>
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5sp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/amaranth_bold"
+            android:text="@string/publicar_desaparecido" />
+        <Button
+            android:id="@+id/button12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/amaranth_bold"
+            android:text="@string/publicar_adopcion" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="@string/publicar_comprayventa" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="@string/publicar_eventos" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="@string/publicar_servicios" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="112dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="@string/publicar_empleos" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="@string/publicar_bienes" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="133dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="@string/publicar_clasificados" />
+
+        </LinearLayout>
     </LinearLayout>
 
 

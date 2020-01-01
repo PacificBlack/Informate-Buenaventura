@@ -24,6 +24,9 @@
     <string name="menu_bienes">Bienes a la venta</string>
     <string name="menu_donaciones">Donaciones</string>
     <string name="menu_funebres">Avisos Funebres</string>
+    <string name="menu_ultimahora">Ultima Hora</string>
+    <string name="menu_adopcion">Zona de Adopción</string>
+    <string name="menu_recetas">Recetas del Pacífico</string>
 
     <string name="submenu_ofertas">Ofertas</string>
     <string name="submenu_informativos">Informativos</string>
@@ -60,6 +63,15 @@
 
 
     <string name="cero"> \ 0</string>
+
+    <string name="publicar_desaparecido">Publicar Desaparición</string>
+    <string name="publicar_comprayventa">Vender Articulo</string>
+    <string name="publicar_eventos">Publicar Eventos</string>
+    <string name="publicar_servicios">Ofrecer Servicios</string>
+    <string name="publicar_empleos">Ofrecer Empleos</string>
+    <string name="publicar_bienes">Vender Bienes</string>
+    <string name="publicar_clasificados">Publicar Clasificados</string>
+    <string name="publicar_adopcion">Publicar Adopcion</string>
 
 
 </resources>

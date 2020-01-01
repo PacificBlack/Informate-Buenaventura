@@ -81,4 +81,19 @@
         android:name="com.pacificblack.informatebuenaventura.fragments.avisosfunebres.FunebresFragment"
         android:label="@string/menu_funebres"
         tools:layout="@layout/fragment_funebres" />
+    <fragment
+        android:id="@+id/nav_ultimahora"
+        android:name="com.pacificblack.informatebuenaventura.fragments.noticias.UltimaHoraFragment"
+        android:label="@string/menu_ultimahora"
+        tools:layout="@layout/fragment_ultima_hora" />
+    <fragment
+        android:id="@+id/nav_adopcion"
+        android:name="com.pacificblack.informatebuenaventura.fragments.adopcion.AdopcionFragment"
+        android:label="@string/menu_adopcion"
+        tools:layout="@layout/fragment_adopcion" />
+    <fragment
+        android:id="@+id/nav_recetas"
+        android:name="com.pacificblack.informatebuenaventura.fragments.recetas.RecetasFragment"
+        android:label="@string/menu_recetas"
+        tools:layout="@layout/fragment_recetas" />
 </navigation>
