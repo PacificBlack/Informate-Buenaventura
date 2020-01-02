@@ -6,8 +6,9 @@ public class ComprayVenta {
 
 
 String titulo_row_comprayventa,descripcion_row_comprayventa,descripcion_comprayventa,
-        fechapublicacion_row_comprayventa,precio_row_comprayventa,
-    contacto_comprayventa,ubicacion_comprayventa,descripcionextra_comprayventa;
+        fechapublicacion_row_comprayventa,precio_row_comprayventa;
+
+String contacto_comprayventa,ubicacion_comprayventa,descripcionextra_comprayventa;
 
 Image imagen1_comprayventa,imagen2_comprayventa,imagen3̣̣_comprayventa;
 

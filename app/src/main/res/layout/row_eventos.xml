@@ -41,7 +41,7 @@
                 <TextView
                     android:id="@+id/descripcion_row_eventos"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
+                    android:layout_height="88dp"
                     android:fontFamily="@font/noto_sans"
                     android:text="@string/descripcion"
                     android:textColor="#555" />
