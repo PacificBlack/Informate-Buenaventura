@@ -1,6 +1,5 @@
 package com.pacificblack.informatebuenaventura.clases.adopcion;
 
-import android.media.Image;
 
 public class Adopcion {
 
