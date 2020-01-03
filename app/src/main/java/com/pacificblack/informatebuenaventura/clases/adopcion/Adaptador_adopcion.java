@@ -23,7 +23,6 @@ public class Adaptador_adopcion extends RecyclerView.Adapter<Adaptador_adopcion.
 
     //Creamos constructor para el arreglo
 
-
     public Adaptador_adopcion(ArrayList<Adopcion> lista_adopcion) {
         Lista_adopcion = lista_adopcion;
     }
@@ -33,7 +32,11 @@ public class Adaptador_adopcion extends RecyclerView.Adapter<Adaptador_adopcion.
     @NonNull
     @Override
     public Adaptador_adopcion.ViewHolderAdopcion onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//Aqui llenamos el recycler con el row
+
+
+
+        //Aqui llenamos el recycler con el row
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_adopcion,null,false);
 
         return new ViewHolderAdopcion(view);
@@ -67,9 +70,8 @@ public class Adaptador_adopcion extends RecyclerView.Adapter<Adaptador_adopcion.
         TextView vista_row_adopcion;
 
         public ViewHolderAdopcion(@NonNull View itemView) {
-
-            //Aqui se referencian las variables declaradas anteriormente
             super(itemView);
+            //Aqui se referencian las variables declaradas anteriormente
 
             img_row_adopcion= itemView.findViewById(R.id.imagen_row_adopcion);
             titulo_row_adopcion = itemView.findViewById(R.id.titulo_row_adopcion);

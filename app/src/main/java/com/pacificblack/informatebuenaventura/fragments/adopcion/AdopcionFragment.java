@@ -47,18 +47,17 @@ public class AdopcionFragment extends Fragment {
 
 
     //Aqui referenciamos
-
+        lista_adopcion = new ArrayList<>();
         recyclerAdopcion = vista.findViewById(R.id.recycler_adopcion);
         recyclerAdopcion.setLayoutManager(new LinearLayoutManager(getContext()));
-        lista_adopcion = new ArrayList<>();
+
 
         llenarlista_adopcion();
 
-        Adaptador_adopcion adaptador_adopcion = new Adaptador_adopcion(lista_adopcion);
-        recyclerAdopcion.setAdapter(adaptador_adopcion);
+        Adaptador_adopcion adaptador = new Adaptador_adopcion(lista_adopcion);
+        recyclerAdopcion.setAdapter(adaptador);
 
-
-    return vista;
+         return vista;
     }
 
 
