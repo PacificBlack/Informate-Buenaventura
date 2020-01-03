@@ -19,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pacificblack.informatebuenaventura.fragments.adopcion.AdopcionFragment;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_especiales ,R.id.nav_compartir, R.id.nav_quienes,
                 R.id.nav_directorio,R.id.nav_ofertaservicios,R.id.nav_bienes,
                 R.id.nav_ofertaempleos,R.id.nav_encuestas,R.id.nav_donaciones,
-                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion,R.id.nav_recetas)
+                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion)
 
                 .setDrawerLayout(drawer)
                 .build();

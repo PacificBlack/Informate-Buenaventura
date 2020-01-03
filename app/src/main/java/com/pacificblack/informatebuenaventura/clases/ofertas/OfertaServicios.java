@@ -4,16 +4,15 @@ import android.media.Image;
 
 public class OfertaServicios {
 
-    String titulo_row_ofertaservicios,descripcion_row_ofertaservicios,fechapublicacion_row_ofertaservicios,necesidad_row_ofertaservicios;
-    Image imagen1_ofertaservicios;
-    int vistas_ofertaservicios;
-    String descripcion1_ofertaservicios,descripcion2_ofertaservicios;
-
+    private String titulo_row_ofertaservicios,descripcion_row_ofertaservicios,fechapublicacion_row_ofertaservicios,necesidad_row_ofertaservicios;
+    private int imagen1_ofertaservicios;
+    private int vistas_ofertaservicios;
+    private String descripcion1_ofertaservicios,descripcion2_ofertaservicios;
 
     public OfertaServicios() {
     }
 
-    public OfertaServicios(String titulo_row_ofertaservicios, String descripcion_row_ofertaservicios, String fechapublicacion_row_ofertaservicios, String necesidad_row_ofertaservicios, Image imagen1_ofertaservicios, int vistas_ofertaservicios, String descripcion1_ofertaservicios, String descripcion2_ofertaservicios) {
+    public OfertaServicios(String titulo_row_ofertaservicios, String descripcion_row_ofertaservicios, String fechapublicacion_row_ofertaservicios, String necesidad_row_ofertaservicios, int imagen1_ofertaservicios, int vistas_ofertaservicios, String descripcion1_ofertaservicios, String descripcion2_ofertaservicios) {
         this.titulo_row_ofertaservicios = titulo_row_ofertaservicios;
         this.descripcion_row_ofertaservicios = descripcion_row_ofertaservicios;
         this.fechapublicacion_row_ofertaservicios = fechapublicacion_row_ofertaservicios;
@@ -56,11 +55,11 @@ public class OfertaServicios {
         this.necesidad_row_ofertaservicios = necesidad_row_ofertaservicios;
     }
 
-    public Image getImagen1_ofertaservicios() {
+    public int getImagen1_ofertaservicios() {
         return imagen1_ofertaservicios;
     }
 
-    public void setImagen1_ofertaservicios(Image imagen1_ofertaservicios) {
+    public void setImagen1_ofertaservicios(int imagen1_ofertaservicios) {
         this.imagen1_ofertaservicios = imagen1_ofertaservicios;
     }
 

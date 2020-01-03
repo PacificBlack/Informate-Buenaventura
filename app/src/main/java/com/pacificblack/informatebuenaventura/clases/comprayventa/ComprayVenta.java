@@ -5,21 +5,15 @@ import android.media.Image;
 public class ComprayVenta {
 
 
-String titulo_row_comprayventa,descripcion_row_comprayventa,descripcion_comprayventa,
-        fechapublicacion_row_comprayventa,precio_row_comprayventa;
-
-String contacto_comprayventa,ubicacion_comprayventa,descripcionextra_comprayventa;
-
-Image imagen1_comprayventa,imagen2_comprayventa,imagen3̣̣_comprayventa;
-
-int cantidad_comprayventa,vista_comprayventa;
-
+    private String titulo_row_comprayventa,descripcion_row_comprayventa,descripcion_comprayventa,fechapublicacion_row_comprayventa,precio_row_comprayventa;
+    private String contacto_comprayventa,ubicacion_comprayventa,descripcionextra_comprayventa;
+    private int imagen1_comprayventa,imagen2_comprayventa,imagen3̣̣_comprayventa;
+    private int cantidad_comprayventa,vista_comprayventa;
 
     public ComprayVenta() {
     }
 
-
-    public ComprayVenta(String titulo_row_comprayventa, String descripcion_row_comprayventa, String descripcion_comprayventa, String fechapublicacion_row_comprayventa, String precio_row_comprayventa, String contacto_comprayventa, String ubicacion_comprayventa, String descripcionextra_comprayventa, Image imagen1_comprayventa, Image imagen2_comprayventa, Image imagen3̣̣_comprayventa, int cantidad_comprayventa, int vista_comprayventa) {
+    public ComprayVenta(String titulo_row_comprayventa, String descripcion_row_comprayventa, String descripcion_comprayventa, String fechapublicacion_row_comprayventa, String precio_row_comprayventa, String contacto_comprayventa, String ubicacion_comprayventa, String descripcionextra_comprayventa, int imagen1_comprayventa, int imagen2_comprayventa, int imagen3̣̣_comprayventa, int cantidad_comprayventa, int vista_comprayventa) {
         this.titulo_row_comprayventa = titulo_row_comprayventa;
         this.descripcion_row_comprayventa = descripcion_row_comprayventa;
         this.descripcion_comprayventa = descripcion_comprayventa;
@@ -100,27 +94,27 @@ int cantidad_comprayventa,vista_comprayventa;
         this.descripcionextra_comprayventa = descripcionextra_comprayventa;
     }
 
-    public Image getImagen1_comprayventa() {
+    public int getImagen1_comprayventa() {
         return imagen1_comprayventa;
     }
 
-    public void setImagen1_comprayventa(Image imagen1_comprayventa) {
+    public void setImagen1_comprayventa(int imagen1_comprayventa) {
         this.imagen1_comprayventa = imagen1_comprayventa;
     }
 
-    public Image getImagen2_comprayventa() {
+    public int getImagen2_comprayventa() {
         return imagen2_comprayventa;
     }
 
-    public void setImagen2_comprayventa(Image imagen2_comprayventa) {
+    public void setImagen2_comprayventa(int imagen2_comprayventa) {
         this.imagen2_comprayventa = imagen2_comprayventa;
     }
 
-    public Image getImagen3̣̣_comprayventa() {
+    public int getImagen3̣̣_comprayventa() {
         return imagen3̣̣_comprayventa;
     }
 
-    public void setImagen3̣̣_comprayventa(Image imagen3̣̣_comprayventa) {
+    public void setImagen3̣̣_comprayventa(int imagen3̣̣_comprayventa) {
         this.imagen3̣̣_comprayventa = imagen3̣̣_comprayventa;
     }
 

@@ -4,15 +4,15 @@ import android.media.Image;
 
 public class Donaciones {
 
-    String titulo_row_donaciones,descripcion_row_donaciones,fechapublicacion_row_donaciones;
-    Image imagen1_donaciones,imagen2_donaciones;
-    int vistas_donaciones,meta_row_donaciones;
-    String descripcion1_donaciones;
+    private String titulo_row_donaciones,descripcion_row_donaciones,fechapublicacion_row_donaciones;
+    private int imagen1_donaciones,imagen2_donaciones;
+    private int vistas_donaciones,meta_row_donaciones;
+    private String descripcion1_donaciones;
 
     public Donaciones() {
     }
 
-    public Donaciones(String titulo_row_donaciones, String descripcion_row_donaciones, String fechapublicacion_row_donaciones, Image imagen1_donaciones, Image imagen2_donaciones, int vistas_donaciones, int meta_row_donaciones, String descripcion1_donaciones) {
+    public Donaciones(String titulo_row_donaciones, String descripcion_row_donaciones, String fechapublicacion_row_donaciones, int imagen1_donaciones, int imagen2_donaciones, int vistas_donaciones, int meta_row_donaciones, String descripcion1_donaciones) {
         this.titulo_row_donaciones = titulo_row_donaciones;
         this.descripcion_row_donaciones = descripcion_row_donaciones;
         this.fechapublicacion_row_donaciones = fechapublicacion_row_donaciones;
@@ -47,19 +47,19 @@ public class Donaciones {
         this.fechapublicacion_row_donaciones = fechapublicacion_row_donaciones;
     }
 
-    public Image getImagen1_donaciones() {
+    public int getImagen1_donaciones() {
         return imagen1_donaciones;
     }
 
-    public void setImagen1_donaciones(Image imagen1_donaciones) {
+    public void setImagen1_donaciones(int imagen1_donaciones) {
         this.imagen1_donaciones = imagen1_donaciones;
     }
 
-    public Image getImagen2_donaciones() {
+    public int getImagen2_donaciones() {
         return imagen2_donaciones;
     }
 
-    public void setImagen2_donaciones(Image imagen2_donaciones) {
+    public void setImagen2_donaciones(int imagen2_donaciones) {
         this.imagen2_donaciones = imagen2_donaciones;
     }
 

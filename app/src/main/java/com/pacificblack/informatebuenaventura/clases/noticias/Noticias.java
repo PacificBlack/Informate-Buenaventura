@@ -4,15 +4,15 @@ import android.media.Image;
 
 public class Noticias {
 
-    String titulo_row_noticias,descripcion_row_noticias,fechapublicacion_row_noticias;
-    Image imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;
-    int likes_noticias,dislikes_noticias,vistas_noticias;
-    String descripcion1_noticias,descripcion2_noticias,descripcion3_noticias;
+    private String titulo_row_noticias,descripcion_row_noticias,fechapublicacion_row_noticias;
+    private int imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;
+    private int likes_noticias,dislikes_noticias,vistas_noticias;
+    private String descripcion1_noticias,descripcion2_noticias,descripcion3_noticias;
 
     public Noticias() {
     }
 
-    public Noticias(String titulo_row_noticias, String descripcion_row_noticias, String fechapublicacion_row_noticias, Image imagen1_noticias, Image imagen2_noticias, Image imagen3_noticias, Image imagen4_noticias, int likes_noticias, int dislikes_noticias, int vistas_noticias, String descripcion1_noticias, String descripcion2_noticias, String descripcion3_noticias) {
+    public Noticias(String titulo_row_noticias, String descripcion_row_noticias, String fechapublicacion_row_noticias, int imagen1_noticias, int imagen2_noticias, int imagen3_noticias, int imagen4_noticias, int likes_noticias, int dislikes_noticias, int vistas_noticias, String descripcion1_noticias, String descripcion2_noticias, String descripcion3_noticias) {
         this.titulo_row_noticias = titulo_row_noticias;
         this.descripcion_row_noticias = descripcion_row_noticias;
         this.fechapublicacion_row_noticias = fechapublicacion_row_noticias;
@@ -52,35 +52,35 @@ public class Noticias {
         this.fechapublicacion_row_noticias = fechapublicacion_row_noticias;
     }
 
-    public Image getImagen1_noticias() {
+    public int getImagen1_noticias() {
         return imagen1_noticias;
     }
 
-    public void setImagen1_noticias(Image imagen1_noticias) {
+    public void setImagen1_noticias(int imagen1_noticias) {
         this.imagen1_noticias = imagen1_noticias;
     }
 
-    public Image getImagen2_noticias() {
+    public int getImagen2_noticias() {
         return imagen2_noticias;
     }
 
-    public void setImagen2_noticias(Image imagen2_noticias) {
+    public void setImagen2_noticias(int imagen2_noticias) {
         this.imagen2_noticias = imagen2_noticias;
     }
 
-    public Image getImagen3_noticias() {
+    public int getImagen3_noticias() {
         return imagen3_noticias;
     }
 
-    public void setImagen3_noticias(Image imagen3_noticias) {
+    public void setImagen3_noticias(int imagen3_noticias) {
         this.imagen3_noticias = imagen3_noticias;
     }
 
-    public Image getImagen4_noticias() {
+    public int getImagen4_noticias() {
         return imagen4_noticias;
     }
 
-    public void setImagen4_noticias(Image imagen4_noticias) {
+    public void setImagen4_noticias(int imagen4_noticias) {
         this.imagen4_noticias = imagen4_noticias;
     }
 

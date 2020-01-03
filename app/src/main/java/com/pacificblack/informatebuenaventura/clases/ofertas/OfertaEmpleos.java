@@ -4,15 +4,15 @@ import android.media.Image;
 
 public class OfertaEmpleos {
 
-    String titulo_row_ofertasempleos,descripcion_row_ofertasempleos,fechapublicacion_row_ofertasempleos,necesidad_row_ofertasempleos;
-    Image imagen1_ofertasempleos;
-    int vistas_ofertasempleos;
-    String descripcion1_ofertasempleos,descripcion2_ofertasempleos;
+    private String titulo_row_ofertasempleos,descripcion_row_ofertasempleos,fechapublicacion_row_ofertasempleos,necesidad_row_ofertasempleos;
+    private int imagen1_ofertasempleos;
+    private int vistas_ofertasempleos;
+    private String descripcion1_ofertasempleos,descripcion2_ofertasempleos;
 
     public OfertaEmpleos() {
     }
 
-    public OfertaEmpleos(String titulo_row_ofertasempleos, String descripcion_row_ofertasempleos, String fechapublicacion_row_ofertasempleos, String necesidad_row_ofertasempleos, Image imagen1_ofertasempleos, int vistas_ofertasempleos, String descripcion1_ofertasempleos, String descripcion2_ofertasempleos) {
+    public OfertaEmpleos(String titulo_row_ofertasempleos, String descripcion_row_ofertasempleos, String fechapublicacion_row_ofertasempleos, String necesidad_row_ofertasempleos, int imagen1_ofertasempleos, int vistas_ofertasempleos, String descripcion1_ofertasempleos, String descripcion2_ofertasempleos) {
         this.titulo_row_ofertasempleos = titulo_row_ofertasempleos;
         this.descripcion_row_ofertasempleos = descripcion_row_ofertasempleos;
         this.fechapublicacion_row_ofertasempleos = fechapublicacion_row_ofertasempleos;
@@ -55,11 +55,11 @@ public class OfertaEmpleos {
         this.necesidad_row_ofertasempleos = necesidad_row_ofertasempleos;
     }
 
-    public Image getImagen1_ofertasempleos() {
+    public int getImagen1_ofertasempleos() {
         return imagen1_ofertasempleos;
     }
 
-    public void setImagen1_ofertasempleos(Image imagen1_ofertasempleos) {
+    public void setImagen1_ofertasempleos(int imagen1_ofertasempleos) {
         this.imagen1_ofertasempleos = imagen1_ofertasempleos;
     }
 

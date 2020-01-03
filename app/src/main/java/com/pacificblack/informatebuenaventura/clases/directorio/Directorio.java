@@ -4,14 +4,14 @@ import android.media.Image;
 
 public class Directorio {
 
-    String titulo_row_directorio,descripcion_row_directorio,fechapublicacion_row_directorio,contactos_row_directorio;
-    Image imagen1_directorio;
-    int vistas_row_directorio;
+   private String titulo_row_directorio,descripcion_row_directorio,fechapublicacion_row_directorio,contactos_row_directorio;
+    private int imagen1_directorio;
+    private int vistas_row_directorio;
 
     public Directorio() {
     }
 
-    public Directorio(String titulo_row_directorio, String descripcion_row_directorio, String fechapublicacion_row_directorio, String contactos_row_directorio, Image imagen1_directorio, int vistas_row_directorio) {
+    public Directorio(String titulo_row_directorio, String descripcion_row_directorio, String fechapublicacion_row_directorio, String contactos_row_directorio, int imagen1_directorio, int vistas_row_directorio) {
         this.titulo_row_directorio = titulo_row_directorio;
         this.descripcion_row_directorio = descripcion_row_directorio;
         this.fechapublicacion_row_directorio = fechapublicacion_row_directorio;
@@ -52,11 +52,11 @@ public class Directorio {
         this.contactos_row_directorio = contactos_row_directorio;
     }
 
-    public Image getImagen1_directorio() {
+    public int getImagen1_directorio() {
         return imagen1_directorio;
     }
 
-    public void setImagen1_directorio(Image imagen1_directorio) {
+    public void setImagen1_directorio(int imagen1_directorio) {
         this.imagen1_directorio = imagen1_directorio;
     }
 

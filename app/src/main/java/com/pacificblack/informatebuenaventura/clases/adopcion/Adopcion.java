@@ -5,15 +5,15 @@ import android.media.Image;
 public class Adopcion {
 
 
-    String titulo_row_adopcion,descripcion_row_adopcion,fechapublicacion_row_desaparecidos;
-    Image imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
-    int vistas_adopcion;
-    String descripcion1_adopcion,descripcion2_adopcion;
+    private String titulo_row_adopcion,descripcion_row_adopcion,fechapublicacion_row_desaparecidos;
+    private int imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
+    private int vistas_adopcion;
+    private String descripcion1_adopcion,descripcion2_adopcion;
 
     public Adopcion() {
     }
 
-    public Adopcion(String titulo_row_adopcion, String descripcion_row_adopcion, String fechapublicacion_row_desaparecidos, Image imagen1_adopcion, Image imagen2_adopcion, Image imagen3_adopcion, Image imagen4_adopcion, int vistas_adopcion, String descripcion1_adopcion, String descripcion2_adopcion) {
+    public Adopcion(String titulo_row_adopcion, String descripcion_row_adopcion, String fechapublicacion_row_desaparecidos, int imagen1_adopcion, int imagen2_adopcion, int imagen3_adopcion, int imagen4_adopcion, int vistas_adopcion, String descripcion1_adopcion, String descripcion2_adopcion) {
         this.titulo_row_adopcion = titulo_row_adopcion;
         this.descripcion_row_adopcion = descripcion_row_adopcion;
         this.fechapublicacion_row_desaparecidos = fechapublicacion_row_desaparecidos;
@@ -25,7 +25,6 @@ public class Adopcion {
         this.descripcion1_adopcion = descripcion1_adopcion;
         this.descripcion2_adopcion = descripcion2_adopcion;
     }
-
 
     public String getTitulo_row_adopcion() {
         return titulo_row_adopcion;
@@ -51,35 +50,35 @@ public class Adopcion {
         this.fechapublicacion_row_desaparecidos = fechapublicacion_row_desaparecidos;
     }
 
-    public Image getImagen1_adopcion() {
+    public int getImagen1_adopcion() {
         return imagen1_adopcion;
     }
 
-    public void setImagen1_adopcion(Image imagen1_adopcion) {
+    public void setImagen1_adopcion(int imagen1_adopcion) {
         this.imagen1_adopcion = imagen1_adopcion;
     }
 
-    public Image getImagen2_adopcion() {
+    public int getImagen2_adopcion() {
         return imagen2_adopcion;
     }
 
-    public void setImagen2_adopcion(Image imagen2_adopcion) {
+    public void setImagen2_adopcion(int imagen2_adopcion) {
         this.imagen2_adopcion = imagen2_adopcion;
     }
 
-    public Image getImagen3_adopcion() {
+    public int getImagen3_adopcion() {
         return imagen3_adopcion;
     }
 
-    public void setImagen3_adopcion(Image imagen3_adopcion) {
+    public void setImagen3_adopcion(int imagen3_adopcion) {
         this.imagen3_adopcion = imagen3_adopcion;
     }
 
-    public Image getImagen4_adopcion() {
+    public int getImagen4_adopcion() {
         return imagen4_adopcion;
     }
 
-    public void setImagen4_adopcion(Image imagen4_adopcion) {
+    public void setImagen4_adopcion(int imagen4_adopcion) {
         this.imagen4_adopcion = imagen4_adopcion;
     }
 

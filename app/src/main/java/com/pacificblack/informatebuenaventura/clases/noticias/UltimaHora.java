@@ -2,8 +2,8 @@ package com.pacificblack.informatebuenaventura.clases.noticias;
 
 public class UltimaHora {
 
-    String titulo_row_ultimahora,descripcion_row_ultimahora,fechapublicacion_row_ultimahora;
-    int vistas_row_ultimahora;
+    private String titulo_row_ultimahora,descripcion_row_ultimahora,fechapublicacion_row_ultimahora;
+    private int vistas_row_ultimahora;
 
 
     public UltimaHora() {
