@@ -1,7 +1,9 @@
 package com.pacificblack.informatebuenaventura.clases.adopcion;
 
 
-public class Adopcion {
+import java.io.Serializable;
+
+public class Adopcion implements Serializable {
 
 
     private String titulo_row_adopcion,descripcion_row_adopcion,fechapublicacion_row_desaparecidos;

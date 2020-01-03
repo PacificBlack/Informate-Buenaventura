@@ -19,8 +19,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
 import com.pacificblack.informatebuenaventura.fragments.adopcion.AdopcionFragment;
+import com.pacificblack.informatebuenaventura.fragments.adopcion.DetalleAdopcionFragment;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
+import com.pacificblack.informatebuenaventura.interfaces.IComunicaFragments;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -30,11 +33,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IComunicaFragments {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     Dialog dialog;
+
+    DetalleAdopcionFragment adopcionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,5 +113,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void enviarAdopcion(Adopcion adopcion) {
+        adopcionFragment= new DetalleAdopcionFragment();
+
+    Bundle bundleenvio = new Bundle();
+    bundleenvio.putSerializable("objeto",adopcion);
+    adopcionFragment.setArguments(bundleenvio);
+
+    //Cargar fragment en activity
+       // getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,adopcionFragment).addToBackStack(null).commit();
+    }
 }
 

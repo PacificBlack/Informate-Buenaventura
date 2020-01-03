@@ -14,9 +14,10 @@ import com.pacificblack.informatebuenaventura.R;
 
 import java.util.ArrayList;
 
-public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.AdopcionHolder> {
+public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.AdopcionHolder> implements View.OnClickListener {
 
     ArrayList<Adopcion> listaAdopcion;
+    private View.OnClickListener listener;
 
     public AdaptadorAdopcion(ArrayList<Adopcion> listaAdopcion) {
         this.listaAdopcion = listaAdopcion;
@@ -26,6 +27,7 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
     @Override
     public AdopcionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_adopcion,null,false);
+        view.setOnClickListener(this);
         return new AdopcionHolder(view);
     }
 
@@ -44,6 +46,21 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
     @Override
     public int getItemCount() {
         return listaAdopcion.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (listener!=null){
+
+            listener.onClick(v);
+            }
+
+    }
+
+    public void setOnClickListener(View.OnClickListener listener){
+
+        this.listener=listener;
     }
 
 
