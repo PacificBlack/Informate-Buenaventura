@@ -59,9 +59,6 @@ public class AdopcionFragment extends Fragment {
         adaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Usted selecciono:"+
-                        listaAdopcion.get(recyclerAdopcion.getChildAdapterPosition(v)).getTitulo_row_adopcion(),
-                        Toast.LENGTH_SHORT).show();
 
                 interfaceComunicaFragments.enviarAdopcion(listaAdopcion.get(recyclerAdopcion.getChildAdapterPosition(v)));
 

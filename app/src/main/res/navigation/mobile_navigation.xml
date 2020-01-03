@@ -91,14 +91,4 @@
         android:name="com.pacificblack.informatebuenaventura.fragments.adopcion.AdopcionFragment"
         android:label="@string/menu_adopcion"
         tools:layout="@layout/fragment_adopcion" />
-    <fragment
-        android:id="@+id/detalleAdopcionFragment"
-        android:name="com.pacificblack.informatebuenaventura.fragments.adopcion.DetalleAdopcionFragment"
-        android:label="fragment_detalle_adopcion"
-        tools:layout="@layout/fragment_detalle_adopcion" >
-        <action
-            android:id="@+id/action_detalleAdopcionFragment_to_nav_adopcion"
-            app:destination="@id/nav_adopcion"
-            app:popUpTo="@+id/detalleAdopcionFragment" />
-    </fragment>
 </navigation>

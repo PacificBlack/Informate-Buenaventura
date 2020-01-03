@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements IComunicaFragment
     adopcionFragment.setArguments(bundleenvio);
 
     //Cargar fragment en activity
-       // getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,adopcionFragment).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,adopcionFragment).addToBackStack(null).commit();
     }
 }
 
