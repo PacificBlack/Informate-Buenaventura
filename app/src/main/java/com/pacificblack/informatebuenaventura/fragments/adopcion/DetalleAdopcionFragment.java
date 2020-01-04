@@ -58,7 +58,6 @@ ImageView imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
             imagen3_adopcion.setImageResource(adopcion.getImagen3_adopcion());
             imagen4_adopcion.setImageResource(adopcion.getImagen4_adopcion());
 
-
         }
 
         return vista;

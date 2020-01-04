@@ -3,7 +3,9 @@ package com.pacificblack.informatebuenaventura.clases.bienes;
 
 import android.media.Image;
 
-public class Bienes {
+import java.io.Serializable;
+
+public class Bienes implements Serializable {
 
     private String titulo_row_bienes,descripcion_row_bienes,fechapublicacion_row_bienes;
     private int imagen1_bienes,imagen2_bienes,imagen3_bienes,imagen4_bienes;

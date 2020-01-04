@@ -2,7 +2,9 @@ package com.pacificblack.informatebuenaventura.clases.clasificados;
 
 import android.media.Image;
 
-public class Clasificados {
+import java.io.Serializable;
+
+public class Clasificados implements Serializable {
 
     private String titulo_row_clasificados,descripcion_row_clasificados,fechapublicacion_row_clasificados;
     private int imagen1_clasificados,imagen2_clasificados,imagen3_clasificados,imagen4_clasificados;
