@@ -6,9 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,15 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
-import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
-import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
-import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
-import com.pacificblack.informatebuenaventura.fragments.adopcion.AdopcionFragment;
-import com.pacificblack.informatebuenaventura.fragments.adopcion.DetalleAdopcionFragment;
-import com.pacificblack.informatebuenaventura.fragments.bienesraizes.DetalleBienesFragment;
-import com.pacificblack.informatebuenaventura.fragments.clasificados.DetalleClasificadosFragment;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
-import com.pacificblack.informatebuenaventura.interfaces.IComunicaFragments;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -37,15 +26,14 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements IComunicaFragments {
+public class MainActivity extends AppCompatActivity  {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     Dialog dialog;
 
-    DetalleAdopcionFragment adopcionFragment;
-    DetalleBienesFragment bienesFragment;
-    DetalleClasificadosFragment clasificadosFragment;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,47 +107,5 @@ public class MainActivity extends AppCompatActivity implements IComunicaFragment
     }
 
 
-    @Override
-    public void enviarAdopcion(Adopcion adopcion) {
-        adopcionFragment= new DetalleAdopcionFragment();
-
-    Bundle bundleenvio = new Bundle();
-    bundleenvio.putSerializable("objeto",adopcion);
-    adopcionFragment.setArguments(bundleenvio);
-
-    //Cargar fragment en activity
-        getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,adopcionFragment).addToBackStack(null).commit();
-    }
-
-    @Override
-    public void enviarBienes(Bienes bienes) {
-
-        bienesFragment = new DetalleBienesFragment();
-
-        Bundle bundleenviob = new Bundle();
-        bundleenviob.putSerializable("objeto2",bienes);
-        bienesFragment.setArguments(bundleenviob);
-
-        //Cargar fragment en activity
-        getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,bienesFragment).addToBackStack(null).commit();
-
-
-
-    }
-
-    @Override
-    public void enviarClasificados(Clasificados clasificados) {
-
-        clasificadosFragment = new DetalleClasificadosFragment();
-
-        Bundle bundleenvioC = new Bundle();
-        bundleenvioC.putSerializable("objeto3",clasificados);
-        clasificadosFragment.setArguments(bundleenvioC);
-
-        //Cargar fragment en activity
-        getSupportFragmentManager().beginTransaction().replace(R.id.contenedor,clasificadosFragment).addToBackStack(null).commit();
-
-
-    }
 }
 

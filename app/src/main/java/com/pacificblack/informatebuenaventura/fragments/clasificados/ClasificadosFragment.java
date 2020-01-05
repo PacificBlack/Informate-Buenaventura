@@ -3,6 +3,7 @@ package com.pacificblack.informatebuenaventura.fragments.clasificados;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,9 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.actividades.DetalleClasificados;
 import com.pacificblack.informatebuenaventura.clases.clasificados.AdaptadorClasificados;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
-import com.pacificblack.informatebuenaventura.interfaces.IComunicaFragments;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,6 @@ public class ClasificadosFragment extends Fragment {
     RecyclerView recyclerClasificados;
 
     ArrayList<Clasificados> listaClasificados;
-
-    Activity activity;
-    IComunicaFragments interfaceComunicaFragments;
 
 
     public ClasificadosFragment() {
@@ -56,7 +54,16 @@ public class ClasificadosFragment extends Fragment {
         adaptadorC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                interfaceComunicaFragments.enviarClasificados(listaClasificados.get(recyclerClasificados.getChildAdapterPosition(v)));
+
+                Clasificados clasificados = listaClasificados.get(recyclerClasificados.getChildAdapterPosition(v));
+
+                Intent intentClasificados = new Intent(getContext(), DetalleClasificados.class);
+                Bundle bundleclasificados = new Bundle();
+                bundleclasificados.putSerializable("objeto3",clasificados);
+
+                intentClasificados.putExtras(bundleclasificados);
+                startActivity(intentClasificados);
+
             }
         });
 
@@ -73,15 +80,5 @@ public class ClasificadosFragment extends Fragment {
 
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
 
-        if (context instanceof Activity){
-
-            this.activity = (Activity) context;
-            interfaceComunicaFragments = (IComunicaFragments) this.activity;
-
-        }
-    }
 }

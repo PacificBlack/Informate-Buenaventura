@@ -3,6 +3,7 @@ package com.pacificblack.informatebuenaventura.fragments.bienesraizes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,9 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.actividades.DetalleBienes;
 import com.pacificblack.informatebuenaventura.clases.bienes.AdaptadorBienes;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
-import com.pacificblack.informatebuenaventura.interfaces.IComunicaFragments;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,6 @@ public class BienesFragment extends Fragment {
     RecyclerView recyclerBienes;
 
     ArrayList<Bienes> listaBienes;
-
-    Activity activity;
-    IComunicaFragments interfaceComunicaFragments;
 
 
     public BienesFragment() {
@@ -57,7 +55,15 @@ public class BienesFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                interfaceComunicaFragments.enviarBienes(listaBienes.get(recyclerBienes.getChildAdapterPosition(v)));
+                Bienes bienes = listaBienes.get(recyclerBienes.getChildAdapterPosition(v));
+
+                Intent intentBienes = new Intent(getContext(), DetalleBienes.class);
+                Bundle bundlebienes = new Bundle();
+                bundlebienes.putSerializable("objeto2",bienes);
+
+                intentBienes.putExtras(bundlebienes);
+                startActivity(intentBienes);
+
 
             }
         });
@@ -76,18 +82,6 @@ public class BienesFragment extends Fragment {
 
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
 
 
-        if (context instanceof Activity){
-
-            this.activity = (Activity) context;
-            interfaceComunicaFragments = (IComunicaFragments) this.activity;
-
-        }
-
-
-    }
 }

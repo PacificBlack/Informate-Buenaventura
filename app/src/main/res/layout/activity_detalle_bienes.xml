@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
-    tools:context=".fragments.clasificados.DetalleClasificadosFragment">
+    tools:context=".actividades.DetalleBienes">
+
+
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/lineardetalleclasificados"
+            android:id="@+id/lineardetalleadopcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/titulo_detalle_clasificados"
+                android:id="@+id/titulo_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -27,7 +30,7 @@
                 android:textSize="20dp" />
 
             <ImageView
-                android:id="@+id/imagen1_detalle_clasificados"
+                android:id="@+id/imagen1_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
@@ -35,7 +38,7 @@
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
             <TextView
-                android:id="@+id/descricion1_detalle_clasificados"
+                android:id="@+id/descricion1_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="175dp"
                 android:layout_marginTop="5dp"
@@ -43,7 +46,7 @@
                 android:text="TextView" />
 
             <ImageView
-                android:id="@+id/imagen2_detalle_clasificados"
+                android:id="@+id/imagen2_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
@@ -51,7 +54,7 @@
                 tools:src="@tools:sample/backgrounds/scenic[15]" />
 
             <TextView
-                android:id="@+id/descripcion2_detalle_clasificados"
+                android:id="@+id/descripcion2_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="175dp"
                 android:layout_marginTop="10dp"
@@ -68,14 +71,14 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/imagen3_detalle_clasificados"
+                        android:id="@+id/imagen3_detalle_bienes"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
-                        android:id="@+id/imagen4_detalle_clasificados"
+                        android:id="@+id/imagen4_detalle_bienes"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:scaleType="fitStart"
@@ -83,7 +86,17 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
+            <TextView
+                android:id="@+id/precio_detalle_bienes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:fontFamily="@font/signika"
+                android:text="TextView"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

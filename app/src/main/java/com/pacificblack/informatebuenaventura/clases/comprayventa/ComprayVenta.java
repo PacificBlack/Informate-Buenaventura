@@ -2,7 +2,9 @@ package com.pacificblack.informatebuenaventura.clases.comprayventa;
 
 import android.media.Image;
 
-public class ComprayVenta {
+import java.io.Serializable;
+
+public class ComprayVenta implements Serializable {
 
 
     private String titulo_row_comprayventa,descripcion_row_comprayventa,descripcion_comprayventa,fechapublicacion_row_comprayventa,precio_row_comprayventa;

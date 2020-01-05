@@ -2,6 +2,7 @@ package com.pacificblack.informatebuenaventura.fragments.adopcion;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.actividades.DetalleAdopcion;
 import com.pacificblack.informatebuenaventura.clases.adopcion.AdaptadorAdopcion;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
-import com.pacificblack.informatebuenaventura.interfaces.IComunicaFragments;
 
 import java.util.ArrayList;
 
@@ -31,8 +32,6 @@ public class AdopcionFragment extends Fragment {
 
     ArrayList<Adopcion> listaAdopcion;
 
-    Activity activity;
-    IComunicaFragments interfaceComunicaFragments;
 
 
 
@@ -60,8 +59,14 @@ public class AdopcionFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                interfaceComunicaFragments.enviarAdopcion(listaAdopcion.get(recyclerAdopcion.getChildAdapterPosition(v)));
+                Adopcion adop = listaAdopcion.get(recyclerAdopcion.getChildAdapterPosition(v));
 
+                Intent intentAdopcion = new Intent(getContext(), DetalleAdopcion.class);
+                Bundle ensayo = new Bundle();
+                ensayo.putSerializable("objeto1",adop);
+
+                intentAdopcion.putExtras(ensayo);
+                startActivity(intentAdopcion);
             }
         });
 
@@ -84,16 +89,4 @@ public class AdopcionFragment extends Fragment {
     }
 
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        if (context instanceof Activity){
-
-            this.activity = (Activity) context;
-            interfaceComunicaFragments = (IComunicaFragments) this.activity;
-
-        }
-
-    }
 }
