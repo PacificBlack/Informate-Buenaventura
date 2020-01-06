@@ -1,16 +1,18 @@
 package com.pacificblack.informatebuenaventura.clases.desaparecidos;
 
-public class Desaparecidos {
+import java.io.Serializable;
+
+public class Desaparecidos implements Serializable {
 
     private String titulo_row_desaparecidos,descripcion_row_desaparecidos,fechapublicacion_row_desaparecidos,recompensa_row_desaparecidos;
     private int vista_row_desaparecidos;
     private int imagen1_desaparecidos,imagen2_desaparecidos,imagen3̣̣_desaparecidos;
-    private String descripcion1_desaparecidos,descripcion2_desaparecidos, fechadesaparecido_desaparecidos, estado_desaparecidos,ultimolugar_desaparecidos;
+    private String descripcion1_desaparecidos,descripcion2_desaparecidos, fechadesaparecido_desaparecidos, estado_desaparecidos,ultimolugar_desaparecidos,que_desaparecidos;
 
     public Desaparecidos() {
     }
 
-    public Desaparecidos(String titulo_row_desaparecidos, String descripcion_row_desaparecidos, String fechapublicacion_row_desaparecidos, String recompensa_row_desaparecidos, int vista_row_desaparecidos, int imagen1_desaparecidos, int imagen2_desaparecidos, int imagen3̣̣_desaparecidos, String descripcion1_desaparecidos, String descripcion2_desaparecidos, String fechadesaparecido_desaparecidos, String estado_desaparecidos, String ultimolugar_desaparecidos) {
+    public Desaparecidos(String titulo_row_desaparecidos, String descripcion_row_desaparecidos, String fechapublicacion_row_desaparecidos, String recompensa_row_desaparecidos, int vista_row_desaparecidos, int imagen1_desaparecidos, int imagen2_desaparecidos, int imagen3̣̣_desaparecidos, String descripcion1_desaparecidos, String descripcion2_desaparecidos, String fechadesaparecido_desaparecidos, String estado_desaparecidos, String ultimolugar_desaparecidos, String que_desaparecidos) {
         this.titulo_row_desaparecidos = titulo_row_desaparecidos;
         this.descripcion_row_desaparecidos = descripcion_row_desaparecidos;
         this.fechapublicacion_row_desaparecidos = fechapublicacion_row_desaparecidos;
@@ -24,6 +26,16 @@ public class Desaparecidos {
         this.fechadesaparecido_desaparecidos = fechadesaparecido_desaparecidos;
         this.estado_desaparecidos = estado_desaparecidos;
         this.ultimolugar_desaparecidos = ultimolugar_desaparecidos;
+        this.que_desaparecidos = que_desaparecidos;
+    }
+
+
+    public String getQue_desaparecidos() {
+        return que_desaparecidos;
+    }
+
+    public void setQue_desaparecidos(String que_desaparecidos) {
+        this.que_desaparecidos = que_desaparecidos;
     }
 
     public String getTitulo_row_desaparecidos() {

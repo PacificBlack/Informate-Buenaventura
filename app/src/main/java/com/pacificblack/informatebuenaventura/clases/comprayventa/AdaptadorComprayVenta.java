@@ -49,7 +49,7 @@ public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorCompray
         holder.titulocomprayventa.setText(listaComprayVenta.get(position).getTitulo_row_comprayventa());
         holder.descripcioncortacomprayventa.setText(listaComprayVenta.get(position).getDescripcion_row_comprayventa());
         holder.fechapublicacioncomprayventa.setText(listaComprayVenta.get(position).getFechapublicacion_row_comprayventa());
-        holder.preciocomprayventa.setText(String.valueOf(listaComprayVenta.get(position).getPrecio_row_comprayventa()));
+        holder.preciocomprayventa.setText(listaComprayVenta.get(position).getPrecio_row_comprayventa());
         holder.vistacomprayventa.setText(String.valueOf(listaComprayVenta.get(position).getVista_comprayventa()));
 
 

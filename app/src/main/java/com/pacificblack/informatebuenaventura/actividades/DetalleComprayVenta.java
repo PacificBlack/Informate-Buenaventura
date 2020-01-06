@@ -35,23 +35,23 @@ public class DetalleComprayVenta extends AppCompatActivity {
 
         Bundle objetoComprayVenta = getIntent().getExtras();
 
-        ComprayVenta compra = null;
+        ComprayVenta comprayventa = null;
 
-        if (compra!=null){
+        if (objetoComprayVenta!=null){
 
-            compra = (ComprayVenta) objetoComprayVenta.getSerializable("objeto4");
+            comprayventa = (ComprayVenta) objetoComprayVenta.getSerializable("objeto4");
 
 
-            titulo_comprayventa.setText(compra.getTitulo_row_comprayventa());
-            descripcion1_comprayventa.setText(compra.getDescripcion_comprayventa());
-            descripcion2_comprayventa.setText(compra.getDescripcionextra_comprayventa());
-            precio_comprayventa.setText(compra.getPrecio_row_comprayventa());
-            contacto_comprayventa.setText(compra.getContacto_comprayventa());
-            ubicacion_comprayventa.setText(compra.getUbicacion_comprayventa());
-            cantidad_comprayventa.setText(compra.getCantidad_comprayventa());
-            imagen1_comprayventa.setImageResource(compra.getImagen1_comprayventa());
-            imagen2_comprayventa.setImageResource(compra.getImagen2_comprayventa());
-            imagen3_comprayventa.setImageResource(compra.getImagen3̣̣_comprayventa());
+            titulo_comprayventa.setText(comprayventa.getTitulo_row_comprayventa());
+            descripcion1_comprayventa.setText(comprayventa.getDescripcion_comprayventa());
+            descripcion2_comprayventa.setText(comprayventa.getDescripcionextra_comprayventa());
+            precio_comprayventa.setText(comprayventa.getPrecio_row_comprayventa());
+            contacto_comprayventa.setText(comprayventa.getContacto_comprayventa());
+            ubicacion_comprayventa.setText(comprayventa.getUbicacion_comprayventa());
+            cantidad_comprayventa.setText(String.valueOf(comprayventa.getCantidad_comprayventa()));
+            imagen1_comprayventa.setImageResource(comprayventa.getImagen1_comprayventa());
+            imagen2_comprayventa.setImageResource(comprayventa.getImagen2_comprayventa());
+            imagen3_comprayventa.setImageResource(comprayventa.getImagen3̣̣_comprayventa());
         }
 
 

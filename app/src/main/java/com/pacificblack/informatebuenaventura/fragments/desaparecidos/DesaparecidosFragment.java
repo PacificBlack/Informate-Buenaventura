@@ -1,20 +1,33 @@
 package com.pacificblack.informatebuenaventura.fragments.desaparecidos;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.actividades.DetalleDesaparecidos;
+import com.pacificblack.informatebuenaventura.clases.desaparecidos.AdaptadorDesaparecidos;
+import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DesaparecidosFragment extends Fragment {
+
+    ArrayList<Desaparecidos> listaDesaparecidos;
+
+    RecyclerView recyclerDesaparecidos;
+
 
 
     public DesaparecidosFragment() {
@@ -25,8 +38,59 @@ public class DesaparecidosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_desaparecidos, container, false);
+View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false);
+
+
+        listaDesaparecidos = new ArrayList<>();
+        recyclerDesaparecidos = vista.findViewById(R.id.recycler_desaparecidos);
+        recyclerDesaparecidos.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        llenarlista_desaparecidos();
+
+
+        AdaptadorDesaparecidos adaptadorDesaparecidos = new AdaptadorDesaparecidos(listaDesaparecidos);
+
+        recyclerDesaparecidos.setAdapter(adaptadorDesaparecidos);
+        adaptadorDesaparecidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Desaparecidos desaparecidos = listaDesaparecidos.get(recyclerDesaparecidos.getChildAdapterPosition(v));
+
+                Intent intentDesaparecidos = new Intent(getContext(), DetalleDesaparecidos.class);
+                Bundle envioDesaparecidos = new Bundle();
+                envioDesaparecidos.putSerializable("objeto5",desaparecidos);
+                intentDesaparecidos.putExtras(envioDesaparecidos);
+
+                startActivity(intentDesaparecidos);
+
+            }
+        });
+
+
+        return vista;
+
+    }
+
+    private void llenarlista_desaparecidos() {
+
+
+        listaDesaparecidos.add(new Desaparecidos(
+                "Cause Heartles",
+                "Este perrito es un Eno back to mai wik crack, jelpme",
+                "Domingo 12 del 2019",
+                "guuGUachan guachan",
+                35,
+                R.drawable.imagencita,
+                R.drawable.imagencita,
+                R.drawable.imagencita,
+                "Uy mi perro lo que te diga de ese man es mentira",
+                "Sabe que mi perro, suerte le deseo",
+                "Se desaparecion ayer el viejito",
+                "Sigue desaparecido",
+                "Don pioka",
+                "Animal"));
+
+
     }
 
 }
