@@ -75,7 +75,7 @@
                     android:text="Fecha publicacion" />
 
                 <TextView
-                    android:id="@+id/vista_row_bienes"
+                    android:id="@+id/vista_row_directorio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="120dp"
