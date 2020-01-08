@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".actividades.DetalleDesaparecidos"></activity>
+        <activity android:name=".actividades.DetalleDonaciones"></activity>
+        <activity android:name=".actividades.DetalleDesaparecidos" />
         <activity android:name=".actividades.DetalleComprayVenta" />
         <activity android:name=".actividades.DetalleClasificados" />
         <activity android:name=".actividades.DetalleBienes" />

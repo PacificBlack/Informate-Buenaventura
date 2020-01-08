@@ -2,7 +2,9 @@ package com.pacificblack.informatebuenaventura.clases.donaciones;
 
 import android.media.Image;
 
-public class Donaciones {
+import java.io.Serializable;
+
+public class Donaciones implements Serializable {
 
     private String titulo_row_donaciones,descripcion_row_donaciones,fechapublicacion_row_donaciones;
     private int imagen1_donaciones,imagen2_donaciones;
