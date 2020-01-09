@@ -2,10 +2,12 @@ package com.pacificblack.informatebuenaventura.clases.funebres;
 
 import android.media.Image;
 
-public class Funebres {
+import java.io.Serializable;
+
+public class Funebres implements Serializable {
 
     private String titulo_row_funebres,descripcion_row_funebres,fechapublicacion_row_funebres;
-    private int imagen1_funebres,imagen2_funebres,imagen3_funebres,imagen4_funebres;
+    private int imagen1_funebres,imagen2_funebres,imagen3_funebres;
     private int vistas_funebres;
     private String descripcion1_funebres,descripcion2_funebres;
 
@@ -13,14 +15,13 @@ public class Funebres {
     public Funebres() {
     }
 
-    public Funebres(String titulo_row_funebres, String descripcion_row_funebres, String fechapublicacion_row_funebres, int imagen1_funebres, int imagen2_funebres, int imagen3_funebres, int imagen4_funebres, int vistas_funebres, String descripcion1_funebres, String descripcion2_funebres) {
+    public Funebres(String titulo_row_funebres, String descripcion_row_funebres, String fechapublicacion_row_funebres, int imagen1_funebres, int imagen2_funebres, int imagen3_funebres, int vistas_funebres, String descripcion1_funebres, String descripcion2_funebres) {
         this.titulo_row_funebres = titulo_row_funebres;
         this.descripcion_row_funebres = descripcion_row_funebres;
         this.fechapublicacion_row_funebres = fechapublicacion_row_funebres;
         this.imagen1_funebres = imagen1_funebres;
         this.imagen2_funebres = imagen2_funebres;
         this.imagen3_funebres = imagen3_funebres;
-        this.imagen4_funebres = imagen4_funebres;
         this.vistas_funebres = vistas_funebres;
         this.descripcion1_funebres = descripcion1_funebres;
         this.descripcion2_funebres = descripcion2_funebres;
@@ -72,14 +73,6 @@ public class Funebres {
 
     public void setImagen3_funebres(int imagen3_funebres) {
         this.imagen3_funebres = imagen3_funebres;
-    }
-
-    public int getImagen4_funebres() {
-        return imagen4_funebres;
-    }
-
-    public void setImagen4_funebres(int imagen4_funebres) {
-        this.imagen4_funebres = imagen4_funebres;
     }
 
     public int getVistas_funebres() {

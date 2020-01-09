@@ -39,7 +39,7 @@
                 <TextView
                     android:id="@+id/descripcion_row_ultimahora"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="138dp"
                     android:fontFamily="@font/noto_sans"
                     android:text="@string/descripcion"
                     android:textColor="#555" />
@@ -62,7 +62,8 @@
                     android:drawableStart="@drawable/ic_ojo_24dp"
                     android:drawableLeft="@drawable/ic_ojo_24dp"
                     android:fontFamily="@font/amaranth_bold"
-                    android:text="@string/cero" />
+                    android:text="@string/cero"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
