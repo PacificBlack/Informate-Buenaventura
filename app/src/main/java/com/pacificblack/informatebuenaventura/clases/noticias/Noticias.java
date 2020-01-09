@@ -2,7 +2,9 @@ package com.pacificblack.informatebuenaventura.clases.noticias;
 
 import android.media.Image;
 
-public class Noticias {
+import java.io.Serializable;
+
+public class Noticias implements Serializable {
 
     private String titulo_row_noticias,descripcion_row_noticias,fechapublicacion_row_noticias;
     private int imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;

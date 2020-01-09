@@ -41,7 +41,7 @@ android:layout_height="match_parent"
                 <TextView
                     android:id="@+id/descripcion_row_noticias"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
+                    android:layout_height="75dp"
                     android:fontFamily="@font/noto_sans"
                     android:text="@string/descripcion"
                     android:textColor="#555" />
@@ -63,31 +63,36 @@ android:layout_height="match_parent"
                 android:orientation="horizontal">
 
 
-                <Button
-                    android:id="@+id/gusta_row_noticias"
-                    android:drawableStart="@drawable/ic_like_on"
-                    android:drawableLeft="@drawable/ic_like_on"
-                    style="@android:style/Widget.DeviceDefault.Light.Button"
-                    android:layout_width="9sp"
-                    android:layout_height="wrap_content"
+                <RadioGroup
+                    android:layout_width="93dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="#00FFFFFF"
-                    android:baselineAligned="false"
-                   android:fontFamily="@font/bree_serif"
-                    android:text="@string/cero" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/nogusta_row_noticias"
-                    android:drawableStart="@drawable/ic_unlike_on"
-                    android:drawableLeft="@drawable/ic_unlike_on"
-                    style="@android:style/Widget.DeviceDefault.Light.Button"
-                    android:layout_width="9sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#00FFFFFF"
-                    android:baselineAligned="false"
-                    android:fontFamily="@font/bree_serif"
-                    android:text="@string/cero" />
+                    <RadioButton
+                        android:id="@+id/gusta_row_noticias"
+                        style="@android:style/Widget.DeviceDefault.Light.Button"
+                        android:layout_width="9sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#00FFFFFF"
+                        android:baselineAligned="false"
+                        android:button="@drawable/ic_like_on"
+                        android:fontFamily="@font/bree_serif"
+                        android:text="@string/cero" />
+
+                    <RadioButton
+                        android:id="@+id/nogusta_row_noticias"
+                        style="@android:style/Widget.DeviceDefault.Light.Button"
+                        android:layout_width="9sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#00FFFFFF"
+                        android:baselineAligned="false"
+                        android:button="@drawable/ic_unlike_on"
+                        android:fontFamily="@font/bree_serif"
+                        android:text="@string/cero" />
+                </RadioGroup>
 
                 <TextView
                     android:id="@+id/vista_row_noticias"

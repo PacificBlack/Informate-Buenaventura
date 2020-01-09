@@ -1,4 +1,4 @@
-package com.pacificblack.informatebuenaventura.fragments.noticias;
+package com.pacificblack.informatebuenaventura.clases.noticias;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.clases.noticias.UltimaHora;
 
 import java.util.ArrayList;
 

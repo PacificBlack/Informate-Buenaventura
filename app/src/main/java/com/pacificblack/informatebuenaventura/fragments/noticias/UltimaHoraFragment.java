@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.clases.noticias.AdaptadorUltimaHora;
 import com.pacificblack.informatebuenaventura.clases.noticias.UltimaHora;
 
 import java.util.ArrayList;
