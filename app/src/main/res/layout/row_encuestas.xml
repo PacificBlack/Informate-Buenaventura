@@ -41,7 +41,7 @@
                 <TextView
                     android:id="@+id/descripcion_row_encuestas"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
+                    android:layout_height="52dp"
                     android:fontFamily="@font/noto_sans"
                     android:text="@string/descripcion"
                     android:textColor="#555" />
@@ -64,19 +64,9 @@
 
 
                 <TextView
-                    android:id="@+id/termina_row_encuestas"
-                    android:layout_width="27dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/baloo"
-                    android:text="Termina en 24:00:00" />
-
-                <TextView
                     android:id="@+id/vista_row_encuestas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="120dp"
-                    android:layout_marginLeft="120dp"
                     android:layout_weight="2"
                     android:baselineAligned="false"
                     android:drawableStart="@drawable/ic_ojo_24dp"
