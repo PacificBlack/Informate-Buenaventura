@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="490dp"
+    android:layout_height="510dp"
     android:layout_gravity="center"
     android:background="@color/azulOscuro"
     android:orientation="vertical"
@@ -125,12 +125,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/amaranth_bold"
+            android:onClick="PublicarDesaparicion"
             android:text="@string/publicar_desaparecido" />
+
         <Button
             android:id="@+id/button12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/amaranth_bold"
+            android:onClick="PublicarAdopcion"
             android:text="@string/publicar_adopcion" />
 
         <LinearLayout
@@ -144,6 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarArticulo"
                 android:text="@string/publicar_comprayventa" />
 
             <Button
@@ -152,6 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarEventos"
                 android:text="@string/publicar_eventos" />
 
             <Button
@@ -160,6 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarServicios"
                 android:text="@string/publicar_servicios" />
         </LinearLayout>
 
@@ -174,6 +180,7 @@
                 android:layout_width="112dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarEmpleos"
                 android:text="@string/publicar_empleos" />
 
             <Button
@@ -182,6 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarBienes"
                 android:text="@string/publicar_bienes" />
 
             <Button
@@ -190,6 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarClasificados"
                 android:text="@string/publicar_clasificados" />
 
         </LinearLayout>

@@ -12,6 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".publicar.PublicarClasificados"></activity>
+        <activity android:name=".publicar.PublicarBienes" />
+        <activity android:name=".publicar.PublicarEmpleos" />
+        <activity android:name=".publicar.PublicarServicios" />
+        <activity android:name=".publicar.PublicarEventos" />
+        <activity android:name=".publicar.PublicarArticulo" />
+        <activity android:name=".publicar.PublicarAdopcion" />
+        <activity android:name=".publicar.PublicarDesaparicion" />
         <activity android:name=".actividades.DetalleNoticias" />
         <activity android:name=".actividades.DetalleDifuntos" />
         <activity android:name=".actividades.DetalleEncuestas" />

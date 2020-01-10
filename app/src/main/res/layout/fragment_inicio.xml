@@ -6,8 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/azulClaro"
     android:weightSum="10"
     tools:context=".fragments.inicio.InicioFragment">
+
+
 
 
     <RelativeLayout
@@ -29,9 +32,9 @@
         android:layout_height="0dp"
         android:alignmentMode="alignMargins"
         android:columnOrderPreserved="false"
-        android:layout_weight="8"
+        android:layout_weight="7"
         android:columnCount="2"
-        android:rowCount="3"
+        android:rowCount="4"
         android:padding="14dp">
 
 

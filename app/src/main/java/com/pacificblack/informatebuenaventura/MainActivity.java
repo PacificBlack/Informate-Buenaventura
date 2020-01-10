@@ -107,5 +107,136 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    public void PublicarDesaparicion(View v){
+        TextView txtcerrar_desaparicion;
+        dialog.setContentView(R.layout.publicar_desaparicion);
+        txtcerrar_desaparicion =(TextView) dialog.findViewById(R.id.cerrardesaparicion);
+        txtcerrar_desaparicion.setText("X");
+        txtcerrar_desaparicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+    }
+
+
+    public void PublicarAdopcion(View v){
+        TextView txtcerrar_adopcion;
+        dialog.setContentView(R.layout.publicar_adopcion);
+        txtcerrar_adopcion =(TextView) dialog.findViewById(R.id.cerraradopcion);
+        txtcerrar_adopcion.setText("X");
+        txtcerrar_adopcion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+
+    public void PublicarArticulo(View view){
+        TextView txtcerrar_articulo;
+        dialog.setContentView(R.layout.publicar_articulo);
+        txtcerrar_articulo =(TextView) dialog.findViewById(R.id.cerrararticulo);
+        txtcerrar_articulo.setText("X");
+        txtcerrar_articulo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+    public void PublicarEventos(View view){
+        TextView txtcerrar_eventos;
+        dialog.setContentView(R.layout.publicar_eventos);
+        txtcerrar_eventos =(TextView) dialog.findViewById(R.id.cerrareventos);
+        txtcerrar_eventos.setText("X");
+        txtcerrar_eventos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    public void PublicarServicios(View view){
+        TextView txtcerrar_servicios;
+        dialog.setContentView(R.layout.publicar_servicios);
+        txtcerrar_servicios =(TextView) dialog.findViewById(R.id.cerrarservicios);
+        txtcerrar_servicios.setText("X");
+        txtcerrar_servicios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+
+    public void PublicarEmpleos(View view){
+        TextView txtcerrar_empleos;
+        dialog.setContentView(R.layout.publicar_empleos);
+        txtcerrar_empleos =(TextView) dialog.findViewById(R.id.cerrarempleos);
+        txtcerrar_empleos.setText("X");
+        txtcerrar_empleos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+    public void PublicarBienes(View view){
+        TextView txtcerrar_bienes;
+        dialog.setContentView(R.layout.publicar_bienes);
+        txtcerrar_bienes =(TextView) dialog.findViewById(R.id.cerrarbienes);
+        txtcerrar_bienes.setText("X");
+        txtcerrar_bienes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+    public void PublicarClasificados(View view){
+        TextView txtcerrar_clasificados;
+        dialog.setContentView(R.layout.publicar_clasificados);
+        txtcerrar_clasificados =(TextView) dialog.findViewById(R.id.cerrarclasificados);
+        txtcerrar_clasificados.setText("X");
+        txtcerrar_clasificados.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+
 }
 
