@@ -90,6 +90,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="175dp"
                 android:layout_marginTop="10dp"
+                android:autoLink="all"
+                android:fontFamily="@font/signika"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/link_detalle_noticias"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:autoLink="web"
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
 

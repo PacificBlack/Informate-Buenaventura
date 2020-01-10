@@ -85,7 +85,7 @@ public class NoticiasFragment extends Fragment {
                 23543,
                 "Como juan caloer era conocido el mayor narco traficante de los unites estates",
                 "Nadie sabia quien era el hasta que hablo el muy torpe",
-                "Bueno, ya no se que decir para que esta mierda quede bien chula"));
+                "Bueno, ya no se que decir para que esta mierda quede bien chula  www.youtube.com","https://www.google.com"));
 
     }
 

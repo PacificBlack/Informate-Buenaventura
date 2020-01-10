@@ -3,18 +3,19 @@ package com.pacificblack.informatebuenaventura.clases.noticias;
 import android.media.Image;
 
 import java.io.Serializable;
+import java.net.URL;
 
 public class Noticias implements Serializable {
 
     private String titulo_row_noticias,descripcion_row_noticias,fechapublicacion_row_noticias;
     private int imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;
     private int likes_noticias,dislikes_noticias,vistas_noticias;
-    private String descripcion1_noticias,descripcion2_noticias,descripcion3_noticias;
+    private String descripcion1_noticias,descripcion2_noticias,descripcion3_noticias,video;
 
     public Noticias() {
     }
 
-    public Noticias(String titulo_row_noticias, String descripcion_row_noticias, String fechapublicacion_row_noticias, int imagen1_noticias, int imagen2_noticias, int imagen3_noticias, int imagen4_noticias, int likes_noticias, int dislikes_noticias, int vistas_noticias, String descripcion1_noticias, String descripcion2_noticias, String descripcion3_noticias) {
+    public Noticias(String titulo_row_noticias, String descripcion_row_noticias, String fechapublicacion_row_noticias, int imagen1_noticias, int imagen2_noticias, int imagen3_noticias, int imagen4_noticias, int likes_noticias, int dislikes_noticias, int vistas_noticias, String descripcion1_noticias, String descripcion2_noticias, String descripcion3_noticias, String video) {
         this.titulo_row_noticias = titulo_row_noticias;
         this.descripcion_row_noticias = descripcion_row_noticias;
         this.fechapublicacion_row_noticias = fechapublicacion_row_noticias;
@@ -28,6 +29,15 @@ public class Noticias implements Serializable {
         this.descripcion1_noticias = descripcion1_noticias;
         this.descripcion2_noticias = descripcion2_noticias;
         this.descripcion3_noticias = descripcion3_noticias;
+        this.video = video;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     public String getTitulo_row_noticias() {

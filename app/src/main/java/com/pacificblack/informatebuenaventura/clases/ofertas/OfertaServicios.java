@@ -7,21 +7,18 @@ public class OfertaServicios {
     private String titulo_row_ofertaservicios,descripcion_row_ofertaservicios,fechapublicacion_row_ofertaservicios,necesidad_row_ofertaservicios;
     private int imagen1_ofertaservicios;
     private int vistas_ofertaservicios;
-    private String descripcion1_ofertaservicios,descripcion2_ofertaservicios;
 
     public OfertaServicios() {
     }
 
-    public OfertaServicios(String titulo_row_ofertaservicios, String descripcion_row_ofertaservicios, String fechapublicacion_row_ofertaservicios, String necesidad_row_ofertaservicios, int imagen1_ofertaservicios, int vistas_ofertaservicios, String descripcion1_ofertaservicios, String descripcion2_ofertaservicios) {
+    public OfertaServicios(String titulo_row_ofertaservicios, String descripcion_row_ofertaservicios, String fechapublicacion_row_ofertaservicios, String necesidad_row_ofertaservicios, int imagen1_ofertaservicios, int vistas_ofertaservicios ) {
         this.titulo_row_ofertaservicios = titulo_row_ofertaservicios;
         this.descripcion_row_ofertaservicios = descripcion_row_ofertaservicios;
         this.fechapublicacion_row_ofertaservicios = fechapublicacion_row_ofertaservicios;
         this.necesidad_row_ofertaservicios = necesidad_row_ofertaservicios;
         this.imagen1_ofertaservicios = imagen1_ofertaservicios;
         this.vistas_ofertaservicios = vistas_ofertaservicios;
-        this.descripcion1_ofertaservicios = descripcion1_ofertaservicios;
-        this.descripcion2_ofertaservicios = descripcion2_ofertaservicios;
-    }
+        }
 
     public String getTitulo_row_ofertaservicios() {
         return titulo_row_ofertaservicios;
@@ -71,19 +68,6 @@ public class OfertaServicios {
         this.vistas_ofertaservicios = vistas_ofertaservicios;
     }
 
-    public String getDescripcion1_ofertaservicios() {
-        return descripcion1_ofertaservicios;
-    }
 
-    public void setDescripcion1_ofertaservicios(String descripcion1_ofertaservicios) {
-        this.descripcion1_ofertaservicios = descripcion1_ofertaservicios;
-    }
 
-    public String getDescripcion2_ofertaservicios() {
-        return descripcion2_ofertaservicios;
-    }
-
-    public void setDescripcion2_ofertaservicios(String descripcion2_ofertaservicios) {
-        this.descripcion2_ofertaservicios = descripcion2_ofertaservicios;
-    }
 }

@@ -2,25 +2,25 @@ package com.pacificblack.informatebuenaventura.clases.ofertas;
 
 import android.media.Image;
 
-public class OfertaEmpleos {
+import java.io.Serializable;
+
+public class OfertaEmpleos implements Serializable {
 
     private String titulo_row_ofertasempleos,descripcion_row_ofertasempleos,fechapublicacion_row_ofertasempleos,necesidad_row_ofertasempleos;
     private int imagen1_ofertasempleos;
     private int vistas_ofertasempleos;
-    private String descripcion1_ofertasempleos,descripcion2_ofertasempleos;
 
     public OfertaEmpleos() {
     }
 
-    public OfertaEmpleos(String titulo_row_ofertasempleos, String descripcion_row_ofertasempleos, String fechapublicacion_row_ofertasempleos, String necesidad_row_ofertasempleos, int imagen1_ofertasempleos, int vistas_ofertasempleos, String descripcion1_ofertasempleos, String descripcion2_ofertasempleos) {
+    public OfertaEmpleos(String titulo_row_ofertasempleos, String descripcion_row_ofertasempleos, String fechapublicacion_row_ofertasempleos, String necesidad_row_ofertasempleos, int imagen1_ofertasempleos, int vistas_ofertasempleos) {
         this.titulo_row_ofertasempleos = titulo_row_ofertasempleos;
         this.descripcion_row_ofertasempleos = descripcion_row_ofertasempleos;
         this.fechapublicacion_row_ofertasempleos = fechapublicacion_row_ofertasempleos;
         this.necesidad_row_ofertasempleos = necesidad_row_ofertasempleos;
         this.imagen1_ofertasempleos = imagen1_ofertasempleos;
         this.vistas_ofertasempleos = vistas_ofertasempleos;
-        this.descripcion1_ofertasempleos = descripcion1_ofertasempleos;
-        this.descripcion2_ofertasempleos = descripcion2_ofertasempleos;
+
     }
 
     public String getTitulo_row_ofertasempleos() {
@@ -71,19 +71,5 @@ public class OfertaEmpleos {
         this.vistas_ofertasempleos = vistas_ofertasempleos;
     }
 
-    public String getDescripcion1_ofertasempleos() {
-        return descripcion1_ofertasempleos;
-    }
 
-    public void setDescripcion1_ofertasempleos(String descripcion1_ofertasempleos) {
-        this.descripcion1_ofertasempleos = descripcion1_ofertasempleos;
-    }
-
-    public String getDescripcion2_ofertasempleos() {
-        return descripcion2_ofertasempleos;
-    }
-
-    public void setDescripcion2_ofertasempleos(String descripcion2_ofertasempleos) {
-        this.descripcion2_ofertasempleos = descripcion2_ofertasempleos;
-    }
 }
