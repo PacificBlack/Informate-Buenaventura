@@ -74,4 +74,17 @@
     <string name="publicar_adopcion">Publicar Adopcion</string>
 
 
+
+    <!-- Los hints que se ven de fondo -->
+
+    <string name="inserte_titulo">Ingrese un titulo para su publicación</string>
+    <string name="inserte_corta">Ingrese una descripción corta para su publicación</string>
+    <string name="inserte_descripcion1">Ingrese la primera descripción detallada de su publicacion</string>
+    <string name="inserte_descripcion2">Ingrese la segunda descripción detallada de su publicacion</string>
+
+
+
+
+
+
 </resources>

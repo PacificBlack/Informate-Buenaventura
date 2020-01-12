@@ -1,15 +1,20 @@
 package com.pacificblack.informatebuenaventura;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.ImageFormat;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,6 +22,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
+import com.pacificblack.informatebuenaventura.publicar.PublicarAdopcion;
+import com.pacificblack.informatebuenaventura.publicar.PublicarArticulo;
+import com.pacificblack.informatebuenaventura.publicar.PublicarBienes;
+import com.pacificblack.informatebuenaventura.publicar.PublicarClasificados;
+import com.pacificblack.informatebuenaventura.publicar.PublicarDesaparicion;
+import com.pacificblack.informatebuenaventura.publicar.PublicarEmpleos;
+import com.pacificblack.informatebuenaventura.publicar.PublicarEventos;
+import com.pacificblack.informatebuenaventura.publicar.PublicarServicios;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -24,6 +37,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity  {
@@ -31,7 +46,6 @@ public class MainActivity extends AppCompatActivity  {
     private AppBarConfiguration mAppBarConfiguration;
 
     Dialog dialog;
-
 
 
 
@@ -59,6 +73,8 @@ public class MainActivity extends AppCompatActivity  {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
     }
 
     @Override
@@ -89,7 +105,10 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-
+public void PublicarAdopcion(View v){
+    Intent intent = new Intent(MainActivity.this, PublicarAdopcion.class);
+    startActivity(intent);
+}
 
     public void ShowPopup(View v) {
         TextView txtclose;
@@ -108,133 +127,49 @@ public class MainActivity extends AppCompatActivity  {
 
 
     public void PublicarDesaparicion(View v){
-        TextView txtcerrar_desaparicion;
-        dialog.setContentView(R.layout.publicar_desaparicion);
-        txtcerrar_desaparicion =(TextView) dialog.findViewById(R.id.cerrardesaparicion);
-        txtcerrar_desaparicion.setText("X");
-        txtcerrar_desaparicion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarDesaparicion.class);
+        startActivity(intent);
 
-    }
-
-
-    public void PublicarAdopcion(View v){
-        TextView txtcerrar_adopcion;
-        dialog.setContentView(R.layout.publicar_adopcion);
-        txtcerrar_adopcion =(TextView) dialog.findViewById(R.id.cerraradopcion);
-        txtcerrar_adopcion.setText("X");
-        txtcerrar_adopcion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
     }
 
 
 
     public void PublicarArticulo(View view){
-        TextView txtcerrar_articulo;
-        dialog.setContentView(R.layout.publicar_articulo);
-        txtcerrar_articulo =(TextView) dialog.findViewById(R.id.cerrararticulo);
-        txtcerrar_articulo.setText("X");
-        txtcerrar_articulo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarArticulo.class);
+        startActivity(intent);
     }
 
 
     public void PublicarEventos(View view){
-        TextView txtcerrar_eventos;
-        dialog.setContentView(R.layout.publicar_eventos);
-        txtcerrar_eventos =(TextView) dialog.findViewById(R.id.cerrareventos);
-        txtcerrar_eventos.setText("X");
-        txtcerrar_eventos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarEventos.class);
+        startActivity(intent);
     }
 
     public void PublicarServicios(View view){
-        TextView txtcerrar_servicios;
-        dialog.setContentView(R.layout.publicar_servicios);
-        txtcerrar_servicios =(TextView) dialog.findViewById(R.id.cerrarservicios);
-        txtcerrar_servicios.setText("X");
-        txtcerrar_servicios.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarServicios.class);
+        startActivity(intent);
     }
 
 
 
     public void PublicarEmpleos(View view){
-        TextView txtcerrar_empleos;
-        dialog.setContentView(R.layout.publicar_empleos);
-        txtcerrar_empleos =(TextView) dialog.findViewById(R.id.cerrarempleos);
-        txtcerrar_empleos.setText("X");
-        txtcerrar_empleos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarEmpleos.class);
+        startActivity(intent);
     }
 
 
     public void PublicarBienes(View view){
-        TextView txtcerrar_bienes;
-        dialog.setContentView(R.layout.publicar_bienes);
-        txtcerrar_bienes =(TextView) dialog.findViewById(R.id.cerrarbienes);
-        txtcerrar_bienes.setText("X");
-        txtcerrar_bienes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarBienes.class);
+        startActivity(intent);
     }
 
 
     public void PublicarClasificados(View view){
-        TextView txtcerrar_clasificados;
-        dialog.setContentView(R.layout.publicar_clasificados);
-        txtcerrar_clasificados =(TextView) dialog.findViewById(R.id.cerrarclasificados);
-        txtcerrar_clasificados.setText("X");
-        txtcerrar_clasificados.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        Intent intent = new Intent(MainActivity.this, PublicarClasificados.class);
+        startActivity(intent);
     }
+
+
 
 
 
