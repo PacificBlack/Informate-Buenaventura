@@ -182,12 +182,12 @@ public class PublicarAdopcion extends AppCompatActivity {
         String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
 
         if (tituloinput.isEmpty()){
-            titulo_publicar_adopcion.setError("Debe ingresar un titulo para la publicación");
+            titulo_publicar_adopcion.setError(""+R.string.error_titulo);
             return false;
         }
         else if(tituloinput.length()>120){
 
-            titulo_publicar_adopcion.setError("El titulo es demasiado largo");
+            titulo_publicar_adopcion.setError(""+R.string.supera);
             return false;
         }
         else {
@@ -202,12 +202,12 @@ public class PublicarAdopcion extends AppCompatActivity {
         String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
 
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_adopcion.setError("Debe ingresar un descripcion corta para la publicación");
+            descripcioncorta_publicar_adopcion.setError(""+R.string.error_descripcioncorta);
             return false;
         }
         else if(descripcioncortainput.length()>150){
 
-            descripcioncorta_publicar_adopcion.setError("La descripcion es demasiada larga");
+            descripcioncorta_publicar_adopcion.setError(""+R.string.supera);
             return false;
         }
         else {
@@ -224,12 +224,12 @@ public class PublicarAdopcion extends AppCompatActivity {
         String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
 
         if (descripcion1input.isEmpty()){
-            descripcion1_publicar_adopcion.setError("Debe ingresar un descripcion  para la publicación");
+            descripcion1_publicar_adopcion.setError(""+R.string.error_descripcion1);
             return false;
         }
         else if(descripcion1input.length()>150){
 
-            descripcion1_publicar_adopcion.setError("La descripcion es demasiada larga");
+            descripcion1_publicar_adopcion.setError(""+R.string.supera);
             return false;
         }
         else {
@@ -242,12 +242,12 @@ public class PublicarAdopcion extends AppCompatActivity {
         String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
         if (descripcion2input.isEmpty()){
-            descripcion2_publicar_adopcion.setError("Debe ingresar un descripcion  para la publicación");
+            descripcion2_publicar_adopcion.setError(""+R.string.error_descripcion2);
             return false;
         }
         else if(descripcion2input.length()>150){
 
-            descripcion2_publicar_adopcion.setError("La descripcion es demasiada larga");
+            descripcion2_publicar_adopcion.setError(""+R.string.supera);
             return false;
         }
         else {

@@ -83,8 +83,22 @@
     <string name="inserte_descripcion2">Ingrese la segunda descripción detallada de su publicacion</string>
 
 
+    <!-- Los mensajes de error mostrados en caso de que falte algo -->
+
+    <string name="error_titulo">Debe ingresar un titulo para la publicación</string>
+    <string name="error_descripcioncorta">Debe ingresar una descripción corta para la publicación</string>
+    <string name="error_descripcion1">Debe ingresar la primera descripción para su publicación</string>
+    <string name="error_descripcion2">Debe ingresar la segunda descripción para su publicación</string>
+    <string name="error_ubicacion">Debe ingresar la ubicación</string>
+    <string name="error_cantidad">Debe ingresar la cantidad disponible de articulos</string>
+    <string name="error_precio">Debe ingresar el precio</string>
+    <string name="error_contacto">Debe ingresar un metodo para contactarlo</string>
 
 
+
+    <!-- Los mensajes de error mostrados en caso de que supere el numero de caracteres -->
+
+    <string name="supera">Ha superado el limite de caracteres</string>
 
 
 </resources>
