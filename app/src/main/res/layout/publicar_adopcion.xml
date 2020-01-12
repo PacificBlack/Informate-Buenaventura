@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="350dp"
-    android:layout_height="490dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context=".publicar.PublicarAdopcion">
-
 
 
     <TextView
@@ -36,29 +35,52 @@
             android:orientation="vertical">
 
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/publicar_titulo_adopcion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:ems="10"
-                android:hint="@string/inserte_titulo"
-                android:inputType="textPersonName" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="120"
+                app:errorEnabled="true">
 
-            <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/inserte_titulo"
+                    android:inputType="textPersonName" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/publicar_descripcioncorta_adopcion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/inserte_corta"
-                android:inputType="textMultiLine" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="150"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/inserte_corta"
+                    android:inputType="textPersonName" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -67,8 +89,8 @@
 
                     <ImageView
                         android:id="@+id/publicar_imagen1_adopcion"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
@@ -76,8 +98,8 @@
 
                     <ImageView
                         android:id="@+id/publicar_imagen2_adopcion"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
@@ -85,8 +107,8 @@
 
                     <ImageView
                         android:id="@+id/publicar_imagen3_adopcion"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
@@ -94,50 +116,74 @@
 
                     <ImageView
                         android:id="@+id/publicar_imagen4_adopcion"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/inserteimagen" />
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <Button
+            <TextView
                 android:id="@+id/publicar_imagenes_adopcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Subir imagenes" />
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/inserte_descripcion1"
-                android:inputType="textMultiLine" />
 
-            <EditText
-                android:id="@+id/editText4"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/publicar_descripcion1_adopcion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/inserte_descripcion2"
-                android:inputType="textMultiLine" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="740"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/inserte_descripcion1"
+                    android:inputType="textMultiLine|textNoSuggestions" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/publicar_descripcion2_adopcion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="740"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/inserte_descripcion2"
+                    android:inputType="textMultiLine" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <Button
                 android:id="@+id/publicar_final_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/publicar_adopcion" />
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>
