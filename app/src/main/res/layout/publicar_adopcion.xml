@@ -4,25 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3F51B5"
     android:layout_gravity="center"
     android:orientation="vertical"
     tools:context=".publicar.PublicarAdopcion">
 
 
-    <TextView
-        android:id="@+id/cerraradopcion"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="end"
-        android:gravity="center"
-        android:text="X"
-        android:textColor="@color/blanco"
-        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <ScrollView
