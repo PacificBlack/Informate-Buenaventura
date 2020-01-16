@@ -98,7 +98,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 app:counterEnabled="true"
-                app:counterMaxLength="250"
+                app:counterMaxLength="15"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -115,7 +115,7 @@
                 android:id="@+id/publicar_estadodes_desapariciom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Seleccione el estado de la publicación" />
+                android:hint="Presione dos veces para seleccionar el estado de la publicación" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/publicar_ultimolugar_desaparicion"
@@ -222,7 +222,7 @@
                 android:id="@+id/publicar_quese_desapariciom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese que se desaparecio ( Humano, animal)" />
+                android:hint="Presione dos veces para seleccionar ingrese que se desaparecio" />
 
 
             <Button

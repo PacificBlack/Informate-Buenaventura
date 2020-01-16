@@ -2,22 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="490dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="#CE2C06B3"
     android:orientation="vertical"
     tools:context=".publicar.PublicarEmpleos">
 
-
-    <TextView
-        android:id="@+id/cerrarempleos"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="end"
-        android:gravity="center"
-        android:text="X"
-        android:textColor="@color/blanco"
-        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -35,28 +26,74 @@
             android:orientation="vertical">
 
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/publicar_titulo_empleos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="120"
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/editText2"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/inserte_titulo"
+                    android:inputType="textPersonName" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/publicar_descripcion_empleos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="740"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="@string/inserte_descripcion1"
+                    android:inputType="textMultiLine|textNoSuggestions" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <AutoCompleteTextView
+                android:id="@+id/publicar_necesidad_empleos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Presione dos veces para seleccionar la necesidad con la que se precisa" />
 
-            <EditText
-                android:id="@+id/editText3"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/publicar_imagen1_empleos"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/inserteimagen" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:text="Subir imagenes" />
+
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/publicar_final_empleos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_marginTop="10dp"
+                android:text="@string/publicar_adopcion" />
 
         </LinearLayout>
     </ScrollView>
