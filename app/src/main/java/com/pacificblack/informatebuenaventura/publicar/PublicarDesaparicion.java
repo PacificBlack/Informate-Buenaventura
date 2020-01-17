@@ -5,19 +5,42 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.view.textclassifier.TextLinks;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
+
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PublicarDesaparicion extends AppCompatActivity {
 
@@ -43,11 +66,18 @@ public class PublicarDesaparicion extends AppCompatActivity {
     String estado[] = new String[]{"Desaparecido","Encontrado"};
     String quees[]  = new String[]{"Animal","Persona","Dococumento","Vehiculo","Otro objeto"};
 
+    StringRequest stringRequest_desaparicion;
+
+    Bitmap bitmap_desaparicion;
+
 
     private static final int IMAGE_PICK_CODE1 = 1000;
     private static final int IMAGE_PICK_CODE2 = 1002;
 
     private static final int PERMISSON_CODE = 1001;
+
+
+
 
 
 
@@ -74,6 +104,17 @@ public class PublicarDesaparicion extends AppCompatActivity {
         estado_publicar_desaparicion = findViewById(R.id.publicar_estadodes_desapariciom);
         ArrayAdapter<String>esta = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,estado);
         estado_publicar_desaparicion.setAdapter(esta);
+
+
+
+
+
+
+
+
+
+
+
 
         queseperdio_publicar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +200,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 ! validardescripcion2()|
                 ! validarqueseperdio()|
                 ! validarestado()){return;}
+                
+                
+                cargarWebService_desaparicion();
 
 
             }
@@ -167,18 +211,120 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     }
 
+    private void cargarWebService_desaparicion() {
+
+        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+
+
+        stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (response.trim().equalsIgnoreCase("registra")){
+                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
+                String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String diadesainput = diadesa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
+                String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
+                String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
+                String imagen1 = convertirImagen1(bitmap_desaparicion);
+                String imagen2 = convertirImagen2(bitmap_desaparicion);
+
+                String Keyimagen1= "foto1";
+                String Keyimagen2= "foto2";
+                String Keyimagen3= "foto3";
+
+                Log.i("Mostrar",imagen1);
+                Log.i("Mostrar",imagen2);
 
 
 
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("titulo_desaparecidos",tituloinput);
+                parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
+                parametros.put("fechapublicacion_desaparecidos","2016/10/10");
+                parametros.put("recompensa_desaparecidos",recompensainput);
+                parametros.put("vistas_desaparecidos","0");
+                parametros.put("fechadesaparecido_desaparecidos","2016/10/10");
+                parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
+                parametros.put("descripcion1_desaparecidos",descripcion1input);
+                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("que_desaparecidos",queseperdioinput);
+                parametros.put("estado_desaparecidos",estadoinput);
+                parametros.put("imagen1_desaparecidos",imagen1);
+                parametros.put("imagen2_desaparecidos",imagen2);
+                parametros.put("imagen3_desaparecidos",imagen1);
 
 
+
+                return parametros;
+            }
+        };
+
+       RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        request_desaparicion.add(stringRequest_desaparicion);
+
+    }
+
+    private String convertirImagen1(Bitmap bmp) {
+
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG,100,array);
+
+        byte[] imagenByte = array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+
+        return imagenString;
+    }
+    private String convertirImagen2(Bitmap bmp2) {
+
+
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        bmp2.compress(Bitmap.CompressFormat.JPEG,100,array);
+
+        byte[] imagenByte = array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+
+        return imagenString;
+    }
 
 
     public void seleccionarimagen1() {
 
         //intent para seleccionar imagen
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
+        intent.setType("image/");
         startActivityForResult(intent,IMAGE_PICK_CODE1);
 
     }
@@ -186,7 +332,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         //intent para seleccionar imagen
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
+        intent.setType("image/");
         startActivityForResult(intent,IMAGE_PICK_CODE2);
 
     }
@@ -317,9 +463,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     }
     private boolean validarqueseperdio() {
-        String queseperdioinput = queseperdio_publicar_desaparicion.getAdapter().toString().trim();
+        String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
 
-        if (queseperdioinput.isEmpty()) {
+        if (queseperdioinput.toString().isEmpty()) {
             queseperdio_publicar_desaparicion.setError("" + R.string.error_descripcioncorta);
             return false;
         } else if (queseperdioinput.length() > 15) {
@@ -332,14 +478,14 @@ public class PublicarDesaparicion extends AppCompatActivity {
         }
     }
     private boolean validarestado(){
-        String estadoinput = estado_publicar_desaparicion.getAdapter().toString().trim();
+        String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
 
         if (estadoinput.isEmpty()) {
-            estado_publicar_desaparicion.setError("" + R.string.error_descripcioncorta);
+            estado_publicar_desaparicion.setError("" + estadoinput);
             return false;
         } else if (estadoinput.length() > 15) {
 
-            estado_publicar_desaparicion.setError("" + R.string.supera);
+            estado_publicar_desaparicion.setError("" + estadoinput);
             return false;
         } else {
             estado_publicar_desaparicion.setError(null);
@@ -381,19 +527,31 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE1){
 
-            imagen2_publicar_desaparicion.setImageURI(data.getData());
+            Uri patch1 = data.getData();
+
+            try {
+                bitmap_desaparicion = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(),patch1);
+                imagen1_publicar_desaparicion.setImageBitmap(bitmap_desaparicion);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE2){
-
-            imagen2_publicar_desaparicion.setImageURI(data.getData());
+            Uri patch2 = data.getData();
+            imagen2_publicar_desaparicion.setImageURI(patch2);
+            try {
+                bitmap_desaparicion = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(),patch2);
+                imagen2_publicar_desaparicion.setImageBitmap(bitmap_desaparicion);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
 
 
     }
-
 
 
 }
