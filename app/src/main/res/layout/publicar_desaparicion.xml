@@ -165,6 +165,14 @@
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/inserteimagen" />
+                    <ImageView
+                        android:id="@+id/publicar_imagen3_desaparicion"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/inserteimagen" />
 
                 </LinearLayout>
             </HorizontalScrollView>

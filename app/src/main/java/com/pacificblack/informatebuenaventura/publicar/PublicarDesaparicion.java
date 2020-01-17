@@ -45,7 +45,8 @@ import java.util.Map;
 public class PublicarDesaparicion extends AppCompatActivity {
 
     ImageView imagen1_publicar_desaparicion,
-            imagen2_publicar_desaparicion;
+            imagen2_publicar_desaparicion,
+            imagen3_publicar_desaparicion;
 
     TextInputLayout
             titulo_publicar_desaparicion,
@@ -73,6 +74,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     private static final int IMAGE_PICK_CODE1 = 1000;
     private static final int IMAGE_PICK_CODE2 = 1002;
+    private static final int IMAGE_PICK_CODE3 = 1003;
 
     private static final int PERMISSON_CODE = 1001;
 
@@ -133,6 +135,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         imagen1_publicar_desaparicion = findViewById(R.id.publicar_imagen1_desaparicion);
         imagen2_publicar_desaparicion = findViewById(R.id.publicar_imagen2_desaparicion);
+        imagen3_publicar_desaparicion = findViewById(R.id.publicar_imagen3_desaparicion);
 
 
 
@@ -178,6 +181,30 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 }else{
                     //para android masmelos
                     seleccionarimagen2();
+                }
+            }
+        });
+
+
+
+        imagen3_publicar_desaparicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+
+                        //permiso denegado
+                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                        //Mostrar emergente del menu
+                        requestPermissions(permisos,PERMISSON_CODE);
+                    }else {
+                        //permiso ya obtenido
+                        seleccionarimagen3();
+                    }
+
+                }else{
+                    //para android masmelos
+                    seleccionarimagen3();
                 }
             }
         });
@@ -260,10 +287,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
                 String imagen1 = convertirImagen1(bitmap_desaparicion);
                 String imagen2 = convertirImagen2(bitmap_desaparicion);
+                String imagen3 = convertirImagen3(bitmap_desaparicion);
 
-                String Keyimagen1= "foto1";
-                String Keyimagen2= "foto2";
-                String Keyimagen3= "foto3";
+
 
                 Log.i("Mostrar",imagen1);
                 Log.i("Mostrar",imagen2);
@@ -273,7 +299,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("titulo_desaparecidos",tituloinput);
                 parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
-                parametros.put("fechapublicacion_desaparecidos","2016/10/10");
+                //parametros.put("fechapublicacion_desaparecidos","2016/10/10");
                 parametros.put("recompensa_desaparecidos",recompensainput);
                 parametros.put("vistas_desaparecidos","0");
                 parametros.put("fechadesaparecido_desaparecidos","2016/10/10");
@@ -284,7 +310,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("imagen1_desaparecidos",imagen1);
                 parametros.put("imagen2_desaparecidos",imagen2);
-                parametros.put("imagen3_desaparecidos",imagen1);
+                parametros.put("imagen3_desaparecidos",imagen3);
 
 
 
@@ -319,6 +345,18 @@ public class PublicarDesaparicion extends AppCompatActivity {
         return imagenString;
     }
 
+    private String convertirImagen3(Bitmap bmp3) {
+
+
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        bmp3.compress(Bitmap.CompressFormat.JPEG,100,array);
+
+        byte[] imagenByte = array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+
+        return imagenString;
+    }
+
 
     public void seleccionarimagen1() {
 
@@ -334,6 +372,15 @@ public class PublicarDesaparicion extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/");
         startActivityForResult(intent,IMAGE_PICK_CODE2);
+
+    }
+
+    public void seleccionarimagen3() {
+
+        //intent para seleccionar imagen
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/");
+        startActivityForResult(intent,IMAGE_PICK_CODE3);
 
     }
 
@@ -543,6 +590,18 @@ public class PublicarDesaparicion extends AppCompatActivity {
             try {
                 bitmap_desaparicion = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(),patch2);
                 imagen2_publicar_desaparicion.setImageBitmap(bitmap_desaparicion);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE3){
+            Uri patch3 = data.getData();
+            imagen3_publicar_desaparicion.setImageURI(patch3);
+            try {
+                bitmap_desaparicion = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(),patch3);
+                imagen3_publicar_desaparicion.setImageBitmap(bitmap_desaparicion);
             } catch (IOException e) {
                 e.printStackTrace();
             }
