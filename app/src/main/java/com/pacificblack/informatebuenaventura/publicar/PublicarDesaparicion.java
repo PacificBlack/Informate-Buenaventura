@@ -35,7 +35,6 @@ import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -45,15 +44,20 @@ import java.util.Map;
 
 public class PublicarDesaparicion extends AppCompatActivity {
 
+
+    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_desaparicion;
     Uri imagenesdesaparicionUri;
     List<Uri> listaimagenes_desaparicion =  new ArrayList<>();
     List<String> listaBase64_desaparicion = new ArrayList<>();
     GridViewAdapter baseAdapter;
+    List<String> cadena = new ArrayList<>();
+    List<String> nombre = new ArrayList<>();
+    StringRequest stringRequest_desaparicion;
+    private static final int IMAGE_PICK_CODE = 100;
+    private static final int PERMISSON_CODE = 1001;
 
-
-    String [] cadena = new String[3];
-    String [] nombre = new String[3];
+    //TODO: Aqui finaliza
 
 
 
@@ -75,31 +79,11 @@ public class PublicarDesaparicion extends AppCompatActivity {
     String estado[] = new String[]{"Desaparecido","Encontrado"};
     String quees[]  = new String[]{"Animal","Persona","Dococumento","Vehiculo","Otro objeto"};
 
-    StringRequest stringRequest_desaparicion;
-
-    Bitmap bitmap_desaparicion;
-
-
-
-
-    private static final int IMAGE_PICK_CODE = 100;
-
-
-    private static final int PERMISSON_CODE = 1001;
-
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_desaparicion);
-
-
-
 
         titulo_publicar_desaparicion = findViewById(R.id.publicar_titulo_desaparicion);
         descripcioncorta_publicar_desaparicion= findViewById(R.id.publicar_descripcioncorta_desaparicion);
@@ -109,9 +93,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
         descripcion1_publicar_desaparicion = findViewById(R.id.publicar_descripcion_desaparicion);
         descripcion2_publicar_desaparicion = findViewById(R.id.publicar_descripcionextra_desaparicion);
 
+
+
+        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
+
         gvImagenes_desaparicion = findViewById(R.id.grid_desaparicion);
         subirimagenes = findViewById(R.id.subir_imagenes_desaparicion);
-
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,8 +121,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
             }
         });
 
-
-
+        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
         queseperdio_publicar_desaparicion = findViewById(R.id.publicar_quese_desapariciom);
         ArrayAdapter<String>adapterque = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,quees);
@@ -143,15 +129,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
         estado_publicar_desaparicion = findViewById(R.id.publicar_estadodes_desapariciom);
         ArrayAdapter<String>esta = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,estado);
         estado_publicar_desaparicion.setAdapter(esta);
-
-
-
-
-
-
-
-
-
 
 
 
@@ -173,7 +150,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         publicar_final_desaparicion = findViewById(R.id.publicar_final_desaparicion);
 
-
         publicar_final_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +164,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 ! validarqueseperdio()|
                 ! validarestado()){return;}
                 
-                
+                //TODO: Aqui se hace el envio a la base de datos
+
                 Subirimagen_desaparicion();
 
             }
@@ -196,155 +173,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
 
     }
-
-    private void cargarWebService_desaparicion() {
-
-        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
-
-
-        stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Funciona : ",response);
-
-                }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
-                }
-
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
-                    }
-                }){
-            @SuppressLint("LongLogTag")
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
-                String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
-                String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
-                String diadesainput = diadesa_publicar_desaparicion.getEditText().getText().toString().trim();
-                String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
-                String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
-                String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
-
-
-                for (int h = 0; h<nombre.length;h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre[h]);
-
-                    Log.i("Mostrar**********************************************************************",cadena[h]);
-
-                }
-
-
-
-                Map<String,String> parametros = new HashMap<>();
-                parametros.put("titulo_desaparecidos",tituloinput);
-                parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
-                //parametros.put("fechapublicacion_desaparecidos","2016/10/10");
-                parametros.put("recompensa_desaparecidos",recompensainput);
-                parametros.put("vistas_desaparecidos","0");
-                parametros.put("fechadesaparecido_desaparecidos","2016/10/10");
-                parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
-                parametros.put("descripcion1_desaparecidos",descripcion1input);
-                parametros.put("descripcion2_desaparecidos",descripcion2input);
-                parametros.put("que_desaparecidos",queseperdioinput);
-                parametros.put("estado_desaparecidos",estadoinput);
-
-                for (int h = 0; h<nombre.length;h++){
-
-                    parametros.put(nombre[h],cadena[h]);
-                }
-
-
-
-
-                return parametros;
-            }
-        };
-
-       RequestQueue request_desaparicion = Volley.newRequestQueue(this);
-        request_desaparicion.add(stringRequest_desaparicion);
-
-    }
-
-    public void Subirimagen_desaparicion(){
-
-
-        listaBase64_desaparicion.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
-        for (int i = 0; i < listaimagenes_desaparicion.size(); i++){
-
-            try {
-
-                InputStream is = getContentResolver().openInputStream(listaimagenes_desaparicion.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-//Solucionar para poder guardar
-
-                nombre[i] = "imagen_desaparecidos"+i;
-
-                cadena[i] = convertirUriEnBase64(bitmap);
-
-                bitmap.recycle();
-
-
-            }catch (IOException e){
-
-            }
-
-        }
-        cargarWebService_desaparicion();
-
-    }
-
-
-
-    public String convertirUriEnBase64(Bitmap bmp){
-        ByteArrayOutputStream array = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
-        byte[] imagenByte = array.toByteArray();
-        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
-        return imagenString;
-    }
-
-
-    public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
-
-    }
-
-
-
-
-
 
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
@@ -500,8 +328,147 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
 
 
+  //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
+
+    private void cargarWebService_desaparicion() {
+
+        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
 
 
+        stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (response.trim().equalsIgnoreCase("registra")){
+                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
+                String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String diadesainput = diadesa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
+                String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
+                String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
+
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
+
+                    Log.i("Mostrar**********************************************************************",cadena.get(h));
+
+                }
+
+
+
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("titulo_desaparecidos",tituloinput);
+                parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
+                parametros.put("recompensa_desaparecidos",recompensainput);
+                parametros.put("vistas_desaparecidos","0");
+                parametros.put("fechadesaparecido_desaparecidos","2016/10/10");
+                parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
+                parametros.put("descripcion1_desaparecidos",descripcion1input);
+                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("que_desaparecidos",queseperdioinput);
+                parametros.put("estado_desaparecidos",estadoinput);
+                parametros.put("subida","pendiente");
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    parametros.put(nombre.get(h),cadena.get(h));
+                }
+
+
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        request_desaparicion.add(stringRequest_desaparicion);
+
+    }
+    public void Subirimagen_desaparicion(){
+
+
+        listaBase64_desaparicion.clear();
+        nombre.clear();
+        cadena.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
+        for (int i = 0; i < listaimagenes_desaparicion.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_desaparicion.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+//Solucionar para poder guardar
+
+                nombre.add( "imagen_desaparecidos"+i);
+
+                cadena.add(convertirUriEnBase64(bitmap));
+
+                bitmap.recycle();
+
+
+            }catch (IOException e){
+
+            }
+
+        }
+        cargarWebService_desaparicion();
+
+    }
+    public String convertirUriEnBase64(Bitmap bmp){
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG,100,array);
+
+        byte[] imagenByte = array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+
+        return imagenString;
+    }
+    public void seleccionarimagen() {
+
+        //intent para seleccionar imagen
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -522,8 +489,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         }
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
