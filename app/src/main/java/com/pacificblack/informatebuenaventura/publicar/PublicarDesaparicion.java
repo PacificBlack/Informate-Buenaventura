@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -49,6 +50,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
     List<Uri> listaimagenes_desaparicion =  new ArrayList<>();
     List<String> listaBase64_desaparicion = new ArrayList<>();
     GridViewAdapter baseAdapter;
+
+
+    String [] cadena = new String[3];
+    String [] nombre = new String[3];
+
+
 
     TextInputLayout
             titulo_publicar_desaparicion,
@@ -190,7 +197,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     }
 
-    private void cargarWebService_desaparicion(final String nombre,final String cadena) {
+    private void cargarWebService_desaparicion() {
 
         String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
 
@@ -202,7 +209,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 if (response.trim().equalsIgnoreCase("registra")){
                     Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
 
-                    Log.i("Error",response);
+                    Log.i("Funciona : ",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
@@ -225,6 +232,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
                     }
                 }){
+            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -239,10 +247,13 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
 
 
+                for (int h = 0; h<nombre.length;h++){
 
+                    Log.i("Mostrar name------------------------------------------------------------------",nombre[h]);
 
-                Log.i("Mostrar",cadena);
-                Log.i("Mostrar name",nombre);
+                    Log.i("Mostrar**********************************************************************",cadena[h]);
+
+                }
 
 
 
@@ -258,7 +269,11 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 parametros.put("descripcion2_desaparecidos",descripcion2input);
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
-                parametros.put(nombre,cadena);
+
+                for (int h = 0; h<nombre.length;h++){
+
+                    parametros.put(nombre[h],cadena[h]);
+                }
 
 
 
@@ -274,7 +289,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     public void Subirimagen_desaparicion(){
 
+
         listaBase64_desaparicion.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
         for (int i = 0; i < listaimagenes_desaparicion.size(); i++){
 
             try {
@@ -284,11 +301,10 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
 //Solucionar para poder guardar
 
-                int nom = 1;
-                String nombre = "imagen"+(nom++)+"_desaparecidos";
+                nombre[i] = "imagen_desaparecidos"+i;
 
-                String cadena = convertirUriEnBase64(bitmap);
-                cargarWebService_desaparicion(nombre,cadena);
+                cadena[i] = convertirUriEnBase64(bitmap);
+
                 bitmap.recycle();
 
 
@@ -297,6 +313,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
             }
 
         }
+        cargarWebService_desaparicion();
 
     }
 
