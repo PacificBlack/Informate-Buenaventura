@@ -91,25 +91,15 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
                 android:id="@+id/publicar_fechade_desaparicion"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="38dp"
                 android:layout_marginTop="10dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="15"
-                app:errorEnabled="true">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="Ingrese que dia se desaparecio"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:drawableRight="@android:drawable/ic_menu_my_calendar"
+                android:hint="Ingrese que dia se desaparecio"
+                android:textSize="18sp" />
 
             <AutoCompleteTextView
                 android:id="@+id/publicar_estadodes_desapariciom"

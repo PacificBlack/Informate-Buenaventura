@@ -6,12 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Picture;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -20,7 +25,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,12 +39,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
+import com.pacificblack.informatebuenaventura.MainActivity;
 import com.pacificblack.informatebuenaventura.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,10 +74,14 @@ public class PublicarDesaparicion extends AppCompatActivity {
             titulo_publicar_desaparicion,
             descripcioncorta_publicar_desaparicion,
             recompensa_publicar_desaparicion,
-            diadesa_publicar_desaparicion,
             ultimolugar_publicar_desaparicion,
             descripcion1_publicar_desaparicion,
             descripcion2_publicar_desaparicion;
+
+    TextView  diadesa_publicar_desaparicion;
+    String dia_desaparicion;
+
+    DatePickerDialog.OnDateSetListener dateSetListener;
 
     AutoCompleteTextView queseperdio_publicar_desaparicion,
             estado_publicar_desaparicion;
@@ -89,6 +102,34 @@ public class PublicarDesaparicion extends AppCompatActivity {
         descripcioncorta_publicar_desaparicion= findViewById(R.id.publicar_descripcioncorta_desaparicion);
         recompensa_publicar_desaparicion = findViewById(R.id.publicar_recompensa_desaparicion);
         diadesa_publicar_desaparicion = findViewById(R.id.publicar_fechade_desaparicion);
+        diadesa_publicar_desaparicion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Calendar cal = Calendar.getInstance();
+                int año = cal.get(Calendar.YEAR);
+                int mes = cal.get(Calendar.MONTH);
+                int dia = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(PublicarDesaparicion.this, android.R.style.Theme_Material_Dialog_MinWidth,dateSetListener,
+                        año,mes,dia);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                int mesi =month+1;
+                dia_desaparicion = year+"/"+mesi+"/"+dayOfMonth;
+
+                diadesa_publicar_desaparicion.setText(dia_desaparicion);
+
+            }
+        };
+
         ultimolugar_publicar_desaparicion = findViewById(R.id.publicar_ultimolugar_desaparicion);
         descripcion1_publicar_desaparicion = findViewById(R.id.publicar_descripcion_desaparicion);
         descripcion2_publicar_desaparicion = findViewById(R.id.publicar_descripcionextra_desaparicion);
@@ -154,10 +195,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo()|
-                !validardescripcioncorta()|
-                !validarrecompensa()|
-                !validardiadesa()|
+                if (!validartitulo()|      !validardescripcioncorta()|               !validarrecompensa()|       !validardiadesa()|
                 ! validarultimolugar()|
                 ! validardescripcion1()|
                 ! validardescripcion2()|
@@ -226,21 +264,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
         }
     }
     private boolean validardiadesa(){
-        String diadesainput = diadesa_publicar_desaparicion.getEditText().getText().toString().trim();
 
-        if (diadesainput.isEmpty()){
+        if (dia_desaparicion.isEmpty()){
             diadesa_publicar_desaparicion.setError(""+R.string.error_descripcioncorta);
             return false;
         }
-        else if(diadesainput.length()>15){
-
-            diadesa_publicar_desaparicion.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            diadesa_publicar_desaparicion.setError(null);
-            return true;
-        }
+          return true;
     }
     private boolean validarultimolugar(){
         String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
@@ -372,7 +401,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
                 String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
-                String diadesainput = diadesa_publicar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
@@ -395,13 +423,14 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
                 parametros.put("recompensa_desaparecidos",recompensainput);
                 parametros.put("vistas_desaparecidos","0");
-                parametros.put("fechadesaparecido_desaparecidos","2016/10/10");
+                parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
                 parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
                 parametros.put("descripcion1_desaparecidos",descripcion1input);
                 parametros.put("descripcion2_desaparecidos",descripcion2input);
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");
+                parametros.put("publicacion","Desaparicion");
 
                 for (int h = 0; h<nombre.size();h++){
 

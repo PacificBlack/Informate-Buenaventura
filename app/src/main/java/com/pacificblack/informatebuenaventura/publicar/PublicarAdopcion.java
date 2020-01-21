@@ -4,41 +4,69 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.GridView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputLayout;
+import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PublicarAdopcion extends AppCompatActivity {
 
-    ImageView imagen1_publicar_adopcion,imagen2_publicar_adopcion,imagen3_publicar_adopcion,imagen4_publicar_adopcion;
-    TextInputLayout titulo_publicar_adopcion,descripcioncorta_publicar_adopcion,descripcion1_publicar_adopcion,descripcion2_publicar_adopcion;
+    TextInputLayout titulo_publicar_adopcion,
+            descripcioncorta_publicar_adopcion,
+            descripcion1_publicar_adopcion,
+            descripcion2_publicar_adopcion;
 
-    Button publicarfinal_adopcion;
+    Button publicarfinal_adopcion,subirimagenes;
 
-    private static final int IMAGE_PICK_CODE = 1000;
-    private static final int IMAGE_PICK_CODE2 = 1002;
-    private static final int IMAGE_PICK_CODE3 = 1003;
-    private static final int IMAGE_PICK_CODE4 = 1004;
 
+    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
+    GridView gvImagenes_adopcion;
+    Uri imagenesadopcionUri;
+    List<Uri> listaimagenes_adopcion =  new ArrayList<>();
+    List<String> listaBase64_adopcion = new ArrayList<>();
+    GridViewAdapter baseAdapter;
+    List<String> cadena = new ArrayList<>();
+    List<String> nombre = new ArrayList<>();
+    StringRequest stringRequest_adopcion;
+    private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
+
+    //TODO: Aqui finaliza
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_adopcion);
-
-        imagen1_publicar_adopcion = findViewById(R.id.publicar_imagen1_adopcion);
-        imagen2_publicar_adopcion = findViewById(R.id.publicar_imagen2_adopcion);
-        imagen3_publicar_adopcion = findViewById(R.id.publicar_imagen3_adopcion);
-        imagen4_publicar_adopcion = findViewById(R.id.publicar_imagen4_adopcion);
-
 
         titulo_publicar_adopcion = findViewById(R.id.publicar_titulo_adopcion);
         descripcioncorta_publicar_adopcion = findViewById(R.id.publicar_descripcioncorta_adopcion);
@@ -56,28 +84,22 @@ public class PublicarAdopcion extends AppCompatActivity {
                     return;
                 }
 
-                String resultado = "Titulo: "+titulo_publicar_adopcion.getEditText().getText().toString();
-                resultado += "\n";
-                resultado += "Corta: "+descripcioncorta_publicar_adopcion.getEditText().getText().toString();
-                resultado += "\n";
-                resultado += "Total la 1: "+descripcion1_publicar_adopcion.getEditText().getText().toString();
-                resultado += "\n";
-                resultado += "Total la 2: "+descripcion2_publicar_adopcion.getEditText().getText().toString();
+                //TODO: Aqui se hace el envio a la base de datos
 
-
-                Toast.makeText(PublicarAdopcion.this, resultado ,Toast.LENGTH_LONG).show();
-
+                Subirimagen_adopcion();
 
             }
         });
 
 
 
+        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
-        imagen1_publicar_adopcion.setOnClickListener(new View.OnClickListener() {
+        gvImagenes_adopcion = findViewById(R.id.grid_adopcion);
+        subirimagenes = findViewById(R.id.subir_imagenes_adopcion);
+        subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
 
@@ -97,81 +119,10 @@ public class PublicarAdopcion extends AppCompatActivity {
             }
         });
 
-
-
-        imagen2_publicar_adopcion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
-                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
-                        requestPermissions(permisos,PERMISSON_CODE);
-                    }else {
-                        //permiso ya obtenido
-                        seleccionarimagen2();
-                    }
-
-                }else{
-                    //para android masmelos
-                    seleccionarimagen2();
-                }
-            }
-        });
-
-
-        imagen3_publicar_adopcion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
-                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
-                        requestPermissions(permisos,PERMISSON_CODE);
-                    }else {
-                        //permiso ya obtenido
-                        seleccionarimagen3();
-                    }
-
-                }else{
-                    //para android masmelos
-                    seleccionarimagen3();
-                }
-            }
-        });
+        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
 
 
-
-
-        imagen4_publicar_adopcion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
-                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
-                        requestPermissions(permisos,PERMISSON_CODE);
-                    }else {
-                        //permiso ya obtenido
-                        seleccionarimagen4();
-                    }
-
-                }else{
-                    //para android masmelos
-                    seleccionarimagen4();
-                }
-            }
-        });
 
 
 
@@ -195,8 +146,6 @@ public class PublicarAdopcion extends AppCompatActivity {
             return true;
         }
     }
-
-
     private boolean validardescripcioncorta(){
 
         String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
@@ -216,10 +165,6 @@ public class PublicarAdopcion extends AppCompatActivity {
         }
 
     }
-
-
-
-
     private boolean validardescripcion1(){
         String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
 
@@ -258,17 +203,150 @@ public class PublicarAdopcion extends AppCompatActivity {
 
 
 
+
+    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
+
+    private void cargarWebService_adopcion() {
+
+        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+
+
+        stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (response.trim().equalsIgnoreCase("registra")){
+                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
+
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
+
+                    Log.i("Mostrar**********************************************************************",cadena.get(h));
+
+                }
+
+
+
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    parametros.put(nombre.get(h),cadena.get(h));
+                }
+
+
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        request_adopcion.add(stringRequest_adopcion);
+
+    }
+    public void Subirimagen_adopcion(){
+
+
+        listaBase64_adopcion.clear();
+        nombre.clear();
+        cadena.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
+        for (int i = 0; i < listaimagenes_adopcion.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+//Solucionar para poder guardar
+
+                //TODO: aqui se debe modificar para que la imagen guarde good
+
+                nombre.add( "imagen_adopcion"+i);
+
+                cadena.add(convertirUriEnBase64(bitmap));
+
+                bitmap.recycle();
+
+
+            }catch (IOException e){
+
+            }
+
+        }
+        cargarWebService_adopcion();
+
+    }
+    public String convertirUriEnBase64(Bitmap bmp){
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG,100,array);
+
+        byte[] imagenByte = array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+
+        return imagenString;
+    }
+    public void seleccionarimagen() {
+
+        //intent para seleccionar imagen
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                  //Permiso autorizado
+                    //Permiso autorizado
                     seleccionarimagen();
-                    seleccionarimagen2();
-                    seleccionarimagen3();
-                    seleccionarimagen4();
 
                 }
                 else{
@@ -281,67 +359,39 @@ public class PublicarAdopcion extends AppCompatActivity {
         }
     }
 
-    public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,IMAGE_PICK_CODE);
-
-    }
-
-    public void seleccionarimagen2() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,IMAGE_PICK_CODE2);
-
-    }
-
-    public void seleccionarimagen3() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,IMAGE_PICK_CODE3);
-
-    }
-    public void seleccionarimagen4() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent,IMAGE_PICK_CODE4);
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+        ClipData clipData = data.getClipData();
+
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            imagen1_publicar_adopcion.setImageURI(data.getData());
+
+            if (clipData == null){
+                imagenesadopcionUri = data.getData();
+                listaimagenes_adopcion.add(imagenesadopcionUri);
+            }else {
+                for (int i = 0; i< 4; i++){
+                    listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
+                }
+            }
+
+
+
 
         }
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE2){
 
-            imagen2_publicar_adopcion.setImageURI(data.getData());
+        baseAdapter = new GridViewAdapter(PublicarAdopcion.this,listaimagenes_adopcion);
+        gvImagenes_adopcion.setAdapter(baseAdapter);
 
-        }
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE3){
-
-            imagen3_publicar_adopcion.setImageURI(data.getData());
-
-        }
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE4){
-
-            imagen4_publicar_adopcion.setImageURI(data.getData());
-
-        }
 
 
     }
+
+
+
+
 }
 
