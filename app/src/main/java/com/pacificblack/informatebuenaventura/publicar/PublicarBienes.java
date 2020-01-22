@@ -5,24 +5,44 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputLayout;
+import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PublicarBienes extends AppCompatActivity {
 
-    ImageView imagen1_publicar_bienes,
-            imagen2_publicar_bienes,
-            imagen3_publicar_bienes,
-            imagen4_publicar_bienes;
 
     TextInputLayout titulo_publicar_bienes,
             descripcioncorta_publicar_bienes,
@@ -30,25 +50,28 @@ public class PublicarBienes extends AppCompatActivity {
             descripcion2_publicar_bienes,
             precio_publicar_bienes;
 
-    Button publicarfinal_bienes;
+    Button publicarfinal_bienes,subirimagenes;
 
-    private static final int IMAGE_PICK_CODE = 1000;
-    private static final int IMAGE_PICK_CODE2 = 1002;
-    private static final int IMAGE_PICK_CODE3 = 1003;
-    private static final int IMAGE_PICK_CODE4 = 1004;
-
+    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
+    GridView gvImagenes_bienes;
+    Uri imagenesbienesUri;
+    List<Uri> listaimagenes_bienes =  new ArrayList<>();
+    List<String> listaBase64_bienes = new ArrayList<>();
+    GridViewAdapter baseAdapter;
+    List<String> cadena = new ArrayList<>();
+    List<String> nombre = new ArrayList<>();
+    StringRequest stringRequest_bienes;
+    private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
+
+    //TODO: Aqui finaliza
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_bienes);
-
-        imagen1_publicar_bienes = findViewById(R.id.publicar_imagen1_bienes);
-        imagen2_publicar_bienes = findViewById(R.id.publicar_imagen2_bienes);
-        imagen3_publicar_bienes = findViewById(R.id.publicar_imagen3_bienes);
-        imagen4_publicar_bienes = findViewById(R.id.publicar_imagen4_bienes);
-
 
         titulo_publicar_bienes = findViewById(R.id.publicar_titulo_bienes);
         descripcioncorta_publicar_bienes = findViewById(R.id.publicar_descripcioncorta_bienes);
@@ -67,206 +90,43 @@ public class PublicarBienes extends AppCompatActivity {
                     return;
                 }
 
-                String resultado = "Titulo: "+titulo_publicar_bienes.getEditText().getText().toString();
-                resultado += "\n";
-                resultado += "Corta: "+descripcioncorta_publicar_bienes.getEditText().getText().toString();
-                resultado += "\n";
-                resultado += "Total la 1: "+descripcion1_publicar_bienes.getEditText().getText().toString();
-                resultado += "\n";
-                resultado += "Total la 2: "+descripcion2_publicar_bienes.getEditText().getText().toString();
-
-
-                Toast.makeText(PublicarBienes.this, resultado ,Toast.LENGTH_LONG).show();
+                Subirimagen_bienes();
 
 
             }
         });
 
+        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
-        imagen1_publicar_bienes.setOnClickListener(new View.OnClickListener() {
+        gvImagenes_bienes = findViewById(R.id.grid_bienes);
+        subirimagenes = findViewById(R.id.subir_imagenes_bienes);
+        subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
 
                         //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
                         //Mostrar emergente del menu
-                        requestPermissions(permisos, PERMISSON_CODE);
-                    } else {
+                        requestPermissions(permisos,PERMISSON_CODE);
+                    }else {
                         //permiso ya obtenido
                         seleccionarimagen();
                     }
 
-                } else {
+                }else{
                     //para android masmelos
                     seleccionarimagen();
                 }
             }
         });
 
-
-        imagen2_publicar_bienes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-
-                        //permiso denegado
-                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
-                        requestPermissions(permisos, PERMISSON_CODE);
-                    } else {
-                        //permiso ya obtenido
-                        seleccionarimagen2();
-                    }
-
-                } else {
-                    //para android masmelos
-                    seleccionarimagen2();
-                }
-            }
-        });
-
-
-        imagen3_publicar_bienes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-
-                        //permiso denegado
-                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
-                        requestPermissions(permisos, PERMISSON_CODE);
-                    } else {
-                        //permiso ya obtenido
-                        seleccionarimagen3();
-                    }
-
-                } else {
-                    //para android masmelos
-                    seleccionarimagen3();
-                }
-            }
-        });
-
-
-        imagen4_publicar_bienes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-
-                        //permiso denegado
-                        String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
-                        requestPermissions(permisos, PERMISSON_CODE);
-                    } else {
-                        //permiso ya obtenido
-                        seleccionarimagen4();
-                    }
-
-                } else {
-                    //para android masmelos
-                    seleccionarimagen4();
-                }
-            }
-        });
+        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
 
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSON_CODE: {
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permiso autorizado
-                    seleccionarimagen();
-                    seleccionarimagen2();
-                    seleccionarimagen3();
-                    seleccionarimagen4();
-
-                } else {
-                    //Permiso denegado
-                    Toast.makeText(PublicarBienes.this, "Debe otorgar permisos de almacenamiento", Toast.LENGTH_LONG);
-
-                }
-            }
-
-        }
-    }
-
-    public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE);
-
-    }
-
-    public void seleccionarimagen2() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE2);
-
-    }
-
-    public void seleccionarimagen3() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE3);
-
-    }
-
-    public void seleccionarimagen4() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE4);
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-
-            imagen1_publicar_bienes.setImageURI(data.getData());
-
-        }
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE2) {
-
-            imagen2_publicar_bienes.setImageURI(data.getData());
-
-        }
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE3) {
-
-            imagen3_publicar_bienes.setImageURI(data.getData());
-
-        }
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE4) {
-
-            imagen4_publicar_bienes.setImageURI(data.getData());
-
-        }
-
-
-    }
 
 
     private boolean validartitulo() {
@@ -284,8 +144,6 @@ public class PublicarBienes extends AppCompatActivity {
             return true;
         }
     }
-
-
     private boolean validardescripcioncorta() {
 
         String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
@@ -303,8 +161,6 @@ public class PublicarBienes extends AppCompatActivity {
         }
 
     }
-
-
     private boolean validardescripcion1() {
         String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
 
@@ -320,7 +176,6 @@ public class PublicarBienes extends AppCompatActivity {
             return true;
         }
     }
-
     private boolean validardescripcion2() {
 
         String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
@@ -339,9 +194,6 @@ public class PublicarBienes extends AppCompatActivity {
 
         }
     }
-
-
-
     private boolean validarprecio() {
 
         String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
@@ -360,5 +212,197 @@ public class PublicarBienes extends AppCompatActivity {
 
         }
     }
+
+
+
+    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
+
+    private void cargarWebService_bienes() {
+
+        String url_bienes = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+
+
+        stringRequest_bienes= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (response.trim().equalsIgnoreCase("registra")){
+                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
+
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
+
+                    Log.i("Mostrar**********************************************************************",cadena.get(h));
+
+                }
+
+
+
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+
+
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    parametros.put(nombre.get(h),cadena.get(h));
+                }
+
+
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes = Volley.newRequestQueue(this);
+        request_bienes.add(stringRequest_bienes);
+
+    }
+    public void Subirimagen_bienes(){
+
+
+        listaBase64_bienes.clear();
+        nombre.clear();
+        cadena.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
+        for (int i = 0; i < listaimagenes_bienes.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+//Solucionar para poder guardar
+
+                nombre.add( "imagen_bienes"+i);
+
+                cadena.add(convertirUriEnBase64(bitmap));
+
+                bitmap.recycle();
+
+
+            }catch (IOException e){
+
+            }
+
+        }
+        cargarWebService_bienes();
+
+    }
+    public String convertirUriEnBase64(Bitmap bmp){
+        ByteArrayOutputStream array = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG,100,array);
+
+        byte[] imagenByte = array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+
+        return imagenString;
+    }
+    public void seleccionarimagen() {
+
+        //intent para seleccionar imagen
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case PERMISSON_CODE: {
+
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    //Permiso autorizado
+                    seleccionarimagen();
+
+                }
+                else{
+                    //Permiso denegado
+                    Toast.makeText(PublicarBienes.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
+
+                }
+            }
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        ClipData clipData = data.getClipData();
+
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
+
+
+            if (clipData == null){
+                imagenesbienesUri = data.getData();
+                listaimagenes_bienes.add(imagenesbienesUri);
+            }else {
+                for (int i = 0; i< 4; i++){
+                    listaimagenes_bienes.add(clipData.getItemAt(i).getUri());
+                }
+            }
+
+
+
+
+        }
+
+        baseAdapter = new GridViewAdapter(PublicarBienes.this,listaimagenes_bienes);
+        gvImagenes_bienes.setAdapter(baseAdapter);
+
+
+
+    }
+
+
 
 }
