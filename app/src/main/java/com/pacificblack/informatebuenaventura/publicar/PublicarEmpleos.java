@@ -90,7 +90,7 @@ public class PublicarEmpleos extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo() | !validardescripcion() | !validarnececidad()) {
+                if (!validartitulo() | !validardescripcion() | !validarnececidad() | !validarfoto()) {
                     return;
                 }
 
@@ -175,7 +175,7 @@ public class PublicarEmpleos extends AppCompatActivity {
         }
     }
     private boolean validarnececidad(){
-        String necesidadinput = necesidad_publicar_empleos.getAdapter().toString().trim();
+        String necesidadinput = necesidad_publicar_empleos.getText().toString().trim();
 
         if (necesidadinput.isEmpty()) {
             necesidad_publicar_empleos.setError("" + R.string.error_descripcioncorta);
@@ -188,6 +188,20 @@ public class PublicarEmpleos extends AppCompatActivity {
             necesidad_publicar_empleos.setError(null);
             return true;
         }
+    }
+    private boolean validarfoto(){
+
+        if (listaimagenes_empleos.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar como minimo una foto",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        else if (listaimagenes_empleos.size() > 1){
+            Toast.makeText(getApplicationContext(),"Solo se agregara una imagen",Toast.LENGTH_LONG).show();
+            return true;
+        }else {
+            return true;}
+
     }
 
 
@@ -208,7 +222,9 @@ public class PublicarEmpleos extends AppCompatActivity {
                     Log.i("Funciona : ",response);
 
                 }else {
+
                     Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
 
                     Log.i("Error",response);
 
@@ -234,7 +250,7 @@ public class PublicarEmpleos extends AppCompatActivity {
 
                 String tituloinput = titulo_publicar_empleos.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_empleos.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_publicar_empleos.getAdapter().toString().trim();
+                String necesidadinput = necesidad_publicar_empleos.getText().toString().trim();
 
 
                 for (int h = 0; h<nombre.size();h++){
