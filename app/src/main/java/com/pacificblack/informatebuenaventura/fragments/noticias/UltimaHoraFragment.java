@@ -55,7 +55,7 @@ public class UltimaHoraFragment extends Fragment {
 
         listaUltimaHora.add(new UltimaHora("Se murio don perenciano ayer",
                 "aosmvsiduvdivnmvlsdoidfvmclxzvofv",
-                "Hoy",123));
+                "Hoy",R.drawable.imagencita,R.drawable.imagencita,R.drawable.imagencita,123));
 
     }
 
