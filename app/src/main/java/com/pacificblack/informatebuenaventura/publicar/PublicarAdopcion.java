@@ -80,7 +80,7 @@ public class PublicarAdopcion extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2()){
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){
                     return;
                 }
 
@@ -199,6 +199,28 @@ public class PublicarAdopcion extends AppCompatActivity {
             descripcion2_publicar_adopcion.setError(null);
             return true;
         }
+    }
+    private boolean validarfoto(){
+
+        if (listaimagenes_adopcion.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        else if (listaimagenes_adopcion.size() > 4){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        else if (listaimagenes_adopcion.size() < 4){
+            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_adopcion.size()+"imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+
+        else {
+            return true;}
+
     }
 
 

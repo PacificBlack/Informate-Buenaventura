@@ -171,8 +171,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
         ArrayAdapter<String>esta = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,estado);
         estado_publicar_desaparicion.setAdapter(esta);
 
-
-
         queseperdio_publicar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,9 +186,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         });
 
 
-
         publicar_final_desaparicion = findViewById(R.id.publicar_final_desaparicion);
-
         publicar_final_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,8 +196,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 ! validardescripcion1()|
                 ! validardescripcion2()|
                 ! validarqueseperdio()|
-                ! validarestado()){return;}
-                
+                ! validarestado()|
+                ! validarfoto()){return;}
+
                 //TODO: Aqui se hace el envio a la base de datos
 
                 Subirimagen_desaparicion();
@@ -354,10 +351,30 @@ public class PublicarDesaparicion extends AppCompatActivity {
             return true;
         }
     }
+    private boolean validarfoto(){
 
+        if (listaimagenes_desaparicion.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar 3 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            return false;
+        }
 
+        else if (listaimagenes_desaparicion.size() > 3){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran 3 imagenes",Toast.LENGTH_LONG).show();
+            return true;
+        }
 
-  //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
+        else if (listaimagenes_desaparicion.size() < 3){
+            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_desaparicion.size()+"imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+
+        else {
+            return true;}
+
+    }
+
+    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
 
     private void cargarWebService_desaparicion() {
 
@@ -537,10 +554,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     listaimagenes_desaparicion.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
 
         baseAdapter = new GridViewAdapter(PublicarDesaparicion.this,listaimagenes_desaparicion);

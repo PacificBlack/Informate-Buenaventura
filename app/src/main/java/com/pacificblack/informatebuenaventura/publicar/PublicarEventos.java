@@ -46,7 +46,6 @@ import java.util.Map;
 
 public class PublicarEventos extends AppCompatActivity {
 
-
     //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_eventos;
     Uri imageneseventosUri;
@@ -61,9 +60,7 @@ public class PublicarEventos extends AppCompatActivity {
 
     //TODO: Aqui finaliza
 
-    TextInputLayout titulo_publicar_eventos,
-            descripcioncorta_publicar_eventos,lugar_publicar_eventos;
-
+    TextInputLayout titulo_publicar_eventos,descripcioncorta_publicar_eventos,lugar_publicar_eventos;
     Button publicarfinal_eventos,subirimagenes;
 
     @Override
@@ -76,14 +73,11 @@ public class PublicarEventos extends AppCompatActivity {
         lugar_publicar_eventos = findViewById(R.id.publicar_lugar_eventos);
         publicarfinal_eventos = findViewById(R.id.publicar_final_eventos);
 
-
-
-
         publicarfinal_eventos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo() | !validardescripcion() | !validarlugar()) {
+                if (!validartitulo() | !validardescripcion() | !validarlugar() | !validarfoto()) {
                     return;
                 }
                 Subirimagen_eventos();
@@ -91,8 +85,6 @@ public class PublicarEventos extends AppCompatActivity {
             }
 
         });
-
-
 
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
@@ -177,9 +169,20 @@ public class PublicarEventos extends AppCompatActivity {
             return true;
         }
     }
+    private boolean validarfoto(){
 
+        if (listaimagenes_eventos.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar como minimo una foto",Toast.LENGTH_LONG).show();
+            return false;
+        }
 
+        else if (listaimagenes_eventos.size() > 1){
+            Toast.makeText(getApplicationContext(),"Solo se agregara una imagen",Toast.LENGTH_LONG).show();
+            return true;
+        }else {
+            return true;}
 
+    }
 
 
 //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos

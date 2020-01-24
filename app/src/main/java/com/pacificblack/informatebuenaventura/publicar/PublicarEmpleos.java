@@ -98,15 +98,9 @@ public class PublicarEmpleos extends AppCompatActivity {
 
             }
 
-
-
-
-                                                 }
+         }
 
         );
-
-
-
 
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla

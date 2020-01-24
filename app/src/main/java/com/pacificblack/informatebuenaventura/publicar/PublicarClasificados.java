@@ -85,7 +85,7 @@ public class PublicarClasificados extends AppCompatActivity {
         publicarfinal_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2()){
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){
                     return;
                 }
 
@@ -124,8 +124,6 @@ public class PublicarClasificados extends AppCompatActivity {
 
 
     }
-
-
 
 
     private boolean validartitulo(){
@@ -199,9 +197,28 @@ public class PublicarClasificados extends AppCompatActivity {
             return true;
         }
     }
+    private boolean validarfoto(){
 
+        if (listaimagenesclasificados.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            return false;
+        }
 
+        else if (listaimagenesclasificados.size() > 4){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
+            return true;
+        }
 
+        else if (listaimagenesclasificados.size() < 4){
+            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenesclasificados.size()+"imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+
+        else {
+            return true;}
+
+    }
 
 
     //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
@@ -258,8 +275,6 @@ public class PublicarClasificados extends AppCompatActivity {
                     Log.i("Mostrar**********************************************************************",cadena.get(h));
 
                 }
-
-
 
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("titulo_clasificados",tituloinput);

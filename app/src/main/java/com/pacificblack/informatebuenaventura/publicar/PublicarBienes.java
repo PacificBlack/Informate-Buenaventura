@@ -86,7 +86,7 @@ public class PublicarBienes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarprecio()){
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarprecio() | !validarfoto()){
                     return;
                 }
 
@@ -212,6 +212,29 @@ public class PublicarBienes extends AppCompatActivity {
 
         }
     }
+    private boolean validarfoto(){
+
+        if (listaimagenes_bienes.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        else if (listaimagenes_bienes.size() > 4){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        else if (listaimagenes_bienes.size() < 4){
+            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_bienes.size()+"imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+
+        else {
+            return true;}
+
+    }
+
 
 
 

@@ -75,9 +75,6 @@ public class PublicarServicios extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_servicios);
 
-
-
-
         titulo_publicar_servicios = findViewById(R.id.publicar_titulo_servicios);
         descripcioncorta_publicar_servicios = findViewById(R.id.publicar_descripcion_servicios);
         necesidad_publicar_servicios = findViewById(R.id.publicar_necesidad_servicios);
@@ -102,9 +99,6 @@ public class PublicarServicios extends AppCompatActivity {
                 Subirimagen_servicios();
             }
         });
-
-
-
 
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
@@ -134,8 +128,6 @@ public class PublicarServicios extends AppCompatActivity {
         });
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-
 
     }
 
@@ -193,8 +185,6 @@ public class PublicarServicios extends AppCompatActivity {
             return true;
         }
     }
-
-
     private boolean validarfoto(){
 
         if (listaimagenes_servicios.size() == 0){

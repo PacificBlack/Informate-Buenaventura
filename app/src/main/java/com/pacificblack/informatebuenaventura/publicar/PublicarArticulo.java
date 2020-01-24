@@ -59,9 +59,6 @@ public class PublicarArticulo extends AppCompatActivity {
 
     //TODO: Aqui finaliza
 
-
-
-
     TextInputLayout titulo_publicar_comprayventa,
             descripcioncorta_publicar_comprayventa,
             descripcion_publicar_comprayventa,
@@ -125,7 +122,7 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 if (
                         !validartitulo() | !validardescripcioncorta()| !validardescripcion()| !validardescripcionextra()|
-                                !validarprecio()| !validarubicacion()| !validarcantidad()| ! validarcontacto()){
+                                !validarprecio()| !validarubicacion()| !validarcantidad()| ! validarcontacto() | !validarfoto()){
 
                     return;
                 }
@@ -135,10 +132,7 @@ public class PublicarArticulo extends AppCompatActivity {
             }
         });
 
-
-
     }
-
 
 
     private boolean validartitulo(){
@@ -279,8 +273,28 @@ public class PublicarArticulo extends AppCompatActivity {
             return true;
         }
     }
+    private boolean validarfoto(){
 
+        if (listaimagenes_comprayventa.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar 3 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            return false;
+        }
 
+        else if (listaimagenes_comprayventa.size() > 3){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran 3 imagenes",Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        else if (listaimagenes_comprayventa.size() < 3){
+            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_comprayventa.size()+"imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+
+        else {
+            return true;}
+
+    }
 
 
     //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
