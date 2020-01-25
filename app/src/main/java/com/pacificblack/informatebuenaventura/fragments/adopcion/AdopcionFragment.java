@@ -89,7 +89,7 @@ public class AdopcionFragment extends Fragment {
 
         listaAdopcion.add(new Adopcion("SHolaso","Este perritoasfgdsfrsfecesita de tu ayuda crack, jelpme",
                 "Domingo 12 del 2019",R.drawable.imagencita,R.drawable.imagencita,R.drawable.imagencita,R.drawable.imagencita,15,
-                "Uy mi perro lo que te diga de ese man es mentira consigalo en https://www.google.com","Sabe que mi perro, suerte le deseo"));
+                "https://www.youtube.com/watch?v=MvITnIylaQ8","Sabe que mi perro, suerte le deseo"));
 
     }
 
