@@ -1,5 +1,6 @@
 package com.pacificblack.informatebuenaventura.clases.eventos;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.toolbox.ImageRequest;
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -34,15 +37,38 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
     @Override
     public void onBindViewHolder(@NonNull EventosHolder holder, int position) {
 
-        holder.tituloeventos.setText(listaEventos.get(position).getLugar_row_eventos());
+        holder.tituloeventos.setText(listaEventos.get(position).getTitulo_row_eventos());
         holder.descripcioneventos.setText(listaEventos.get(position).getDescripcion_row_eventos());
         holder.fechapublicacioneventos.setText(listaEventos.get(position).getFechapublicacion_row_eventos());
         holder.lugareventos.setText(listaEventos.get(position).getLugar_row_eventos());
         holder.vistaeventos.setText(String.valueOf(listaEventos.get(position).getVistas_eventos()));
-        holder.imageneventos.setImageResource(listaEventos.get(position).getImagen1_eventos());
+
+       //TODO: Aqui verifico si trae la imagen o no
+
+
+        if (listaEventos.get(position).getImagen1_eventos() != null){
+
+            Picasso.get().load(listaEventos.get(position).getImagen1_eventos())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .centerInside()
+                    .resize(400,400)
+                    .into(holder.imageneventos);
+
+
+        }else{
+            holder.imageneventos.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
+
+
+        //TODO: Aqui verifico si trae la imagen o no
 
 
     }
+
+
 
     @Override
     public int getItemCount() {

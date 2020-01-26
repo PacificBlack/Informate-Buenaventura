@@ -74,7 +74,6 @@
     <string name="publicar_adopcion">Publicar Adopcion</string>
 
 
-
     <!-- Los hints que se ven de fondo -->
 
     <string name="inserte_titulo">Ingrese un titulo para su publicación</string>
@@ -93,7 +92,6 @@
     <string name="error_cantidad">Debe ingresar la cantidad disponible de articulos</string>
     <string name="error_precio">Debe ingresar el precio</string>
     <string name="error_contacto">Debe ingresar un metodo para contactarlo</string>
-
 
 
     <!-- Los mensajes de error mostrados en caso de que supere el numero de caracteres -->

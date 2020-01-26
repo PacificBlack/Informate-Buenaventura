@@ -230,7 +230,7 @@ public class PublicarEventos extends AppCompatActivity {
 
                 String tituloinput = titulo_publicar_eventos.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_eventos.getEditText().getText().toString().trim();
-                String lugarinput = lugar_publicar_eventos.getEditText().toString().trim();
+                String lugarinput = lugar_publicar_eventos.getEditText().getText().toString().trim();
 
 
                 for (int h = 0; h<nombre.size();h++){

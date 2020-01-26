@@ -17,9 +17,10 @@
             <ImageView
                 android:id="@+id/imagen_row_eventos"
                 android:layout_width="match_parent"
-                android:layout_height="309dp"
+                android:layout_height="330dp"
                 android:contentDescription="@string/imagen"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <LinearLayout
