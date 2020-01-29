@@ -7,14 +7,14 @@ public class Adopcion implements Serializable {
 
 
     private String titulo_row_adopcion,descripcion_row_adopcion,fechapublicacion_row_desaparecidos;
-    private int imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
+    private String imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
     private int vistas_adopcion;
     private String descripcion1_adopcion,descripcion2_adopcion;
 
     public Adopcion() {
     }
 
-    public Adopcion(String titulo_row_adopcion, String descripcion_row_adopcion, String fechapublicacion_row_desaparecidos, int imagen1_adopcion, int imagen2_adopcion, int imagen3_adopcion, int imagen4_adopcion, int vistas_adopcion, String descripcion1_adopcion, String descripcion2_adopcion) {
+    public Adopcion(String titulo_row_adopcion, String descripcion_row_adopcion, String fechapublicacion_row_desaparecidos, String imagen1_adopcion, String imagen2_adopcion, String imagen3_adopcion, String imagen4_adopcion, int vistas_adopcion, String descripcion1_adopcion, String descripcion2_adopcion) {
         this.titulo_row_adopcion = titulo_row_adopcion;
         this.descripcion_row_adopcion = descripcion_row_adopcion;
         this.fechapublicacion_row_desaparecidos = fechapublicacion_row_desaparecidos;
@@ -51,35 +51,35 @@ public class Adopcion implements Serializable {
         this.fechapublicacion_row_desaparecidos = fechapublicacion_row_desaparecidos;
     }
 
-    public int getImagen1_adopcion() {
+    public String getImagen1_adopcion() {
         return imagen1_adopcion;
     }
 
-    public void setImagen1_adopcion(int imagen1_adopcion) {
+    public void setImagen1_adopcion(String imagen1_adopcion) {
         this.imagen1_adopcion = imagen1_adopcion;
     }
 
-    public int getImagen2_adopcion() {
+    public String getImagen2_adopcion() {
         return imagen2_adopcion;
     }
 
-    public void setImagen2_adopcion(int imagen2_adopcion) {
+    public void setImagen2_adopcion(String imagen2_adopcion) {
         this.imagen2_adopcion = imagen2_adopcion;
     }
 
-    public int getImagen3_adopcion() {
+    public String getImagen3_adopcion() {
         return imagen3_adopcion;
     }
 
-    public void setImagen3_adopcion(int imagen3_adopcion) {
+    public void setImagen3_adopcion(String imagen3_adopcion) {
         this.imagen3_adopcion = imagen3_adopcion;
     }
 
-    public int getImagen4_adopcion() {
+    public String getImagen4_adopcion() {
         return imagen4_adopcion;
     }
 
-    public void setImagen4_adopcion(int imagen4_adopcion) {
+    public void setImagen4_adopcion(String imagen4_adopcion) {
         this.imagen4_adopcion = imagen4_adopcion;
     }
 

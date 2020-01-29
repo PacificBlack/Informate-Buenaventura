@@ -78,7 +78,7 @@ return vista;
 
     private void cargarWebService_Eventos() {
 
-        String url_eventos = "http://192.168.0.18/InformateDB/wsnJSONllenar.php";
+        String url_eventos = "http://192.168.0.18/InformateDB/wsnJSONllenarEventos.php";
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_eventos,null,this,this);
         request.add(jsonObjectRequest);

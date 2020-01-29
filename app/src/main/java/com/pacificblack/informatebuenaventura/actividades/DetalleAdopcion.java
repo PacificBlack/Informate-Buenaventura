@@ -13,6 +13,7 @@ import android.widget.VideoView;
 
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
+import com.squareup.picasso.Picasso;
 
 public class DetalleAdopcion extends AppCompatActivity {
 
@@ -49,13 +50,27 @@ public class DetalleAdopcion extends AppCompatActivity {
             titulo_adopcion.setText(adopcion.getTitulo_row_adopcion());
             descripcion1_adopcion.setText(adopcion.getDescripcion1_adopcion());
             descripcion2_adopcion.setText(adopcion.getDescripcion2_adopcion());
-            imagen1_adopcion.setImageResource(adopcion.getImagen1_adopcion());
-            imagen2_adopcion.setImageResource(adopcion.getImagen2_adopcion());
-            imagen3_adopcion.setImageResource(adopcion.getImagen3_adopcion());
-            imagen4_adopcion.setImageResource(adopcion.getImagen4_adopcion());
+
+            Picasso.get().load(adopcion.getImagen1_adopcion())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen1_adopcion);
 
 
+            Picasso.get().load(adopcion.getImagen2_adopcion())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen2_adopcion);
 
+            Picasso.get().load(adopcion.getImagen3_adopcion())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen3_adopcion);
+
+            Picasso.get().load(adopcion.getImagen4_adopcion())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen4_adopcion);
 
         }
 

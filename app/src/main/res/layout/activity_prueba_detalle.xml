@@ -72,6 +72,7 @@
                         android:id="@+id/imagen3_detalle_adopcion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
+                        android:background="@android:color/transparent"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
@@ -79,6 +80,7 @@
                         android:id="@+id/imagen4_detalle_adopcion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
+                        android:background="@android:color/transparent"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic" />
                 </LinearLayout>

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,27 @@ public class AdaptadorBienes extends RecyclerView.Adapter<AdaptadorBienes.Bienes
         holder.fechapublicacionbienes.setText(listaBienes.get(position).getFechapublicacion_row_bienes());
         holder.vistabienes.setText(String.valueOf(listaBienes.get(position).getVistas_bienes()));
         holder.preciobienes.setText(String.valueOf(listaBienes.get(position).getPrecio_row_bienes()));
-        holder.imagenbienes.setImageResource(listaBienes.get(position).getImagen1_bienes());
+
+        //TODO: Aqui verifico si trae la imagen o no
+
+
+        if (listaBienes.get(position).getImagen1_bienes() != null){
+
+            Picasso.get().load(listaBienes.get(position).getImagen1_bienes())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenbienes);
+
+
+        }else{
+            holder.imagenbienes.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
+
+
+        //TODO: Aqui verifico si trae la imagen o no
+
 
     }
 

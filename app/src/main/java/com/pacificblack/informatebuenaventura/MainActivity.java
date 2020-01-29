@@ -15,6 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
 import com.pacificblack.informatebuenaventura.publicar.PublicarAdopcion;
@@ -22,8 +23,10 @@ import com.pacificblack.informatebuenaventura.publicar.PublicarArticulo;
 import com.pacificblack.informatebuenaventura.publicar.PublicarBienes;
 import com.pacificblack.informatebuenaventura.publicar.PublicarClasificados;
 import com.pacificblack.informatebuenaventura.publicar.PublicarDesaparicion;
+import com.pacificblack.informatebuenaventura.publicar.PublicarDonaciones;
 import com.pacificblack.informatebuenaventura.publicar.PublicarEmpleos;
 import com.pacificblack.informatebuenaventura.publicar.PublicarEventos;
+import com.pacificblack.informatebuenaventura.publicar.PublicarFunebres;
 import com.pacificblack.informatebuenaventura.publicar.PublicarServicios;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity   {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
 
 
 
@@ -163,6 +168,19 @@ public void PublicarAdopcion(View v){
         Intent intent = new Intent(MainActivity.this, PublicarClasificados.class);
         startActivity(intent);
     }
+
+    public void PublicarFunebres(View view){
+
+        Intent intent = new Intent(MainActivity.this, PublicarFunebres.class);
+        startActivity(intent);
+    }
+
+    public void PublicarDonaciones(View view){
+        Intent intent = new Intent(MainActivity.this, PublicarDonaciones.class);
+        startActivity(intent);
+    }
+
+    public void PublicarEncuestas(View view){}
 
 
 

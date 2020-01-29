@@ -8,14 +8,14 @@ import java.io.Serializable;
 public class Bienes implements Serializable {
 
     private String titulo_row_bienes,descripcion_row_bienes,fechapublicacion_row_bienes;
-    private int imagen1_bienes,imagen2_bienes,imagen3_bienes,imagen4_bienes;
+    private String imagen1_bienes,imagen2_bienes,imagen3_bienes,imagen4_bienes;
     private int precio_row_bienes,vistas_bienes;
     private String descripcion1_bienes,descripcion2_bienes;
 
     public Bienes() {
     }
 
-    public Bienes(String titulo_row_bienes, String descripcion_row_bienes, String fechapublicacion_row_bienes, int imagen1_bienes, int imagen2_bienes, int imagen3_bienes, int imagen4_bienes, int precio_row_bienes, int vistas_bienes, String descripcion1_bienes, String descripcion2_bienes) {
+    public Bienes(String titulo_row_bienes, String descripcion_row_bienes, String fechapublicacion_row_bienes, String imagen1_bienes, String imagen2_bienes, String imagen3_bienes, String imagen4_bienes, int precio_row_bienes, int vistas_bienes, String descripcion1_bienes, String descripcion2_bienes) {
         this.titulo_row_bienes = titulo_row_bienes;
         this.descripcion_row_bienes = descripcion_row_bienes;
         this.fechapublicacion_row_bienes = fechapublicacion_row_bienes;
@@ -53,35 +53,35 @@ public class Bienes implements Serializable {
         this.fechapublicacion_row_bienes = fechapublicacion_row_bienes;
     }
 
-    public int getImagen1_bienes() {
+    public String getImagen1_bienes() {
         return imagen1_bienes;
     }
 
-    public void setImagen1_bienes(int imagen1_bienes) {
+    public void setImagen1_bienes(String imagen1_bienes) {
         this.imagen1_bienes = imagen1_bienes;
     }
 
-    public int getImagen2_bienes() {
+    public String getImagen2_bienes() {
         return imagen2_bienes;
     }
 
-    public void setImagen2_bienes(int imagen2_bienes) {
+    public void setImagen2_bienes(String imagen2_bienes) {
         this.imagen2_bienes = imagen2_bienes;
     }
 
-    public int getImagen3_bienes() {
+    public String getImagen3_bienes() {
         return imagen3_bienes;
     }
 
-    public void setImagen3_bienes(int imagen3_bienes) {
+    public void setImagen3_bienes(String imagen3_bienes) {
         this.imagen3_bienes = imagen3_bienes;
     }
 
-    public int getImagen4_bienes() {
+    public String getImagen4_bienes() {
         return imagen4_bienes;
     }
 
-    public void setImagen4_bienes(int imagen4_bienes) {
+    public void setImagen4_bienes(String imagen4_bienes) {
         this.imagen4_bienes = imagen4_bienes;
     }
 

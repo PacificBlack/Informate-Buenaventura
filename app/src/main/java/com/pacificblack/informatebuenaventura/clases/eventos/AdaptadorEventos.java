@@ -51,8 +51,6 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
             Picasso.get().load(listaEventos.get(position).getImagen1_eventos())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
-                    .centerInside()
-                    .resize(400,400)
                     .into(holder.imageneventos);
 
 

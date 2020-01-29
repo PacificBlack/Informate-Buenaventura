@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="510dp"
+    android:layout_height="551dp"
     android:layout_gravity="center"
     android:background="@color/azulOscuro"
     android:orientation="vertical"
@@ -172,6 +172,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button71"
+                android:layout_width="112dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarFunebres"
+                android:text="Funebres" />
+
+            <Button
+                android:id="@+id/button81"
+                android:layout_width="126dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:onClick="PublicarDonaciones"
+                android:text="Donaciones" />
+
+            <Button
+                android:id="@+id/button61"
+                android:layout_width="133dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="Encuestas" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -202,6 +234,8 @@
                 android:text="@string/publicar_clasificados" />
 
         </LinearLayout>
+
+
     </LinearLayout>
 
 
