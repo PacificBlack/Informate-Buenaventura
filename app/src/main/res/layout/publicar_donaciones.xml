@@ -84,6 +84,35 @@
                 android:text="Subir imagenes" />
 
 
+            <HorizontalScrollView
+                android:id="@+id/imagenes_actualizar_donaciones"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/imagen1_actualizar_donaciones"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic[14]" />
+
+                    <ImageButton
+                        android:id="@+id/imagen2_actualizar_donaciones"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/publicar_descripcion1_donaciones"
                 android:layout_width="match_parent"
@@ -133,19 +162,37 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/publicar_adopcion" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_id_donaciones"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@android:drawable/screen_background_light_transparent">
+                android:layout_height="66dp"
+                android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingrese el id de la publicación que desea modificar o eliminar" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/publicar_id_donaciones"
+                    android:layout_width="314dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/screen_background_light_transparent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="308dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                        android:inputType="text|number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/publicar_buscar_donaciones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_search_black_24dp"
+                    tools:ignore="VectorDrawableCompat" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

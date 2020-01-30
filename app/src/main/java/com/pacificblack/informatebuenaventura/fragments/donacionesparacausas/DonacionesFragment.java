@@ -71,10 +71,10 @@ llenarlista_donaciones();
 
     private void llenarlista_donaciones() {
 
-        listaDonaciones.add(new Donaciones("Bienvenido a su donacion plus",
+        listaDonaciones.add(new Donaciones(12,"Bienvenido a su donacion plus",
                 "Aqui puede hacer sus donaciones rapidito",
                 "La vida te da sorpresas",
-                R.drawable.imagencita,R.drawable.imagencita,
+                "www.google.com","www.google.com",
                 54,
                 5000000,
                 "Yo que wua saber"));

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
+import com.squareup.picasso.Picasso;
 
 public class DetalleDonaciones extends AppCompatActivity {
 
@@ -37,8 +38,18 @@ public class DetalleDonaciones extends AppCompatActivity {
 
             titulodonaciones.setText(dona.getTitulo_row_donaciones());
             descripcion1donaciones.setText(dona.getDescripcion1_donaciones());
-            imagen1donaciones.setImageResource(dona.getImagen1_donaciones());
-            imagen2donaciones.setImageResource(dona.getImagen2_donaciones());
+
+
+            Picasso.get().load(dona.getImagen1_donaciones())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen1donaciones);
+
+            Picasso.get().load(dona.getImagen2_donaciones())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen2donaciones);
+
             metadonaciones.setText(String.valueOf(dona.getMeta_row_donaciones()));
         }
 

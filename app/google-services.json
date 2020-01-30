@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "519807766114",
+    "firebase_url": "https://informate-buenaventura-d25bf.firebaseio.com",
+    "project_id": "informate-buenaventura-d25bf",
+    "storage_bucket": "informate-buenaventura-d25bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519807766114:android:ce59609cd0f9354795cb3b",
+        "android_client_info": {
+          "package_name": "com.pacificblack.informatebuenaventura"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519807766114-gm4nhkjmrgl61h8v32tlk4gb4vbendda.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pacificblack.informatebuenaventura",
+            "certificate_hash": "ab491d8dc3b808ad17d935bd4e0eda653b5dd276"
+          }
+        },
+        {
+          "client_id": "519807766114-8gtpccf4dsb991uic2vvh8f2st9fjmgp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI6hC5w9cuchWOOzE8OKWPLfjKediTdv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519807766114-8gtpccf4dsb991uic2vvh8f2st9fjmgp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,26 @@ public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonacione
         holder.fechapublicaciondonaciones.setText(listaDonaciones.get(position).getFechapublicacion_row_donaciones());
         holder.metadonaciones.setText(String.valueOf(listaDonaciones.get(position).getMeta_row_donaciones()));
         holder.vistadonaciones.setText(String.valueOf(listaDonaciones.get(position).getVistas_donaciones()));
-        holder.imagendonaciones.setImageResource(listaDonaciones.get(position).getImagen1_donaciones());
+
+        //TODO: Aqui verifico si trae la imagen o no
+
+
+        if (listaDonaciones.get(position).getImagen1_donaciones() != null){
+
+            Picasso.get().load(listaDonaciones.get(position).getImagen1_donaciones())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagendonaciones);
+
+
+        }else{
+            holder.imagendonaciones.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
+
+
+        //TODO: Aqui verifico si trae la imagen o no
 
     }
 
