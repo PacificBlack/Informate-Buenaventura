@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class Adopcion implements Serializable {
 
-
+    private  int id_adopcion;
     private String titulo_row_adopcion,descripcion_row_adopcion,fechapublicacion_row_desaparecidos;
     private String imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
     private int vistas_adopcion;
@@ -14,7 +14,8 @@ public class Adopcion implements Serializable {
     public Adopcion() {
     }
 
-    public Adopcion(String titulo_row_adopcion, String descripcion_row_adopcion, String fechapublicacion_row_desaparecidos, String imagen1_adopcion, String imagen2_adopcion, String imagen3_adopcion, String imagen4_adopcion, int vistas_adopcion, String descripcion1_adopcion, String descripcion2_adopcion) {
+    public Adopcion(int id_adopcion, String titulo_row_adopcion, String descripcion_row_adopcion, String fechapublicacion_row_desaparecidos, String imagen1_adopcion, String imagen2_adopcion, String imagen3_adopcion, String imagen4_adopcion, int vistas_adopcion, String descripcion1_adopcion, String descripcion2_adopcion) {
+        this.id_adopcion = id_adopcion;
         this.titulo_row_adopcion = titulo_row_adopcion;
         this.descripcion_row_adopcion = descripcion_row_adopcion;
         this.fechapublicacion_row_desaparecidos = fechapublicacion_row_desaparecidos;
@@ -25,6 +26,14 @@ public class Adopcion implements Serializable {
         this.vistas_adopcion = vistas_adopcion;
         this.descripcion1_adopcion = descripcion1_adopcion;
         this.descripcion2_adopcion = descripcion2_adopcion;
+    }
+
+    public int getId_adopcion() {
+        return id_adopcion;
+    }
+
+    public void setId_adopcion(int id_adopcion) {
+        this.id_adopcion = id_adopcion;
     }
 
     public String getTitulo_row_adopcion() {

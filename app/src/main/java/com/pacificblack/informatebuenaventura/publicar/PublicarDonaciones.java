@@ -94,8 +94,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
     JsonObjectRequest jsonObjectRequestBuscar;
     HorizontalScrollView imagenes_donaciones;
     ImageView imagen1_actualizar_donaciones,imagen2_actualizar_donaciones;
-    String imagen1_donaciones = null,
-            imagen2_donaciones = null;
+
 
     //TODO: Modificar y Eliminar
 
@@ -200,6 +199,8 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
         publicar_buscar_donaciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                subirimagenes.setText("Actualizar Imagenes");
 
                 if (!validarid()){return;}
 
@@ -339,19 +340,17 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
                 descripcioncorta_publicar_donaciones.getEditText().setText(donacion.getDescripcion_row_donaciones());
                 descripcion1_publicar_donaciones.getEditText().setText(donacion.getDescripcion1_donaciones());
                 meta_publicar_donaciones.getEditText().setText(String.valueOf(donacion.getMeta_row_donaciones()));
-                imagen1_donaciones = donacion.getImagen1_donaciones();
 
                 imagenes_donaciones.setVisibility(View.VISIBLE);
 
-        Picasso.get().load(imagen1_donaciones)
+        Picasso.get().load(donacion.getImagen1_donaciones())
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_donaciones);
 
 
-        imagen2_donaciones = donacion.getImagen2_donaciones();
 
-        Picasso.get().load(imagen2_donaciones)
+        Picasso.get().load(donacion.getImagen2_donaciones())
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen2_actualizar_donaciones);
@@ -445,9 +444,6 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
                     parametros.put("meta_donaciones",metainput);
                     parametros.put("subida","pendiente");
                     parametros.put("publicacion","Donaciones");
-                    parametros.put("imagen_donaciones0",imagen1_donaciones);
-                    parametros.put("imagen_donaciones1",imagen2_donaciones);
-
 
                         Log.i("Parametros", String.valueOf(parametros));
 
@@ -455,8 +451,8 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
             }
         };
 
-        RequestQueue request_funebres_actualizar = Volley.newRequestQueue(this);
-        request_funebres_actualizar.add(stringRequest_donaciones);
+        RequestQueue request_donaciones_actualizar = Volley.newRequestQueue(this);
+        request_donaciones_actualizar.add(stringRequest_donaciones);
 
     }
     private void cargarActualizarConImagen_donaciones() {
@@ -558,8 +554,8 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
             }
         };
 
-        RequestQueue request_funebres_actualizar = Volley.newRequestQueue(this);
-        request_funebres_actualizar.add(stringRequest_donaciones);
+        RequestQueue request_donaciones_actualizar = Volley.newRequestQueue(this);
+        request_donaciones_actualizar.add(stringRequest_donaciones);
 
     }
     private void cargarEliminar_donaciones() {
