@@ -500,7 +500,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
     //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_comprayventa() {
 
-        String url_buscar_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONBuscarAdopcion.php?id_comprayventa="+buscar_publicar_comprayventa.getEditText().getText().toString().trim();
+        String url_buscar_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONBuscarComprayVenta.php?id_comprayventa="+buscar_publicar_comprayventa.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_comprayventa,null,this,this);
 
