@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,27 @@ public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorCompray
     @Override
     public void onBindViewHolder(@NonNull AdaptadorComprayVenta.ComprayVentaHolder holder, int position) {
 
-        holder.imagencomprayventa.setImageResource(listaComprayVenta.get(position).getImagen1_comprayventa());
+
+        //TODO: Aqui verifico si trae la imagen o no
+
+
+        if (listaComprayVenta.get(position).getImagen1_comprayventa() != null){
+
+            Picasso.get().load(listaComprayVenta.get(position).getImagen1_comprayventa())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagencomprayventa);
+
+
+        }else{
+            holder.imagencomprayventa.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
+
+
+        //TODO: Aqui verifico si trae la imagen o no
+
         holder.titulocomprayventa.setText(listaComprayVenta.get(position).getTitulo_row_comprayventa());
         holder.descripcioncortacomprayventa.setText(listaComprayVenta.get(position).getDescripcion_row_comprayventa());
         holder.fechapublicacioncomprayventa.setText(listaComprayVenta.get(position).getFechapublicacion_row_comprayventa());

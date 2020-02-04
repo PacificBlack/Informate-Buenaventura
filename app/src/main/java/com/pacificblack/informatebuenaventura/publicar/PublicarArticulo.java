@@ -2,11 +2,13 @@ package com.pacificblack.informatebuenaventura.publicar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,6 +21,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,11 +31,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,8 +53,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class PublicarArticulo extends AppCompatActivity {
+public class PublicarArticulo extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
 
 
@@ -66,9 +81,27 @@ public class PublicarArticulo extends AppCompatActivity {
             precio_publicar_comprayventa,
             ubicacion_publicar_comprayventa,
             cantidad_publicar_comprayventa,
-            contacto_publicar_comprayventa;
+            contacto_publicar_comprayventa,
+            buscar_publicar_comprayventa;
 
     Button publicarfinal_comprayventa,subirimagenes;
+
+
+    //TODO: Modificar y Eliminar
+    ImageButton publicar_editar_comprayventa,
+            publicar_eliminar_comprayventa,
+            publicar_buscar_comprayventa;
+    RequestQueue requestbuscar;
+    JsonObjectRequest jsonObjectRequestBuscar;
+    HorizontalScrollView imagenes_comprayventa;
+    ImageView imagen1_actualizar_comprayventa,imagen2_actualizar_comprayventa,
+            imagen3_actualizar_comprayventa;
+
+    private InterstitialAd anuncioAdopcion;
+
+
+    //TODO: Modificar y Eliminar
+
 
 
     @Override
@@ -132,9 +165,148 @@ public class PublicarArticulo extends AppCompatActivity {
             }
         });
 
+
+        //TODO: Modificar y Eliminar
+
+
+        imagenes_comprayventa = findViewById(R.id.imagenes_actualizar_comprayventa);
+        imagen1_actualizar_comprayventa = findViewById(R.id.imagen1_actualizar_comprayventa);
+        imagen2_actualizar_comprayventa = findViewById(R.id.imagen2_actualizar_comprayventa);
+        imagen3_actualizar_comprayventa = findViewById(R.id.imagen3_actualizar_comprayventa);
+
+
+        buscar_publicar_comprayventa = findViewById(R.id.publicar_id_comprayventa);
+        publicar_editar_comprayventa = findViewById(R.id.publicar_editar_comprayventa);
+        publicar_editar_comprayventa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!validarid()|
+                !validartitulo()|
+                !validardescripcioncorta()|
+                !validardescripcion()|
+                !validardescripcionextra()|
+                !validarprecio()|
+                !validarubicacion()|
+                !validarcantidad()|
+                !validarcontacto()){return;}
+
+                if (!validarfotoupdate()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
+                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
+                            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            imagenes_comprayventa.setVisibility(View.GONE);
+
+                            if (listaimagenes_comprayventa.size() == 3){
+                                Subirimagen_comprayventa_update();
+                            }
+
+                        }
+                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            cargarActualizarSinImagen_comprayventa();
+
+                        }
+                    });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Modificar Publicación");
+                    titulo.show();
+
+
+                    return; }
+
+            }
+        });
+        publicar_eliminar_comprayventa = findViewById(R.id.publicar_eliminar_comprayventa);
+        publicar_eliminar_comprayventa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!validarid()){return;}
+
+                AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
+                mensaje.setMessage("¿Esta seguro que desea eliminar la publicación?")
+                        .setCancelable(false).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        cargarEliminar_comprayventa();
+
+                    }
+                });
+
+                AlertDialog titulo = mensaje.create();
+                titulo.setTitle("Modificar Publicación");
+                titulo.show();
+
+            }
+        });
+        publicar_buscar_comprayventa = findViewById(R.id.publicar_buscar_comprayventa);
+
+
+        requestbuscar = Volley.newRequestQueue(getApplicationContext());
+        publicar_buscar_comprayventa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                subirimagenes.setText("Actualizar Imagenes");
+
+                if (!validarid()){return;}
+
+                cargarBusqueda_comprayventa();
+                publicarfinal_comprayventa.setEnabled(false);
+            }
+        });
+
+
+
+        //TODO: Modificar y Eliminar
+
+        //TODO: Anuncios
+
+        anuncioAdopcion = new InterstitialAd(this);
+        anuncioAdopcion.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioAdopcion.loadAd(new AdRequest.Builder().build());
+        //TODO: Anuncios
+
+
+
+
+
+
+
     }
 
 
+    private boolean validarid(){
+        String idinput = buscar_publicar_comprayventa.getEditText().getText().toString().trim();
+
+        if (idinput.isEmpty()){
+            buscar_publicar_comprayventa.setError(""+R.string.error_descripcioncorta);
+            return false;
+        }
+        else if(idinput.length()>15){
+
+            buscar_publicar_comprayventa.setError(""+R.string.supera);
+            return false;
+        }
+        else {
+            buscar_publicar_comprayventa.setError(null);
+            return true;
+        }
+    }
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_comprayventa.getEditText().getText().toString().trim();
 
@@ -210,7 +382,7 @@ public class PublicarArticulo extends AppCompatActivity {
             precio_publicar_comprayventa.setError(""+R.string.error_precio);
             return false;
         }
-        else if(precioinput.length()>15){
+        else if(precioinput.length()>400){
 
             precio_publicar_comprayventa.setError(""+R.string.supera);
             return false;
@@ -295,6 +467,463 @@ public class PublicarArticulo extends AppCompatActivity {
             return true;}
 
     }
+    private boolean validarfotoupdate(){
+
+        if (listaimagenes_comprayventa.size() == 0){
+            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        else if (listaimagenes_comprayventa.size() > 3){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        else if (listaimagenes_comprayventa.size() < 3){
+            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_comprayventa.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
+            return true;
+
+        }
+
+        else if(listaimagenes_comprayventa.size() == 3){
+            return false;
+        }
+
+        else {
+            return true;
+        }
+    }
+
+
+
+
+    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
+    private void cargarBusqueda_comprayventa() {
+
+        String url_buscar_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONBuscarAdopcion.php?id_comprayventa="+buscar_publicar_comprayventa.getEditText().getText().toString().trim();
+
+        jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_comprayventa,null,this,this);
+
+        requestbuscar.add(jsonObjectRequestBuscar);
+    }
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+
+        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+        Log.i("ERROR",error.toString());
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+
+        ComprayVenta comprayVenta = new ComprayVenta();
+
+        JSONArray json = response.optJSONArray("comprayventa");
+        JSONObject jsonObject = null;
+
+        try {
+            jsonObject = json.getJSONObject(0);
+
+
+            comprayVenta.setId_comprayventa(jsonObject.getInt("id_comprayventa"));
+            comprayVenta.setImagen1_comprayventa(jsonObject.getString("imagen1_comprayventa"));
+            comprayVenta.setImagen2_comprayventa(jsonObject.getString("imagen2_comprayventa"));
+            comprayVenta.setImagen3̣̣_comprayventa(jsonObject.getString("imagen3_comprayventa"));
+            comprayVenta.setTitulo_row_comprayventa(jsonObject.getString("titulo_comprayventa"));
+            comprayVenta.setDescripcion_row_comprayventa(jsonObject.getString("descripcionrow_comprayventa"));
+            comprayVenta.setDescripcion_comprayventa(jsonObject.getString("descripcion_comprayventa"));
+            comprayVenta.setFechapublicacion_row_comprayventa(jsonObject.getString("fechapublicacion_comprayventa"));
+            comprayVenta.setPrecio_row_comprayventa(jsonObject.getString("precio_comprayventa"));
+            comprayVenta.setContacto_comprayventa(jsonObject.getString("contacto_comprayventa"));
+            comprayVenta.setUbicacion_comprayventa(jsonObject.getString("ubicacion_comprayventa"));
+            comprayVenta.setDescripcionextra_comprayventa(jsonObject.getString("descripcionextra_comprayventa"));
+            comprayVenta.setCantidad_comprayventa(jsonObject.getInt("cantidad_comprayventa"));
+            comprayVenta.setVista_comprayventa(jsonObject.getInt("vistas_comprayventa"));
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        titulo_publicar_comprayventa.getEditText().setText(comprayVenta.getTitulo_row_comprayventa());
+        descripcioncorta_publicar_comprayventa.getEditText().setText(comprayVenta.getDescripcion_row_comprayventa());
+        descripcion_publicar_comprayventa.getEditText().setText(comprayVenta.getDescripcion_comprayventa());
+        descripcionextra_publicar_comprayventa.getEditText().setText(comprayVenta.getDescripcionextra_comprayventa());
+        precio_publicar_comprayventa.getEditText().setText(comprayVenta.getPrecio_row_comprayventa());
+        ubicacion_publicar_comprayventa.getEditText().setText(comprayVenta.getUbicacion_comprayventa());
+        cantidad_publicar_comprayventa.getEditText().setText(comprayVenta.getCantidad_comprayventa());
+        contacto_publicar_comprayventa.getEditText().setText(comprayVenta.getContacto_comprayventa());
+
+
+        imagenes_comprayventa.setVisibility(View.VISIBLE);
+
+        Picasso.get().load(comprayVenta.getImagen1_comprayventa())
+                .placeholder(R.drawable.imagennodisponible)
+                .error(R.drawable.imagennodisponible)
+                .into(imagen1_actualizar_comprayventa);
+
+        Picasso.get().load(comprayVenta.getImagen2_comprayventa())
+                .placeholder(R.drawable.imagennodisponible)
+                .error(R.drawable.imagennodisponible)
+                .into(imagen2_actualizar_comprayventa);
+
+        Picasso.get().load(comprayVenta.getImagen3̣̣_comprayventa())
+                .placeholder(R.drawable.imagennodisponible)
+                .error(R.drawable.imagennodisponible)
+                .into(imagen3_actualizar_comprayventa);
+
+    }
+
+
+    private void cargarActualizarSinImagen_comprayventa() {
+
+        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagen.php?";
+
+
+        stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+
+
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_publicar_comprayventa.getEditText().getText().toString().trim();
+                String tituloinput = titulo_publicar_comprayventa.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_comprayventa.getEditText().getText().toString().trim();
+                String descripcioninput = descripcion_publicar_comprayventa.getEditText().getText().toString().trim();
+                String descripcionextrainput = descripcionextra_publicar_comprayventa.getEditText().getText().toString().trim();
+                String precioinput = precio_publicar_comprayventa.getEditText().getText().toString().trim();
+                String ubicacioninput = ubicacion_publicar_comprayventa.getEditText().getText().toString().trim();
+                String cantidadinput = cantidad_publicar_comprayventa.getEditText().getText().toString().trim();
+                String contactoinput = contacto_publicar_comprayventa.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+
+                parametros.put("id_comprayventa",idinput);
+                parametros.put("titulo_comprayventa",tituloinput);
+                parametros.put("descripcionrow_comprayventa",descripcioncortainput);
+                parametros.put("vistas_comprayventa","0");
+                parametros.put("descripcion_comprayventa",descripcioninput);
+                parametros.put("descripcionextra_comprayventa",descripcionextrainput);
+                parametros.put("precio_comprayventa",precioinput);
+                parametros.put("ubicacion_comprayventa",ubicacioninput);
+                parametros.put("cantidad_comprayventa",cantidadinput);
+                parametros.put("contacto_comprayventa",contactoinput);
+
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Compra y Venta");
+
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_comprayventa_actualizar = Volley.newRequestQueue(this);
+        request_comprayventa_actualizar.add(stringRequest_comprayventa);
+
+    }
+    private void cargarActualizarConImagen_comprayventa() {
+
+        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagen.php?";
+
+
+        stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+
+
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_publicar_comprayventa.getEditText().getText().toString().trim();
+                String tituloinput = titulo_publicar_comprayventa.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_comprayventa.getEditText().getText().toString().trim();
+                String descripcioninput = descripcion_publicar_comprayventa.getEditText().getText().toString().trim();
+                String descripcionextrainput = descripcionextra_publicar_comprayventa.getEditText().getText().toString().trim();
+                String precioinput = precio_publicar_comprayventa.getEditText().getText().toString().trim();
+                String ubicacioninput = ubicacion_publicar_comprayventa.getEditText().getText().toString().trim();
+                String cantidadinput = cantidad_publicar_comprayventa.getEditText().getText().toString().trim();
+                String contactoinput = contacto_publicar_comprayventa.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+
+                parametros.put("id_comprayventa",idinput);
+                parametros.put("titulo_comprayventa",tituloinput);
+                parametros.put("descripcionrow_comprayventa",descripcioncortainput);
+                parametros.put("vistas_comprayventa","0");
+                parametros.put("descripcion_comprayventa",descripcioninput);
+                parametros.put("descripcionextra_comprayventa",descripcionextrainput);
+                parametros.put("precio_comprayventa",precioinput);
+                parametros.put("ubicacion_comprayventa",ubicacioninput);
+                parametros.put("cantidad_comprayventa",cantidadinput);
+                parametros.put("contacto_comprayventa",contactoinput);
+                parametros.put("imagen_comprayventa0",cadena.get(0));
+                parametros.put("imagen_comprayventa1",cadena.get(1));
+                parametros.put("imagen_comprayventa2",cadena.get(2));
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Compra y Venta");
+
+
+
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_comprayventa_actualizar = Volley.newRequestQueue(this);
+        request_comprayventa_actualizar.add(stringRequest_comprayventa);
+
+    }
+    private void cargarEliminar_comprayventa() {
+
+        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONEliminar.php?";
+
+
+        stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                String resul = "Eliminada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Eliminada exitosamente");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_publicar_comprayventa.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("id_comprayventa",idinput);
+                parametros.put("publicacion","Compra y Venta");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_comprayventa_actualizar = Volley.newRequestQueue(this);
+        request_comprayventa_actualizar.add(stringRequest_comprayventa);
+
+    }
+
+
+    public void Subirimagen_comprayventa_update(){
+
+
+        listaBase64_comprayventa.clear();
+        nombre.clear();
+        cadena.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
+        for (int i = 0; i < listaimagenes_comprayventa.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_comprayventa.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+//Solucionar para poder guardar
+
+                nombre.add( "imagen_comprayventa"+i);
+
+                cadena.add(convertirUriEnBase64(bitmap));
+
+                bitmap.recycle();
+
+
+            }catch (IOException e){
+
+            }
+
+        }
+
+        cargarActualizarConImagen_comprayventa();
+
+    }
+
+
+
+
+    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
+
+
+
 
 
     //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos

@@ -77,7 +77,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 app:counterEnabled="true"
-                app:counterMaxLength="15"
+                app:counterMaxLength="400"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -86,8 +86,7 @@
                     android:layout_marginTop="10dp"
                     android:ems="10"
                     android:gravity="start|top"
-                    android:hint="Ingrese el precio que desea cobrar por articulo"
-                    android:inputType="text|number" />
+                    android:hint="Ingrese el precio que desea cobrar por articulo" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -174,6 +173,43 @@
                 android:layout_height="wrap_content"
                 android:text="Subir imagenes" />
 
+            <HorizontalScrollView
+                android:id="@+id/imagenes_actualizar_comprayventa"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/imagen1_actualizar_comprayventa"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic[14]" />
+
+                    <ImageButton
+                        android:id="@+id/imagen2_actualizar_comprayventa"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                    <ImageButton
+                        android:id="@+id/imagen3_actualizar_comprayventa"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -231,6 +267,64 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/publicar_adopcion" />
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/publicar_id_comprayventa"
+                    android:layout_width="314dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/screen_background_light_transparent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="308dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                        android:inputType="text|number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/publicar_buscar_comprayventa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_search_black_24dp"
+                    tools:ignore="VectorDrawableCompat" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/publicar_editar_comprayventa"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@android:drawable/ic_menu_edit" />
+
+                <ImageButton
+                    android:id="@+id/publicar_eliminar_comprayventa"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@android:drawable/ic_menu_delete" />
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

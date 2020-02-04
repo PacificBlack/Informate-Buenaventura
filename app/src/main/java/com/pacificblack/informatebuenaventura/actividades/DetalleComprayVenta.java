@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.squareup.picasso.Picasso;
 
 public class DetalleComprayVenta extends AppCompatActivity {
 
@@ -49,9 +50,22 @@ public class DetalleComprayVenta extends AppCompatActivity {
             contacto_comprayventa.setText(comprayventa.getContacto_comprayventa());
             ubicacion_comprayventa.setText(comprayventa.getUbicacion_comprayventa());
             cantidad_comprayventa.setText(String.valueOf(comprayventa.getCantidad_comprayventa()));
-            imagen1_comprayventa.setImageResource(comprayventa.getImagen1_comprayventa());
-            imagen2_comprayventa.setImageResource(comprayventa.getImagen2_comprayventa());
-            imagen3_comprayventa.setImageResource(comprayventa.getImagen3̣̣_comprayventa());
+
+            Picasso.get().load(comprayventa.getImagen1_comprayventa())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen1_comprayventa);
+
+            Picasso.get().load(comprayventa.getImagen2_comprayventa())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen2_comprayventa);
+
+            Picasso.get().load(comprayventa.getImagen3̣̣_comprayventa())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen3_comprayventa);
+
         }
 
 

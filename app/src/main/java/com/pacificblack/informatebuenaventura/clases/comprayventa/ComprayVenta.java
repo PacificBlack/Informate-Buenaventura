@@ -7,15 +7,18 @@ import java.io.Serializable;
 public class ComprayVenta implements Serializable {
 
 
+    private int id_comprayventa;
     private String titulo_row_comprayventa,descripcion_row_comprayventa,descripcion_comprayventa,fechapublicacion_row_comprayventa,precio_row_comprayventa;
     private String contacto_comprayventa,ubicacion_comprayventa,descripcionextra_comprayventa;
-    private int imagen1_comprayventa,imagen2_comprayventa,imagen3̣̣_comprayventa;
+    private String imagen1_comprayventa,imagen2_comprayventa,imagen3̣̣_comprayventa;
     private int cantidad_comprayventa,vista_comprayventa;
 
     public ComprayVenta() {
     }
 
-    public ComprayVenta(String titulo_row_comprayventa, String descripcion_row_comprayventa, String descripcion_comprayventa, String fechapublicacion_row_comprayventa, String precio_row_comprayventa, String contacto_comprayventa, String ubicacion_comprayventa, String descripcionextra_comprayventa, int imagen1_comprayventa, int imagen2_comprayventa, int imagen3̣̣_comprayventa, int cantidad_comprayventa, int vista_comprayventa) {
+
+    public ComprayVenta(int id_comprayventa, String titulo_row_comprayventa, String descripcion_row_comprayventa, String descripcion_comprayventa, String fechapublicacion_row_comprayventa, String precio_row_comprayventa, String contacto_comprayventa, String ubicacion_comprayventa, String descripcionextra_comprayventa, String imagen1_comprayventa, String imagen2_comprayventa, String imagen3̣̣_comprayventa, int cantidad_comprayventa, int vista_comprayventa) {
+        this.id_comprayventa = id_comprayventa;
         this.titulo_row_comprayventa = titulo_row_comprayventa;
         this.descripcion_row_comprayventa = descripcion_row_comprayventa;
         this.descripcion_comprayventa = descripcion_comprayventa;
@@ -31,6 +34,37 @@ public class ComprayVenta implements Serializable {
         this.vista_comprayventa = vista_comprayventa;
     }
 
+    public int getId_comprayventa() {
+        return id_comprayventa;
+    }
+
+    public void setId_comprayventa(int id_comprayventa) {
+        this.id_comprayventa = id_comprayventa;
+    }
+
+    public String getImagen1_comprayventa() {
+        return imagen1_comprayventa;
+    }
+
+    public void setImagen1_comprayventa(String imagen1_comprayventa) {
+        this.imagen1_comprayventa = imagen1_comprayventa;
+    }
+
+    public String getImagen2_comprayventa() {
+        return imagen2_comprayventa;
+    }
+
+    public void setImagen2_comprayventa(String imagen2_comprayventa) {
+        this.imagen2_comprayventa = imagen2_comprayventa;
+    }
+
+    public String getImagen3̣̣_comprayventa() {
+        return imagen3̣̣_comprayventa;
+    }
+
+    public void setImagen3̣̣_comprayventa(String imagen3̣̣_comprayventa) {
+        this.imagen3̣̣_comprayventa = imagen3̣̣_comprayventa;
+    }
 
     public String getTitulo_row_comprayventa() {
         return titulo_row_comprayventa;
@@ -94,30 +128,6 @@ public class ComprayVenta implements Serializable {
 
     public void setDescripcionextra_comprayventa(String descripcionextra_comprayventa) {
         this.descripcionextra_comprayventa = descripcionextra_comprayventa;
-    }
-
-    public int getImagen1_comprayventa() {
-        return imagen1_comprayventa;
-    }
-
-    public void setImagen1_comprayventa(int imagen1_comprayventa) {
-        this.imagen1_comprayventa = imagen1_comprayventa;
-    }
-
-    public int getImagen2_comprayventa() {
-        return imagen2_comprayventa;
-    }
-
-    public void setImagen2_comprayventa(int imagen2_comprayventa) {
-        this.imagen2_comprayventa = imagen2_comprayventa;
-    }
-
-    public int getImagen3̣̣_comprayventa() {
-        return imagen3̣̣_comprayventa;
-    }
-
-    public void setImagen3̣̣_comprayventa(int imagen3̣̣_comprayventa) {
-        this.imagen3̣̣_comprayventa = imagen3̣̣_comprayventa;
     }
 
     public int getCantidad_comprayventa() {

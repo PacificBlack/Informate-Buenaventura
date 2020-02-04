@@ -75,7 +75,7 @@ public class ComprayVentaFragment extends Fragment {
 
     private void llenarlista_comprayventa() {
 
-        listaComprayVenta.add(new ComprayVenta("Se busca dueño para este guapo",
+        listaComprayVenta.add(new ComprayVenta(123,"Se busca dueño para este guapo",
                 "Este perrito es un prieto y necesita de tu ayuda crack, jelpme",
                 "Domingo 12 del 2019",
                 "Yo ni se que esto",
@@ -83,12 +83,10 @@ public class ComprayVentaFragment extends Fragment {
                 "Estring otro",
                 "Estring que falta",
                 "y Otra descriocion",
-                R.drawable.imagencita,
-                R.drawable.imagencita,
-                R.drawable.imagencita,
+                "www.gugle.com",
+                "www.gugle.com",
+                "www.gugle.com",
                 28,15));
-
-
 
     }
 
