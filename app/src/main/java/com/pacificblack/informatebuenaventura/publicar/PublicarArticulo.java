@@ -995,8 +995,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("vistas_comprayventa","0");
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
-
-               parametros.put("cantidad_comprayventa",cantidadinput);
+                parametros.put("cantidad_comprayventa",cantidadinput);
                 parametros.put("contacto_comprayventa",contactoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Compra y Venta");
@@ -1007,7 +1006,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                 }
 
 
-
+        Log.i("Lo que entra",parametros.toString());
 
                 return parametros;
             }
