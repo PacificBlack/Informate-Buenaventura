@@ -495,8 +495,6 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
     }
 
 
-
-
     //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_comprayventa() {
 
@@ -527,7 +525,6 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
         try {
             jsonObject = json.getJSONObject(0);
 
-
             comprayVenta.setId_comprayventa(jsonObject.getInt("id_comprayventa"));
             comprayVenta.setImagen1_comprayventa(jsonObject.getString("imagen1_comprayventa"));
             comprayVenta.setImagen2_comprayventa(jsonObject.getString("imagen2_comprayventa"));
@@ -556,7 +553,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
         descripcionextra_publicar_comprayventa.getEditText().setText(comprayVenta.getDescripcionextra_comprayventa());
         precio_publicar_comprayventa.getEditText().setText(comprayVenta.getPrecio_row_comprayventa());
         ubicacion_publicar_comprayventa.getEditText().setText(comprayVenta.getUbicacion_comprayventa());
-        cantidad_publicar_comprayventa.getEditText().setText(comprayVenta.getCantidad_comprayventa());
+        cantidad_publicar_comprayventa.getEditText().setText(String.valueOf(comprayVenta.getCantidad_comprayventa()));
         contacto_publicar_comprayventa.getEditText().setText(comprayVenta.getContacto_comprayventa());
 
 
@@ -582,10 +579,10 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
 
     private void cargarActualizarSinImagen_comprayventa() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagen.php?";
+        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagen.php?";
 
 
-        stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+        stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -639,9 +636,9 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Tenemos un error"+error,Toast.LENGTH_LONG).show();
 
-                        Log.i("ERROR",error.toString());
+                        Log.i("EL ERROR ES : ",error.toString());
 
 
                     }
@@ -666,17 +663,14 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                 parametros.put("id_comprayventa",idinput);
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
-                parametros.put("vistas_comprayventa","0");
                 parametros.put("descripcion_comprayventa",descripcioninput);
                 parametros.put("descripcionextra_comprayventa",descripcionextrainput);
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
                 parametros.put("contacto_comprayventa",contactoinput);
-
                 parametros.put("subida","pendiente");
-                parametros.put("publicacion","Compra y Venta");
-
+                parametros.put("publicacion","ComprayVenta");
 
                 Log.i("Parametros", String.valueOf(parametros));
 
@@ -774,18 +768,17 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                 parametros.put("id_comprayventa",idinput);
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
-                parametros.put("vistas_comprayventa","0");
                 parametros.put("descripcion_comprayventa",descripcioninput);
                 parametros.put("descripcionextra_comprayventa",descripcionextrainput);
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
                 parametros.put("contacto_comprayventa",contactoinput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","ComprayVenta");
                 parametros.put("imagen_comprayventa0",cadena.get(0));
                 parametros.put("imagen_comprayventa1",cadena.get(1));
                 parametros.put("imagen_comprayventa2",cadena.get(2));
-                parametros.put("subida","pendiente");
-                parametros.put("publicacion","Compra y Venta");
 
 
 
@@ -870,7 +863,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
 
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("id_comprayventa",idinput);
-                parametros.put("publicacion","Compra y Venta");
+                parametros.put("publicacion","ComprayVenta");
 
                 Log.i("Parametros", String.valueOf(parametros));
 
@@ -882,8 +875,6 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
         request_comprayventa_actualizar.add(stringRequest_comprayventa);
 
     }
-
-
     public void Subirimagen_comprayventa_update(){
 
 
