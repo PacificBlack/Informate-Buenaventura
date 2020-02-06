@@ -502,7 +502,7 @@ public class PublicarAdopcion extends AppCompatActivity implements Response.List
 
     private void cargarActualizarSinImagen_adopcion() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagen.php?";
+        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagenAdopcion.php?";
 
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
@@ -600,7 +600,7 @@ public class PublicarAdopcion extends AppCompatActivity implements Response.List
     }
     private void cargarActualizarConImagen_adopcion() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagen.php?";
+        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenAdopcion.php?";
 
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {

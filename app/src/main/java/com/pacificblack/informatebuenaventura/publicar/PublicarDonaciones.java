@@ -361,7 +361,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
     }
     private void cargarActualizarSinImagen_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagen.php?";
+        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImageneDonaciones.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -457,7 +457,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
     }
     private void cargarActualizarConImagen_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagen.php?";
+        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenDonaciones.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {

@@ -579,7 +579,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
 
     private void cargarActualizarSinImagen_comprayventa() {
 
-        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagen.php?";
+        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagenArticulo.php?";
 
 
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
@@ -657,22 +657,21 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                 String cantidadinput = cantidad_publicar_comprayventa.getEditText().getText().toString().trim();
                 String contactoinput = contacto_publicar_comprayventa.getEditText().getText().toString().trim();
 
-                Map<String,String> parametros = new HashMap<>();
 
+                Map<String,String> parametros = new HashMap<>();
 
                 parametros.put("id_comprayventa",idinput);
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
-                parametros.put("descripcion_comprayventa",descripcioninput);
-                parametros.put("descripcionextra_comprayventa",descripcionextrainput);
+                parametros.put("descripcion1_comprayventa",descripcioninput);
+                parametros.put("descripcion2_comprayventa",descripcionextrainput);
                 parametros.put("precio_comprayventa",precioinput);
+                parametros.put("vistas_comprayventa","0");
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
                 parametros.put("contacto_comprayventa",contactoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","ComprayVenta");
-
-                Log.i("Parametros", String.valueOf(parametros));
 
                 return parametros;
             }
@@ -684,7 +683,7 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
     }
     private void cargarActualizarConImagen_comprayventa() {
 
-        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagen.php?";
+        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenArticulo.php?";
 
 
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
@@ -762,28 +761,25 @@ public class PublicarArticulo extends AppCompatActivity implements Response.List
                 String cantidadinput = cantidad_publicar_comprayventa.getEditText().getText().toString().trim();
                 String contactoinput = contacto_publicar_comprayventa.getEditText().getText().toString().trim();
 
-                Map<String,String> parametros = new HashMap<>();
 
+                Map<String,String> parametros = new HashMap<>();
 
                 parametros.put("id_comprayventa",idinput);
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
-                parametros.put("descripcion_comprayventa",descripcioninput);
-                parametros.put("descripcionextra_comprayventa",descripcionextrainput);
+                parametros.put("descripcion1_comprayventa",descripcioninput);
+                parametros.put("descripcion2_comprayventa",descripcionextrainput);
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
                 parametros.put("contacto_comprayventa",contactoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","ComprayVenta");
-                parametros.put("imagen_comprayventa0",cadena.get(0));
-                parametros.put("imagen_comprayventa1",cadena.get(1));
-                parametros.put("imagen_comprayventa2",cadena.get(2));
 
+                for (int h = 0; h<nombre.size();h++){
 
-
-
-                Log.i("Parametros", String.valueOf(parametros));
+                    parametros.put(nombre.get(h),cadena.get(h));
+                }
 
                 return parametros;
             }
