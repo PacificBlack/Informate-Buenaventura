@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public class Bienes implements Serializable {
 
+    private int id_bienes;
     private String titulo_row_bienes,descripcion_row_bienes,fechapublicacion_row_bienes;
     private String imagen1_bienes,imagen2_bienes,imagen3_bienes,imagen4_bienes;
     private int precio_row_bienes,vistas_bienes;
@@ -15,7 +16,8 @@ public class Bienes implements Serializable {
     public Bienes() {
     }
 
-    public Bienes(String titulo_row_bienes, String descripcion_row_bienes, String fechapublicacion_row_bienes, String imagen1_bienes, String imagen2_bienes, String imagen3_bienes, String imagen4_bienes, int precio_row_bienes, int vistas_bienes, String descripcion1_bienes, String descripcion2_bienes) {
+    public Bienes(int id_bienes, String titulo_row_bienes, String descripcion_row_bienes, String fechapublicacion_row_bienes, String imagen1_bienes, String imagen2_bienes, String imagen3_bienes, String imagen4_bienes, int precio_row_bienes, int vistas_bienes, String descripcion1_bienes, String descripcion2_bienes) {
+        this.id_bienes = id_bienes;
         this.titulo_row_bienes = titulo_row_bienes;
         this.descripcion_row_bienes = descripcion_row_bienes;
         this.fechapublicacion_row_bienes = fechapublicacion_row_bienes;
@@ -27,6 +29,15 @@ public class Bienes implements Serializable {
         this.vistas_bienes = vistas_bienes;
         this.descripcion1_bienes = descripcion1_bienes;
         this.descripcion2_bienes = descripcion2_bienes;
+    }
+
+
+    public int getId_bienes() {
+        return id_bienes;
+    }
+
+    public void setId_bienes(int id_bienes) {
+        this.id_bienes = id_bienes;
     }
 
     public String getTitulo_row_bienes() {

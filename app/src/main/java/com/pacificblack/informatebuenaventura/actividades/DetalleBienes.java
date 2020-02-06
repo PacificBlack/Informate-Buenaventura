@@ -42,23 +42,24 @@ public class DetalleBienes extends AppCompatActivity {
             descripcion1_bienes.setText(bienes.getDescripcion1_bienes());
             descripcion2_bienes.setText(bienes.getDescripcion2_bienes());
             precio_bienes.setText(String.valueOf(bienes.getPrecio_row_bienes()));
+
             Picasso.get().load(bienes.getImagen1_bienes())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen1_bienes);
 
 
-            Picasso.get().load(bienes.getImagen1_bienes())
+            Picasso.get().load(bienes.getImagen2_bienes())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen2_bienes);
 
-            Picasso.get().load(bienes.getImagen1_bienes())
+            Picasso.get().load(bienes.getImagen3_bienes())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_bienes);
 
-            Picasso.get().load(bienes.getImagen1_bienes())
+            Picasso.get().load(bienes.getImagen4_bienes())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen4_bienes);
