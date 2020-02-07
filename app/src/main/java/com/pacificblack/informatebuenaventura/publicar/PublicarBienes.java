@@ -484,7 +484,7 @@ public class PublicarBienes extends AppCompatActivity implements Response.Listen
         descripcioncorta_publicar_bienes.getEditText().setText(bienes.getDescripcion_row_bienes());
         descripcion1_publicar_bienes.getEditText().setText(bienes.getDescripcion1_bienes());
         descripcion2_publicar_bienes.getEditText().setText(bienes.getDescripcion2_bienes());
-        precio_publicar_bienes.getEditText().setText(bienes.getPrecio_row_bienes());
+        precio_publicar_bienes.getEditText().setText(String.valueOf(bienes.getPrecio_row_bienes()));
 
 
         imagenes_bienes.setVisibility(View.VISIBLE);
