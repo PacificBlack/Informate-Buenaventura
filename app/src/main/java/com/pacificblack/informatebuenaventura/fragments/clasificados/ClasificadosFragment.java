@@ -47,8 +47,6 @@ public class ClasificadosFragment extends Fragment {
         recyclerClasificados = vista.findViewById(R.id.recycler_clasificados);
         recyclerClasificados.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        llenarlista_clasificados();
-
         AdaptadorClasificados adaptadorC = new AdaptadorClasificados(listaClasificados);
         recyclerClasificados.setAdapter(adaptadorC);
         adaptadorC.setOnClickListener(new View.OnClickListener() {
@@ -68,16 +66,6 @@ public class ClasificadosFragment extends Fragment {
         });
 
         return vista;
-    }
-
-    private void llenarlista_clasificados() {
-
-        listaClasificados.add(new Clasificados("Ami lo gui yu pari","Comanso coman guit baby comon guit baby un prieto y necesita de tu ayuda crack, jelpme",
-                "Domingo 12 del 2019",R.drawable.imagencita,R.drawable.imagencita,R.drawable.imagencita,R.drawable.imagencita,15,
-                "Uy mi perro lo que te diga de ese man es mentira","Sabe que mi perro, suerte le deseo"));
-
-
-
     }
 
 

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
+import com.squareup.picasso.Picasso;
 
 public class DetalleClasificados extends AppCompatActivity {
 
@@ -38,10 +39,28 @@ public class DetalleClasificados extends AppCompatActivity {
             titulo_clasificados.setText(clasificados.getTitulo_row_clasificados());
             descripcion1_clasificados.setText(clasificados.getDescripcion1_clasificados());
             descripcion2_clasificados.setText(clasificados.getDescripcion2_clasificados());
-            imagen1_clasificados.setImageResource(clasificados.getImagen1_clasificados());
-            imagen2_clasificados.setImageResource(clasificados.getImagen2_clasificados());
-            imagen3_clasificados.setImageResource(clasificados.getImagen3_clasificados());
-            imagen4_clasificados.setImageResource(clasificados.getImagen4_clasificados());
+
+
+            Picasso.get().load(clasificados.getImagen1_clasificados())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen1_clasificados);
+
+
+            Picasso.get().load(clasificados.getImagen2_clasificados())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen2_clasificados);
+
+            Picasso.get().load(clasificados.getImagen3_clasificados())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen3_clasificados);
+
+            Picasso.get().load(clasificados.getImagen4_clasificados())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen4_clasificados);
 
         }
     }

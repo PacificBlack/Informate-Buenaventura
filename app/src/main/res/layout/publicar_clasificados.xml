@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:columnWidth="150dp"
-                android:numColumns="3"
+                android:numColumns="4"
                 android:verticalSpacing="5dp"
                 android:horizontalSpacing="5dp"/>
 
@@ -87,11 +87,79 @@
                 android:text="Subir imagenes" />
 
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/publicar_video_clasificados"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="150"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Ingrese la url de su video"
+                    android:inputType="textPersonName" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <TextView
                 android:id="@+id/publicar_imagenes_clasificados"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Subir imagenes" />
+
+            <HorizontalScrollView
+                android:id="@+id/imagenes_actualizar_clasificados"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/imagen1_actualizar_clasificados"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic[14]" />
+
+                    <ImageButton
+                        android:id="@+id/imagen2_actualizar_clasificados"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                    <ImageButton
+                        android:id="@+id/imagen3_actualizar_clasificados"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                    <ImageButton
+                        android:id="@+id/imagen4_actualizar_clasificados"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -144,6 +212,61 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/publicar_adopcion" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/publicar_id_clasificados"
+                    android:layout_width="314dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/screen_background_light_transparent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="308dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                        android:inputType="text|number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/publicar_buscar_clasificados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_search_black_24dp"
+                    tools:ignore="VectorDrawableCompat" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/publicar_editar_clasificados"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@android:drawable/ic_menu_edit" />
+
+                <ImageButton
+                    android:id="@+id/publicar_eliminar_clasificados"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@android:drawable/ic_menu_delete" />
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,19 @@ public class AdaptadorClasificados extends RecyclerView.Adapter<AdaptadorClasifi
     @Override
     public void onBindViewHolder(@NonNull AdaptadorClasificados.ClasificadosHolder holder, int position) {
 
-        holder.imagenclasificados.setImageResource(listaClasificados.get(position).getImagen1_clasificados());
+
+        if (listaClasificados.get(position).getImagen1_clasificados() != null){
+
+            Picasso.get().load(listaClasificados.get(position).getImagen1_clasificados())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenclasificados);
+
+
+        }else{
+            holder.imagenclasificados.setImageResource(R.drawable.imagennodisponible);
+
+        }
         holder.tituloclasificados.setText(listaClasificados.get(position).getTitulo_row_clasificados());
         holder.descripcioncortaclasificados.setText(listaClasificados.get(position).getDescripcion_row_clasificados());
         holder.fechapublicacionclasificados.setText(listaClasificados.get(position).getFechapublicacion_row_clasificados());
