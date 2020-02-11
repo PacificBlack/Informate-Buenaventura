@@ -764,7 +764,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
 
     private void cargarWebService_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {

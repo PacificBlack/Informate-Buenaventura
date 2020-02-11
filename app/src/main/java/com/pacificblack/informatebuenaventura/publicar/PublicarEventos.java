@@ -189,7 +189,7 @@ public class PublicarEventos extends AppCompatActivity {
 
     private void cargarWebService_eventos() {
 
-        String url_eventos = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+        String url_eventos = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
 
 
         stringRequest_eventos= new StringRequest(Request.Method.POST, url_eventos, new Response.Listener<String>() {

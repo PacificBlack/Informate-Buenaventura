@@ -17,6 +17,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarAdopcion;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarArticulo;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarBienes;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarClasificados;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarAdopcion;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarArticulo;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarBienes;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarClasificados;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
 import com.pacificblack.informatebuenaventura.publicar.PublicarAdopcion;
 import com.pacificblack.informatebuenaventura.publicar.PublicarArticulo;
@@ -105,10 +113,6 @@ public class MainActivity extends AppCompatActivity   {
     }
 
 
-public void PublicarAdopcion(View v){
-    Intent intent = new Intent(MainActivity.this, PublicarAdopcion.class);
-    startActivity(intent);
-}
 
     public void ShowPopup(View v) {
         TextView txtclose;
@@ -125,63 +129,120 @@ public void PublicarAdopcion(View v){
         dialog.show();
     }
 
-
+    public void PublicarAdopcion(View v){
+        Intent intent = new Intent(MainActivity.this, PublicarAdopcion.class);
+        startActivity(intent);
+    }
     public void PublicarDesaparicion(View v){
         Intent intent = new Intent(MainActivity.this, PublicarDesaparicion.class);
         startActivity(intent);
 
     }
-
-
-
     public void PublicarArticulo(View view){
         Intent intent = new Intent(MainActivity.this, PublicarArticulo.class);
         startActivity(intent);
     }
-
-
     public void PublicarEventos(View view){
         Intent intent = new Intent(MainActivity.this, PublicarEventos.class);
         startActivity(intent);
     }
-
     public void PublicarServicios(View view){
         Intent intent = new Intent(MainActivity.this, PublicarServicios.class);
         startActivity(intent);
     }
-
-
-
     public void PublicarEmpleos(View view){
         Intent intent = new Intent(MainActivity.this, PublicarEmpleos.class);
         startActivity(intent);
     }
-
-
     public void PublicarBienes(View view){
         Intent intent = new Intent(MainActivity.this, PublicarBienes.class);
         startActivity(intent);
     }
-
-
     public void PublicarClasificados(View view){
         Intent intent = new Intent(MainActivity.this, PublicarClasificados.class);
         startActivity(intent);
     }
-
     public void PublicarFunebres(View view){
 
         Intent intent = new Intent(MainActivity.this, PublicarFunebres.class);
         startActivity(intent);
     }
-
     public void PublicarDonaciones(View view){
         Intent intent = new Intent(MainActivity.this, PublicarDonaciones.class);
         startActivity(intent);
     }
+    public void PublicarEncuestas(View view){
 
-    public void PublicarEncuestas(View view){}
+    }
 
+/////////////////////////////////////////////////////////////////
+
+    public void MostrarEliminar(View view){
+        TextView txtclose;
+        dialog.setContentView(R.layout.ventana_eliminar);
+        txtclose =(TextView) dialog.findViewById(R.id.txtclose_eliminar);
+        txtclose.setText("X");
+        txtclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    public void EliminarAdopcion(View view){
+        Intent intent = new Intent(MainActivity.this, EliminarAdopcion.class);
+        startActivity(intent);
+    }
+    public void EliminarArticulo(View view){
+        Intent intent = new Intent(MainActivity.this, EliminarArticulo.class);
+        startActivity(intent);
+    }
+    public void EliminarBienes(View v){
+        Intent intent = new Intent(MainActivity.this, EliminarBienes.class);
+        startActivity(intent);
+    }
+    public void EliminarClasificados(View view){
+        Intent intent = new Intent(MainActivity.this, EliminarClasificados.class);
+        startActivity(intent);
+    }
+
+
+/////////////////////////////////////////////////////////////
+
+    public void MostrarActualizar(View view){
+        TextView txtclose;
+        dialog.setContentView(R.layout.ventana_actualizar);
+        txtclose =(TextView) dialog.findViewById(R.id.txtclose_eliminar);
+        txtclose.setText("X");
+        txtclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    public void ActualizarAdopcion(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarAdopcion.class);
+        startActivity(intent);
+    }
+    public void ActualizarArticulo(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarArticulo.class);
+        startActivity(intent);
+    }
+    public void ActualizarBienes(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarBienes.class);
+        startActivity(intent);
+    }
+    public void ActualizarClasificados(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarClasificados.class);
+        startActivity(intent);
+    }
 
 
 }

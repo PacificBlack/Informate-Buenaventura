@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="#E91E63"
     android:orientation="vertical"
-
-    tools:context=".publicar.PublicarArticulo">
+    tools:context=".actualizar.ActualizarArticulo">
 
 
 
@@ -18,6 +18,39 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/actualizar_id_comprayventa"
+            android:layout_width="314dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:drawable/screen_background_light_transparent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="308dp"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                android:inputType="text|number"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/actualizar_buscar_comprayventa"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_search_black_24dp"
+            tools:ignore="VectorDrawableCompat" />
+
+    </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,7 +63,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_titulo_comprayventa"
+                android:id="@+id/actualizar_titulo_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -47,10 +80,8 @@
 
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_descripcioncorta_comprayventa"
+                android:id="@+id/actualizar_descripcioncorta_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -67,12 +98,8 @@
                     android:hint="@string/inserte_corta"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_precio_comprayventa"
+                android:id="@+id/actualizar_precio_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -89,11 +116,8 @@
                     android:hint="Ingrese el precio que desea cobrar por articulo" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_contacto_comprayventa"
+                android:id="@+id/actualizar_contacto_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -110,12 +134,8 @@
                     android:hint="Ingrese un medio de contacto para que lo puedan ubicar"
                     android:inputType="textMultiLine|textNoSuggestions" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_ubicacion_comprayventa"
+                android:id="@+id/actualizar_ubicacion_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -132,11 +152,8 @@
                     android:hint="Ingrese la ubicación donde se puede comprar"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_cantidad_comprayventa"
+                android:id="@+id/actualizar_cantidad_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -159,7 +176,7 @@
 
 
             <GridView
-                android:id="@+id/grid_comprayventa"
+                android:id="@+id/grid_comprayventa_actualizar"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:columnWidth="150dp"
@@ -168,21 +185,50 @@
                 android:horizontalSpacing="5dp"/>
 
             <Button
-                android:id="@+id/subir_imagenes_comprayventa"
+                android:id="@+id/actualizar_imagenes_comprayventa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subir imagenes" />
+                android:text="Actualizar imagenes" />
 
+            <HorizontalScrollView
+                android:id="@+id/imagenes_actualizar_comprayventa"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subir imagenes" />
+                    <ImageButton
+                        android:id="@+id/imagen1_actualizar_comprayventa"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic[14]" />
+
+                    <ImageButton
+                        android:id="@+id/imagen2_actualizar_comprayventa"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                    <ImageButton
+                        android:id="@+id/imagen3_actualizar_comprayventa"
+                        android:layout_width="409dp"
+                        android:layout_height="280dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitStart"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+                </LinearLayout>
+            </HorizontalScrollView>
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_descripcion_comprayventa"
+                android:id="@+id/actualizar_descripcion_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -204,7 +250,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_descripcionextra_comprayventa"
+                android:id="@+id/actualizar_descripcionextra_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -225,63 +271,15 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <Button
-                android:id="@+id/publicar_final_comprayventa"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/publicar_adopcion" />
-
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="66dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/publicar_id_comprayventa"
-                    android:layout_width="314dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@android:drawable/screen_background_light_transparent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="308dp"
-                        android:layout_height="wrap_content"
-                        android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
-                        android:inputType="text|number"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <ImageButton
-                    android:id="@+id/publicar_buscar_comprayventa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_search_black_24dp"
-                    tools:ignore="VectorDrawableCompat" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/publicar_editar_comprayventa"
-                    android:layout_width="50dp"
+                    android:id="@+id/actualizar_editar_comprayventa"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     app:srcCompat="@android:drawable/ic_menu_edit" />
 
 
-            </LinearLayout>
 
 
         </LinearLayout>

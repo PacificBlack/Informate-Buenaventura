@@ -203,7 +203,7 @@ public class PublicarEmpleos extends AppCompatActivity {
 
     private void cargarWebService_empleos() {
 
-        String url_empleos = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+        String url_empleos = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
 
 
         stringRequest_empleos= new StringRequest(Request.Method.POST, url_empleos, new Response.Listener<String>() {

@@ -17,7 +17,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".publicar.PublicarDonaciones"></activity>
+        <activity android:name=".actualizar.ActualizarClasificados"></activity>
+        <activity android:name=".eliminar.EliminarClasificados" />
+        <activity android:name=".actualizar.ActualizarBienes" />
+        <activity android:name=".eliminar.EliminarBienes" />
+        <activity android:name=".actualizar.ActualizarArticulo" />
+        <activity android:name=".eliminar.EliminarArticulo" />
+        <activity android:name=".actualizar.ActualizarAdopcion" />
+        <activity android:name=".eliminar.EliminarAdopcion" />
+        <activity android:name=".publicar.PublicarDonaciones" />
         <activity android:name=".publicar.PublicarFunebres" />
         <activity android:name=".publicar.PublicarClasificados" />
         <activity android:name=".publicar.PublicarBienes" />
@@ -51,12 +59,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7236340326570289~3340443977"/>
-
-
+            android:value="ca-app-pub-7236340326570289~3340443977" />
     </application>
 
 </manifest>

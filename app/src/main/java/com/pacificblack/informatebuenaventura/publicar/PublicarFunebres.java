@@ -232,7 +232,7 @@ public class PublicarFunebres extends AppCompatActivity {
 
     private void cargarWebService_funebres() {
 
-        String url_funebres = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+        String url_funebres = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
 
 
         stringRequest_funebres= new StringRequest(Request.Method.POST, url_funebres, new Response.Listener<String>() {

@@ -4,19 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3F51B5"
     android:layout_gravity="center"
-    android:background="#FFD600"
     android:orientation="vertical"
-    tools:context=".publicar.PublicarClasificados">
-
-
+    tools:context=".actualizar.ActualizarAdopcion">
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,9 +25,43 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/actualizar_id_adopcion"
+                    android:layout_width="314dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:drawable/screen_background_light_transparent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="308dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                        android:inputType="text|number"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/actualizar_buscar_adopcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_search_black_24dp"
+                    tools:ignore="VectorDrawableCompat" />
+
+            </LinearLayout>
+
+
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_titulo_clasificados"
+                android:id="@+id/actualizar_titulo_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -49,7 +81,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_descripcioncorta_clasificados"
+                android:id="@+id/actualizar_descripcioncorta_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -70,9 +102,8 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
             <GridView
-                android:id="@+id/grid_clasificados"
+                android:id="@+id/actualizar_grid_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:columnWidth="150dp"
@@ -81,45 +112,15 @@
                 android:horizontalSpacing="5dp"/>
 
             <Button
-                android:id="@+id/subir_imagenes_clasificados"
+                android:id="@+id/actualizar_imagenes_adopcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subir imagenes" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_video_clasificados"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="150"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="Ingrese la url de su video"
-                    android:inputType="textPersonName" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <TextView
-                android:id="@+id/publicar_imagenes_clasificados"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subir imagenes" />
+                android:text="Actualizar imagenes" />
 
             <HorizontalScrollView
-                android:id="@+id/imagenes_actualizar_clasificados"
+                android:id="@+id/imagenes_actualizar_adopcion"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -127,7 +128,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/imagen1_actualizar_clasificados"
+                        android:id="@+id/imagen1_actualizar_adopcion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
@@ -135,35 +136,34 @@
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
-                        android:id="@+id/imagen2_actualizar_clasificados"
+                        android:id="@+id/imagen2_actualizar_adopcion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic" />
                     <ImageButton
-                        android:id="@+id/imagen3_actualizar_clasificados"
+                        android:id="@+id/imagen3_actualizar_adopcion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic" />
                     <ImageButton
-                        android:id="@+id/imagen4_actualizar_clasificados"
+                        android:id="@+id/imagen4_actualizar_adopcion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic" />
-
-
                 </LinearLayout>
             </HorizontalScrollView>
 
 
 
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_descripcion1_clasificados"
+                android:id="@+id/actualizar_descripcion1_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -185,7 +185,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/publicar_descripcion2_clasificados"
+                android:id="@+id/actualizar_descripcion2_adopcion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -206,18 +206,25 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <Button
-                android:id="@+id/publicar_final_clasificados"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/publicar_adopcion" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/actualizar_editar_adopcion"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            </LinearLayout>
 
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </LinearLayout>
