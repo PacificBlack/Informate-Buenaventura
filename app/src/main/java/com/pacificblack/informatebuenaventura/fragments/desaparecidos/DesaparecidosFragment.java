@@ -74,21 +74,6 @@ View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false
     private void llenarlista_desaparecidos() {
 
 
-        listaDesaparecidos.add(new Desaparecidos(
-                "Cause Heartles",
-                "Este perrito es un Eno back to mai wik crack, jelpme",
-                "Domingo 12 del 2019",
-                "guuGUachan guachan",
-                35,
-                R.drawable.imagencita,
-                R.drawable.imagencita,
-                R.drawable.imagencita,
-                "Uy mi perro lo que te diga de ese man es mentira",
-                "Sabe que mi perro, suerte le deseo",
-                "Se desaparecion ayer el viejito",
-                "Sigue desaparecido",
-                "Don pioka",
-                "Animal"));
 
 
     }

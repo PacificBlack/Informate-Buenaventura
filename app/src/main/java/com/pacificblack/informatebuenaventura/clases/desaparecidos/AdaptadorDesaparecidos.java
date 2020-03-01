@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,28 @@ public class AdaptadorDesaparecidos extends RecyclerView.Adapter<AdaptadorDesapa
         holder.fechapublicaciondesaparecidos.setText(listaDesaparecidos.get(position).getFechapublicacion_row_desaparecidos());
         holder.vistadesaparecidos.setText(String.valueOf(listaDesaparecidos.get(position).getVista_row_desaparecidos()));
         holder.recompensadesaparecidos.setText(listaDesaparecidos.get(position).getRecompensa_row_desaparecidos());
-        holder.imagendesaparecidos.setImageResource(listaDesaparecidos.get(position).getImagen1_desaparecidos());
+
+
+        //TODO: Aqui verifico si trae la imagen o no
+
+
+        if (listaDesaparecidos.get(position).getImagen1_desaparecidos() != null){
+
+            Picasso.get().load(listaDesaparecidos.get(position).getImagen1_desaparecidos())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagendesaparecidos);
+
+
+        }else{
+            holder.imagendesaparecidos.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
+
+
+        //TODO: Aqui verifico si trae la imagen o no
+
 
     }
 

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+import com.squareup.picasso.Picasso;
 
 public class DetalleDesaparecidos extends AppCompatActivity {
 
@@ -47,9 +48,23 @@ public class DetalleDesaparecidos extends AppCompatActivity {
             fechadesaparicion_desaparecidos.setText(desaparecidos.getFechadesaparecido_desaparecidos());
             recompensa_desaparecidos.setText(desaparecidos.getRecompensa_row_desaparecidos());
             estado_desaparecidos.setText(desaparecidos.getEstado_desaparecidos());
-            imagen1_desaparecidos.setImageResource(desaparecidos.getImagen1_desaparecidos());
-            imagen2_desaparecidos.setImageResource(desaparecidos.getImagen2_desaparecidos());
-            imagen3_desaparecidos.setImageResource(desaparecidos.getImagen3̣̣_desaparecidos());
+
+            Picasso.get().load(desaparecidos.getImagen1_desaparecidos())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen1_desaparecidos);
+
+
+            Picasso.get().load(desaparecidos.getImagen2_desaparecidos())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen2_desaparecidos);
+
+            Picasso.get().load(desaparecidos.getImagen3̣̣_desaparecidos())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen3_desaparecidos);
+
 
         }
 

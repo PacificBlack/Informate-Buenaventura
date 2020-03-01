@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3F51B5"
     android:layout_gravity="center"
+    android:background="#FF87"
     android:orientation="vertical"
-    tools:context=".eliminar.EliminarAdopcion">
+    tools:context=".eliminar.EliminarDesaparicion">
 
 
 
     <ImageView
+        android:id="@+id/imageView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="66dp"
@@ -24,7 +26,7 @@
         android:layout_marginBottom="20dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/eliminar_id_adopcion"
+            android:id="@+id/eliminar_id_desaparicion"
             android:layout_width="314dp"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
@@ -40,7 +42,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
-            android:id="@+id/eliminar_buscar_adopcion"
+            android:id="@+id/eliminar_buscar_desaparicion"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="4dp"
@@ -49,6 +51,7 @@
             tools:ignore="VectorDrawableCompat" />
 
     </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -59,33 +62,60 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/eliminar_titulo_desaparicion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/inserte_titulo" />
 
-
-            <TextView
-                android:id="@+id/eliminar_titulo_adopcion"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp"
-                android:hint="@string/inserte_titulo"
-                 />
 
 
                 <TextView
-                    android:id="@+id/eliminar_descripcioncorta_adopcion"
+                    android:id="@+id/eliminar_descripcioncorta_desaparicion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:ems="10"
                     android:gravity="start|top"
-                    android:hint="@string/inserte_corta"
-                    />
+                    android:hint="@string/inserte_corta" />
 
+                <TextView
+                    android:id="@+id/eliminar_recompensa_desaparicion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:gravity="start|top" />
+
+
+            <TextView
+                android:id="@+id/eliminar_fechade_desaparicion"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginTop="10dp"
+                android:drawableRight="@android:drawable/ic_menu_my_calendar"
+                android:hint="Ingrese que dia se desaparecio"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/eliminar_estadodes_desapariciom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Presione dos veces para seleccionar el estado de la publicación" />
+
+                <TextView
+                    android:id="@+id/eliminar_ultimolugar_desaparicion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Ingrese el ultimo lugar donde fue visto" />
 
             <HorizontalScrollView
-                android:id="@+id/imagenes_eliminar_adopcion"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -93,7 +123,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/imagen1_eliminar_adopcion"
+                        android:id="@+id/imagen1_eliminar_desaparicion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
@@ -101,21 +131,14 @@
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
-                        android:id="@+id/imagen2_eliminar_adopcion"
+                        android:id="@+id/imagen2_eliminar_desaparicion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
                         android:scaleType="fitStart"
                         tools:src="@tools:sample/backgrounds/scenic" />
                     <ImageButton
-                        android:id="@+id/imagen3_eliminar_adopcion"
-                        android:layout_width="409dp"
-                        android:layout_height="280dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitStart"
-                        tools:src="@tools:sample/backgrounds/scenic" />
-                    <ImageButton
-                        android:id="@+id/imagen4_eliminar_adopcion"
+                        android:id="@+id/imagen3_eliminar_desaparicion"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
@@ -125,40 +148,36 @@
             </HorizontalScrollView>
 
 
-
                 <TextView
-                    android:id="@+id/eliminar_descripcion1_adopcion"
+                    android:id="@+id/eliminar_descripcion_desaparicion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="@string/inserte_descripcion1"
-                     />
+                    android:hint="@string/inserte_descripcion1"/>
+
 
                 <TextView
-                    android:id="@+id/eliminar_descripcion2_adopcion"
+                    android:id="@+id/eliminar_descripcionextra_desaparicion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:ems="10"
                     android:gravity="start|top"
-                    android:hint="@string/inserte_descripcion2"
-                    android:inputType="textMultiLine" />
+                    android:hint="@string/inserte_descripcion2" />
 
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/eliminar_quese_desaparicion"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:hint="Presione dos veces para seleccionar ingrese que se desaparecio" />
 
-                <ImageButton
-                    android:id="@+id/eliminar_adopcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@android:drawable/ic_menu_delete" />
-            </LinearLayout>
-
+            <ImageButton
+                android:id="@+id/eliminar_desaparicion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                app:srcCompat="@android:drawable/ic_menu_delete" />
 
         </LinearLayout>
     </ScrollView>

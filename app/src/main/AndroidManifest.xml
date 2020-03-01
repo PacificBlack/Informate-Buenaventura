@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".actualizar.ActualizarClasificados"></activity>
+        <activity android:name=".eliminar.EliminarDesaparicion"></activity>
+        <activity android:name=".actualizar.ActualizarClasificados" />
         <activity android:name=".eliminar.EliminarClasificados" />
         <activity android:name=".actualizar.ActualizarBienes" />
         <activity android:name=".eliminar.EliminarBienes" />

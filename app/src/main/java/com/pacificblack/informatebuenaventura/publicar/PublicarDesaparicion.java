@@ -378,7 +378,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     private void cargarWebService_desaparicion() {
 
-        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONRegistroDesaparicion.php?";
 
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {

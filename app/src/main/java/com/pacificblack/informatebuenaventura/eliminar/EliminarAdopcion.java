@@ -74,24 +74,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     ImageView imagen1_eliminar_adopcion,imagen2_eliminar_adopcion,
             imagen3_eliminar_adopcion,imagen4_eliminar_adopcion;
 
-
-    //TODO: Modificar y Eliminar
-
-
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
-    GridView gvImagenes_adopcion_eliminar;
-    Uri imagenesadopcionUri_eliminar;
-    List<Uri> listaimagenes_adopcion_eliminar =  new ArrayList<>();
-    List<String> listaBase64_adopcion_eliminar = new ArrayList<>();
-    GridViewAdapter baseAdapter_eliminar;
-    List<String> cadena = new ArrayList<>();
-    List<String> nombre = new ArrayList<>();
     StringRequest stringRequest_adopcion_eliminar;
-    private static final int IMAGE_PICK_CODE = 100;
-    private static final int PERMISSON_CODE = 1001;
-
-    //TODO: Aqui finaliza
 
     private InterstitialAd anuncioAdopcion_eliminar;
 
@@ -362,83 +345,5 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         request_adopcion_eliminar.add(stringRequest_adopcion_eliminar);
 
     }
-
-
-
-
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
-
-
-    public String convertirUriEnBase64(Bitmap bmp){
-        ByteArrayOutputStream array = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
-        byte[] imagenByte = array.toByteArray();
-        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
-        return imagenString;
-    }
-    public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case PERMISSON_CODE: {
-
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
-                    seleccionarimagen();
-
-                }
-                else{
-                    //Permiso denegado
-                    Toast.makeText(EliminarAdopcion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
-                }
-            }
-
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-        ClipData clipData = data.getClipData();
-
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
-            if (clipData == null){
-                imagenesadopcionUri_eliminar = data.getData();
-                listaimagenes_adopcion_eliminar.add(imagenesadopcionUri_eliminar);
-            }else {
-                for (int i = 0; i< 4; i++){
-                    listaimagenes_adopcion_eliminar.add(clipData.getItemAt(i).getUri());
-                }
-            }
-
-
-
-
-        }
-
-        baseAdapter_eliminar = new GridViewAdapter(EliminarAdopcion.this,listaimagenes_adopcion_eliminar);
-        gvImagenes_adopcion_eliminar.setAdapter(baseAdapter_eliminar);
-
-
-
-    }
-
 
 }
