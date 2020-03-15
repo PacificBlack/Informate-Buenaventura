@@ -433,8 +433,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
                 }
 
-
-
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("titulo_desaparecidos",tituloinput);
                 parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
@@ -453,9 +451,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
-
-
-
 
                 return parametros;
             }

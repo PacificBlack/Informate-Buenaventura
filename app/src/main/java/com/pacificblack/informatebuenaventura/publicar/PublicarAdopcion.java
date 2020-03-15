@@ -81,36 +81,12 @@ public class PublicarAdopcion extends AppCompatActivity {
         descripcion1_publicar_adopcion = findViewById(R.id.publicar_descripcion1_adopcion);
         descripcion2_publicar_adopcion = findViewById(R.id.publicar_descripcion2_adopcion);
 
-        publicarfinal_adopcion = findViewById(R.id.publicar_final_adopcion);
-
-        publicarfinal_adopcion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){
-                    return;
-                }
-
-                //TODO: Aqui se hace el envio a la base de datos
-
-                Subirimagen_adopcion();
-
-            }
-        });
-
-
-
-
         //TODO: Anuncios
 
         anuncioAdopcion = new InterstitialAd(this);
         anuncioAdopcion.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         anuncioAdopcion.loadAd(new AdRequest.Builder().build());
         //TODO: Anuncios
-
-
-
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
@@ -140,9 +116,24 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
+        publicarfinal_adopcion = findViewById(R.id.publicar_final_adopcion);
+        publicarfinal_adopcion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 
+                if (!validartitulo() |
+                        !validardescripcioncorta() |
+                        !validardescripcion1() |
+                        !validardescripcion2() |
+                        !validarfoto()){return;}
 
+                //TODO: Aqui se hace el envio a la base de datos
+
+                Subirimagen_adopcion();
+
+            }
+        });
 
 
     }
@@ -243,9 +234,6 @@ public class PublicarAdopcion extends AppCompatActivity {
 
     }
 
-
-
-
     //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
 
     private void cargarWebService_adopcion() {
@@ -292,20 +280,28 @@ public class PublicarAdopcion extends AppCompatActivity {
                 String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
+
+                for (int h = 0; h<nombre.size();h++){
+
+                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
+
+                    Log.i("Mostrar**********************************************************************",cadena.get(h));
+
+                }
+
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("titulo_adopcion",tituloinput);
                 parametros.put("descripcionrow_adopcion",descripcioncortainput);
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
                 parametros.put("descripcion2_adopcion",descripcion2input);
-                parametros.put("imagen_adopcion0",cadena.get(0));
-                parametros.put("imagen_adopcion1",cadena.get(1));
-                parametros.put("imagen_adopcion2",cadena.get(2));
-                parametros.put("imagen_adopcion3",cadena.get(3));
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
 
-                Log.i("Parametros: ", parametros.toString());
+                for (int h = 0; h<nombre.size();h++){
+
+                    parametros.put(nombre.get(h),cadena.get(h));
+                }
 
                 return parametros;
             }
@@ -406,9 +402,6 @@ public class PublicarAdopcion extends AppCompatActivity {
                     listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
 
         }
 

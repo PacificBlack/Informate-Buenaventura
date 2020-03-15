@@ -413,7 +413,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         precio_actualizar_bienes.getEditText().setText(String.valueOf(bienes.getPrecio_row_bienes()));
 
 
-        imagenes_bienes.setVisibility(View.VISIBLE);
 
         Picasso.get().load(bienes.getImagen1_bienes())
                 .placeholder(R.drawable.imagennodisponible)
