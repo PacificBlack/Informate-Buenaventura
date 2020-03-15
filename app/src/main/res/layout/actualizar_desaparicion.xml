@@ -164,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:columnWidth="150dp"
-                android:numColumns="4"
+                android:numColumns="3"
                 android:verticalSpacing="5dp"
                 android:horizontalSpacing="5dp"/>
 

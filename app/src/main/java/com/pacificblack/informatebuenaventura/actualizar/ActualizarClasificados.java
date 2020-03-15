@@ -501,7 +501,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                 Map<String,String> parametros = new HashMap<>();
 
-                parametros.put("id_adopcion",idinput);
+                parametros.put("id_clasificados",idinput);
                 parametros.put("titulo_clasificados",tituloinput);
                 parametros.put("descripcionrow_clasificados",descripcioncortainput);
                 parametros.put("video_clasificados",videoinput);
@@ -610,7 +610,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                 Map<String,String> parametros = new HashMap<>();
 
-                parametros.put("id_adopcion",idinput);
+                parametros.put("id_clasificados",idinput);
                 parametros.put("titulo_clasificados",tituloinput);
                 parametros.put("descripcionrow_clasificados",descripcioncortainput);
                 parametros.put("video_clasificados",videoinput);

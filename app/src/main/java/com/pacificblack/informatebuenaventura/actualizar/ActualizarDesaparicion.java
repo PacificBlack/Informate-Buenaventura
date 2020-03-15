@@ -255,8 +255,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
-        gvImagenes_desaparicion = findViewById(R.id.grid_desaparicion);
-        subirimagenes = findViewById(R.id.subir_imagenes_desaparicion);
+        gvImagenes_desaparicion = findViewById(R.id.grid_actualizar_desaparicion);
+        subirimagenes = findViewById(R.id.actualizar_imagenes_desaparicion);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -481,7 +481,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             return true;
 
         }
-        else if(listaimagenes_desaparicion.size() == 4){
+        else if(listaimagenes_desaparicion.size() == 3){
             return false;
         }
 
@@ -494,15 +494,12 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
     private void cargarBusqueda_desaparicion() {
 
-        String url_buscar_bienes = "http://192.168.0.18/InformateDB/wsnJSONBuscarDesaparicion.php?id_bienes="+buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
+        String url_buscar_bienes = "http://192.168.0.18/InformateDB/wsnJSONBuscarDesaparicion.php?id_desaparecidos="+buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
 
         requestbuscar.add(jsonObjectRequestBuscar);
     }
-
-
-
     @Override
     public void onErrorResponse(VolleyError error) {
 
@@ -550,6 +547,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         descripcioncorta_actualizar_desaparicion.getEditText().setText(desaparecidos.getDescripcion_row_desaparecidos());
         recompensa_actualizar_desaparicion.getEditText().setText(desaparecidos.getRecompensa_row_desaparecidos());
         diadesa_actualizar_desaparicion.setText(desaparecidos.getFechadesaparecido_desaparecidos());
+        dia_desaparicion = desaparecidos.getFechadesaparecido_desaparecidos();
         ultimolugar_actualizar_desaparicion.getEditText().setText(desaparecidos.getUltimolugar_desaparecidos());
         descripcion1_actualizar_desaparicion.getEditText().setText(desaparecidos.getDescripcion1_desaparecidos());
         descripcion2_actualizar_desaparicion.getEditText().setText(desaparecidos.getDescripcion2_desaparecidos());
@@ -649,6 +647,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
+                String iddesaparecidos = buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String tituloinput = titulo_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
@@ -670,6 +669,9 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
 
                 Map<String,String> parametros = new HashMap<>();
+
+
+                parametros.put("id_desaparecidos",iddesaparecidos);
                 parametros.put("titulo_desaparecidos",tituloinput);
                 parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
                 parametros.put("recompensa_desaparecidos",recompensainput);
@@ -770,6 +772,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
+                String iddesaparecidos = buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String tituloinput = titulo_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
@@ -781,7 +784,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
                 Map<String,String> parametros = new HashMap<>();
 
-
+                parametros.put("id_desaparecidos",iddesaparecidos);
                 parametros.put("titulo_desaparecidos",tituloinput);
                 parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
                 parametros.put("recompensa_desaparecidos",recompensainput);
