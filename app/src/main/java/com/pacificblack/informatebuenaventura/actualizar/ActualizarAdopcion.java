@@ -56,6 +56,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class ActualizarAdopcion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     TextInputLayout titulo_actualizar_adopcion,
@@ -349,7 +351,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_adopcion() {
 
-        String url_buscar_adopcion = "http://192.168.0.18/InformateDB/wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_actualizar_adopcion.getEditText().getText().toString().trim();
+        String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_actualizar_adopcion.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_adopcion,null,this,this);
 
@@ -425,7 +427,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
     private void cargarActualizarSinImagen_adopcion() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagenAdopcion.php?";
+        String url_adopcion = DireccionServidor+"wsnJSONActualizarSinImagenAdopcion.php?";
 
 
         stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
@@ -523,7 +525,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     }
     private void cargarActualizarConImagen_adopcion() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenAdopcion.php?";
+        String url_adopcion = DireccionServidor+"wsnJSONActualizarConImagenAdopcion.php?";
 
 
         stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {

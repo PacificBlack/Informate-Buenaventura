@@ -56,6 +56,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class ActualizarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
 
@@ -360,7 +362,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_bienes() {
 
-        String url_buscar_bienes = "http://192.168.0.18/InformateDB/wsnJSONBuscarBienes.php?id_bienes="+buscar_actualizar_bienes.getEditText().getText().toString().trim();
+        String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarBienes.php?id_bienes="+buscar_actualizar_bienes.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
 
@@ -438,7 +440,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
     private void cargarActualizarSinImagen_bienes() {
 
-        String url_bienes = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagenBienes.php?";
+        String url_bienes = DireccionServidor+"wsnJSONActualizarSinImagenBienes.php?";
 
 
         stringRequest_bienes= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
@@ -538,7 +540,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     }
     private void cargarActualizarConImagen_bienes() {
 
-        String url_bienes = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenBienes.php?";
+        String url_bienes = DireccionServidor+"wsnJSONActualizarConImagenBienes.php?";
 
 
         stringRequest_bienes = new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
