@@ -34,6 +34,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -85,7 +87,7 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
     private void cargarWebService_Bienes() {
 
-        String url_bienes = "http://192.168.0.18/InformateDB/wsnJSONllenarBienes.php";
+        String url_bienes = DireccionServidor+"wsnJSONllenarBienes.php";
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_bienes,null,this,this);
         request.add(jsonObjectRequest);

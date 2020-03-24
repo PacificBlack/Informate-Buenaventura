@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class EliminarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     StringRequest stringRequest_desaparicion;
@@ -173,7 +175,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_desaparicion() {
 
-        String url_buscar_bienes = "http://192.168.0.18/InformateDB/wsnJSONBuscarDesaparicion.php?id_desaparecidos="+id_desaparicion.getEditText().getText().toString().trim();
+        String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarDesaparicion.php?id_desaparecidos="+id_desaparicion.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar_eliminar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
 
@@ -254,7 +256,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
     private void cargarEliminar_desaparicion() {
 
-        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONEliminar.php?";
+        String url_desaparicion = DireccionServidor+"wsnJSONEliminar.php?";
 
 
         stringRequest_desaparicion = new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {

@@ -65,6 +65,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class ActualizarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
 
@@ -494,7 +496,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
     private void cargarBusqueda_desaparicion() {
 
-        String url_buscar_bienes = "http://192.168.0.18/InformateDB/wsnJSONBuscarDesaparicion.php?id_desaparecidos="+buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
+        String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarDesaparicion.php?id_desaparecidos="+buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
 
@@ -579,7 +581,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
     private void cargarActualizarConImagen_desaparicion(){
 
-        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenDesaparicion.php?";
+        String url_desaparicion = DireccionServidor+"wsnJSONActualizarConImagenDesaparicion.php?";
 
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
@@ -704,7 +706,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private void cargarActualizarSinImagen_desaparicion(){
 
-        String url_desaparicion = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagenDesaparicion.php?";
+        String url_desaparicion = DireccionServidor+"wsnJSONActualizarSinImagenDesaparicion.php?";
 
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {

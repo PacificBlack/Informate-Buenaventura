@@ -41,6 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 
 public class PublicarAdopcion extends AppCompatActivity {
 
@@ -238,7 +240,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
     private void cargarWebService_adopcion() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONRegistroAdopcion.php?";
+        String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
 
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {

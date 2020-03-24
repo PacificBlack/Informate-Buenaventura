@@ -56,6 +56,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class PublicarDonaciones extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
@@ -290,7 +292,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
 //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_donaciones() {
 
-        String url_buscar_donaciones = "http://192.168.0.18/InformateDB/wsnJSONBuscarDonaciones.php?id_donaciones="+buscar_publicar_donaciones.getEditText().getText().toString().trim();
+        String url_buscar_donaciones = DireccionServidor+"wsnJSONBuscarDonaciones.php?id_donaciones="+buscar_publicar_donaciones.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_donaciones,null,this,this);
 
@@ -361,7 +363,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
     }
     private void cargarActualizarSinImagen_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImageneDonaciones.php?";
+        String url_donaciones = DireccionServidor+"wsnJSONActualizarSinImageneDonaciones.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -457,7 +459,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
     }
     private void cargarActualizarConImagen_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenDonaciones.php?";
+        String url_donaciones = DireccionServidor+"wsnJSONActualizarConImagenDonaciones.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -560,7 +562,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
     }
     private void cargarEliminar_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONEliminar.php?";
+        String url_donaciones = DireccionServidor+"wsnJSONEliminar.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -764,7 +766,7 @@ public class PublicarDonaciones extends AppCompatActivity implements Response.Li
 
     private void cargarWebService_donaciones() {
 
-        String url_donaciones = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
+        String url_donaciones = DireccionServidor+"wsnJSONRegistroDos.php?";
 
 
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {

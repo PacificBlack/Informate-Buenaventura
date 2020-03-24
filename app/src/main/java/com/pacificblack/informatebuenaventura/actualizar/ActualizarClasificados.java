@@ -56,6 +56,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class ActualizarClasificados extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
@@ -346,7 +348,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     }
     private void cargarBusqueda_clasificados() {
 
-        String url_buscar_adopcion = "http://192.168.0.18/InformateDB/wsnJSONBuscarClasificados.php?id_clasificados="+buscar_actualizar_clasificados.getEditText().getText().toString().trim();
+        String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarClasificados.php?id_clasificados="+buscar_actualizar_clasificados.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_adopcion,null,this,this);
 
@@ -423,7 +425,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
     private void cargarActualizarSinImagen_clasificados() {
 
-        String url_clasificados = "http://192.168.0.18/InformateDB/wsnJSONActualizarSinImagenClasificados.php?";
+        String url_clasificados = DireccionServidor+"wsnJSONActualizarSinImagenClasificados.php?";
 
 
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
@@ -524,7 +526,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     }
     private void cargarActualizarConImagen_clasificados() {
 
-        String url_clasificados = "http://192.168.0.18/InformateDB/wsnJSONActualizarConImagenClasificados.php?";
+        String url_clasificados = DireccionServidor+"wsnJSONActualizarConImagenClasificados.php?";
 
 
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {

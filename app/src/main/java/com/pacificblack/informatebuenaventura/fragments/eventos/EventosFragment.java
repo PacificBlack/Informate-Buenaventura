@@ -29,6 +29,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -78,7 +80,7 @@ return vista;
 
     private void cargarWebService_Eventos() {
 
-        String url_eventos = "http://192.168.0.18/InformateDB/wsnJSONllenarEventos.php";
+        String url_eventos = DireccionServidor+"wsnJSONllenarEventos.php";
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_eventos,null,this,this);
         request.add(jsonObjectRequest);

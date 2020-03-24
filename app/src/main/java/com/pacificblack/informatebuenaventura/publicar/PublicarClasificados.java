@@ -56,6 +56,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class PublicarClasificados extends AppCompatActivity {
 
 
@@ -282,7 +284,7 @@ public class PublicarClasificados extends AppCompatActivity {
 
     private void cargarWebService_clasificados() {
 
-        String url_clasificados = "http://192.168.0.18/InformateDB/wsnJSONRegistro.php?";
+        String url_clasificados = DireccionServidor+"wsnJSONRegistro.php?";
 
 
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {

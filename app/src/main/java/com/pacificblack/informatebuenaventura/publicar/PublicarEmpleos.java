@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class PublicarEmpleos extends AppCompatActivity {
 
 
@@ -203,7 +205,7 @@ public class PublicarEmpleos extends AppCompatActivity {
 
     private void cargarWebService_empleos() {
 
-        String url_empleos = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
+        String url_empleos = DireccionServidor+"wsnJSONRegistroDos.php?";
 
 
         stringRequest_empleos= new StringRequest(Request.Method.POST, url_empleos, new Response.Listener<String>() {

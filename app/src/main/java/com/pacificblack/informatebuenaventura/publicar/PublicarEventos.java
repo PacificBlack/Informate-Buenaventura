@@ -44,6 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class PublicarEventos extends AppCompatActivity {
 
     //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
@@ -189,7 +191,7 @@ public class PublicarEventos extends AppCompatActivity {
 
     private void cargarWebService_eventos() {
 
-        String url_eventos = "http://192.168.0.18/InformateDB/wsnJSONRegistroDos.php?";
+        String url_eventos = DireccionServidor+"wsnJSONRegistroDos.php?";
 
 
         stringRequest_eventos= new StringRequest(Request.Method.POST, url_eventos, new Response.Listener<String>() {

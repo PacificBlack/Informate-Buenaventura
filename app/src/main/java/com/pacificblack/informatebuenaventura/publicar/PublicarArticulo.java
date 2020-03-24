@@ -56,6 +56,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class PublicarArticulo extends AppCompatActivity {
 
     //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
@@ -331,7 +333,7 @@ public class PublicarArticulo extends AppCompatActivity {
 
     private void cargarWebService_comprayventa() {
 
-        String url_comprayventa = "http://192.168.0.18/InformateDB/wsnJSONRegistroArticulo.php?";
+        String url_comprayventa = DireccionServidor+"wsnJSONRegistroArticulo.php?";
 
 
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {

@@ -32,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 
 public class AdopcionFragment extends Fragment  implements Response.Listener<JSONObject>,Response.ErrorListener {
     //Declaramos lo que vamos a usar
@@ -88,7 +90,7 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
     private void cargarWebService_Adopcion() {
 
-        String url_adopcion = "http://192.168.0.18/InformateDB/wsnJSONllenarAdopcion.php";
+        String url_adopcion = DireccionServidor+"wsnJSONllenarAdopcion.php";
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_adopcion,null,this,this);
         request.add(jsonObjectRequest);

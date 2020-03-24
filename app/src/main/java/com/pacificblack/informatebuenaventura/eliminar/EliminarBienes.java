@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+
 public class EliminarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     TextView titulo_eliminar_bienes,
@@ -183,7 +185,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_bienes() {
 
-        String url_buscar_bienes = "http://192.168.0.18/InformateDB/wsnJSONBuscarBienes.php?id_bienes="+buscar_eliminar_bienes.getEditText().getText().toString().trim();
+        String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarBienes.php?id_bienes="+buscar_eliminar_bienes.getEditText().getText().toString().trim();
 
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
 
@@ -262,7 +264,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
 
     private void cargarEliminar_bienes() {
 
-        String url_bienes = "http://192.168.0.18/InformateDB/wsnJSONEliminar.php?";
+        String url_bienes = DireccionServidor+"wsnJSONEliminar.php?";
 
 
         stringRequest_bienes = new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
