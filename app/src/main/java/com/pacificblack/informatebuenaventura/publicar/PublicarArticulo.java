@@ -56,11 +56,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class PublicarArticulo extends AppCompatActivity {
 
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_comprayventa;
     Uri imagenescomprayventaUri;
     List<Uri> listaimagenes_comprayventa =  new ArrayList<>();
@@ -72,29 +76,10 @@ public class PublicarArticulo extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-    TextInputLayout titulo_publicar_comprayventa,
-            descripcioncorta_publicar_comprayventa,
-            descripcion_publicar_comprayventa,
-            descripcionextra_publicar_comprayventa,
-            precio_publicar_comprayventa,
-            ubicacion_publicar_comprayventa,
-            cantidad_publicar_comprayventa,
-            contacto_publicar_comprayventa,
-            buscar_publicar_comprayventa;
-
+    TextInputLayout titulo_publicar_comprayventa, descripcioncorta_publicar_comprayventa, descripcion_publicar_comprayventa, descripcionextra_publicar_comprayventa, precio_publicar_comprayventa, ubicacion_publicar_comprayventa, cantidad_publicar_comprayventa, contacto_publicar_comprayventa, buscar_publicar_comprayventa;
     Button publicarfinal_comprayventa,subirimagenes;
 
-
-    //TODO: Modificar y Eliminar
-
-    private InterstitialAd anuncioAdopcion;
-
-
-    //TODO: Modificar y Eliminar
-
-
+    private InterstitialAd anuncioArticulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,18 +95,15 @@ public class PublicarArticulo extends AppCompatActivity {
         cantidad_publicar_comprayventa = findViewById(R.id.publicar_cantidad_comprayventa);
         contacto_publicar_comprayventa = findViewById(R.id.publicar_contacto_comprayventa);
         publicarfinal_comprayventa = findViewById(R.id.publicar_final_comprayventa);
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
         gvImagenes_comprayventa = findViewById(R.id.grid_comprayventa);
         subirimagenes = findViewById(R.id.subir_imagenes_comprayventa);
+
+
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
                         //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
                         //Mostrar emergente del menu
@@ -130,7 +112,6 @@ public class PublicarArticulo extends AppCompatActivity {
                         //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
                     //para android masmelos
                     seleccionarimagen();
@@ -138,31 +119,19 @@ public class PublicarArticulo extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-
         publicarfinal_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!validartitulo() | !validardescripcioncorta()| !validardescripcion()| !validardescripcionextra()|
-                                !validarprecio()| !validarubicacion()| !validarcantidad()| ! validarcontacto() | !validarfoto()){
-
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion() | !validardescripcionextra() | !validarprecio() | !validarubicacion() | !validarcantidad() | !validarcontacto() | !validarfoto()) {
                     return;
                 }
-
                 Subirimagen_comprayventa();
-
             }
         });
 
-        //TODO: Anuncios
-
-        anuncioAdopcion = new InterstitialAd(this);
-        anuncioAdopcion.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        anuncioAdopcion.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
+        anuncioArticulo = new InterstitialAd(this);
+        anuncioArticulo.setAdUnitId(AnuncioPublicar);
+        anuncioArticulo.loadAd(new AdRequest.Builder().build());
 
     }
 
@@ -328,28 +297,47 @@ public class PublicarArticulo extends AppCompatActivity {
 
     }
 
-
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
-
     private void cargarWebService_comprayventa() {
 
         String url_comprayventa = DireccionServidor+"wsnJSONRegistroArticulo.php?";
-
 
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
 
-                    Log.i("Funciona : ",response);
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioArticulo.isLoaded()) {
+                                        anuncioArticulo.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
-                    Log.i("Error",response);
-
+                    Log.i("SA",response.toString());
 
                 }
 
@@ -358,11 +346,9 @@ public class PublicarArticulo extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
+                        Log.i("Error",error.toString());
 
                     }
                 }){
@@ -379,18 +365,8 @@ public class PublicarArticulo extends AppCompatActivity {
                 String cantidadinput = cantidad_publicar_comprayventa.getEditText().getText().toString().trim();
                 String contactoinput = contacto_publicar_comprayventa.getEditText().getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
-
-
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
                 parametros.put("descripcion1_comprayventa",descripcioninput);
@@ -408,9 +384,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
 
-
-        Log.i("Lo que entra",parametros.toString());
-
+                Log.i("Sale",parametros.toString());
                 return parametros;
             }
         };
@@ -420,7 +394,6 @@ public class PublicarArticulo extends AppCompatActivity {
 
     }
     public void Subirimagen_comprayventa(){
-
 
         listaBase64_comprayventa.clear();
         nombre.clear();
@@ -432,16 +405,9 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 InputStream is = getContentResolver().openInputStream(listaimagenes_comprayventa.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-//Solucionar para poder guardar
-
                 nombre.add( "imagen_comprayventa"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
-
-
             }catch (IOException e){
 
             }
@@ -461,7 +427,6 @@ public class PublicarArticulo extends AppCompatActivity {
     }
     public void seleccionarimagen() {
 
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
@@ -494,11 +459,9 @@ public class PublicarArticulo extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
 
             if (clipData == null){
                 imagenescomprayventaUri = data.getData();
@@ -509,18 +472,10 @@ public class PublicarArticulo extends AppCompatActivity {
                 }
             }
 
-
-
-
         }
 
         baseAdapter = new GridViewAdapter(PublicarArticulo.this,listaimagenes_comprayventa);
         gvImagenes_comprayventa.setAdapter(baseAdapter);
 
-
-
     }
-
-
 }
-

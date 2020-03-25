@@ -15,6 +15,5 @@ public class Servidor {
     public static String AnuncioPublicar = "ca-app-pub-3940256099942544/1033173712";
 
 
-
     public static String Nosepudobuscar = "Lastimosamente no podemos buscar su publicación, verifique su conexión a internet e intentelo de nuevo";
 }

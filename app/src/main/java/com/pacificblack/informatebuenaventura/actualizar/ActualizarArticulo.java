@@ -56,12 +56,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class ActualizarArticulo extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener  {
 
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_comprayventa_actualizar;
     Uri imagenescomprayventaUri;
     List<Uri> listaimagenes_comprayventa =  new ArrayList<>();
@@ -73,33 +77,15 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-    TextInputLayout titulo_actualizar_comprayventa,
-            descripcioncorta_actualizar_comprayventa,
-            descripcion_actualizar_comprayventa,
-            descripcionextra_actualizar_comprayventa,
-            precio_actualizar_comprayventa,
-            ubicacion_actualizar_comprayventa,
-            cantidad_actualizar_comprayventa,
-            contacto_actualizar_comprayventa,
-            buscar_actualizar_comprayventa;
-
+    TextInputLayout titulo_actualizar_comprayventa, descripcioncorta_actualizar_comprayventa, descripcion_actualizar_comprayventa, descripcionextra_actualizar_comprayventa, precio_actualizar_comprayventa, ubicacion_actualizar_comprayventa, cantidad_actualizar_comprayventa, contacto_actualizar_comprayventa, buscar_actualizar_comprayventa;
     Button subirimagenes;
 
-
-    //TODO: Modificar y Eliminar
-    ImageButton actualizar_editar_comprayventa,
-            actualizar_buscar_comprayventa;
+    ImageButton actualizar_editar_comprayventa, actualizar_buscar_comprayventa;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-    ImageView imagen1_actualizar_comprayventa,imagen2_actualizar_comprayventa,
-            imagen3_actualizar_comprayventa;
+    ImageView imagen1_actualizar_comprayventa,imagen2_actualizar_comprayventa, imagen3_actualizar_comprayventa;
 
     private InterstitialAd anuncioAdopcion_actualizar;
-
-
-    //TODO: Modificar y Eliminar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +101,16 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         ubicacion_actualizar_comprayventa = findViewById(R.id.actualizar_ubicacion_comprayventa);
         cantidad_actualizar_comprayventa = findViewById(R.id.actualizar_cantidad_comprayventa);
         contacto_actualizar_comprayventa = findViewById(R.id.actualizar_contacto_comprayventa);
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
         gvImagenes_comprayventa_actualizar = findViewById(R.id.grid_comprayventa_actualizar);
         subirimagenes = findViewById(R.id.actualizar_imagenes_comprayventa);
+        imagen1_actualizar_comprayventa = findViewById(R.id.imagen1_actualizar_comprayventa);
+        imagen2_actualizar_comprayventa = findViewById(R.id.imagen2_actualizar_comprayventa);
+        imagen3_actualizar_comprayventa = findViewById(R.id.imagen3_actualizar_comprayventa);
+        buscar_actualizar_comprayventa = findViewById(R.id.actualizar_id_comprayventa);
+        actualizar_editar_comprayventa = findViewById(R.id.actualizar_editar_comprayventa);
+        actualizar_buscar_comprayventa = findViewById(R.id.actualizar_buscar_comprayventa);
+
+
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,29 +133,11 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        //TODO: Modificar y Eliminar
-
-        imagen1_actualizar_comprayventa = findViewById(R.id.imagen1_actualizar_comprayventa);
-        imagen2_actualizar_comprayventa = findViewById(R.id.imagen2_actualizar_comprayventa);
-        imagen3_actualizar_comprayventa = findViewById(R.id.imagen3_actualizar_comprayventa);
-
-        buscar_actualizar_comprayventa = findViewById(R.id.actualizar_id_comprayventa);
-        actualizar_editar_comprayventa = findViewById(R.id.actualizar_editar_comprayventa);
         actualizar_editar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validarid()|
-                        !validartitulo()|
-                        !validardescripcioncorta()|
-                        !validardescripcion()|
-                        !validardescripcionextra()|
-                        !validarprecio()|
-                        !validarubicacion()|
-                        !validarcantidad()|
-                        !validarcontacto()){return;}
+                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validardescripcion()| !validardescripcionextra()| !validarprecio()| !validarubicacion()| !validarcantidad()| !validarcontacto()){return;}
 
                 if (!validarfotoupdate()){
 
@@ -175,7 +147,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-
                             if (listaimagenes_comprayventa.size() == 3){
                                 Subirimagen_comprayventa_update();
                             }
@@ -184,9 +155,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             cargarActualizarSinImagen_comprayventa();
-
                         }
                     });
 
@@ -194,13 +163,11 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
 
-
                     return; }
 
             }
         });
 
-        actualizar_buscar_comprayventa = findViewById(R.id.actualizar_buscar_comprayventa);
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,19 +176,13 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 subirimagenes.setText("Actualizar Imagenes");
 
                 if (!validarid()){return;}
-
                 cargarBusqueda_comprayventa();
             }
         });
 
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
-
         anuncioAdopcion_actualizar = new InterstitialAd(this);
-        anuncioAdopcion_actualizar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioAdopcion_actualizar.setAdUnitId(AnuncioActualizar);
         anuncioAdopcion_actualizar.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
 
     }
     private boolean validarid(){
@@ -405,6 +366,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             return true;
         }
     }
+
     private void cargarBusqueda_comprayventa() {
 
         String url_buscar_comprayventa = DireccionServidor+"wsnJSONBuscarComprayVenta.php?id_comprayventa="+buscar_actualizar_comprayventa.getEditText().getText().toString().trim();
@@ -415,12 +377,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-        Log.i("ERROR",error.toString());
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -448,12 +405,9 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             comprayVenta.setCantidad_comprayventa(jsonObject.getInt("cantidad_comprayventa"));
             comprayVenta.setVista_comprayventa(jsonObject.getInt("vistas_comprayventa"));
 
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         titulo_actualizar_comprayventa.getEditText().setText(comprayVenta.getTitulo_row_comprayventa());
         descripcioncorta_actualizar_comprayventa.getEditText().setText(comprayVenta.getDescripcion_row_comprayventa());
@@ -463,7 +417,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         ubicacion_actualizar_comprayventa.getEditText().setText(comprayVenta.getUbicacion_comprayventa());
         cantidad_actualizar_comprayventa.getEditText().setText(String.valueOf(comprayVenta.getCantidad_comprayventa()));
         contacto_actualizar_comprayventa.getEditText().setText(comprayVenta.getContacto_comprayventa());
-
 
         Picasso.get().load(comprayVenta.getImagen1_comprayventa())
                 .placeholder(R.drawable.imagennodisponible)
@@ -481,20 +434,18 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 .into(imagen3_actualizar_comprayventa);
 
     }
+
     private void cargarActualizarSinImagen_comprayventa() {
 
         String url_comprayventa = DireccionServidor+"wsnJSONActualizarSinImagenArticulo.php?";
-
 
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Actualizada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
-
 
                 if (match.find()){
 
@@ -513,7 +464,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
 
-
                                 }
                             });
 
@@ -521,30 +471,16 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
-                    Log.i("Funciona : ",response);
-
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
 
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"Tenemos un error"+error,Toast.LENGTH_LONG).show();
-
-                        Log.i("EL ERROR ES : ",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -560,7 +496,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 String ubicacioninput = ubicacion_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String contactoinput = contacto_actualizar_comprayventa.getEditText().getText().toString().trim();
-
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -589,16 +524,13 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
         String url_comprayventa = DireccionServidor+"wsnJSONActualizarConImagenArticulo.php?";
 
-
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Actualizada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
-
 
                 if (match.find()){
 
@@ -616,8 +548,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
-
                                 }
                             });
 
@@ -625,17 +555,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
-                    Log.i("Funciona : ",response);
-
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -643,12 +564,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -665,7 +581,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String contactoinput = contacto_actualizar_comprayventa.getEditText().getText().toString().trim();
 
-
                 Map<String,String> parametros = new HashMap<>();
 
                 parametros.put("id_comprayventa",idinput);
@@ -681,7 +596,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 parametros.put("publicacion","ComprayVenta");
 
                 for (int h = 0; h<nombre.size();h++){
-
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
 
@@ -695,11 +609,10 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     public void Subirimagen_comprayventa_update(){
 
-
         listaBase64_comprayventa.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
+
         for (int i = 0; i < listaimagenes_comprayventa.size(); i++){
 
             try {
@@ -707,21 +620,13 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 InputStream is = getContentResolver().openInputStream(listaimagenes_comprayventa.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-//Solucionar para poder guardar
-
                 nombre.add( "imagen_comprayventa"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
 
-
             }catch (IOException e){
-
             }
-
         }
-
         cargarActualizarConImagen_comprayventa();
 
     }
@@ -736,7 +641,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     public void seleccionarimagen() {
 
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
@@ -767,11 +671,9 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
 
             if (clipData == null){
                 imagenescomprayventaUri = data.getData();
@@ -781,16 +683,9 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     listaimagenes_comprayventa.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
 
         baseAdapter = new GridViewAdapter(ActualizarArticulo.this,listaimagenes_comprayventa);
         gvImagenes_comprayventa_actualizar.setAdapter(baseAdapter);
-
-
-
     }
 }

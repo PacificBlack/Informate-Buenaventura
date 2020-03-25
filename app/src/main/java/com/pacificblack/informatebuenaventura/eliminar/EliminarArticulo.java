@@ -58,30 +58,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class EliminarArticulo extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
-
-    TextView titulo_eliminar_comprayventa,
-            descripcioncorta_eliminar_comprayventa,
-            descripcion_eliminar_comprayventa,
-            descripcionextra_eliminar_comprayventa,
-            precio_eliminar_comprayventa,
-            ubicacion_eliminar_comprayventa,
-            cantidad_eliminar_comprayventa,
-            contacto_eliminar_comprayventa;
-
+    TextView titulo_eliminar_comprayventa, descripcioncorta_eliminar_comprayventa, descripcion_eliminar_comprayventa, descripcionextra_eliminar_comprayventa, precio_eliminar_comprayventa, ubicacion_eliminar_comprayventa, cantidad_eliminar_comprayventa, contacto_eliminar_comprayventa;
     StringRequest stringRequest_comprayventa;
-
     TextInputLayout buscar_eliminar_comprayventa;
-
-
-    //TODO: Modificar y Eliminar
     ImageButton eliminar_comprayventa, eliminar_buscar_comprayventa;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-    ImageView imagen1_eliminar_comprayventa,imagen2_eliminar_comprayventa,
-            imagen3_eliminar_comprayventa;
+    ImageView imagen1_eliminar_comprayventa,imagen2_eliminar_comprayventa,imagen3_eliminar_comprayventa;
 
     private InterstitialAd anuncioAdopcion_eliminar;
 
@@ -98,19 +89,13 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         ubicacion_eliminar_comprayventa = findViewById(R.id.eliminar_ubicacion_comprayventa);
         cantidad_eliminar_comprayventa = findViewById(R.id.eliminar_cantidad_comprayventa);
         contacto_eliminar_comprayventa = findViewById(R.id.eliminar_contacto_comprayventa);
-
-
-        //TODO: Modificar y Eliminar
-
-
         imagen1_eliminar_comprayventa = findViewById(R.id.imagen1_eliminar_comprayventa);
         imagen2_eliminar_comprayventa = findViewById(R.id.imagen2_eliminar_comprayventa);
         imagen3_eliminar_comprayventa = findViewById(R.id.imagen3_eliminar_comprayventa);
-
-
         buscar_eliminar_comprayventa = findViewById(R.id.eliminar_id_comprayventa);
-
         eliminar_comprayventa = findViewById(R.id.eliminar_comprayventa);
+        eliminar_buscar_comprayventa = findViewById(R.id.eliminar_buscar_comprayventa);
+
         eliminar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,14 +107,11 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
                     }
                 }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         cargarEliminar_comprayventa();
-
                     }
                 });
 
@@ -139,7 +121,6 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
             }
         });
-        eliminar_buscar_comprayventa = findViewById(R.id.eliminar_buscar_comprayventa);
 
 
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
@@ -153,21 +134,10 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
             }
         });
 
-
-
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
-
         anuncioAdopcion_eliminar = new InterstitialAd(this);
         anuncioAdopcion_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         anuncioAdopcion_eliminar.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
-
     }
-
-
 
     private boolean validarid(){
         String idinput = buscar_eliminar_comprayventa.getEditText().getText().toString().trim();
@@ -177,7 +147,6 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
             return false;
         }
         else if(idinput.length()>15){
-
             buscar_eliminar_comprayventa.setError(""+R.string.supera);
             return false;
         }
@@ -187,24 +156,15 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         }
     }
 
-
-    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_comprayventa() {
 
         String url_buscar_comprayventa = DireccionServidor+"wsnJSONBuscarComprayVenta.php?id_comprayventa="+buscar_eliminar_comprayventa.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_comprayventa,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-        Log.i("ERROR",error.toString());
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -233,12 +193,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
             comprayVenta.setCantidad_comprayventa(jsonObject.getInt("cantidad_comprayventa"));
             comprayVenta.setVista_comprayventa(jsonObject.getInt("vistas_comprayventa"));
 
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         titulo_eliminar_comprayventa.setText(comprayVenta.getTitulo_row_comprayventa());
         descripcioncorta_eliminar_comprayventa.setText(comprayVenta.getDescripcion_row_comprayventa());
@@ -266,16 +223,13 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
     }
 
-
     private void cargarEliminar_comprayventa() {
 
         String url_comprayventa = DireccionServidor+"wsnJSONEliminar.php?";
 
-
         stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
 
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
@@ -298,7 +252,6 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
                                 }
                             });
 
@@ -306,14 +259,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     titulo.setTitle("Eliminada exitosamente");
                     titulo.show();
 
-                    Log.i("Funciona : ",response);
-
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
+                    Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -321,12 +268,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -339,21 +281,11 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 parametros.put("id_comprayventa",idinput);
                 parametros.put("publicacion","ComprayVenta");
 
-                Log.i("Parametros", String.valueOf(parametros));
-
                 return parametros;
             }
         };
 
         RequestQueue request_comprayventa_eliminar = Volley.newRequestQueue(this);
         request_comprayventa_eliminar.add(stringRequest_comprayventa);
-
     }
-
-
-
-
-
-
-
 }
