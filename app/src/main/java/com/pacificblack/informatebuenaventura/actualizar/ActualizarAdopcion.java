@@ -56,34 +56,26 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
 //TODO: Esta full adopcion solo faltan retoques
 
 
 public class ActualizarAdopcion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
-    TextInputLayout titulo_actualizar_adopcion,
-            descripcioncorta_actualizar_adopcion,
-            descripcion1_actualizar_adopcion,
-            descripcion2_actualizar_adopcion,
-            buscar_actualizar_adopcion;
-
+    TextInputLayout titulo_actualizar_adopcion, descripcioncorta_actualizar_adopcion, descripcion1_actualizar_adopcion, descripcion2_actualizar_adopcion, buscar_actualizar_adopcion;
     Button actualizarimagenes;
 
     //TODO: Modificar y Eliminar
-
     ImageButton actualizar_editar_adopcion,actualizar_buscar_adopcion;
-
     RequestQueue requestbuscar;
-
     JsonObjectRequest jsonObjectRequestBuscar;
-
     HorizontalScrollView imagenes_adopcion_actualizar;
-
-    ImageView imagen1_actualizar_adopcion,imagen2_actualizar_adopcion,
-            imagen3_actualizar_adopcion,imagen4_actualizar_adopcion;
-
+    ImageView imagen1_actualizar_adopcion,imagen2_actualizar_adopcion,imagen3_actualizar_adopcion,imagen4_actualizar_adopcion;
     //TODO: Modificar y Eliminar
 
 
@@ -98,8 +90,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     StringRequest stringRequest_adopcion_actualizar;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
     //TODO: Aqui finaliza
+
 
     private InterstitialAd anuncioAdopcion_actualizar;
 
@@ -116,35 +108,28 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
 
         //TODO: Modificar y Eliminar
-
-
         imagenes_adopcion_actualizar = findViewById(R.id.imagenes_actualizar_adopcion);
         imagen1_actualizar_adopcion = findViewById(R.id.imagen1_actualizar_adopcion);
         imagen2_actualizar_adopcion = findViewById(R.id.imagen2_actualizar_adopcion);
         imagen3_actualizar_adopcion = findViewById(R.id.imagen3_actualizar_adopcion);
         imagen4_actualizar_adopcion = findViewById(R.id.imagen4_actualizar_adopcion);
-
-
         buscar_actualizar_adopcion = findViewById(R.id.actualizar_id_adopcion);
         actualizar_editar_adopcion = findViewById(R.id.actualizar_editar_adopcion);
+        actualizar_buscar_adopcion = findViewById(R.id.actualizar_buscar_adopcion);
+
+
         actualizar_editar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo()|
-                        !validardescripcioncorta()|
-                        ! validardescripcion1()|
-                        ! validardescripcion2()|
-                        ! validarid()){return;}
+                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validardescripcion2()| ! validarid()){return;}
 
                 if (!validarfotoupdate()){
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
-                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-                            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?").setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             imagenes_adopcion_actualizar.setVisibility(View.GONE);
 
                             if (listaimagenes_adopcion_actualizar.size() == 4){
@@ -155,9 +140,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             cargarActualizarSinImagen_adopcion();
-
                         }
                     });
 
@@ -165,14 +148,10 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
 
-
                     return; }
 
             }
         });
-        actualizar_buscar_adopcion = findViewById(R.id.actualizar_buscar_adopcion);
-
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,20 +164,14 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 cargarBusqueda_adopcion();
             }
         });
-
-
-
         //TODO: Modificar y Eliminar
 
         //TODO: Anuncios
 
         anuncioAdopcion_actualizar = new InterstitialAd(this);
-        anuncioAdopcion_actualizar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioAdopcion_actualizar.setAdUnitId(AnuncioActualizar);
         anuncioAdopcion_actualizar.loadAd(new AdRequest.Builder().build());
         //TODO: Anuncios
-
-
-
 
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
@@ -225,9 +198,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 }
             }
         });
-
         //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
     }
 
 
@@ -355,19 +326,12 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     private void cargarBusqueda_adopcion() {
 
         String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_actualizar_adopcion.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_adopcion,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-        Log.i("ERROR",error.toString());
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -393,7 +357,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
             adopcion.setDescripcion1_adopcion(jsonObject.getString("descripcion1_adopcion"));
             adopcion.setDescripcion2_adopcion(jsonObject.getString("descripcion2_adopcion"));
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -402,7 +365,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         descripcioncorta_actualizar_adopcion.getEditText().setText(adopcion.getDescripcion_row_adopcion());
         descripcion1_actualizar_adopcion.getEditText().setText(adopcion.getDescripcion1_adopcion());
         descripcion2_actualizar_adopcion.getEditText().setText(adopcion.getDescripcion2_adopcion());
-
 
         imagenes_adopcion_actualizar.setVisibility(View.VISIBLE);
 
@@ -431,12 +393,9 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     private void cargarActualizarSinImagen_adopcion() {
 
         String url_adopcion = DireccionServidor+"wsnJSONActualizarSinImagenAdopcion.php?";
-
-
         stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
 
                 String resul = "Actualizada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
@@ -460,7 +419,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
 
-
                                 }
                             });
 
@@ -468,17 +426,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
-                    Log.i("Funciona : ",response);
-
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -486,12 +435,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -530,19 +474,15 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
         String url_adopcion = DireccionServidor+"wsnJSONActualizarConImagenAdopcion.php?";
 
-
         stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-
                 String resul = "Actualizada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
 
 
                 if (match.find()){
-
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
 
                     mensaje.setMessage(response)
@@ -557,8 +497,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
-
                                 }
                             });
 
@@ -566,17 +504,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
-                    Log.i("Funciona : ",response);
-
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -584,12 +513,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -601,10 +525,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 String descripcioncortainput = descripcioncorta_actualizar_adopcion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_adopcion.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_actualizar_adopcion.getEditText().getText().toString().trim();
-
-
-                Log.i("Mostrar name------------------------------------------------------------------",nombre.get(0)+cadena.get(0));
-                Log.i("Mostrar name------------------------------------------------------------------",nombre.get(1)+cadena.get(1));
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -621,7 +541,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
 
-
                 Log.i("Parametros", String.valueOf(parametros));
 
                 return parametros;
@@ -633,33 +552,22 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
     }
 
-
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
-
     public void Subirimagen_adopcion_update(){
 
         listaBase64_adopcion_actualizar.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
-        for (int i = 0; i < listaimagenes_adopcion_actualizar.size(); i++){
 
+        for (int i = 0; i < listaimagenes_adopcion_actualizar.size(); i++){
             try {
 
                 InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion_actualizar.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-//Solucionar para poder guardar
-
-                //TODO: aqui se debe modificar para que la imagen guarde good
-
                 nombre.add( "imagen_adopcion"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
 
                 bitmap.recycle();
-
-
             }catch (IOException e){
 
             }
@@ -679,14 +587,11 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         return imagenString;
     }
     public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
-
     }
 
     @Override
@@ -713,7 +618,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
@@ -732,13 +636,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
         baseAdapter_actualizar = new GridViewAdapter(ActualizarAdopcion.this,listaimagenes_adopcion_actualizar);
         actualizar_gvImagenes_adopcion.setAdapter(baseAdapter_actualizar);
-
-
-
     }
-
-
-
-
 
 }

@@ -2,10 +2,12 @@ package com.pacificblack.informatebuenaventura.publicar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -40,22 +42,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
 
 //TODO: Esta full adopcion solo faltan retoques
 
 
 public class PublicarAdopcion extends AppCompatActivity {
 
-    TextInputLayout titulo_publicar_adopcion,
-            descripcioncorta_publicar_adopcion,
-            descripcion1_publicar_adopcion,
-            descripcion2_publicar_adopcion;
-
+    TextInputLayout titulo_publicar_adopcion, descripcioncorta_publicar_adopcion, descripcion1_publicar_adopcion, descripcion2_publicar_adopcion;
     Button publicarfinal_adopcion,subirimagenes;
-
-
 
     //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_adopcion;
@@ -73,8 +74,6 @@ public class PublicarAdopcion extends AppCompatActivity {
 
     private InterstitialAd anuncioAdopcion;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,14 +84,9 @@ public class PublicarAdopcion extends AppCompatActivity {
         descripcion1_publicar_adopcion = findViewById(R.id.publicar_descripcion1_adopcion);
         descripcion2_publicar_adopcion = findViewById(R.id.publicar_descripcion2_adopcion);
 
-        //TODO: Anuncios
-
         anuncioAdopcion = new InterstitialAd(this);
-        anuncioAdopcion.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioAdopcion.setAdUnitId(AnuncioPublicar);
         anuncioAdopcion.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
         gvImagenes_adopcion = findViewById(R.id.grid_adopcion);
         subirimagenes = findViewById(R.id.subir_imagenes_adopcion);
@@ -118,31 +112,18 @@ public class PublicarAdopcion extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
         publicarfinal_adopcion = findViewById(R.id.publicar_final_adopcion);
         publicarfinal_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                if (!validartitulo() |
-                        !validardescripcioncorta() |
-                        !validardescripcion1() |
-                        !validardescripcion2() |
-                        !validarfoto()){return;}
-
-                //TODO: Aqui se hace el envio a la base de datos
-
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){return;}
                 Subirimagen_adopcion();
-
             }
         });
 
 
     }
-
-//TODO: AQUI VA LO DE ACTUALIZAR Y ELIMINAR
 
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
@@ -228,7 +209,7 @@ public class PublicarAdopcion extends AppCompatActivity {
         }
 
         else if (listaimagenes_adopcion.size() < 4){
-            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_adopcion.size()+"imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_adopcion.size()+" imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
             return false;
 
         }
@@ -238,27 +219,44 @@ public class PublicarAdopcion extends AppCompatActivity {
 
     }
 
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
-
     private void cargarWebService_adopcion() {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
-
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
 
-                    Log.i("Funciona : ",response);
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                 }
 
@@ -267,12 +265,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -283,15 +276,6 @@ public class PublicarAdopcion extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
-
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
 
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("titulo_adopcion",tituloinput);
@@ -320,32 +304,19 @@ public class PublicarAdopcion extends AppCompatActivity {
         listaBase64_adopcion.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
+
         for (int i = 0; i < listaimagenes_adopcion.size(); i++){
-
             try {
-
                 InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-//Solucionar para poder guardar
-
-                //TODO: aqui se debe modificar para que la imagen guarde good
-
                 nombre.add( "imagen_adopcion"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
-
-
-            }catch (IOException e){
-
-            }
+            }catch (IOException e){        }
 
         }
         cargarWebService_adopcion();
-
     }
 
     public String convertirUriEnBase64(Bitmap bmp){
@@ -392,11 +363,9 @@ public class PublicarAdopcion extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
 
             if (clipData == null){
                 imagenesadopcionUri = data.getData();
@@ -406,18 +375,10 @@ public class PublicarAdopcion extends AppCompatActivity {
                     listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
                 }
             }
-
         }
 
         baseAdapter = new GridViewAdapter(PublicarAdopcion.this,listaimagenes_adopcion);
         gvImagenes_adopcion.setAdapter(baseAdapter);
 
-
-
     }
-
-
-
-
 }
-

@@ -57,19 +57,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 
 //TODO: Esta full adopcion solo faltan retoques
 
-
-
 public class EliminarAdopcion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
-    TextView titulo_eliminar_adopcion,
-            descripcioncorta_eliminar_adopcion,
-            descripcion1_eliminar_adopcion,
-            descripcion2_eliminar_adopcion;
-
+    TextView titulo_eliminar_adopcion,descripcioncorta_eliminar_adopcion, descripcion1_eliminar_adopcion, descripcion2_eliminar_adopcion;
     TextInputLayout  buscar_eliminar_adopcion;
 
     //TODO: Modificar y Eliminar
@@ -77,13 +74,10 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     RequestQueue requestbuscar_eliminar;
     JsonObjectRequest jsonObjectRequestBuscar_eliminar;
     HorizontalScrollView eliminar_imagenes_adopcion;
-    ImageView imagen1_eliminar_adopcion,imagen2_eliminar_adopcion,
-            imagen3_eliminar_adopcion,imagen4_eliminar_adopcion;
-
+    ImageView imagen1_eliminar_adopcion,imagen2_eliminar_adopcion,imagen3_eliminar_adopcion,imagen4_eliminar_adopcion;
     StringRequest stringRequest_adopcion_eliminar;
 
     private InterstitialAd anuncioAdopcion_eliminar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,20 +89,16 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         descripcion1_eliminar_adopcion = findViewById(R.id.eliminar_descripcion1_adopcion);
         descripcion2_eliminar_adopcion = findViewById(R.id.eliminar_descripcion2_adopcion);
 
-
-        //TODO: Modificar y Eliminar
-
-
         eliminar_imagenes_adopcion = findViewById(R.id.imagenes_eliminar_adopcion);
         imagen1_eliminar_adopcion = findViewById(R.id.imagen1_eliminar_adopcion);
         imagen2_eliminar_adopcion = findViewById(R.id.imagen2_eliminar_adopcion);
         imagen3_eliminar_adopcion = findViewById(R.id.imagen3_eliminar_adopcion);
         imagen4_eliminar_adopcion = findViewById(R.id.imagen4_eliminar_adopcion);
-
-
         buscar_eliminar_adopcion = findViewById(R.id.eliminar_id_adopcion);
-
         publicar_eliminar_adopcion = findViewById(R.id.eliminar_adopcion);
+        publicar_buscar_adopcion = findViewById(R.id.eliminar_buscar_adopcion);
+
+
         publicar_eliminar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,50 +115,29 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         cargarEliminar_adopcion();
-
                     }
                 });
 
                 AlertDialog titulo = mensaje.create();
                 titulo.setTitle("Modificar Publicación");
                 titulo.show();
-
             }
         });
-        publicar_buscar_adopcion = findViewById(R.id.eliminar_buscar_adopcion);
-
 
         requestbuscar_eliminar = Volley.newRequestQueue(getApplicationContext());
         publicar_buscar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
                 if (!validarid()){return;}
-
                 cargarBusqueda_adopcion();
             }
         });
 
-
-
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
-
         anuncioAdopcion_eliminar = new InterstitialAd(this);
-        anuncioAdopcion_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioAdopcion_eliminar.setAdUnitId(AnuncioEliminar);
         anuncioAdopcion_eliminar.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
-
-
-
-
-
-
 
     }
 
@@ -196,19 +165,12 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     private void cargarBusqueda_adopcion() {
 
         String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_eliminar_adopcion.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar_eliminar = new JsonObjectRequest(Request.Method.GET,url_buscar_adopcion,null,this,this);
-
         requestbuscar_eliminar.add(jsonObjectRequestBuscar_eliminar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-        Log.i("ERROR",error.toString());
-
+        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -273,16 +235,13 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
 
         String url_adopcion = DireccionServidor+"wsnJSONEliminar.php?";
 
-
         stringRequest_adopcion_eliminar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
-
 
                 if (match.find()){
 
@@ -308,27 +267,16 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                     titulo.setTitle("Eliminada exitosamente");
                     titulo.show();
 
-                    Log.i("Funciona : ",response);
-
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
-                }
+                    Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
+                    }
 
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                        Log.i("ERROR",error.toString());
-
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
             @SuppressLint("LongLogTag")
