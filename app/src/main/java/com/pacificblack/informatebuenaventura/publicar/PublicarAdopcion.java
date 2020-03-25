@@ -43,6 +43,8 @@ import java.util.Map;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
+//TODO: Esta full adopcion solo faltan retoques
+
 
 public class PublicarAdopcion extends AppCompatActivity {
 

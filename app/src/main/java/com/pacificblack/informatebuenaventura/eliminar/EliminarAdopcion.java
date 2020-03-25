@@ -59,6 +59,10 @@ import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
+//TODO: Esta full adopcion solo faltan retoques
+
+
+
 public class EliminarAdopcion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     TextView titulo_eliminar_adopcion,
