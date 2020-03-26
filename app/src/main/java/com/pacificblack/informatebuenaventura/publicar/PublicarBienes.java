@@ -56,24 +56,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+
+//TODO: Testeando para comprobar si todo esta full
 
 public class PublicarBienes extends AppCompatActivity  {
 
-
-    TextInputLayout titulo_publicar_bienes,
-            descripcioncorta_publicar_bienes,
-            descripcion1_publicar_bienes,
-            descripcion2_publicar_bienes,
-            precio_publicar_bienes,
-            buscar_publicar_bienes;
-
-
+    TextInputLayout titulo_publicar_bienes, descripcioncorta_publicar_bienes, descripcion1_publicar_bienes, descripcion2_publicar_bienes, precio_publicar_bienes, buscar_publicar_bienes;
     Button publicarfinal_bienes,subirimagenes;
 
     private InterstitialAd anunciobienes;
 
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_bienes;
     Uri imagenesbienesUri;
     List<Uri> listaimagenes_bienes =  new ArrayList<>();
@@ -84,9 +79,6 @@ public class PublicarBienes extends AppCompatActivity  {
     StringRequest stringRequest_bienes;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
-    //TODO: Aqui finaliza
-
 
 
     @Override
@@ -99,9 +91,9 @@ public class PublicarBienes extends AppCompatActivity  {
         descripcion1_publicar_bienes = findViewById(R.id.publicar_descripcion1_bienes);
         descripcion2_publicar_bienes = findViewById(R.id.publicar_descripcion2_bienes);
         precio_publicar_bienes = findViewById(R.id.publicar_precio_bienes);
-
-
         publicarfinal_bienes = findViewById(R.id.publicar_final_bienes);
+        gvImagenes_bienes = findViewById(R.id.grid_bienes);
+        subirimagenes = findViewById(R.id.subir_imagenes_bienes);
 
         publicarfinal_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,21 +109,10 @@ public class PublicarBienes extends AppCompatActivity  {
             }
         });
 
-
-        //TODO: Anuncios
-
         anunciobienes = new InterstitialAd(this);
-        anunciobienes.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anunciobienes.setAdUnitId(AnuncioPublicar);
         anunciobienes.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
 
-
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        gvImagenes_bienes = findViewById(R.id.grid_bienes);
-        subirimagenes = findViewById(R.id.subir_imagenes_bienes);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,29 +135,8 @@ public class PublicarBienes extends AppCompatActivity  {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-
     }
 
-
-    private boolean validarid(){
-        String idinput = buscar_publicar_bienes.getEditText().getText().toString().trim();
-
-        if (idinput.isEmpty()){
-            buscar_publicar_bienes.setError(""+R.string.error_descripcioncorta);
-            return false;
-        }
-        else if(idinput.length()>15){
-
-            buscar_publicar_bienes.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            buscar_publicar_bienes.setError(null);
-            return true;
-        }
-    }
     private boolean validartitulo() {
         String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
 
@@ -282,34 +242,6 @@ public class PublicarBienes extends AppCompatActivity  {
             return true;}
 
     }
-    private boolean validarfotoupdate(){
-
-        if (listaimagenes_bienes.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_bienes.size() > 4){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_bienes.size() < 4){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_bienes.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_bienes.size() == 4){
-            return false;
-        }
-
-        else {
-            return true;
-        }
-    }
-
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
 
     private void cargarWebService_bienes() {
 
@@ -320,16 +252,39 @@ public class PublicarBienes extends AppCompatActivity  {
             @Override
             public void onResponse(String response) {
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
 
-                    Log.i("Funciona : ",response);
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
-                    Log.i("Error",response);
-
+                    Log.i("SA",response.toString());
 
                 }
 
@@ -338,12 +293,8 @@ public class PublicarBienes extends AppCompatActivity  {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
                         Log.i("ERROR",error.toString());
-
-
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -356,18 +307,8 @@ public class PublicarBienes extends AppCompatActivity  {
                 String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
-
-
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
@@ -377,15 +318,10 @@ public class PublicarBienes extends AppCompatActivity  {
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Bienes");
 
-
-
                 for (int h = 0; h<nombre.size();h++){
 
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
-
-
-
 
                 return parametros;
             }
@@ -396,7 +332,6 @@ public class PublicarBienes extends AppCompatActivity  {
 
     }
     public void Subirimagen_bienes(){
-
 
         listaBase64_bienes.clear();
         nombre.clear();
@@ -409,19 +344,12 @@ public class PublicarBienes extends AppCompatActivity  {
                 InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-//Solucionar para poder guardar
-
-                nombre.add( "imagen_bienes"+i);
-
+                nombre.add("imagen_bienes"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
 
-
             }catch (IOException e){
-
             }
-
         }
         cargarWebService_bienes();
 
@@ -437,10 +365,9 @@ public class PublicarBienes extends AppCompatActivity  {
     }
     public void seleccionarimagen() {
 
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
 
@@ -470,12 +397,9 @@ public class PublicarBienes extends AppCompatActivity  {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
             if (clipData == null){
                 imagenesbienesUri = data.getData();
                 listaimagenes_bienes.add(imagenesbienesUri);
@@ -484,19 +408,8 @@ public class PublicarBienes extends AppCompatActivity  {
                     listaimagenes_bienes.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
-
         baseAdapter = new GridViewAdapter(PublicarBienes.this,listaimagenes_bienes);
         gvImagenes_bienes.setAdapter(baseAdapter);
-
-
-
     }
-
-
-
 }

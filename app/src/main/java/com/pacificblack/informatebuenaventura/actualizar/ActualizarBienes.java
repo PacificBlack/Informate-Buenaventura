@@ -56,39 +56,27 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
+
+//TODO: Testeando para comprobar si todo esta full
 
 public class ActualizarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
-
-    TextInputLayout titulo_actualizar_bienes,
-            descripcioncorta_actualizar_bienes,
-            descripcion1_actualizar_bienes,
-            descripcion2_actualizar_bienes,
-            precio_actualizar_bienes,
-            buscar_actualizar_bienes;
-
-
+    TextInputLayout titulo_actualizar_bienes, descripcioncorta_actualizar_bienes, descripcion1_actualizar_bienes, descripcion2_actualizar_bienes, precio_actualizar_bienes, buscar_actualizar_bienes;
     Button actualizarimagenes;
 
-
-    //TODO: Modificar y Eliminar
-    ImageButton actualizar_editar_bienes,
-            actualizar_buscar_bienes;
+    ImageButton actualizar_editar_bienes,actualizar_buscar_bienes;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     HorizontalScrollView imagenes_bienes;
-    ImageView imagen1_actualizar_bienes,imagen2_actualizar_bienes,
-            imagen3_actualizar_bienes,imagen4_actualizar_bienes;
-
-
-    //TODO: Modificar y Eliminar
+    ImageView imagen1_actualizar_bienes,imagen2_actualizar_bienes,imagen3_actualizar_bienes,imagen4_actualizar_bienes;
 
     private InterstitialAd anunciobienes;
 
-
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_bienes;
     Uri imagenesbienesUri;
     List<Uri> listaimagenes_bienes =  new ArrayList<>();
@@ -100,9 +88,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,18 +98,17 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         descripcion1_actualizar_bienes = findViewById(R.id.actualizar_descripcion1_bienes);
         descripcion2_actualizar_bienes = findViewById(R.id.actualizar_descripcion2_bienes);
         precio_actualizar_bienes = findViewById(R.id.actualizar_precio_bienes);
-
-        //TODO: Modificar y Eliminar
-
-
         imagen1_actualizar_bienes = findViewById(R.id.imagen1_actualizar_bienes);
         imagen2_actualizar_bienes = findViewById(R.id.imagen2_actualizar_bienes);
         imagen3_actualizar_bienes = findViewById(R.id.imagen3_actualizar_bienes);
         imagen4_actualizar_bienes = findViewById(R.id.imagen4_actualizar_bienes);
-
-
         buscar_actualizar_bienes = findViewById(R.id.actualizar_id_bienes);
         actualizar_editar_bienes = findViewById(R.id.actualizar_editar_bienes);
+        actualizar_buscar_bienes = findViewById(R.id.actualizar_buscar_bienes);
+        gvImagenes_bienes = findViewById(R.id.grid_bienes);
+        actualizarimagenes = findViewById(R.id.actualizar_imagenes_bienes);
+
+
         actualizar_editar_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,45 +154,25 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             }
         });
 
-        actualizar_buscar_bienes = findViewById(R.id.actualizar_buscar_bienes);
-
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
                 if (!validarid()){return;}
-
                 cargarBusqueda_bienes();
             }
         });
 
-
-
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
-
         anunciobienes = new InterstitialAd(this);
-        anunciobienes.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anunciobienes.setAdUnitId(AnuncioActualizar);
         anunciobienes.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
 
-
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        gvImagenes_bienes = findViewById(R.id.grid_bienes);
-        actualizarimagenes = findViewById(R.id.actualizar_imagenes_bienes);
         actualizarimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
                         //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
                         //Mostrar emergente del menu
@@ -225,11 +189,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-
     }
-
 
     private boolean validarid(){
         String idinput = buscar_actualizar_bienes.getEditText().getText().toString().trim();
@@ -358,8 +318,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         }
     }
 
-
-    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_bienes() {
 
         String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarBienes.php?id_bienes="+buscar_actualizar_bienes.getEditText().getText().toString().trim();
@@ -370,12 +328,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-
     }
 
     @Override
@@ -437,7 +391,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 .into(imagen4_actualizar_bienes);
     }
 
-
     private void cargarActualizarSinImagen_bienes() {
 
         String url_bienes = DireccionServidor+"wsnJSONActualizarSinImagenBienes.php?";
@@ -447,13 +400,11 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Actualizada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
 
-
-                if (match.find()){
+                if (match.find()) {
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
 
@@ -478,13 +429,10 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
 
@@ -497,7 +445,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
 
@@ -542,7 +490,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
         String url_bienes = DireccionServidor+"wsnJSONActualizarConImagenBienes.php?";
 
-
         stringRequest_bienes = new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -578,17 +525,11 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-
-
                 }
 
             }
@@ -596,12 +537,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
-
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -629,12 +566,10 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Bienes");
 
-
                 for (int h = 0; h<nombre.size();h++){
 
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
-
 
                 Log.i("Parametros", String.valueOf(parametros));
 
@@ -659,18 +594,9 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-//Solucionar para poder guardar
-
-                //TODO: aqui se debe modificar para que la imagen guarde good
-
                 nombre.add( "imagen_bienes"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
-
-
             }catch (IOException e){
 
             }
@@ -690,11 +616,9 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         return imagenString;
     }
     public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
 
@@ -724,12 +648,9 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
             if (clipData == null){
                 imagenesbienesUri = data.getData();
                 listaimagenes_bienes.add(imagenesbienesUri);
@@ -738,16 +659,9 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     listaimagenes_bienes.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
-
         baseAdapter = new GridViewAdapter(ActualizarBienes.this,listaimagenes_bienes);
         gvImagenes_bienes.setAdapter(baseAdapter);
-
-
 
     }
 }

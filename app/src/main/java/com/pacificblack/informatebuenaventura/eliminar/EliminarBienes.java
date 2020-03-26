@@ -55,33 +55,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
+
+//TODO: Testeando para comprobar si todo esta full
 
 public class EliminarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
-    TextView titulo_eliminar_bienes,
-            descripcioncorta_eliminar_bienes,
-            descripcion1_eliminar_bienes,
-            descripcion2_eliminar_bienes,
-            precio_eliminar_bienes;
-
+    TextView titulo_eliminar_bienes, descripcioncorta_eliminar_bienes, descripcion1_eliminar_bienes, descripcion2_eliminar_bienes, precio_eliminar_bienes;
     TextInputLayout buscar_eliminar_bienes;
-
-    //TODO: Modificar y Eliminar
-    ImageButton eliminar_bienes,
-            eliminar_buscar_bienes;
+    ImageButton eliminar_bienes, eliminar_buscar_bienes;
     RequestQueue requestbuscar;
     StringRequest stringRequest_bienes;
     JsonObjectRequest jsonObjectRequestBuscar;
-    ImageView imagen1_eliminar_bienes,imagen2_eliminar_bienes,
-            imagen3_eliminar_bienes,imagen4_eliminar_bienes;
-
-
-    //TODO: Modificar y Eliminar
-
+    ImageView imagen1_eliminar_bienes,imagen2_eliminar_bienes,imagen3_eliminar_bienes,imagen4_eliminar_bienes;
     private InterstitialAd anunciobienes_eliminar;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,19 +85,14 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         descripcion1_eliminar_bienes = findViewById(R.id.eliminar_descripcion1_bienes);
         descripcion2_eliminar_bienes = findViewById(R.id.eliminar_descripcion2_bienes);
         precio_eliminar_bienes = findViewById(R.id.eliminar_precio_bienes);
-
-
-        //TODO: Modificar y Eliminar
-
         imagen1_eliminar_bienes = findViewById(R.id.imagen1_eliminar_bienes);
         imagen2_eliminar_bienes = findViewById(R.id.imagen2_eliminar_bienes);
         imagen3_eliminar_bienes = findViewById(R.id.imagen3_eliminar_bienes);
         imagen4_eliminar_bienes = findViewById(R.id.imagen4_eliminar_bienes);
-
-
         buscar_eliminar_bienes = findViewById(R.id.eliminar_id_bienes);
-
         eliminar_bienes = findViewById(R.id.eliminar_bienes);
+        eliminar_buscar_bienes = findViewById(R.id.eliminar_buscar_bienes);
+
         eliminar_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,14 +104,11 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
                     }
                 }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         cargarEliminar_bienes();
-
                     }
                 });
 
@@ -135,31 +118,19 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
 
             }
         });
-        eliminar_buscar_bienes = findViewById(R.id.eliminar_buscar_bienes);
-
 
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         eliminar_buscar_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 if (!validarid()){return;}
-
                 cargarBusqueda_bienes();
             }
         });
 
-
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
-
         anunciobienes_eliminar = new InterstitialAd(this);
-        anunciobienes_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anunciobienes_eliminar.setAdUnitId(AnuncioEliminar);
         anunciobienes_eliminar.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
 
     }
 
@@ -181,24 +152,16 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         }
     }
 
-
-    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_bienes() {
-
         String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarBienes.php?id_bienes="+buscar_eliminar_bienes.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
+
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-
     }
 
     @Override
@@ -237,8 +200,6 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         descripcion2_eliminar_bienes.setText(bienes.getDescripcion2_bienes());
         precio_eliminar_bienes.setText(String.valueOf(bienes.getPrecio_row_bienes()));
 
-
-
         Picasso.get().load(bienes.getImagen1_bienes())
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
@@ -260,8 +221,6 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 .into(imagen4_eliminar_bienes);
     }
 
-
-
     private void cargarEliminar_bienes() {
 
         String url_bienes = DireccionServidor+"wsnJSONEliminar.php?";
@@ -271,11 +230,9 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
-
 
                 if (match.find()){
 
@@ -304,11 +261,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-
-
                 }
 
             }
@@ -316,11 +270,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
 
                     }
                 }){
@@ -344,11 +295,4 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         request_bienes_actualizar.add(stringRequest_bienes);
 
     }
-
-
-
-
-
-
-
 }
