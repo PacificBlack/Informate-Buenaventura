@@ -57,11 +57,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
+
 
 public class PublicarClasificados extends AppCompatActivity {
-
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_clasificados;
     Uri imagenesclasificadosUri;
     List<Uri> listaimagenesclasificados =  new ArrayList<>();
@@ -73,34 +75,25 @@ public class PublicarClasificados extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-    TextInputLayout titulo_publicar_clasificados,
-            descripcioncorta_publicar_clasificados,video_clasificados,
-            descripcion1_publicar_clasificados,
-            descripcion2_publicar_clasificados,
-            buscar_publicar_clasificados;
-
+    TextInputLayout titulo_publicar_clasificados,descripcioncorta_publicar_clasificados,video_clasificados,descripcion1_publicar_clasificados,descripcion2_publicar_clasificados,buscar_publicar_clasificados;
     Button publicarfinal_clasificados,subirimagenes;
 
     private InterstitialAd anuncioClasificados;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_clasificados);
 
-
-
         titulo_publicar_clasificados = findViewById(R.id.publicar_titulo_clasificados);
         descripcioncorta_publicar_clasificados = findViewById(R.id.publicar_descripcioncorta_clasificados);
         video_clasificados = findViewById(R.id.publicar_video_clasificados);
         descripcion1_publicar_clasificados = findViewById(R.id.publicar_descripcion1_clasificados);
         descripcion2_publicar_clasificados = findViewById(R.id.publicar_descripcion2_clasificados);
-
         publicarfinal_clasificados = findViewById(R.id.publicar_final_clasificados);
+        gvImagenes_clasificados = findViewById(R.id.grid_clasificados);
+        subirimagenes = findViewById(R.id.subir_imagenes_clasificados);
+
 
         publicarfinal_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,17 +106,11 @@ public class PublicarClasificados extends AppCompatActivity {
             }
         });
 
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        gvImagenes_clasificados = findViewById(R.id.grid_clasificados);
-        subirimagenes = findViewById(R.id.subir_imagenes_clasificados);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
                         //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
                         //Mostrar emergente del menu
@@ -140,35 +127,12 @@ public class PublicarClasificados extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        //TODO: Anuncios
-
         anuncioClasificados = new InterstitialAd(this);
         anuncioClasificados.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         anuncioClasificados.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
 
     }
 
-    private boolean validarid(){
-        String idinput = buscar_publicar_clasificados.getEditText().getText().toString().trim();
-
-        if (idinput.isEmpty()){
-            buscar_publicar_clasificados.setError(""+R.string.error_descripcioncorta);
-            return false;
-        }
-        else if(idinput.length()>15){
-
-            buscar_publicar_clasificados.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            buscar_publicar_clasificados.setError(null);
-            return true;
-        }
-    }
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
 
@@ -291,26 +255,48 @@ public class PublicarClasificados extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
 
-                    Log.i("Funciona : ",response);
+                if (match.find()){
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioClasificados.isLoaded()) {
+                                        anuncioClasificados.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
-                    Log.i("Error",response);
-
+                    Log.i("SA",response.toString());
 
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
 
@@ -327,16 +313,8 @@ public class PublicarClasificados extends AppCompatActivity {
                 String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_clasificados",tituloinput);
                 parametros.put("descripcionrow_clasificados",descripcioncortainput);
                 parametros.put("video_clasificados",videoinput);
@@ -365,27 +343,18 @@ public class PublicarClasificados extends AppCompatActivity {
         listaBase64clasificados.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
         for (int i = 0; i < listaimagenesclasificados.size(); i++){
-
             try {
-
                 InputStream is = getContentResolver().openInputStream(listaimagenesclasificados.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-//Solucionar para poder guardar
-
                 nombre.add( "imagen_clasificados"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
-
 
             }catch (IOException e){
 
             }
-
         }
         cargarWebService_clasificados();
 
@@ -400,14 +369,11 @@ public class PublicarClasificados extends AppCompatActivity {
         return imagenString;
     }
     public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
-
     }
 
     @Override
@@ -418,12 +384,10 @@ public class PublicarClasificados extends AppCompatActivity {
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
                     //Permiso denegado
                     Toast.makeText(PublicarClasificados.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
 
@@ -434,12 +398,9 @@ public class PublicarClasificados extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
             if (clipData == null){
                 imagenesclasificadosUri = data.getData();
                 listaimagenesclasificados.add(imagenesclasificadosUri);
@@ -448,18 +409,9 @@ public class PublicarClasificados extends AppCompatActivity {
                     listaimagenesclasificados.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
 
         baseAdapter = new GridViewAdapter(PublicarClasificados.this,listaimagenesclasificados);
         gvImagenes_clasificados.setAdapter(baseAdapter);
-
-
-
     }
-
-
 }

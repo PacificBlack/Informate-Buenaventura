@@ -58,9 +58,10 @@ import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
 
-//TODO: Testeando para comprobar si todo esta full
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class PublicarBienes extends AppCompatActivity  {
 
@@ -287,13 +288,12 @@ public class PublicarBienes extends AppCompatActivity  {
                     Log.i("SA",response.toString());
 
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                     }
                 }){

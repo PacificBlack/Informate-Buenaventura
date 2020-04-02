@@ -57,10 +57,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class ActualizarClasificados extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_clasificados;
     Uri imagenesclasificadosUri;
     List<Uri> listaimagenesclasificados =  new ArrayList<>();
@@ -72,57 +77,39 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-
-    //TODO: Modificar y Eliminar
-    ImageButton actualizar_editar_clasificados,
-            actualizar_buscar_clasificados;
+    ImageButton actualizar_editar_clasificados,actualizar_buscar_clasificados;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-    ImageView imagen1_actualizar_clasificados,imagen2_actualizar_clasificados,
-            imagen3_actualizar_clasificados,imagen4_actualizar_clasificados;
-
-
-    //TODO: Modificar y Eliminar
-
-
-    TextInputLayout titulo_actualizar_clasificados,
-            descripcioncorta_actualizar_clasificados,video_clasificados,
-            descripcion1_actualizar_clasificados,
-            descripcion2_actualizar_clasificados,
-            buscar_actualizar_clasificados;
-
+    ImageView imagen1_actualizar_clasificados,imagen2_actualizar_clasificados, imagen3_actualizar_clasificados,imagen4_actualizar_clasificados;
+    TextInputLayout titulo_actualizar_clasificados, descripcioncorta_actualizar_clasificados,video_clasificados,descripcion1_actualizar_clasificados, descripcion2_actualizar_clasificados, buscar_actualizar_clasificados;
     Button actualizarimagenes;
-
     private InterstitialAd anuncioClasificados_actualizar;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_clasificados);
 
-
         titulo_actualizar_clasificados = findViewById(R.id.actualizar_titulo_clasificados);
         descripcioncorta_actualizar_clasificados = findViewById(R.id.actualizar_descripcioncorta_clasificados);
         video_clasificados = findViewById(R.id.actualizar_video_clasificados);
         descripcion1_actualizar_clasificados = findViewById(R.id.actualizar_descripcion1_clasificados);
         descripcion2_actualizar_clasificados = findViewById(R.id.actualizar_descripcion2_clasificados);
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
         gvImagenes_clasificados = findViewById(R.id.grid_clasificados);
         actualizarimagenes = findViewById(R.id.actualizar_imagenes_clasificados);
+        imagen1_actualizar_clasificados = findViewById(R.id.imagen1_actualizar_clasificados);
+        imagen2_actualizar_clasificados = findViewById(R.id.imagen2_actualizar_clasificados);
+        imagen3_actualizar_clasificados = findViewById(R.id.imagen3_actualizar_clasificados);
+        imagen4_actualizar_clasificados = findViewById(R.id.imagen4_actualizar_clasificados);
+        buscar_actualizar_clasificados = findViewById(R.id.actualizar_id_clasificados);
+        actualizar_editar_clasificados = findViewById(R.id.actualizar_editar_clasificados);
+        actualizar_buscar_clasificados = findViewById(R.id.actualizar_buscar_clasificados);
+
         actualizarimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
                         //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
                         //Mostrar emergente del menu
@@ -139,26 +126,11 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
             }
         });
 
-        //TODO: Modificar y Eliminar
-
-        imagen1_actualizar_clasificados = findViewById(R.id.imagen1_actualizar_clasificados);
-        imagen2_actualizar_clasificados = findViewById(R.id.imagen2_actualizar_clasificados);
-        imagen3_actualizar_clasificados = findViewById(R.id.imagen3_actualizar_clasificados);
-        imagen4_actualizar_clasificados = findViewById(R.id.imagen4_actualizar_clasificados);
-
-
-        buscar_actualizar_clasificados = findViewById(R.id.actualizar_id_clasificados);
-        actualizar_editar_clasificados = findViewById(R.id.actualizar_editar_clasificados);
         actualizar_editar_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo()|
-                        !validardescripcioncorta()|
-                        ! validardescripcion1()|
-                        ! validardescripcion2()|
-                        ! validarid()|
-                        ! validarvideo()){return;}
+                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validardescripcion2()| ! validarid()| ! validarvideo()){return;}
 
                 if (!validarfotoupdate()){
 
@@ -176,9 +148,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             cargarActualizarSinImagen_clasificados();
-
                         }
                     });
 
@@ -186,13 +156,10 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
 
-
                     return; }
 
             }
         });
-
-        actualizar_buscar_clasificados = findViewById(R.id.actualizar_buscar_clasificados);
 
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_clasificados.setOnClickListener(new View.OnClickListener() {
@@ -200,11 +167,9 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
             public void onClick(View v) {
 
                 if (!validarid()){return;}
-
                 cargarBusqueda_clasificados();
             }
         });
-
 
         anuncioClasificados_actualizar = new InterstitialAd(this);
         anuncioClasificados_actualizar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -357,9 +322,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     @Override
     public void onErrorResponse(VolleyError error) {
 
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
 
     }
@@ -375,7 +338,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
         try {
             jsonObject = json.getJSONObject(0);
 
-
             clasificados.setId_clasificados(jsonObject.getInt("id_clasificados"));
             clasificados.setTitulo_row_clasificados(jsonObject.getString("titulo_clasificados"));
             clasificados.setDescripcion_row_clasificados(jsonObject.getString("descripcionrow_clasificados"));
@@ -389,8 +351,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
             clasificados.setDescripcion1_clasificados(jsonObject.getString("descripcion1_clasificados"));
             clasificados.setDescripcion2_clasificados(jsonObject.getString("descripcion2_clasificados"));
 
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -401,42 +361,26 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
         descripcion1_actualizar_clasificados.getEditText().setText(clasificados.getDescripcion1_clasificados());
         descripcion2_actualizar_clasificados.getEditText().setText(clasificados.getDescripcion2_clasificados());
 
+        Picasso.get().load(clasificados.getImagen1_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen1_actualizar_clasificados);
 
-        Picasso.get().load(clasificados.getImagen1_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
-                .into(imagen1_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen2_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen2_actualizar_clasificados);
 
-        Picasso.get().load(clasificados.getImagen2_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
-                .into(imagen2_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen3_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen3_actualizar_clasificados);
 
-        Picasso.get().load(clasificados.getImagen3_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
-                .into(imagen3_actualizar_clasificados);
-
-        Picasso.get().load(clasificados.getImagen4_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
-                .into(imagen4_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen4_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen4_actualizar_clasificados);
     }
 
     private void cargarActualizarSinImagen_clasificados() {
 
         String url_clasificados = DireccionServidor+"wsnJSONActualizarSinImagenClasificados.php?";
 
-
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Actualizada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
-
 
                 if (match.find()){
 
@@ -454,8 +398,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
-
                                 }
                             });
 
@@ -463,30 +405,19 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     titulo.setTitle("Recuerda");
                     titulo.show();
 
-
-
-
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-
-
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
-
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -500,7 +431,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                 String descripcion1input = descripcion1_actualizar_clasificados.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_actualizar_clasificados.getEditText().getText().toString().trim();
 
-
                 Map<String,String> parametros = new HashMap<>();
 
                 parametros.put("id_clasificados",idinput);
@@ -511,8 +441,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                 parametros.put("descripcion2_clasificados",descripcion2input);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Clasificados");
-
-
 
                 Log.i("Parametros", String.valueOf(parametros));
 
@@ -570,24 +498,16 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-
-
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
-
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -600,15 +520,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                 String videoinput = video_clasificados.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_clasificados.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_actualizar_clasificados.getEditText().getText().toString().trim();
-
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -650,25 +561,14 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                 InputStream is = getContentResolver().openInputStream(listaimagenesclasificados.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-//Solucionar para poder guardar
-
-                //TODO: aqui se debe modificar para que la imagen guarde good
-
                 nombre.add( "imagen_clasificados"+i);
-
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
-
-
             }catch (IOException e){
 
             }
-
         }
         cargarActualizarConImagen_clasificados();
-
     }
 
 
@@ -683,7 +583,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     }
     public void seleccionarimagen() {
 
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
@@ -708,7 +607,6 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                 }
             }
-
         }
     }
 
@@ -716,11 +614,9 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
 
             if (clipData == null){
                 imagenesclasificadosUri = data.getData();
@@ -730,20 +626,9 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     listaimagenesclasificados.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
 
         baseAdapter = new GridViewAdapter(ActualizarClasificados.this,listaimagenesclasificados);
         gvImagenes_clasificados.setAdapter(baseAdapter);
-
-
-
     }
-
-
-
-
 }

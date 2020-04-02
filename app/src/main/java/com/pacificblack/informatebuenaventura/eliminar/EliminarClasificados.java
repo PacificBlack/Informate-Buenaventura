@@ -58,22 +58,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class EliminarClasificados extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
-
 
     StringRequest stringRequestclasificados;
     ImageButton eliminar_clasificados, eliminar_buscar_clasificados;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-    ImageView imagen1_eliminar_clasificados,imagen2_eliminar_clasificados,
-            imagen3_eliminar_clasificados,imagen4_eliminar_clasificados;
-
-    TextView titulo_eliminar_clasificados,
-            descripcioncorta_eliminar_clasificados,video_eliminar_clasificados,
-            descripcion1_eliminar_clasificados,
-            descripcion2_eliminar_clasificados;
-
+    ImageView imagen1_eliminar_clasificados, imagen2_eliminar_clasificados, imagen3_eliminar_clasificados, imagen4_eliminar_clasificados;
+    TextView titulo_eliminar_clasificados, descripcioncorta_eliminar_clasificados, video_eliminar_clasificados, descripcion1_eliminar_clasificados, descripcion2_eliminar_clasificados;
     TextInputLayout buscar_eliminar_clasificados;
 
     private InterstitialAd anuncioClasificados_eliminar;
@@ -89,15 +87,14 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         video_eliminar_clasificados = findViewById(R.id.eliminar_video_clasificados);
         descripcion1_eliminar_clasificados = findViewById(R.id.eliminar_descripcion1_clasificados);
         descripcion2_eliminar_clasificados = findViewById(R.id.eliminar_descripcion2_clasificados);
-
         imagen1_eliminar_clasificados = findViewById(R.id.imagen1_eliminar_clasificados);
         imagen2_eliminar_clasificados = findViewById(R.id.imagen2_eliminar_clasificados);
         imagen3_eliminar_clasificados = findViewById(R.id.imagen3_eliminar_clasificados);
         imagen4_eliminar_clasificados = findViewById(R.id.imagen4_eliminar_clasificados);
-
         buscar_eliminar_clasificados = findViewById(R.id.eliminar_id_clasificados);
-
         eliminar_clasificados = findViewById(R.id.eliminar_clasificados);
+        eliminar_buscar_clasificados = findViewById(R.id.eliminar_buscar_clasificados);
+
         eliminar_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,14 +106,11 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
                     }
                 }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         cargarEliminar_clasificados();
-
                     }
                 });
 
@@ -127,19 +121,15 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
             }
         });
 
-        eliminar_buscar_clasificados = findViewById(R.id.eliminar_buscar_clasificados);
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         eliminar_buscar_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (!validarid()){return;}
-
                 cargarBusqueda_clasificados();
             }
         });
-
 
         anuncioClasificados_eliminar = new InterstitialAd(this);
         anuncioClasificados_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -176,9 +166,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
     @Override
     public void onErrorResponse(VolleyError error) {
 
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
 
     }
@@ -208,8 +196,6 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
             clasificados.setDescripcion1_clasificados(jsonObject.getString("descripcion1_clasificados"));
             clasificados.setDescripcion2_clasificados(jsonObject.getString("descripcion2_clasificados"));
 
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -219,7 +205,6 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         video_eliminar_clasificados.setText(clasificados.getVideo_clasificados());
         descripcion1_eliminar_clasificados.setText(clasificados.getDescripcion1_clasificados());
         descripcion2_eliminar_clasificados.setText(clasificados.getDescripcion2_clasificados());
-
 
         Picasso.get().load(clasificados.getImagen1_clasificados())
                 .placeholder(R.drawable.imagennodisponible)
@@ -241,15 +226,14 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_clasificados);
     }
+
     private void cargarEliminar_clasificados() {
 
         String url_clasificados = DireccionServidor+"wsnJSONEliminar.php?";
 
-
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
 
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
@@ -283,11 +267,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-
-
                 }
 
             }
@@ -296,10 +277,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
 
                     }
                 }){
@@ -310,9 +289,9 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 String idinput = buscar_eliminar_clasificados.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("id_clasificados",idinput);
                 parametros.put("publicacion","Clasificados");
-
                 Log.i("Parametros", String.valueOf(parametros));
 
                 return parametros;

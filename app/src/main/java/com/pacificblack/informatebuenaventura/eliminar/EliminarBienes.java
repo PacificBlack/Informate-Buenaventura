@@ -61,7 +61,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
-//TODO: Testeando para comprobar si todo esta full
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class EliminarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 

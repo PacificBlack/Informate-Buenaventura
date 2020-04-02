@@ -62,7 +62,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
-//TODO: Testeando para comprobar si todo esta full
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class ActualizarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
@@ -105,7 +105,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         buscar_actualizar_bienes = findViewById(R.id.actualizar_id_bienes);
         actualizar_editar_bienes = findViewById(R.id.actualizar_editar_bienes);
         actualizar_buscar_bienes = findViewById(R.id.actualizar_buscar_bienes);
-        gvImagenes_bienes = findViewById(R.id.grid_bienes);
+        gvImagenes_bienes = findViewById(R.id.actualizar_grid_bienes);
         actualizarimagenes = findViewById(R.id.actualizar_imagenes_bienes);
 
 
@@ -127,8 +127,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                             .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
-                            imagenes_bienes.setVisibility(View.GONE);
 
                             if (listaimagenes_bienes.size() == 4){
                                 Subirimagen_bienes_update();
