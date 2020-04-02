@@ -582,19 +582,15 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
     }
     public void Subirimagen_bienes_update(){
-
-
         listaBase64_bienes.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
         for (int i = 0; i < listaimagenes_bienes.size(); i++){
 
             try {
-
                 InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-                nombre.add( "imagen_bienes"+i);
+                nombre.add("imagen_bienes"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
             }catch (IOException e){
