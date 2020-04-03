@@ -69,7 +69,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 
-//TODO: Testeando para ver si todo esta bien.
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 
 public class ActualizarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {

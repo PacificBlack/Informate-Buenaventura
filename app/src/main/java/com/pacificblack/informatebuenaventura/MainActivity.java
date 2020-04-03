@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -16,17 +17,20 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarAdopcion;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarArticulo;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarBienes;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarClasificados;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarDesaparicion;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarDonaciones;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarAdopcion;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarArticulo;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarBienes;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarClasificados;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarDesaparicion;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarDonaciones;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
 import com.pacificblack.informatebuenaventura.publicar.PublicarAdopcion;
 import com.pacificblack.informatebuenaventura.publicar.PublicarArticulo;
@@ -77,6 +81,15 @@ public class MainActivity extends AppCompatActivity   {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.openDrawer(Gravity.LEFT);
+
+            }
+        });
 
     }
 
@@ -207,6 +220,11 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, EliminarDesaparicion.class);
         startActivity(intent);
     }
+    public void EliminarDonaciones(View view){
+        Intent intent = new Intent(MainActivity.this, EliminarDonaciones.class);
+        startActivity(intent);
+    }
+
 
 
 /////////////////////////////////////////////////////////////
@@ -244,6 +262,10 @@ public class MainActivity extends AppCompatActivity   {
     }
     public void ActualizarDesaparicion(View view){
         Intent intent = new Intent(MainActivity.this, ActualizarDesaparicion.class);
+        startActivity(intent);
+    }
+    public void ActualizarDonaciones(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarDonaciones.class);
         startActivity(intent);
     }
 

@@ -48,6 +48,9 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
+
+
 public class EliminarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     StringRequest stringRequest_desaparicion;

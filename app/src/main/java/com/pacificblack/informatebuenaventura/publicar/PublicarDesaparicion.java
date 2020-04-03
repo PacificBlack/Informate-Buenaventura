@@ -62,7 +62,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
 
-//TODO: Testeando para ver si todo esta bien.
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class PublicarDesaparicion extends AppCompatActivity {
 
