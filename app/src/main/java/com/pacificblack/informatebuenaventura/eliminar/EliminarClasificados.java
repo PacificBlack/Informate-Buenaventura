@@ -115,7 +115,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 });
 
                 AlertDialog titulo = mensaje.create();
-                titulo.setTitle("Modificar Publicación");
+                titulo.setTitle("Eliminar Publicación");
                 titulo.show();
 
             }

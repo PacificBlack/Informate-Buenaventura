@@ -113,7 +113,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 });
 
                 AlertDialog titulo = mensaje.create();
-                titulo.setTitle("Modificar Publicación");
+                titulo.setTitle("Eliminar Publicación");
                 titulo.show();
 
             }

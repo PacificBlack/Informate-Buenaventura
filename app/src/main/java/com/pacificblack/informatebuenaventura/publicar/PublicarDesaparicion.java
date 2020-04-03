@@ -2,12 +2,14 @@ package com.pacificblack.informatebuenaventura.publicar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -37,6 +39,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.MainActivity;
@@ -50,13 +54,18 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+
+//TODO: Testeando para ver si todo esta bien.
 
 public class PublicarDesaparicion extends AppCompatActivity {
 
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_desaparicion;
     Uri imagenesdesaparicionUri;
     List<Uri> listaimagenes_desaparicion =  new ArrayList<>();
@@ -67,33 +76,16 @@ public class PublicarDesaparicion extends AppCompatActivity {
     StringRequest stringRequest_desaparicion;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
+    private InterstitialAd anuncioActualizardesaparicion;
 
-    //TODO: Aqui finaliza
-
-
-
-    TextInputLayout
-            titulo_publicar_desaparicion,
-            descripcioncorta_publicar_desaparicion,
-            recompensa_publicar_desaparicion,
-            ultimolugar_publicar_desaparicion,
-            descripcion1_publicar_desaparicion,
-            descripcion2_publicar_desaparicion;
-
+    TextInputLayout titulo_publicar_desaparicion, descripcioncorta_publicar_desaparicion, recompensa_publicar_desaparicion, ultimolugar_publicar_desaparicion, descripcion1_publicar_desaparicion, descripcion2_publicar_desaparicion;
     TextView  diadesa_publicar_desaparicion;
     String dia_desaparicion;
-
     DatePickerDialog.OnDateSetListener dateSetListener;
-
-    AutoCompleteTextView queseperdio_publicar_desaparicion,
-            estado_publicar_desaparicion;
-
+    AutoCompleteTextView queseperdio_publicar_desaparicion, estado_publicar_desaparicion;
     Button publicar_final_desaparicion,subirimagenes;
-
-
     String estado[] = new String[]{"Desaparecido","Encontrado"};
     String quees[]  = new String[]{"Animal","Persona","Dococumento","Vehiculo","Otro objeto"};
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +96,15 @@ public class PublicarDesaparicion extends AppCompatActivity {
         descripcioncorta_publicar_desaparicion= findViewById(R.id.publicar_descripcioncorta_desaparicion);
         recompensa_publicar_desaparicion = findViewById(R.id.publicar_recompensa_desaparicion);
         diadesa_publicar_desaparicion = findViewById(R.id.publicar_fechade_desaparicion);
+        ultimolugar_publicar_desaparicion = findViewById(R.id.publicar_ultimolugar_desaparicion);
+        descripcion1_publicar_desaparicion = findViewById(R.id.publicar_descripcion_desaparicion);
+        descripcion2_publicar_desaparicion = findViewById(R.id.publicar_descripcionextra_desaparicion);
+        gvImagenes_desaparicion = findViewById(R.id.grid_desaparicion);
+        subirimagenes = findViewById(R.id.subir_imagenes_desaparicion);
+        queseperdio_publicar_desaparicion = findViewById(R.id.publicar_quese_desapariciom);
+        publicar_final_desaparicion = findViewById(R.id.publicar_final_desaparicion);
+        estado_publicar_desaparicion = findViewById(R.id.publicar_estadodes_desapariciom);
+
         diadesa_publicar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +114,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 int mes = cal.get(Calendar.MONTH);
                 int dia = cal.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(PublicarDesaparicion.this, android.R.style.Theme_Material_Dialog_MinWidth,dateSetListener,
-                        año,mes,dia);
+                DatePickerDialog dialog = new DatePickerDialog(PublicarDesaparicion.this, android.R.style.Theme_Material_Dialog_MinWidth,dateSetListener, año,mes,dia);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
@@ -132,16 +132,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
             }
         };
 
-        ultimolugar_publicar_desaparicion = findViewById(R.id.publicar_ultimolugar_desaparicion);
-        descripcion1_publicar_desaparicion = findViewById(R.id.publicar_descripcion_desaparicion);
-        descripcion2_publicar_desaparicion = findViewById(R.id.publicar_descripcionextra_desaparicion);
-
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        gvImagenes_desaparicion = findViewById(R.id.grid_desaparicion);
-        subirimagenes = findViewById(R.id.subir_imagenes_desaparicion);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,12 +154,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
-        queseperdio_publicar_desaparicion = findViewById(R.id.publicar_quese_desapariciom);
         ArrayAdapter<String>adapterque = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,quees);
         queseperdio_publicar_desaparicion.setAdapter(adapterque);
-        estado_publicar_desaparicion = findViewById(R.id.publicar_estadodes_desapariciom);
         ArrayAdapter<String>esta = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,estado);
         estado_publicar_desaparicion.setAdapter(esta);
 
@@ -188,26 +174,19 @@ public class PublicarDesaparicion extends AppCompatActivity {
         });
 
 
-        publicar_final_desaparicion = findViewById(R.id.publicar_final_desaparicion);
         publicar_final_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo()|      !validardescripcioncorta()|               !validarrecompensa()|       !validardiadesa()|
-                ! validarultimolugar()|
-                ! validardescripcion1()|
-                ! validardescripcion2()|
-                ! validarqueseperdio()|
-                ! validarestado()|
-                ! validarfoto()){return;}
-
-                //TODO: Aqui se hace el envio a la base de datos
-
+                if (!validartitulo()| !validardescripcioncorta()| !validarrecompensa()| !validardiadesa()| ! validarultimolugar()| ! validardescripcion1()| ! validardescripcion2()| ! validarqueseperdio()| ! validarestado()| ! validarfoto()){return;}
                 Subirimagen_desaparicion();
-
             }
         });
 
+
+        anuncioActualizardesaparicion = new InterstitialAd(this);
+        anuncioActualizardesaparicion.setAdUnitId(AnuncioActualizar);
+        anuncioActualizardesaparicion.loadAd(new AdRequest.Builder().build());
 
     }
 
@@ -376,41 +355,52 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     }
 
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
-
     private void cargarWebService_desaparicion() {
 
         String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
 
-
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                if (match.find()){
 
-                    Log.i("Funciona : ",response);
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioActualizardesaparicion.isLoaded()) {
+                                        anuncioActualizardesaparicion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
-
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
-
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -426,16 +416,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
                 String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_desaparecidos",tituloinput);
                 parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
                 parametros.put("recompensa_desaparecidos",recompensainput);
@@ -468,30 +450,18 @@ public class PublicarDesaparicion extends AppCompatActivity {
         listaBase64_desaparicion.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
         for (int i = 0; i < listaimagenes_desaparicion.size(); i++){
-
             try {
-
                 InputStream is = getContentResolver().openInputStream(listaimagenes_desaparicion.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-//Solucionar para poder guardar
-
-                nombre.add( "imagen_desaparecidos"+i);
-
+                nombre.add("imagen_desaparecidos" + i);
                 cadena.add(convertirUriEnBase64(bitmap));
-
                 bitmap.recycle();
-
-
             }catch (IOException e){
 
             }
-
         }
         cargarWebService_desaparicion();
-
     }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -504,7 +474,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
     }
     public void seleccionarimagen() {
 
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
@@ -526,7 +495,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 else{
                     //Permiso denegado
                     Toast.makeText(PublicarDesaparicion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
 
@@ -537,12 +505,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
             if (clipData == null){
                 imagenesdesaparicionUri = data.getData();
                 listaimagenes_desaparicion.add(imagenesdesaparicionUri);
@@ -555,10 +520,5 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         baseAdapter = new GridViewAdapter(PublicarDesaparicion.this,listaimagenes_desaparicion);
         gvImagenes_desaparicion.setAdapter(baseAdapter);
-
-
-
     }
-
-
 }

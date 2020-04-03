@@ -120,7 +120,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 });
 
                 AlertDialog titulo = mensaje.create();
-                titulo.setTitle("Modificar Publicación");
+                titulo.setTitle("Eliminar Publicación");
                 titulo.show();
             }
         });
@@ -141,8 +141,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
 
     }
 
-    //TODO: AQUI VA LO DE ACTUALIZAR Y ELIMINAR
-
     private boolean validarid(){
         String idinput = buscar_eliminar_adopcion.getEditText().getText().toString().trim();
 
@@ -161,7 +159,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         }
     }
 
-    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_adopcion() {
 
         String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_eliminar_adopcion.getEditText().getText().toString().trim();

@@ -44,38 +44,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
 public class EliminarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     StringRequest stringRequest_desaparicion;
     TextInputLayout id_desaparicion;
-
-    TextView titulo_eliminar_desaparicion,
-             descripcioncorta_eliminar_desaparicion,
-             recompensa_eliminar_desaparicion,
-             ultimolugar_eliminar_desaparicion,
-             descripcion1_eliminar_desaparicion,
-             descripcion2_eliminar_desaparicion,
-             diadesa_eliminar_desaparicion,
-             queseperdio_eliminar_desaparicion,
-             estado_eliminar_desaparicion;
-
+    TextView titulo_eliminar_desaparicion, descripcioncorta_eliminar_desaparicion,recompensa_eliminar_desaparicion, ultimolugar_eliminar_desaparicion, descripcion1_eliminar_desaparicion, descripcion2_eliminar_desaparicion,diadesa_eliminar_desaparicion,queseperdio_eliminar_desaparicion, estado_eliminar_desaparicion;
     ImageButton eliminar_buscar_adopcion,eliminar_desaparicion;
-
-
     RequestQueue requestbuscar_eliminar;
     JsonObjectRequest jsonObjectRequestBuscar_eliminar;
     ImageView imagen1_eliminar_desaparicion,imagen2_eliminar_desaparicion,imagen3_eliminar_desaparicion;
-
     private InterstitialAd anunciodesaparicion_eliminar;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_desaparicion);
-
 
         titulo_eliminar_desaparicion = findViewById(R.id.eliminar_titulo_desaparicion);
         descripcioncorta_eliminar_desaparicion= findViewById(R.id.eliminar_descripcioncorta_desaparicion);
@@ -89,11 +76,10 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         imagen1_eliminar_desaparicion = findViewById(R.id.imagen1_eliminar_desaparicion);
         imagen2_eliminar_desaparicion = findViewById(R.id.imagen2_eliminar_desaparicion);
         imagen3_eliminar_desaparicion = findViewById(R.id.imagen3_eliminar_desaparicion);
-
-
         id_desaparicion = findViewById(R.id.eliminar_id_desaparicion);
-
         eliminar_desaparicion = findViewById(R.id.eliminar_desaparicion);
+        eliminar_buscar_adopcion = findViewById(R.id.eliminar_buscar_desaparicion);
+
         eliminar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,15 +90,11 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                         .setCancelable(false).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-
                     }
                 }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         cargarEliminar_desaparicion();
-
                     }
                 });
 
@@ -122,7 +104,6 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
             }
         });
-        eliminar_buscar_adopcion = findViewById(R.id.eliminar_buscar_desaparicion);
 
 
         requestbuscar_eliminar = Volley.newRequestQueue(getApplicationContext());
@@ -137,20 +118,10 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
             }
         });
 
-
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
-
         anunciodesaparicion_eliminar = new InterstitialAd(this);
         anunciodesaparicion_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         anunciodesaparicion_eliminar.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
-
-
     }
-
 
 
     private boolean validarid(){
@@ -171,8 +142,6 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         }
     }
 
-
-    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_desaparicion() {
 
         String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarDesaparicion.php?id_desaparecidos="+id_desaparicion.getEditText().getText().toString().trim();
@@ -183,12 +152,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-
-        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-
     }
 
     @Override
@@ -218,12 +183,9 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
             desaparecidos.setEstado_desaparecidos(jsonObject.getString("estado_desaparecidos"));
             desaparecidos.setUltimolugar_desaparecidos(jsonObject.getString("ultimolugar_desaparecidos"));
 
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         titulo_eliminar_desaparicion.setText(desaparecidos.getTitulo_row_desaparecidos());
         descripcioncorta_eliminar_desaparicion.setText(desaparecidos.getDescripcion_row_desaparecidos());
@@ -258,16 +220,13 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
         String url_desaparicion = DireccionServidor+"wsnJSONEliminar.php?";
 
-
         stringRequest_desaparicion = new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
-
 
                 if (match.find()){
 
@@ -296,24 +255,16 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                     Log.i("Funciona : ",response);
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-
-
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-
-
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -331,12 +282,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 return parametros;
             }
         };
-
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
         request_bienes_actualizar.add(stringRequest_desaparicion);
-
     }
-
-
 }
-
