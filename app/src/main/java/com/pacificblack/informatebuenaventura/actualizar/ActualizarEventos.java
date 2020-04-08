@@ -19,10 +19,8 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,7 +38,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaEmpleos;
+import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -66,95 +64,94 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobusc
 //TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 
-public class ActualizarEmpleos extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
+public class ActualizarEventos extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
-    TextInputLayout titulo_actualizar_empleos, descripcioncorta_actualizar_empleos, id_actualizar_empleos;
-    AutoCompleteTextView necesidad_actualizar_empleos;
-    Button subirimagenes;
-    String nece[] = new String[]{"Urgente","Rapido","Para hoy mismo"};
-
-    GridView gvImagenes_empleos;
-    Uri imagenesempleosUri;
-    List<Uri> listaimagenes_empleos =  new ArrayList<>();
-    List<String> listaBase64_empleos = new ArrayList<>();
+    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
+    GridView gvImagenes_eventos;
+    Uri imageneseventosUri;
+    List<Uri> listaimagenes_eventos =  new ArrayList<>();
+    List<String> listaBase64_eventos = new ArrayList<>();
     GridViewAdapter baseAdapter;
     List<String> cadena = new ArrayList<>();
     List<String> nombre = new ArrayList<>();
-    StringRequest stringRequest_empleos;
+    StringRequest stringRequest_eventos;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    ImageButton actualizar_empleos,actualizar_buscar_empleos;
+    //TODO: Aqui finaliza
+
+    TextInputLayout titulo_actualizar_eventos,id_actualizar_eventos,descripcioncorta_actualizar_eventos,lugar_actualizar_eventos;
+    Button subirimagenes;
+
+    ImageButton actualizar_eventos,actualizar_buscar_eventos;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-        ImageView imagen1_actualizar_empleos;
-    private InterstitialAd anuncioempleos;
+    ImageView imagen1_actualizar_eventos;
+    private InterstitialAd anuncioeventos;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.actualizar_empleos);
+        setContentView(R.layout.actualizar_eventos);
 
-        titulo_actualizar_empleos = findViewById(R.id.actualizar_titulo_empleos);
-        descripcioncorta_actualizar_empleos = findViewById(R.id.actualizar_descripcion_empleos);
-        necesidad_actualizar_empleos = findViewById(R.id.actualizar_necesidad_empleos);
-        subirimagenes = findViewById(R.id.subir_imagenes_actualizar_empleos);
-        id_actualizar_empleos = findViewById(R.id.actualizar_id_empleos);
-        actualizar_empleos = findViewById(R.id.actualizar_empleos);
-        actualizar_buscar_empleos = findViewById(R.id.actualizar_buscar_empleos);
-        imagen1_actualizar_empleos = findViewById(R.id.imagen1_actualizar_empleos);
+        titulo_actualizar_eventos = findViewById(R.id.actualizar_titulo_eventos);
+        descripcioncorta_actualizar_eventos = findViewById(R.id.actualizar_descripcion_eventos);
+        lugar_actualizar_eventos = findViewById(R.id.actualizar_lugar_eventos);
+        subirimagenes = findViewById(R.id.actualizar_imagenes_eventos);
+        id_actualizar_eventos = findViewById(R.id.actualizar_id_eventos);
+        actualizar_eventos = findViewById(R.id.actualizar_final_eventos);
+        actualizar_buscar_eventos = findViewById(R.id.actualizar_buscar_eventos);
+        imagen1_actualizar_eventos = findViewById(R.id.imagen1_actualizar_eventos);
 
-    actualizar_empleos.setOnClickListener(new View.OnClickListener() {
-     @Override
-     public void onClick(View v) {
-        if (!validartitulo() | !validardescripcion() | !validarnececidad() | !validarid()) { return;
-            }
+        actualizar_eventos.setOnClickListener(new View.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(View v) {
+            if (!validartitulo() | !validardescripcion() | !validarlugar() | !validarid()) { return;
+                }
+                if (!validarfotoupdate()){
+                          AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
+                           mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
+                            .setCancelable(false).setNegativeButton("Modificar tambien las imagenes", new DialogInterface.OnClickListener() {
+                                                              @Override
+                                                              public void onClick(DialogInterface dialog, int which) {
 
-        if (!validarfotoupdate()){
-             AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
-            mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+                                if (listaimagenes_eventos.size() == 1){
+                                     Subirimagen_eventos_update();
+                                                                  }
+                          }
+                                                          }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                @Override
                 public void onClick(DialogInterface dialog, int which) {
-
-         if (listaimagenes_empleos.size() == 1){
-               Subirimagen_empleos_update();
-                     }
-             }
-            }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
-          @Override
-           public void onClick(DialogInterface dialog, int which) {
-
-            cargarActualizarSinImagen_empleos();
-
-           }
-              });
-             AlertDialog titulo = mensaje.create();
-              titulo.setTitle("Modificar Publicación");
-              titulo.show();
-     return;
-        }
-             }
-                               }
+                           cargarActualizarSinImagen_eventos();
+                                                              }
+                                                          });
+                           AlertDialog titulo2 = mensaje.create();
+                            titulo2.setTitle("Modificar Publicación");
+                             titulo2.show();
+                                return;
+                                                      }
+                                }
+                                              }
         );
 
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
-        actualizar_buscar_empleos.setOnClickListener(new View.OnClickListener() {
+        actualizar_buscar_eventos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (!validarid()){return;}
-                cargarBusqueda_empleos();
+                cargarBusqueda_eventos();
             }
         });
 
-        anuncioempleos = new InterstitialAd(this);
-        anuncioempleos.setAdUnitId(AnuncioActualizar);
-        anuncioempleos.loadAd(new AdRequest.Builder().build());
+        anuncioeventos = new InterstitialAd(this);
+        anuncioeventos.setAdUnitId(AnuncioActualizar);
+        anuncioeventos.loadAd(new AdRequest.Builder().build());
 
 
-        gvImagenes_empleos = findViewById(R.id.actualizar_grid_empleos);
+        gvImagenes_eventos = findViewById(R.id.grid_eventos_actualizar);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,107 +175,109 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         });
 
 
+
     }
 
     private boolean validarid(){
-        String idinput = id_actualizar_empleos.getEditText().getText().toString().trim();
+        String idinput = id_actualizar_eventos.getEditText().getText().toString().trim();
 
         if (idinput.isEmpty()){
-            id_actualizar_empleos.setError(""+R.string.error_descripcioncorta);
+            id_actualizar_eventos.setError(""+R.string.error_descripcioncorta);
             return false;
         }
         else if(idinput.length()>15){
 
-            id_actualizar_empleos.setError(""+R.string.supera);
+            id_actualizar_eventos.setError(""+R.string.supera);
             return false;
         }
         else {
-            id_actualizar_empleos.setError(null);
+            id_actualizar_eventos.setError(null);
             return true;
         }
     }
     private boolean validartitulo(){
-        String tituloinput = titulo_actualizar_empleos.getEditText().getText().toString().trim();
+        String tituloinput = titulo_actualizar_eventos.getEditText().getText().toString().trim();
 
         if (tituloinput.isEmpty()){
-            titulo_actualizar_empleos.setError(""+R.string.error_titulo);
+            titulo_actualizar_eventos.setError(""+R.string.error_titulo);
             return false;
         }
         else if(tituloinput.length()>120){
 
-            titulo_actualizar_empleos.setError(""+R.string.supera);
+            titulo_actualizar_eventos.setError(""+R.string.supera);
             return false;
         }
         else {
-            titulo_actualizar_empleos.setError(null);
+            titulo_actualizar_eventos.setError(null);
             return true;
         }
     }
     private boolean  validardescripcion(){
-        String descripcioncortainput = descripcioncorta_actualizar_empleos.getEditText().getText().toString().trim();
+        String descripcioncortainput = descripcioncorta_actualizar_eventos.getEditText().getText().toString().trim();
 
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_actualizar_empleos.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_eventos.setError(""+R.string.error_descripcioncorta);
             return false;
         }
         else if(descripcioncortainput.length()>740){
 
-            descripcioncorta_actualizar_empleos.setError(""+R.string.supera);
+            descripcioncorta_actualizar_eventos.setError(""+R.string.supera);
             return false;
         }
         else {
-            descripcioncorta_actualizar_empleos.setError(null);
+            descripcioncorta_actualizar_eventos.setError(null);
             return true;
         }
     }
-    private boolean validarnececidad(){
-        String necesidadinput = necesidad_actualizar_empleos.getText().toString().trim();
+    private boolean validarlugar(){
+        String lugarinput = lugar_actualizar_eventos.getEditText().toString().trim();
 
-        if (necesidadinput.isEmpty()) {
-            necesidad_actualizar_empleos.setError("" + R.string.error_descripcioncorta);
+        if (lugarinput.isEmpty()) {
+            lugar_actualizar_eventos.setError("" + String.valueOf(R.string.error_descripcioncorta));
             return false;
-        } else if (necesidadinput.length() > 15) {
+        } else if (lugarinput.length() > 120) {
 
-            necesidad_actualizar_empleos.setError("" + R.string.supera);
+            lugar_actualizar_eventos.setError("" + R.string.supera);
             return false;
         } else {
-            necesidad_actualizar_empleos.setError(null);
+            lugar_actualizar_eventos.setError(null);
             return true;
         }
     }
+
+
     private boolean validarfotoupdate(){
 
-        if (listaimagenes_empleos.size() == 0){
+        if (listaimagenes_eventos.size() == 0){
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
 
-        else if (listaimagenes_empleos.size() > 1){
+        else if (listaimagenes_eventos.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
             return false;
         }
 
-        else if (listaimagenes_empleos.size() < 1){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_empleos.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
+        else if (listaimagenes_eventos.size() < 1){
+            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_eventos.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
             return true;
 
         }
 
-        else if(listaimagenes_empleos.size() == 1){
+        else if(listaimagenes_eventos.size() == 1){
             return false;
         }
 
         else {
             return true;
         }
-
     }
 
-    private void cargarBusqueda_empleos() {
+    private void cargarBusqueda_eventos() {
 
-        String url_buscar_empleos = DireccionServidor+"wsnJSONBuscarEmpleos.php?id_ofertaempleos="+id_actualizar_empleos.getEditText().getText().toString().trim();
+        String url_buscar_eventos = DireccionServidor+"wsnJSONBuscarEventos.php?id_eventos="+id_actualizar_eventos.getEditText().getText().toString().trim();
 
-        jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_empleos,null,this,this);
+        jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_eventos,null,this,this);
 
         requestbuscar.add(jsonObjectRequestBuscar);
     }
@@ -287,45 +286,44 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
     }
-
     @Override
     public void onResponse(JSONObject response) {
-        OfertaEmpleos empleos = new OfertaEmpleos();
+        Eventos eventos = new Eventos();
 
-        JSONArray json = response.optJSONArray("empleos");
+        JSONArray json = response.optJSONArray("eventos");
         JSONObject jsonObject = null;
 
         try {
 
             jsonObject = json.getJSONObject(0);
 
-            empleos.setId_empleos(jsonObject.getInt("id_ofertaempleos"));
-            empleos.setTitulo_row_ofertasempleos(jsonObject.getString("titulo_ofertaempleos"));
-            empleos.setDescripcion_row_ofertasempleos(jsonObject.getString("descripcionrow_ofertaempleos"));
-            empleos.setFechapublicacion_row_ofertasempleos(jsonObject.getString("fechapublicacion_ofertaempleos"));
-            empleos.setNecesidad_row_ofertasempleos(jsonObject.getString("necesidad_ofertaempleos"));
-            empleos.setImagen1_ofertasempleos(jsonObject.getString("imagen1_ofertaempleos"));
-            empleos.setVistas_ofertasempleos(jsonObject.getInt("vistas_ofertaempleos"));
+            eventos.setId_eventos(jsonObject.getInt("id_eventos"));
+            eventos.setTitulo_row_eventos(jsonObject.getString("titulo_eventos"));
+            eventos.setDescripcion_row_eventos(jsonObject.getString("descripcionrow_eventos"));
+            eventos.setFechapublicacion_row_eventos(jsonObject.getString("fechapublicacion_eventos"));
+            eventos.setLugar_row_eventos(jsonObject.getString("lugar_eventos"));
+            eventos.setImagen1_eventos(jsonObject.getString("imagen1_eventos"));
+            eventos.setVistas_eventos(jsonObject.getInt("vistas_eventos"));
 
         }catch (JSONException e){
             e.printStackTrace();
         }
 
-        titulo_actualizar_empleos.getEditText().setText(empleos.getTitulo_row_ofertasempleos());
-        descripcioncorta_actualizar_empleos.getEditText().setText(empleos.getDescripcion_row_ofertasempleos());
-        necesidad_actualizar_empleos.setText(empleos.getNecesidad_row_ofertasempleos());
-        Picasso.get().load(empleos.getImagen1_ofertasempleos())
+        titulo_actualizar_eventos.getEditText().setText(eventos.getTitulo_row_eventos());
+        descripcioncorta_actualizar_eventos.getEditText().setText(eventos.getDescripcion_row_eventos());
+        lugar_actualizar_eventos.getEditText().setText(eventos.getLugar_row_eventos());
+        Picasso.get().load(eventos.getImagen1_eventos())
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
-                .into(imagen1_actualizar_empleos);
+                .into(imagen1_actualizar_eventos);
     }
 
 
-    private void cargarActualizarConImagen_empleos() {
+    private void cargarActualizarConImagen_eventos() {
 
-        String url_empleos = DireccionServidor+"wsnJSONActualizarConImagenEmpleos.php?";
+        String url_eventos = DireccionServidor+"wsnJSONActualizarConImagenEventos.php?";
 
-        stringRequest_empleos= new StringRequest(Request.Method.POST, url_empleos, new Response.Listener<String>() {
+        stringRequest_eventos= new StringRequest(Request.Method.POST, url_eventos, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -335,7 +333,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
 
                     mensaje.setMessage(response)
                             .setCancelable(false)
@@ -344,8 +342,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     finish();
-                                    if (anuncioempleos.isLoaded()) {
-                                        anuncioempleos.show();
+                                    if (anuncioeventos.isLoaded()) {
+                                        anuncioeventos.show();
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
@@ -375,20 +373,20 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                String idinput = id_actualizar_empleos.getEditText().getText().toString().trim();
-                String tituloinput = titulo_actualizar_empleos.getEditText().getText().toString().trim();
-                String descripcioncortainput = descripcioncorta_actualizar_empleos.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_actualizar_empleos.getText().toString().trim();
+                String idinput = id_actualizar_eventos.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_eventos.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_eventos.getEditText().getText().toString().trim();
+                String lugarinput = lugar_actualizar_eventos.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
-                parametros.put("id_ofertaempleos",idinput);
-                parametros.put("titulo_empleos",tituloinput);
-                parametros.put("descripcionrow_empleos",descripcioncortainput);
-                parametros.put("vistas_empleos","0");
-                parametros.put("necesidad_empleos",necesidadinput);
+
+                parametros.put("id_eventos",idinput);
+                parametros.put("titulo_eventos",tituloinput);
+                parametros.put("descripcionrow_eventos",descripcioncortainput);
+                parametros.put("lugar_eventos",lugarinput);
                 parametros.put("subida","pendiente");
-                parametros.put("publicacion","Empleos");
+                parametros.put("publicacion","Eventos");
 
                 for (int h = 0; h<nombre.size();h++){
                     parametros.put(nombre.get(h),cadena.get(h));
@@ -398,17 +396,17 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             }
         };
 
-        RequestQueue request_empleos = Volley.newRequestQueue(this);
-        request_empleos.add(stringRequest_empleos);
+        RequestQueue request_eventos = Volley.newRequestQueue(this);
+        request_eventos.add(stringRequest_eventos);
 
     }
 
 
-    private void cargarActualizarSinImagen_empleos() {
+    private void cargarActualizarSinImagen_eventos() {
 
-        String url_empleos = DireccionServidor+"wsnJSONActualizarSinnImagenEmpleos.php?";
+        String url_eventos = DireccionServidor+"wsnJSONActualizarSinnImagenEventos.php?";
 
-        stringRequest_empleos= new StringRequest(Request.Method.POST, url_empleos, new Response.Listener<String>() {
+        stringRequest_eventos= new StringRequest(Request.Method.POST, url_eventos, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -418,7 +416,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
 
                     mensaje.setMessage(response)
                             .setCancelable(false)
@@ -427,8 +425,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     finish();
-                                    if (anuncioempleos.isLoaded()) {
-                                        anuncioempleos.show();
+                                    if (anuncioeventos.isLoaded()) {
+                                        anuncioeventos.show();
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
@@ -458,48 +456,46 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
-                String idinput = id_actualizar_empleos.getEditText().getText().toString().trim();
-                String tituloinput = titulo_actualizar_empleos.getEditText().getText().toString().trim();
-                String descripcioncortainput = descripcioncorta_actualizar_empleos.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_actualizar_empleos.getText().toString().trim();
+                String idinput = id_actualizar_eventos.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_eventos.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_eventos.getEditText().getText().toString().trim();
+                String lugarinput = lugar_actualizar_eventos.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
-                parametros.put("id_ofertaempleos",idinput);
-                parametros.put("titulo_empleos",tituloinput);
-                parametros.put("descripcionrow_empleos",descripcioncortainput);
-                parametros.put("vistas_empleos","0");
-                parametros.put("necesidad_empleos",necesidadinput);
+                parametros.put("id_eventos",idinput);
+                parametros.put("titulo_eventos",tituloinput);
+                parametros.put("descripcionrow_eventos",descripcioncortainput);
+                parametros.put("lugar_eventos",lugarinput);
                 parametros.put("subida","pendiente");
-                parametros.put("publicacion","Empleos");
-
+                parametros.put("publicacion","Eventos");
 
                 return parametros;
             }
         };
 
-        RequestQueue request_empleos = Volley.newRequestQueue(this);
-        request_empleos.add(stringRequest_empleos);
+        RequestQueue request_eventos = Volley.newRequestQueue(this);
+        request_eventos.add(stringRequest_eventos);
 
     }
 
-    public void Subirimagen_empleos_update(){
+    public void Subirimagen_eventos_update(){
 
-        listaBase64_empleos.clear();
+        listaBase64_eventos.clear();
         nombre.clear();
         cadena.clear();
-        for (int i = 0; i < listaimagenes_empleos.size(); i++){
+        for (int i = 0; i < listaimagenes_eventos.size(); i++){
             try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_empleos.get(i));
+                InputStream is = getContentResolver().openInputStream(listaimagenes_eventos.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-                nombre.add( "imagen_empleos"+i);
+                nombre.add( "imagen_eventos"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
             }catch (IOException e){
             }
         }
-        cargarActualizarConImagen_empleos();
+        cargarActualizarConImagen_eventos();
     }
 
 
@@ -535,7 +531,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }
                 else{
                     //Permiso denegado
-                    Toast.makeText(ActualizarEmpleos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
+                    Toast.makeText(ActualizarEventos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
 
                 }
             }
@@ -551,16 +547,16 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (clipData == null){
-                imagenesempleosUri = data.getData();
-                listaimagenes_empleos.add(imagenesempleosUri);
+                imageneseventosUri = data.getData();
+                listaimagenes_eventos.add(imageneseventosUri);
             }else {
                 for (int i = 0; i<= 1; i++){
-                    listaimagenes_empleos.add(clipData.getItemAt(i).getUri());
+                    listaimagenes_eventos.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
-        baseAdapter = new GridViewAdapter(ActualizarEmpleos.this,listaimagenes_empleos);
-        gvImagenes_empleos.setAdapter(baseAdapter);
+        baseAdapter = new GridViewAdapter(ActualizarEventos.this,listaimagenes_eventos);
+        gvImagenes_eventos.setAdapter(baseAdapter);
     }
 
 }

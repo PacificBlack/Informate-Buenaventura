@@ -6,18 +6,27 @@ public class Eventos {
 
     private String titulo_row_eventos,descripcion_row_eventos,fechapublicacion_row_eventos,lugar_row_eventos;
     private String imagen1_eventos;
-    private int vistas_eventos;
+    private int vistas_eventos, id_eventos;
 
     public Eventos() {
     }
 
-    public Eventos(String titulo_row_eventos, String descripcion_row_eventos, String fechapublicacion_row_eventos, String lugar_row_eventos, String imagen1_eventos, int vistas_eventos) {
+    public Eventos(String titulo_row_eventos, String descripcion_row_eventos, String fechapublicacion_row_eventos, String lugar_row_eventos, String imagen1_eventos, int vistas_eventos, int id_eventos) {
         this.titulo_row_eventos = titulo_row_eventos;
         this.descripcion_row_eventos = descripcion_row_eventos;
         this.fechapublicacion_row_eventos = fechapublicacion_row_eventos;
         this.lugar_row_eventos = lugar_row_eventos;
         this.imagen1_eventos = imagen1_eventos;
         this.vistas_eventos = vistas_eventos;
+        this.id_eventos = id_eventos;
+    }
+
+    public int getId_eventos() {
+        return id_eventos;
+    }
+
+    public void setId_eventos(int id_eventos) {
+        this.id_eventos = id_eventos;
     }
 
     public String getTitulo_row_eventos() {

@@ -26,6 +26,7 @@ import com.pacificblack.informatebuenaventura.actualizar.ActualizarClasificados;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarDesaparicion;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarDonaciones;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarEmpleos;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarEventos;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarAdopcion;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarArticulo;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarBienes;
@@ -277,7 +278,10 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, ActualizarEmpleos.class);
         startActivity(intent);
     }
-
+    public void ActualizarEventos(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarEventos.class);
+        startActivity(intent);
+    }
 
 }
 

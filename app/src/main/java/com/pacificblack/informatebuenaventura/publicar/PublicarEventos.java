@@ -2,11 +2,13 @@ package com.pacificblack.informatebuenaventura.publicar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -31,6 +33,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
@@ -43,8 +47,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
+
 
 public class PublicarEventos extends AppCompatActivity {
 
@@ -64,6 +75,9 @@ public class PublicarEventos extends AppCompatActivity {
 
     TextInputLayout titulo_publicar_eventos,descripcioncorta_publicar_eventos,lugar_publicar_eventos;
     Button publicarfinal_eventos,subirimagenes;
+
+    private InterstitialAd anuncioeventos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +129,11 @@ public class PublicarEventos extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantall
 
+
+        anuncioeventos = new InterstitialAd(this);
+        anuncioeventos.setAdUnitId(AnuncioPublicar);
+        anuncioeventos.loadAd(new AdRequest.Builder().build());
 
     }
 
@@ -191,28 +208,50 @@ public class PublicarEventos extends AppCompatActivity {
 
     private void cargarWebService_eventos() {
 
-        String url_eventos = DireccionServidor+"wsnJSONRegistroDos.php?";
+        String url_eventos = DireccionServidor+"wsnJSONRegistroEventos.php?";
 
 
         stringRequest_eventos= new StringRequest(Request.Method.POST, url_eventos, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                String resul = "Registrada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                if (match.find()) {
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEventos.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioeventos.isLoaded()) {
+                                        anuncioeventos.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
 
                     Log.i("Funciona : ",response);
 
                 }else {
-
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
 
 
                 }
-
             }
         },
                 new Response.ErrorListener() {
