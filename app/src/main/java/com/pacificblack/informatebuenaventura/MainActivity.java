@@ -25,12 +25,14 @@ import com.pacificblack.informatebuenaventura.actualizar.ActualizarBienes;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarClasificados;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarDesaparicion;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarDonaciones;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarEmpleos;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarAdopcion;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarArticulo;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarBienes;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarClasificados;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarDesaparicion;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarDonaciones;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarEmpleos;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
 import com.pacificblack.informatebuenaventura.publicar.PublicarAdopcion;
 import com.pacificblack.informatebuenaventura.publicar.PublicarArticulo;
@@ -224,7 +226,10 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, EliminarDonaciones.class);
         startActivity(intent);
     }
-
+    public void EliminarEmpleos(View view){
+        Intent intent = new Intent(MainActivity.this, EliminarEmpleos.class);
+        startActivity(intent);
+    }
 
 
 /////////////////////////////////////////////////////////////
@@ -266,6 +271,10 @@ public class MainActivity extends AppCompatActivity   {
     }
     public void ActualizarDonaciones(View view){
         Intent intent = new Intent(MainActivity.this, ActualizarDonaciones.class);
+        startActivity(intent);
+    }
+    public void ActualizarEmpleos(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarEmpleos.class);
         startActivity(intent);
     }
 

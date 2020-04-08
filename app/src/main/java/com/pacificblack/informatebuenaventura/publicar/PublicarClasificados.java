@@ -248,7 +248,7 @@ public class PublicarClasificados extends AppCompatActivity {
 
     private void cargarWebService_clasificados() {
 
-        String url_clasificados = DireccionServidor+"wsnJSONRegistro.php?";
+        String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
 
 
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {

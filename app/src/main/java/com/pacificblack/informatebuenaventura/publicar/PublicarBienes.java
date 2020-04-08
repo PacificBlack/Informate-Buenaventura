@@ -246,7 +246,7 @@ public class PublicarBienes extends AppCompatActivity  {
 
     private void cargarWebService_bienes() {
 
-        String url_bienes = DireccionServidor+"wsnJSONRegistro.php?";
+        String url_bienes = DireccionServidor+"wsnJSONRegistroBienes.php?";
 
 
         stringRequest_bienes= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {

@@ -54,13 +54,6 @@ public class OfertaEmpleosFragment extends Fragment {
 
     private void llenarlista_empleos() {
 
-        listaEmpleos.add(new OfertaEmpleos("Bienvenido guapo",
-                "Este empleo es muy cool",
-                "Today for de morning",
-                "Ya mismito",
-                R.drawable.imagencita,
-                25));
-
     }
 
 }

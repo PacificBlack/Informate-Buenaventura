@@ -224,7 +224,7 @@ public class PublicarDonaciones extends AppCompatActivity{
 
     private void cargarWebService_donaciones() {
 
-        String url_donaciones = DireccionServidor+"wsnJSONRegistroDos.php?";
+        String url_donaciones = DireccionServidor+"wsnJSONRegistroDonaciones.php?";
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

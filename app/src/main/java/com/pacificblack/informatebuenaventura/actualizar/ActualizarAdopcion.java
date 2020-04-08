@@ -70,16 +70,11 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     TextInputLayout titulo_actualizar_adopcion, descripcioncorta_actualizar_adopcion, descripcion1_actualizar_adopcion, descripcion2_actualizar_adopcion, buscar_actualizar_adopcion;
     Button actualizarimagenes;
 
-    //TODO: Modificar y Eliminar
     ImageButton actualizar_editar_adopcion,actualizar_buscar_adopcion;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     HorizontalScrollView imagenes_adopcion_actualizar;
     ImageView imagen1_actualizar_adopcion,imagen2_actualizar_adopcion,imagen3_actualizar_adopcion,imagen4_actualizar_adopcion;
-    //TODO: Modificar y Eliminar
-
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView actualizar_gvImagenes_adopcion;
     Uri imagenesadopcionUri;
     List<Uri> listaimagenes_adopcion_actualizar =  new ArrayList<>();

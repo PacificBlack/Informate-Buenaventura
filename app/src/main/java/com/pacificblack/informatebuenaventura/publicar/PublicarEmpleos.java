@@ -2,11 +2,13 @@ package com.pacificblack.informatebuenaventura.publicar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -31,6 +33,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
@@ -42,8 +46,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+
+//TODO: Esta full pero hay que verificar el tamaño de las imagenes
+
 
 public class PublicarEmpleos extends AppCompatActivity {
 
@@ -53,7 +64,6 @@ public class PublicarEmpleos extends AppCompatActivity {
     Button publicarfinal_empleos,subirimagenes;
     String nece[] = new String[]{"Urgente","Rapido","Para hoy mismo"};
 
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_empleos;
     Uri imagenesempleosUri;
     List<Uri> listaimagenes_empleos =  new ArrayList<>();
@@ -65,7 +75,8 @@ public class PublicarEmpleos extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
+    private InterstitialAd anuncioempleos;
+
 
 
     @Override
@@ -95,17 +106,12 @@ public class PublicarEmpleos extends AppCompatActivity {
                 if (!validartitulo() | !validardescripcion() | !validarnececidad() | !validarfoto()) {
                     return;
                 }
-
                 Subirimagen_empleos();
-
             }
 
          }
 
         );
-
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
         gvImagenes_empleos = findViewById(R.id.grid_empleos);
         subirimagenes = findViewById(R.id.subir_imagenes_empleos);
@@ -131,8 +137,10 @@ public class PublicarEmpleos extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
+        anuncioempleos = new InterstitialAd(this);
+        anuncioempleos.setAdUnitId(AnuncioPublicar);
+        anuncioempleos.loadAd(new AdRequest.Builder().build());
     }
 
 
@@ -205,27 +213,51 @@ public class PublicarEmpleos extends AppCompatActivity {
 
     private void cargarWebService_empleos() {
 
-        String url_empleos = DireccionServidor+"wsnJSONRegistroDos.php?";
-
+        String url_empleos = DireccionServidor+"wsnJSONRegistroEmpleos.php?";
 
         stringRequest_empleos= new StringRequest(Request.Method.POST, url_empleos, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-                if (response.trim().equalsIgnoreCase("registra")){
-                    Toast.makeText(getApplicationContext(),"Registro papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                String resul = "Registrada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()) {
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEmpleos.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioempleos.isLoaded()) {
+                                        anuncioempleos.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
 
                     Log.i("Funciona : ",response);
 
                 }else {
-
-                    Toast.makeText(getApplicationContext(),"Lo siento papito, pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
 
 
                 }
+
 
             }
         },
@@ -248,18 +280,8 @@ public class PublicarEmpleos extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_empleos.getEditText().getText().toString().trim();
                 String necesidadinput = necesidad_publicar_empleos.getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
-
-
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_empleos",tituloinput);
                 parametros.put("descripcionrow_empleos",descripcioncortainput);
                 parametros.put("vistas_empleos","0");
@@ -342,22 +364,18 @@ public class PublicarEmpleos extends AppCompatActivity {
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
                     //Permiso denegado
                     Toast.makeText(PublicarEmpleos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         ClipData clipData = data.getClipData();
 
@@ -372,19 +390,8 @@ public class PublicarEmpleos extends AppCompatActivity {
                     listaimagenes_empleos.add(clipData.getItemAt(i).getUri());
                 }
             }
-
-
-
-
         }
-
         baseAdapter = new GridViewAdapter(PublicarEmpleos.this,listaimagenes_empleos);
         gvImagenes_empleos.setAdapter(baseAdapter);
-
-
-
     }
-
-
-
 }

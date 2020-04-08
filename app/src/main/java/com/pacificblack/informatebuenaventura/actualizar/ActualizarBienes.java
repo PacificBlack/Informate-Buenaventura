@@ -72,7 +72,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     ImageButton actualizar_editar_bienes,actualizar_buscar_bienes;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-    HorizontalScrollView imagenes_bienes;
     ImageView imagen1_actualizar_bienes,imagen2_actualizar_bienes,imagen3_actualizar_bienes,imagen4_actualizar_bienes;
 
     private InterstitialAd anunciobienes;

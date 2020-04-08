@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,7 +40,19 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
         holder.fechaempleos.setText(listaEmpleos.get(position).getFechapublicacion_row_ofertasempleos());
         holder.necesidadempleos.setText(listaEmpleos.get(position).getNecesidad_row_ofertasempleos());
         holder.vistaempleos.setText(String.valueOf(listaEmpleos.get(position).getVistas_ofertasempleos()));
-        holder.imagenempleos.setImageResource(listaEmpleos.get(position).getImagen1_ofertasempleos());
+
+        if (listaEmpleos.get(position).getImagen1_ofertasempleos() != null){
+
+            Picasso.get().load(listaEmpleos.get(position).getImagen1_ofertasempleos())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenempleos);
+
+
+        }else{
+            holder.imagenempleos.setImageResource(R.drawable.imagennodisponible);
+
+        }
 
     }
 
