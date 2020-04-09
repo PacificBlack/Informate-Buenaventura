@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -55,7 +56,21 @@ public class AdaptadorFunebres extends RecyclerView.Adapter<AdaptadorFunebres.Fu
         holder.descripcionfunebres.setText(listaFunebres.get(position).getDescripcion_row_funebres());
         holder.fechafunebres.setText(listaFunebres.get(position).getFechapublicacion_row_funebres());
         holder.vistafunebres.setText(String.valueOf(listaFunebres.get(position).getVistas_funebres()));
-        holder.imagenfunebres.setImageResource(listaFunebres.get(position).getImagen1_funebres());
+
+
+        if (listaFunebres.get(position).getImagen1_funebres() != null){
+
+            Picasso.get().load(listaFunebres.get(position).getImagen1_funebres())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenfunebres);
+
+
+        }else{
+            holder.imagenfunebres.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
 
     }
 

@@ -56,7 +56,7 @@ public class FunebresFragment extends Fragment {
 
                 Intent intentFunebres = new Intent(getContext(), DetalleDifuntos.class);
                 Bundle envioFunebres = new Bundle();
-                envioFunebres.putSerializable("objeto9",fune);
+                envioFunebres.putSerializable("objeto9", fune);
 
                 intentFunebres.putExtras(envioFunebres);
                 startActivity(intentFunebres);
@@ -70,14 +70,6 @@ public class FunebresFragment extends Fragment {
 
     private void llenarlista_funebres() {
 
-        listaFunebres.add(new Funebres("Hola mi papichulo eh",
-                "Mañana si",
-                "Mañana no",
-                R.drawable.imagencita,R.drawable.imagencita,R.drawable.imagencita,
-                39,
-                "Interesantemente mañana si mañana no crack",
-                "Bueno eso me alegra crack"));
 
     }
-
 }

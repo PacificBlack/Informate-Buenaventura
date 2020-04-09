@@ -550,7 +550,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 imageneseventosUri = data.getData();
                 listaimagenes_eventos.add(imageneseventosUri);
             }else {
-                for (int i = 0; i<= 1; i++){
+                for (int i = 0; i< 1; i++){
                     listaimagenes_eventos.add(clipData.getItemAt(i).getUri());
                 }
             }

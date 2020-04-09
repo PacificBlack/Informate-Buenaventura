@@ -17,7 +17,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".eliminar.EliminarEventos"></activity>
+        <activity android:name=".eliminar.EliminarFunebres"></activity>
+        <activity android:name=".actualizar.ActualizarFunebres" />
+        <activity android:name=".eliminar.EliminarEventos" />
         <activity android:name=".actualizar.ActualizarEventos" />
         <activity android:name=".actualizar.ActualizarEmpleos" />
         <activity android:name=".eliminar.EliminarEmpleos" />
