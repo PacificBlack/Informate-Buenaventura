@@ -33,26 +33,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
 
 public class AdopcionFragment extends Fragment  implements Response.Listener<JSONObject>,Response.ErrorListener {
-    //Declaramos lo que vamos a usar
 
     RecyclerView recyclerAdopcion;
-
-
-    //Agregamos un arraylist ya que estamos usando uno
-
     ArrayList<Adopcion> listaAdopcion;
-
-    //TODO: Aqui va todo lo de obtener de la base de datos
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-
-//TODO: Aqui va todo lo de obtener de la base de datos
-
-
 
     public AdopcionFragment() {
         // Required empty public constructor
@@ -69,17 +58,9 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
         recyclerAdopcion = vista.findViewById(R.id.recycler_adopcion);
         recyclerAdopcion.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-        //TODO: Aqui va todo lo de obtener de la base de datos
-
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Adopcion();
-
-        //TODO: Aqui va todo lo de obtener de la base de datos
-
-
-
 
         return vista;
     }
@@ -102,10 +83,8 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
     @Override
     public void onErrorResponse(VolleyError error) {
 
-        Toast.makeText(getContext(),"No funciona pa",Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-
 
     }
 
@@ -125,7 +104,7 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
                 JSONObject jsonObject = null;
                 jsonObject = json_adopcion.getJSONObject(i);
 
-
+                adopcion.setId_adopcion(jsonObject.getInt("id_adopcion"));
                 adopcion.setTitulo_row_adopcion(jsonObject.optString("titulo_adopcion"));
                 adopcion.setDescripcion_row_adopcion(jsonObject.optString("descripcionrow_adopcion"));
                 adopcion.setFechapublicacion_row_desaparecidos(jsonObject.optString("fechapublicacion_adopcion"));

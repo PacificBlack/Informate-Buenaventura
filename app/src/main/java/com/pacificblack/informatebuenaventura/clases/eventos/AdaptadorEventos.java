@@ -61,9 +61,6 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
 
 
 
-        //TODO: Aqui verifico si trae la imagen o no
-
-
     }
 
 
