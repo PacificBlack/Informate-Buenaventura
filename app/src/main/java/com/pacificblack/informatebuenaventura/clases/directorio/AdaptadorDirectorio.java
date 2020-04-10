@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -37,8 +38,19 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
         holder.contactosdirectorio.setText(listaDirectorio.get(position).getContactos_row_directorio());
         holder.fechapublicaciondirectorio.setText(listaDirectorio.get(position).getFechapublicacion_row_directorio());
         holder.vistadirectorio.setText(String.valueOf(listaDirectorio.get(position).getVistas_row_directorio()));
-        holder.imagendirectorio.setImageResource(listaDirectorio.get(position).getImagen1_directorio());
-    }
+
+        if (listaDirectorio.get(position).getImagen1_directorio() != null){
+
+            Picasso.get().load(listaDirectorio.get(position).getImagen1_directorio())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagendirectorio);
+
+
+        }else{
+            holder.imagendirectorio.setImageResource(R.drawable.imagennodisponible);
+
+        }    }
 
     @Override
     public int getItemCount() {

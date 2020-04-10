@@ -7,25 +7,39 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.directorio.AdaptadorDirectorio;
 import com.pacificblack.informatebuenaventura.clases.directorio.Directorio;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DirectoriosFragment extends Fragment {
+public class DirectoriosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerDirectorios;
-
     ArrayList<Directorio> listaDirectorios;
-
+    RequestQueue request;
+    JsonObjectRequest jsonObjectRequest;
 
 
     public DirectoriosFragment() {
@@ -37,34 +51,68 @@ public class DirectoriosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-View vista =inflater.inflate(R.layout.fragment_directorios, container, false);
-
+        View vista =inflater.inflate(R.layout.fragment_directorios, container, false);
 
             listaDirectorios = new ArrayList<>();
             recyclerDirectorios = vista.findViewById(R.id.recycler_directorios);
             recyclerDirectorios.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            llenarlista_directorios();
-
-        AdaptadorDirectorio adaptadorDirectorio  = new AdaptadorDirectorio(listaDirectorios);
-        recyclerDirectorios.setAdapter(adaptadorDirectorio);
-
+        request = Volley.newRequestQueue(getContext());
+        cargarWebService_Directorios();
 
 
         return vista;
     }
 
-    private void llenarlista_directorios() {
+    private void cargarWebService_Directorios() {
 
-        listaDirectorios.add(new Directorio("SHolaso",
-                "Este perritoasfgdsfrsfecesita de tu ayuda crack, jelpme",
-                "Domingo 12 del 2019",
-                "Aqui van los contacots de la gente",
-                R.drawable.imagencita,
-                2948));
+        String url_Directorios = DireccionServidor+"wsnJSONllenarDirectorios.php";
 
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Directorios,null,this,this);
+        request.add(jsonObjectRequest);
 
 
     }
 
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        Log.i("ERROR",error.toString());
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+
+        Directorio directorio = null;
+        JSONArray json_directorio = response.optJSONArray("directorio");
+
+        try {
+            for (int i = 0; i < json_directorio.length() ; i++) {
+
+                directorio = new Directorio();
+                JSONObject jsonObject = null;
+                jsonObject = json_directorio.getJSONObject(i);
+
+                directorio.setId_directorio(jsonObject.getInt("id_directorios"));
+                directorio.setTitulo_row_directorio(jsonObject.getString("titulo_directorios"));
+                directorio.setDescripcion_row_directorio(jsonObject.getString("descripcionrow_directorios"));
+                directorio.setFechapublicacion_row_directorio(jsonObject.getString("fechapublicacion_directorios"));
+                directorio.setContactos_row_directorio(jsonObject.getString("contactos_directorios"));
+                directorio.setVistas_row_directorio(jsonObject.getInt("vistas_directorios"));
+                directorio.setImagen1_directorio(jsonObject.getString("imagen1_directorios"));
+
+                listaDirectorios.add(directorio);
+
+            }
+
+            AdaptadorDirectorio adaptadorDirectorio  = new AdaptadorDirectorio(listaDirectorios);
+            recyclerDirectorios.setAdapter(adaptadorDirectorio);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
