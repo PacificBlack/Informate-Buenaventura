@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -38,8 +39,19 @@ public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.
         holder.fechaservicios.setText(listaServicios.get(position).getFechapublicacion_row_ofertaservicios());
         holder.notaservicios.setText(listaServicios.get(position).getNecesidad_row_ofertaservicios());
         holder.vistaservicios.setText(String.valueOf(listaServicios.get(position).getVistas_ofertaservicios()));
-        holder.imagenservicios.setImageResource(listaServicios.get(position).getImagen1_ofertaservicios());
 
+        if (listaServicios.get(position).getImagen1_ofertaservicios() != null){
+
+            Picasso.get().load(listaServicios.get(position).getImagen1_ofertaservicios())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenservicios);
+
+
+        }else{
+            holder.imagenservicios.setImageResource(R.drawable.imagennodisponible);
+
+        }
     }
 
     @Override

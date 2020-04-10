@@ -79,6 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/amaranth_bold"
+                        android:onClick="ActualizarServicios"
                         android:text="Actualizar Servicios" />
                 </LinearLayout>
 

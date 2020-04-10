@@ -55,11 +55,7 @@ public class OfertaServiciosFragment extends Fragment {
 
     private void llenarlista_servicios() {
 
-        listaServicios.add(new OfertaServicios("Hola amiggo mop",
-                "Descripcion listo todo full efectivo",
-                "Mañana domingo santo",
-                "Hoy por la noche puej",
-                R.drawable.imagencita,12));
+
 
     }
 

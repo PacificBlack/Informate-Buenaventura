@@ -28,6 +28,7 @@ import com.pacificblack.informatebuenaventura.actualizar.ActualizarDonaciones;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarEmpleos;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarEventos;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarFunebres;
+import com.pacificblack.informatebuenaventura.actualizar.ActualizarServicios;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarAdopcion;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarArticulo;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarBienes;
@@ -37,6 +38,7 @@ import com.pacificblack.informatebuenaventura.eliminar.EliminarDonaciones;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarEmpleos;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarEventos;
 import com.pacificblack.informatebuenaventura.eliminar.EliminarFunebres;
+import com.pacificblack.informatebuenaventura.eliminar.EliminarServicios;
 import com.pacificblack.informatebuenaventura.fragments.configuracion.Configuraciones;
 import com.pacificblack.informatebuenaventura.publicar.PublicarAdopcion;
 import com.pacificblack.informatebuenaventura.publicar.PublicarArticulo;
@@ -242,6 +244,10 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, EliminarFunebres.class);
         startActivity(intent);
     }
+    public void EliminarServicios(View view){
+        Intent intent = new Intent(MainActivity.this, EliminarServicios.class);
+        startActivity(intent);
+    }
 
 /////////////////////////////////////////////////////////////
 
@@ -294,6 +300,10 @@ public class MainActivity extends AppCompatActivity   {
     }
     public void ActualizarFunebres(View view){
         Intent intent = new Intent(MainActivity.this, ActualizarFunebres.class);
+        startActivity(intent);
+    }
+    public void ActualizarServicios(View view){
+        Intent intent = new Intent(MainActivity.this, ActualizarServicios.class);
         startActivity(intent);
     }
 
