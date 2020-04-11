@@ -7,25 +7,40 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.AdaptadorServicios;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaServicios;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OfertaServiciosFragment extends Fragment {
+public class OfertaServiciosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerServicios;
-
     ArrayList<OfertaServicios> listaServicios;
 
+    RequestQueue request;
+    JsonObjectRequest jsonObjectRequest;
 
 
     public OfertaServiciosFragment() {
@@ -44,19 +59,68 @@ public class OfertaServiciosFragment extends Fragment {
         recyclerServicios = vista.findViewById(R.id.recycler_ofertaservicios);
         recyclerServicios.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        llenarlista_servicios();
 
-        AdaptadorServicios adaptadorServicios = new AdaptadorServicios(listaServicios);
-        recyclerServicios.setAdapter(adaptadorServicios);
+        request = Volley.newRequestQueue(getContext());
+
+        cargarWebService_Servicios();
 
 
         return vista;
     }
 
-    private void llenarlista_servicios() {
 
+    private void cargarWebService_Servicios() {
+
+        String url_Servicios = DireccionServidor+"wsnJSONllenarServicios.php";
+
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Servicios,null,this,this);
+        request.add(jsonObjectRequest);
 
 
     }
 
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        Log.i("ERROR",error.toString());
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+
+        OfertaServicios servicios  = null;
+        JSONArray json_servicios = response.optJSONArray("servicios");
+
+        try {
+
+            for (int i = 0; i < json_servicios.length() ; i++) {
+
+                servicios = new OfertaServicios();
+                JSONObject jsonObject = null;
+                jsonObject = json_servicios.getJSONObject(i);
+
+                servicios.setId_servicios(jsonObject.getInt("id_ofertaservicios"));
+                servicios.setTitulo_row_ofertaservicios(jsonObject.getString("titulo_ofertaservicios"));
+                servicios.setDescripcion_row_ofertaservicios(jsonObject.getString("descripcionrow_ofertaservicios"));
+                servicios.setFechapublicacion_row_ofertaservicios(jsonObject.getString("fechapublicacion_ofertaservicios"));
+                servicios.setNecesidad_row_ofertaservicios(jsonObject.getString("necesidad_ofertaservicios"));
+                servicios.setImagen1_ofertaservicios(jsonObject.getString("imagen1_ofertaservicios"));
+                servicios.setVistas_ofertaservicios(jsonObject.getInt("vistas_ofertaservicios"));
+
+                listaServicios.add(servicios);
+
+            }
+
+            AdaptadorServicios adaptadorServicios = new AdaptadorServicios(listaServicios);
+            recyclerServicios.setAdapter(adaptadorServicios);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.encuestas.Encuestas;
+import com.squareup.picasso.Picasso;
 
 public class DetalleEncuestas extends AppCompatActivity {
 
@@ -52,7 +53,12 @@ public class DetalleEncuestas extends AppCompatActivity {
 
             tituloencuestas.setText(encuesta.getTitulo_row_encuestas());
             descripcion.setText(encuesta.getDescripcion1_encuestas());
-            imagenencuesta.setImageResource(encuesta.getImagen1_encuestas());
+
+            Picasso.get().load(encuesta.getImagen1_encuestas())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagenencuesta);
+
             opcion1encuesta.setText(encuesta.getOpcion1()+" \t"+encuesta.getVoto1_encuestas()+" votos");
             opcion2encuesta.setText(encuesta.getOpcion2()+" \t"+encuesta.getVoto2_encuestas()+" votos");
             opcion3encuesta.setText(encuesta.getOpcion3()+" \t"+encuesta.getVoto3_encuestas()+" votos");

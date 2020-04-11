@@ -38,6 +38,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
  */
 public class DonacionesFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
 
+
     RecyclerView recyclerDonacion;
     ArrayList<Donaciones> listaDonaciones;
 

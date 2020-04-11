@@ -7,15 +7,16 @@ import java.net.URL;
 
 public class Noticias implements Serializable {
 
+    private int id_noticias;
     private String titulo_row_noticias,descripcion_row_noticias,fechapublicacion_row_noticias;
-    private int imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;
+    private String imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;
     private int likes_noticias,dislikes_noticias,vistas_noticias;
     private String descripcion1_noticias,descripcion2_noticias,descripcion3_noticias,video;
 
     public Noticias() {
     }
 
-    public Noticias(String titulo_row_noticias, String descripcion_row_noticias, String fechapublicacion_row_noticias, int imagen1_noticias, int imagen2_noticias, int imagen3_noticias, int imagen4_noticias, int likes_noticias, int dislikes_noticias, int vistas_noticias, String descripcion1_noticias, String descripcion2_noticias, String descripcion3_noticias, String video) {
+    public Noticias(String titulo_row_noticias, String descripcion_row_noticias, String fechapublicacion_row_noticias, String imagen1_noticias, String imagen2_noticias, String imagen3_noticias, String imagen4_noticias, int likes_noticias, int dislikes_noticias, int vistas_noticias, String descripcion1_noticias, String descripcion2_noticias, String descripcion3_noticias, String video, int id_noticias) {
         this.titulo_row_noticias = titulo_row_noticias;
         this.descripcion_row_noticias = descripcion_row_noticias;
         this.fechapublicacion_row_noticias = fechapublicacion_row_noticias;
@@ -30,6 +31,7 @@ public class Noticias implements Serializable {
         this.descripcion2_noticias = descripcion2_noticias;
         this.descripcion3_noticias = descripcion3_noticias;
         this.video = video;
+        this.id_noticias = id_noticias;
     }
 
     public String getVideo() {
@@ -64,35 +66,43 @@ public class Noticias implements Serializable {
         this.fechapublicacion_row_noticias = fechapublicacion_row_noticias;
     }
 
-    public int getImagen1_noticias() {
+    public int getId_noticias() {
+        return id_noticias;
+    }
+
+    public void setId_noticias(int id_noticias) {
+        this.id_noticias = id_noticias;
+    }
+
+    public String getImagen1_noticias() {
         return imagen1_noticias;
     }
 
-    public void setImagen1_noticias(int imagen1_noticias) {
+    public void setImagen1_noticias(String imagen1_noticias) {
         this.imagen1_noticias = imagen1_noticias;
     }
 
-    public int getImagen2_noticias() {
+    public String getImagen2_noticias() {
         return imagen2_noticias;
     }
 
-    public void setImagen2_noticias(int imagen2_noticias) {
+    public void setImagen2_noticias(String imagen2_noticias) {
         this.imagen2_noticias = imagen2_noticias;
     }
 
-    public int getImagen3_noticias() {
+    public String getImagen3_noticias() {
         return imagen3_noticias;
     }
 
-    public void setImagen3_noticias(int imagen3_noticias) {
+    public void setImagen3_noticias(String imagen3_noticias) {
         this.imagen3_noticias = imagen3_noticias;
     }
 
-    public int getImagen4_noticias() {
+    public String getImagen4_noticias() {
         return imagen4_noticias;
     }
 
-    public void setImagen4_noticias(int imagen4_noticias) {
+    public void setImagen4_noticias(String imagen4_noticias) {
         this.imagen4_noticias = imagen4_noticias;
     }
 

@@ -3,46 +3,36 @@ package com.pacificblack.informatebuenaventura.clases.noticias;
 public class UltimaHora {
 
     private String titulo_row_ultimahora,descripcion_row_ultimahora,fechapublicacion_row_ultimahora;
-    private int imagen_row_ultimahora, imagen2_row_ultimahora, imagen3_row_ultimahora;
-    private int vistas_row_ultimahora;
+    private String imagen_row_ultimahora;
+    private int vistas_row_ultimahora,id_ultimahora;
 
 
     public UltimaHora() {
     }
 
-    public UltimaHora(String titulo_row_ultimahora, String descripcion_row_ultimahora, String fechapublicacion_row_ultimahora, int imagen_row_ultimahora, int imagen2_row_ultimahora, int imagen3_row_ultimahora, int vistas_row_ultimahora) {
+    public UltimaHora(String titulo_row_ultimahora, String descripcion_row_ultimahora, String fechapublicacion_row_ultimahora, String imagen_row_ultimahora, int vistas_row_ultimahora, int id_ultimahora) {
         this.titulo_row_ultimahora = titulo_row_ultimahora;
         this.descripcion_row_ultimahora = descripcion_row_ultimahora;
         this.fechapublicacion_row_ultimahora = fechapublicacion_row_ultimahora;
         this.imagen_row_ultimahora = imagen_row_ultimahora;
-        this.imagen2_row_ultimahora = imagen2_row_ultimahora;
-        this.imagen3_row_ultimahora = imagen3_row_ultimahora;
-
         this.vistas_row_ultimahora = vistas_row_ultimahora;
+        this.id_ultimahora= id_ultimahora;
     }
 
-    public int getImagen2_row_ultimahora() {
-        return imagen2_row_ultimahora;
-    }
-
-    public void setImagen2_row_ultimahora(int imagen2_row_ultimahora) {
-        this.imagen2_row_ultimahora = imagen2_row_ultimahora;
-    }
-
-    public int getImagen3_row_ultimahora() {
-        return imagen3_row_ultimahora;
-    }
-
-    public void setImagen3_row_ultimahora(int imagen3_row_ultimahora) {
-        this.imagen3_row_ultimahora = imagen3_row_ultimahora;
-    }
-
-    public int getImagen_row_ultimahora() {
+    public String getImagen_row_ultimahora() {
         return imagen_row_ultimahora;
     }
 
-    public void setImagen_row_ultimahora(int imagen_row_ultimahora) {
+    public void setImagen_row_ultimahora(String imagen_row_ultimahora) {
         this.imagen_row_ultimahora = imagen_row_ultimahora;
+    }
+
+    public int getId_ultimahora() {
+        return id_ultimahora;
+    }
+
+    public void setId_ultimahora(int id_ultimahora) {
+        this.id_ultimahora = id_ultimahora;
     }
 
     public String getTitulo_row_ultimahora() {

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -57,9 +58,21 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
         holder.descripcionnoticias.setText(listaNoticias.get(position).getDescripcion_row_noticias());
         holder.fechanoticias.setText(listaNoticias.get(position).getFechapublicacion_row_noticias());
         holder.vistanoticias.setText(String.valueOf(listaNoticias.get(position).getVistas_noticias()));
-        holder.imagennoticias.setImageResource(listaNoticias.get(position).getImagen1_noticias());
         holder.likenoticias.setText(String.valueOf(listaNoticias.get(position).getLikes_noticias()));
         holder.dislikenoticias.setText(String.valueOf(listaNoticias.get(position).getDislikes_noticias()));
+
+        if (listaNoticias.get(position).getImagen1_noticias() != null){
+
+            Picasso.get().load(listaNoticias.get(position).getImagen1_noticias())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagennoticias);
+        }else{
+            holder.imagennoticias.setImageResource(R.drawable.imagennodisponible);
+
+        }
+
+
     }
 
     @Override

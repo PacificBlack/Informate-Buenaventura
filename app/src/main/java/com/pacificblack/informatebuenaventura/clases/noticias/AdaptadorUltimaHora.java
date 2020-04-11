@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,10 +37,18 @@ public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHor
         holder.tituloultima.setText(listaUltimaHora.get(position).getTitulo_row_ultimahora());
         holder.descripcionultima.setText(listaUltimaHora.get(position).getDescripcion_row_ultimahora());
         holder.fechaultimo.setText(listaUltimaHora.get(position).getFechapublicacion_row_ultimahora());
-        holder.imagenultima.setImageResource(listaUltimaHora.get(position).getImagen_row_ultimahora());
-        holder.imagen2ultima.setImageResource(listaUltimaHora.get(position).getImagen2_row_ultimahora());
-        holder.imagen3ultima.setImageResource(listaUltimaHora.get(position).getImagen3_row_ultimahora());
+        if (listaUltimaHora.get(position).getImagen_row_ultimahora() != null){
 
+            Picasso.get().load(listaUltimaHora.get(position).getImagen_row_ultimahora())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenultima);
+
+
+        }else{
+            holder.imagenultima.setImageResource(R.drawable.imagennodisponible);
+
+        }
 
     }
 
@@ -51,7 +60,7 @@ public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHor
     public class UltimaHolder extends RecyclerView.ViewHolder {
 
         TextView tituloultima,descripcionultima,fechaultimo;
-        ImageView imagenultima,imagen2ultima,imagen3ultima;
+        ImageView imagenultima;
 
         public UltimaHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,8 +69,6 @@ public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHor
             descripcionultima = itemView.findViewById(R.id.descripcion_row_ultimahora);
             fechaultimo = itemView.findViewById(R.id.fecha_row_ultimahora);
             imagenultima = itemView.findViewById(R.id.imagen_row_ultimahora);
-            imagen2ultima = itemView.findViewById(R.id.imagen2_row_ultimahora);
-            imagen3ultima = itemView.findViewById(R.id.imagen3_row_ultimahora);
 
         }
     }

@@ -5,8 +5,9 @@ import java.io.Serializable;
 
 public class Encuestas implements Serializable {
 
+    private  int id_encuestas;
     private String titulo_row_encuestas,descripcion_row_encuestas,fechapublicacion_row_encuestas;
-    private int imagen1_encuestas;
+    private String imagen1_encuestas;
     private int vistas_encuestas,voto1_encuestas,voto2_encuestas,voto3_encuestas,voto4_encuestas;
     private String opcion1,opcion2,opcion3,opcion4,descripcion1_encuestas;
 
@@ -14,7 +15,8 @@ public class Encuestas implements Serializable {
     }
 
 
-    public Encuestas(String titulo_row_encuestas, String descripcion_row_encuestas, String fechapublicacion_row_encuestas, int imagen1_encuestas, int vistas_encuestas, int voto1_encuestas, int voto2_encuestas, int voto3_encuestas, int voto4_encuestas, String opcion1, String opcion2, String opcion3, String opcion4, String descripcion1_encuestas) {
+    public Encuestas(String titulo_row_encuestas, String descripcion_row_encuestas, String fechapublicacion_row_encuestas, String imagen1_encuestas, int vistas_encuestas, int voto1_encuestas, int voto2_encuestas, int voto3_encuestas, int voto4_encuestas, String opcion1, String opcion2, String opcion3, String opcion4, String descripcion1_encuestas, int id_encuestas) {
+        this.id_encuestas = id_encuestas;
         this.titulo_row_encuestas = titulo_row_encuestas;
         this.descripcion_row_encuestas = descripcion_row_encuestas;
         this.fechapublicacion_row_encuestas = fechapublicacion_row_encuestas;
@@ -120,14 +122,6 @@ public class Encuestas implements Serializable {
         this.fechapublicacion_row_encuestas = fechapublicacion_row_encuestas;
     }
 
-    public int getImagen1_encuestas() {
-        return imagen1_encuestas;
-    }
-
-    public void setImagen1_encuestas(int imagen1_encuestas) {
-        this.imagen1_encuestas = imagen1_encuestas;
-    }
-
     public int getVistas_encuestas() {
         return vistas_encuestas;
     }
@@ -142,5 +136,21 @@ public class Encuestas implements Serializable {
 
     public void setDescripcion1_encuestas(String descripcion1_encuestas) {
         this.descripcion1_encuestas = descripcion1_encuestas;
+    }
+
+    public int getId_encuestas() {
+        return id_encuestas;
+    }
+
+    public void setId_encuestas(int id_encuestas) {
+        this.id_encuestas = id_encuestas;
+    }
+
+    public String getImagen1_encuestas() {
+        return imagen1_encuestas;
+    }
+
+    public void setImagen1_encuestas(String imagen1_encuestas) {
+        this.imagen1_encuestas = imagen1_encuestas;
     }
 }

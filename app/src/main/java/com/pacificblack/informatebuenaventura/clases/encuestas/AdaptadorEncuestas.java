@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -52,8 +53,18 @@ public class AdaptadorEncuestas extends RecyclerView.Adapter<AdaptadorEncuestas.
         holder.descripcioncortaencuestas.setText(listaEncuestas.get(position).getDescripcion_row_encuestas());
         holder.fechapublicacionencuestas.setText(listaEncuestas.get(position).getFechapublicacion_row_encuestas());
         holder.vistaencuestas.setText(String.valueOf(listaEncuestas.get(position).getVistas_encuestas()));
-        holder.imagenencuestas.setImageResource(listaEncuestas.get(position).getImagen1_encuestas());
+        if (listaEncuestas.get(position).getImagen1_encuestas() != null){
 
+            Picasso.get().load(listaEncuestas.get(position).getImagen1_encuestas())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(holder.imagenencuestas);
+
+
+        }else{
+            holder.imagenencuestas.setImageResource(R.drawable.imagennodisponible);
+
+        }
     }
 
     public void setOnClickListener(View.OnClickListener listener){

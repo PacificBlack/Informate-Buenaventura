@@ -13,6 +13,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.noticias.Noticias;
+import com.squareup.picasso.Picasso;
 
 
 public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, YouTubePlayer.PlaybackEventListener {
@@ -62,10 +63,26 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
             descripcion1_noticias.setText(noticias.getDescripcion1_noticias());
             descripcion2_noticias.setText(noticias.getDescripcion2_noticias());
             descripcion3_noticias.setText(noticias.getDescripcion3_noticias());
-            imagen1_noticias.setImageResource(noticias.getImagen1_noticias());
-            imagen2_noticias.setImageResource(noticias.getImagen2_noticias());
-            imagen3_noticias.setImageResource(noticias.getImagen3_noticias());
-            imagen4_noticias.setImageResource(noticias.getImagen4_noticias());
+
+            Picasso.get().load(noticias.getImagen1_noticias())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen1_noticias);
+
+            Picasso.get().load(noticias.getImagen2_noticias())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen2_noticias);
+
+            Picasso.get().load(noticias.getImagen3_noticias())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen3_noticias);
+
+            Picasso.get().load(noticias.getImagen4_noticias())
+                    .placeholder(R.drawable.imagennodisponible)
+                    .error(R.drawable.imagennodisponible)
+                    .into(imagen4_noticias);
 
             video = noticias.getVideo();
 

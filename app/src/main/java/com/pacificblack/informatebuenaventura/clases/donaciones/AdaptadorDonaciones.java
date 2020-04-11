@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonaciones.DonacionesHolder>implements View.OnClickListener {
+public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonaciones.DonacionesHolder> implements View.OnClickListener {
 
     ArrayList<Donaciones> listaDonaciones;
     private View.OnClickListener listener;
