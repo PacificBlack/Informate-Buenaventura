@@ -2,18 +2,34 @@ package com.pacificblack.informatebuenaventura.actividades;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 public class DetalleDesaparecidos extends AppCompatActivity {
 
     TextView titulo_desaparecidos,descripcion1_desaparecidos,ultimolugar_desaparecidos,fechadesaparicion_desaparecidos,recompensa_desaparecidos,estado_desaparecidos,descripcion2_desaparecidos;
     ImageView imagen1_desaparecidos,imagen2_desaparecidos,imagen3_desaparecidos;
+    StringRequest stringRequest_desaparecidos_actualizar;
+    int id_actualizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +57,7 @@ public class DetalleDesaparecidos extends AppCompatActivity {
 
             desaparecidos = (Desaparecidos) objetoDesaparecidos.getSerializable("objeto5");
 
+            id_actualizar = desaparecidos.getId_desaparecidos();
             titulo_desaparecidos.setText(desaparecidos.getTitulo_row_desaparecidos());
             descripcion1_desaparecidos.setText(desaparecidos.getDescripcion1_desaparecidos());
             descripcion2_desaparecidos.setText(desaparecidos.getDescripcion2_desaparecidos());
@@ -65,6 +82,44 @@ public class DetalleDesaparecidos extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_desaparecidos);
 
+            //TODO://////////////////////////////////////////////////////////////
+
+
+
+            String url_desaparecidos = DireccionServidor+"wsnJSONActualizarVista.php?";
+
+            stringRequest_desaparecidos_actualizar= new StringRequest(Request.Method.POST, url_desaparecidos, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.i("Si actualizo","Vista Positiva");
+
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("No actualizo","Vista Negativa");
+                        }
+                    }){
+                @SuppressLint("LongLogTag")
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+
+                    String idinput = String.valueOf(id_actualizar);
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("id_desaparicion",idinput);
+                    parametros.put("publicacion","Desaparicion");
+
+                    Log.i("Parametros", String.valueOf(parametros));
+
+                    return parametros;
+                }
+            };
+
+            RequestQueue request_desaparecidos_eliminar = Volley.newRequestQueue(this);
+            request_desaparecidos_eliminar.add(stringRequest_desaparecidos_actualizar);
 
         }
 

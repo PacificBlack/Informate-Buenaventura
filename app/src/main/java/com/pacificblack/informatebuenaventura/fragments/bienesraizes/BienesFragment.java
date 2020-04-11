@@ -122,6 +122,7 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
                 JSONObject jsonObject = null;
                 jsonObject = json_bienes.getJSONObject(i);
 
+                bienes.setId_bienes(jsonObject.optInt("id_bienes"));
                 bienes.setTitulo_row_bienes(jsonObject.optString("titulo_bienes"));
                 bienes.setDescripcion_row_bienes(jsonObject.optString("descripcionrow_bienes"));
                 bienes.setFechapublicacion_row_bienes(jsonObject.optString("fechapublicacion_bienes"));

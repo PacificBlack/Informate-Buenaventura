@@ -2,18 +2,35 @@ package com.pacificblack.informatebuenaventura.actividades;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 public class DetalleBienes extends AppCompatActivity {
 
     TextView titulo_bienes,descripcion1_bienes,descripcion2_bienes,precio_bienes;
     ImageView imagen1_bienes,imagen2_bienes,imagen3_bienes,imagen4_bienes;
+
+    StringRequest stringRequest_bienes_actualizar;
+    int id_actualizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +55,7 @@ public class DetalleBienes extends AppCompatActivity {
 
             bienes = (Bienes) objetoBienes.getSerializable("objeto2");
 
+            id_actualizar = bienes.getId_bienes();
             titulo_bienes.setText(bienes.getTitulo_row_bienes());
             descripcion1_bienes.setText(bienes.getDescripcion1_bienes());
             descripcion2_bienes.setText(bienes.getDescripcion2_bienes());
@@ -64,11 +82,49 @@ public class DetalleBienes extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen4_bienes);
 
+            //TODO://////////////////////////////////////////////////////////////
+
+            String url_bienes = DireccionServidor+"wsnJSONActualizarVista.php?";
+
+            stringRequest_bienes_actualizar= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.i("Si actualizo",response);
+
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("No actualizo",error.toString());
+                        }
+                    }){
+                @SuppressLint("LongLogTag")
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+
+                    String idinput = String.valueOf(id_actualizar);
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("id_bienes",idinput);
+                    parametros.put("publicacion","Bienes");
+
+                    Log.i("Parametros", String.valueOf(parametros));
+
+                    return parametros;
+                }
+            };
+
+            RequestQueue request_bienes_eliminar = Volley.newRequestQueue(this);
+            request_bienes_eliminar.add(stringRequest_bienes_actualizar);
+
         }
 
 
 
-        }
+
+    }
 
 
     }

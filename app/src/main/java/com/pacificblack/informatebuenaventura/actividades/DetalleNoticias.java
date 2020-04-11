@@ -1,12 +1,21 @@
 package com.pacificblack.informatebuenaventura.actividades;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -14,6 +23,11 @@ import com.google.android.youtube.player.YouTubePlayerView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.noticias.Noticias;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 
 public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, YouTubePlayer.PlaybackEventListener {
@@ -29,6 +43,9 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
     String API_KEY = "AIzaSyCjplldkmscSZfu1yMY7eJr4xiSjuAbZgo";
 
     String video;
+
+    StringRequest stringRequest_noticias_actualizar;
+    int id_actualizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +76,7 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
 
             noticias = (Noticias) objetoNoticias.getSerializable("objeto10");
 
+            id_actualizar = noticias.getId_noticias();
             titulo_noticias.setText(noticias.getTitulo_row_noticias());
             descripcion1_noticias.setText(noticias.getDescripcion1_noticias());
             descripcion2_noticias.setText(noticias.getDescripcion2_noticias());
@@ -85,6 +103,46 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
                     .into(imagen4_noticias);
 
             video = noticias.getVideo();
+
+            //TODO://////////////////////////////////////////////////////////////
+
+
+
+            String url_noticias = DireccionServidor+"wsnJSONActualizarVista.php?";
+
+            stringRequest_noticias_actualizar= new StringRequest(Request.Method.POST, url_noticias, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.i("Si actualizo",response);
+
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("No actualizo","Vista Negativa");
+                        }
+                    }){
+                @SuppressLint("LongLogTag")
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+
+                    String idinput = String.valueOf(id_actualizar);
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("id_noticias",idinput);
+                    parametros.put("publicacion","Noticias");
+
+                    Log.i("Parametros", String.valueOf(parametros));
+
+                    return parametros;
+                }
+            };
+
+            RequestQueue request_noticias_eliminar = Volley.newRequestQueue(this);
+            request_noticias_eliminar.add(stringRequest_noticias_actualizar);
+
 
 
         }

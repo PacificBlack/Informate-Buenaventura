@@ -2,19 +2,34 @@ package com.pacificblack.informatebuenaventura.actividades;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 public class DetalleComprayVenta extends AppCompatActivity {
 
     TextView titulo_comprayventa,descripcion1_comprayventa,descripcion2_comprayventa,precio_comprayventa,contacto_comprayventa,ubicacion_comprayventa,cantidad_comprayventa;
     ImageView imagen1_comprayventa,imagen2_comprayventa,imagen3_comprayventa;
-
+    StringRequest stringRequest_comprayventa_actualizar;
+    int id_actualizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +57,7 @@ public class DetalleComprayVenta extends AppCompatActivity {
 
             comprayventa = (ComprayVenta) objetoComprayVenta.getSerializable("objeto4");
 
-
+            id_actualizar = comprayventa.getId_comprayventa();
             titulo_comprayventa.setText(comprayventa.getTitulo_row_comprayventa());
             descripcion1_comprayventa.setText(comprayventa.getDescripcion_comprayventa());
             descripcion2_comprayventa.setText(comprayventa.getDescripcionextra_comprayventa());
@@ -65,6 +80,45 @@ public class DetalleComprayVenta extends AppCompatActivity {
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_comprayventa);
+
+            //TODO://////////////////////////////////////////////////////////////
+
+
+
+            String url_comprayventa = DireccionServidor+"wsnJSONActualizarVista.php?";
+
+            stringRequest_comprayventa_actualizar= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.i("Si actualizo","Vista Positiva");
+
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("No actualizo","Vista Negativa");
+                        }
+                    }){
+                @SuppressLint("LongLogTag")
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+
+                    String idinput = String.valueOf(id_actualizar);
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("id_comprayventa",idinput);
+                    parametros.put("publicacion","ComprayVenta");
+
+                    Log.i("Parametros", String.valueOf(parametros));
+
+                    return parametros;
+                }
+            };
+
+            RequestQueue request_comprayventa_eliminar = Volley.newRequestQueue(this);
+            request_comprayventa_eliminar.add(stringRequest_comprayventa_actualizar);
 
         }
 

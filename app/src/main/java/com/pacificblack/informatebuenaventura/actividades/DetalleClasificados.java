@@ -2,18 +2,34 @@ package com.pacificblack.informatebuenaventura.actividades;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 public class DetalleClasificados extends AppCompatActivity {
 
     TextView titulo_clasificados,descripcion1_clasificados,descripcion2_clasificados;
     ImageView imagen1_clasificados,imagen2_clasificados,imagen3_clasificados,imagen4_clasificados;
+    StringRequest stringRequest_clasificados_actualizar;
+    int id_actualizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +52,7 @@ public class DetalleClasificados extends AppCompatActivity {
 
             clasificados = (Clasificados) objetoClasificados.getSerializable("objeto3");
 
+            id_actualizar= clasificados.getId_clasificados();
             titulo_clasificados.setText(clasificados.getTitulo_row_clasificados());
             descripcion1_clasificados.setText(clasificados.getDescripcion1_clasificados());
             descripcion2_clasificados.setText(clasificados.getDescripcion2_clasificados());
@@ -61,6 +78,45 @@ public class DetalleClasificados extends AppCompatActivity {
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen4_clasificados);
+
+            //TODO://////////////////////////////////////////////////////////////
+
+
+
+            String url_clasificados = DireccionServidor+"wsnJSONActualizarVista.php?";
+
+            stringRequest_clasificados_actualizar= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.i("Si actualizo","Vista Positiva");
+
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("No actualizo","Vista Negativa");
+                        }
+                    }){
+                @SuppressLint("LongLogTag")
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+
+                    String idinput = String.valueOf(id_actualizar);
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("id_clasificados",idinput);
+                    parametros.put("publicacion","Clasificados");
+
+                    Log.i("Parametros", String.valueOf(parametros));
+
+                    return parametros;
+                }
+            };
+
+            RequestQueue request_clasificados_eliminar = Volley.newRequestQueue(this);
+            request_clasificados_eliminar.add(stringRequest_clasificados_actualizar);
 
         }
     }

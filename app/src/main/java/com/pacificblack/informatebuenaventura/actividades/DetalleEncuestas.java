@@ -2,7 +2,9 @@ package com.pacificblack.informatebuenaventura.actividades;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,9 +12,21 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.encuestas.Encuestas;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 public class DetalleEncuestas extends AppCompatActivity {
 
@@ -20,6 +34,8 @@ public class DetalleEncuestas extends AppCompatActivity {
     ImageView imagenencuesta;
     RadioButton opcion1encuesta,opcion2encuesta,opcion3encuesta,opcion4encuesta;
     Button votarencuesta;
+    StringRequest stringRequest_encuestas_actualizar;
+    int id_actualizar;
 
 
     @Override
@@ -51,6 +67,7 @@ public class DetalleEncuestas extends AppCompatActivity {
 
           //  opcion1 = encuesta.getOpcion1();
 
+            id_actualizar = encuesta.getId_encuestas();
             tituloencuestas.setText(encuesta.getTitulo_row_encuestas());
             descripcion.setText(encuesta.getDescripcion1_encuestas());
 
@@ -63,6 +80,45 @@ public class DetalleEncuestas extends AppCompatActivity {
             opcion2encuesta.setText(encuesta.getOpcion2()+" \t"+encuesta.getVoto2_encuestas()+" votos");
             opcion3encuesta.setText(encuesta.getOpcion3()+" \t"+encuesta.getVoto3_encuestas()+" votos");
             opcion4encuesta.setText(encuesta.getOpcion4()+" \t"+encuesta.getVoto4_encuestas()+" votos");
+
+            //TODO://////////////////////////////////////////////////////////////
+
+
+
+            String url_encuestas = DireccionServidor+"wsnJSONActualizarVista.php?";
+
+            stringRequest_encuestas_actualizar= new StringRequest(Request.Method.POST, url_encuestas, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.i("Si actualizo","Vista Positiva");
+
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("No actualizo","Vista Negativa");
+                        }
+                    }){
+                @SuppressLint("LongLogTag")
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+
+                    String idinput = String.valueOf(id_actualizar);
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("id_encuestas",idinput);
+                    parametros.put("publicacion","Encuestas");
+
+                    Log.i("Parametros", String.valueOf(parametros));
+
+                    return parametros;
+                }
+            };
+
+            RequestQueue request_encuestas_eliminar = Volley.newRequestQueue(this);
+            request_encuestas_eliminar.add(stringRequest_encuestas_actualizar);
 
 
 
