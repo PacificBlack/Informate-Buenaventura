@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,11 +41,10 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 public class FunebresFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener   {
 
     RecyclerView recyclerFunebres;
-
     ArrayList<Funebres> listaFunebres;
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    private SwipeRefreshLayout refresh_funebres;
 
     public FunebresFragment() {
         // Required empty public constructor
@@ -61,9 +61,19 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
         recyclerFunebres = vista.findViewById(R.id.recycler_funebres);
         recyclerFunebres.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_funebres = vista.findViewById(R.id.swipe_funebres);
+        refresh_funebres.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaFunebres.clear();
+                cargarWebService_Funebres();
+            }
+        });
+
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Funebres();
+        refresh_funebres.setRefreshing(true);
 
 
         return vista;
@@ -75,12 +85,17 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Funebres,null,this,this);
         request.add(jsonObjectRequest);
+
+        refresh_funebres.setRefreshing(false);
+
     }
     @Override
     public void onErrorResponse(VolleyError error) {
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_funebres.setRefreshing(false);
+
 
     }
 
@@ -141,8 +156,6 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
             e.printStackTrace();
         }
 
-
-
-
+        refresh_funebres.setRefreshing(false);
     }
 }

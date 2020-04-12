@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
@@ -23,6 +24,8 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
     public AdaptadorAdopcion(ArrayList<Adopcion> listaAdopcion) {
         this.listaAdopcion = listaAdopcion;
     }
+
+
 
     @NonNull
     @Override
@@ -102,4 +105,7 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
 
         }
     }
+
+
+
 }

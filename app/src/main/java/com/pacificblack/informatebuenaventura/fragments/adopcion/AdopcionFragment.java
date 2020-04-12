@@ -1,8 +1,8 @@
 package com.pacificblack.informatebuenaventura.fragments.adopcion;
 
-import android.app.Activity;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,6 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -43,28 +45,41 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
+    private SwipeRefreshLayout refresh_adopcion;
+
     public AdopcionFragment() {
         // Required empty public constructor
     }
 
 
+    @SuppressLint("ResourceAsColor")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
 
 
-        View vista = inflater.inflate(R.layout.fragment_adopcion, container, false);
+         View vista = inflater.inflate(R.layout.fragment_adopcion, container, false);
 
         listaAdopcion = new ArrayList<>();
         recyclerAdopcion = vista.findViewById(R.id.recycler_adopcion);
         recyclerAdopcion.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_adopcion = vista.findViewById(R.id.swipe_adopcion);
+        refresh_adopcion.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaAdopcion.clear();
+                cargarWebService_Adopcion();
+            }
+        });
+
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Adopcion();
 
+        refresh_adopcion.setRefreshing(true);
+
         return vista;
     }
-
 
 
     //TODO: Aqui va todo lo de obtener de la base de datos
@@ -76,7 +91,7 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_adopcion,null,this,this);
         request.add(jsonObjectRequest);
 
-
+        refresh_adopcion.setRefreshing(false);
     }
 
 
@@ -85,8 +100,11 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_adopcion.setRefreshing(false);
+
 
     }
+
 
     @Override
     public void onResponse(JSONObject response) {
@@ -147,13 +165,9 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
             e.printStackTrace();
         }
 
+        refresh_adopcion.setRefreshing(false);
+
     }
-
-
-    //TODO: Aqui va todo lo de obtener de la base de datos
-
-
-
 
 
 }
