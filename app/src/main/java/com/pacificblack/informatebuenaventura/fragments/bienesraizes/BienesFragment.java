@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,15 +43,11 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 public class BienesFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerBienes;
-
     ArrayList<Bienes> listaBienes;
-
-    //TODO: Aqui va todo lo de obtener de la base de datos
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
-//TODO: Aqui va todo lo de obtener de la base de datos
+    private SwipeRefreshLayout refresh_bienes;
 
 
 
@@ -69,17 +66,18 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
         recyclerBienes = vista.findViewById(R.id.recycler_bienes);
         recyclerBienes.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //TODO: Aqui va todo lo de obtener de la base de datos
-
+        refresh_bienes = vista.findViewById(R.id.swipe_bienes);
+        refresh_bienes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaBienes.clear();
+                cargarWebService_Bienes();
+            }
+        });
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Bienes();
-
-        //TODO: Aqui va todo lo de obtener de la base de datos
-
-
-
-
+        refresh_bienes.setRefreshing(true);
 
         return vista;
     }
@@ -92,7 +90,7 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_bienes,null,this,this);
         request.add(jsonObjectRequest);
 
-
+        refresh_bienes.setRefreshing(false);
     }
 
 
@@ -102,7 +100,7 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
         Toast.makeText(getContext(),"No funciona pa",Toast.LENGTH_LONG).show();
 
         Log.i("ERROR",error.toString());
-
+        refresh_bienes.setRefreshing(false);
 
     }
 
@@ -167,12 +165,8 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
             e.printStackTrace();
         }
 
+        refresh_bienes.setRefreshing(false);
+
     }
-
-
-    //TODO: Aqui va todo lo de obtener de la base de datos
-
-
-
 
 }

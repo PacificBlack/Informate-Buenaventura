@@ -5,8 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".fragments.especiales.encuestas.EncuestasFragment">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_encuestas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blanco">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_encuestas"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </FrameLayout>

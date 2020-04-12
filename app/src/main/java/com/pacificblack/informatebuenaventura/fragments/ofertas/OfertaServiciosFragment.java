@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +42,8 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    private SwipeRefreshLayout refresh_ofertaservicios;
+
 
 
     public OfertaServiciosFragment() {
@@ -59,10 +62,18 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
         recyclerServicios = vista.findViewById(R.id.recycler_ofertaservicios);
         recyclerServicios.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
+        refresh_ofertaservicios = vista.findViewById(R.id.swipe_ofertaservicios);
+        refresh_ofertaservicios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaServicios.clear();
+                cargarWebService_Servicios();
+            }
+        });
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Servicios();
+        refresh_ofertaservicios.setRefreshing(true);
 
 
         return vista;
@@ -76,6 +87,7 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Servicios,null,this,this);
         request.add(jsonObjectRequest);
 
+        refresh_ofertaservicios.setRefreshing(false);
 
     }
 
@@ -85,6 +97,7 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_ofertaservicios.setRefreshing(false);
 
     }
 
@@ -121,6 +134,7 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh_ofertaservicios.setRefreshing(false);
 
     }
 }

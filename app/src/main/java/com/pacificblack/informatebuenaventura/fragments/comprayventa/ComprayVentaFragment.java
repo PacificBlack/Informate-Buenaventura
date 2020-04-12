@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,8 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
     ArrayList<ComprayVenta> listaComprayVenta;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    private SwipeRefreshLayout refresh_comprayventa;
+
 
 
     public ComprayVentaFragment() {
@@ -62,9 +65,18 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
         recyclerComprayventa = vista.findViewById(R.id.recycler_comprayventa);
         recyclerComprayventa.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_comprayventa = vista.findViewById(R.id.swipe_comprayventa);
+        refresh_comprayventa.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaComprayVenta.clear();
+                cargarWebService_ComprayVenta();
+            }
+        });
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_ComprayVenta();
+        refresh_comprayventa.setRefreshing(true);
 
         return vista;
     }
@@ -76,6 +88,7 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_ComprayVenta,null,this,this);
         request.add(jsonObjectRequest);
 
+        refresh_comprayventa.setRefreshing(false);
 
     }
 
@@ -85,6 +98,7 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_comprayventa.setRefreshing(false);
 
     }
 
@@ -146,5 +160,7 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
 
             e.printStackTrace();
         }
+        refresh_comprayventa.setRefreshing(false);
+
     }
 }

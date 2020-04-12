@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
+    private SwipeRefreshLayout refresh_noticias;
 
 
     public NoticiasFragment() {
@@ -61,9 +63,18 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         listaNoticias =  new ArrayList<>();
         recyclerNoticias = vista.findViewById(R.id.recycler_noticias);
         recyclerNoticias.setLayoutManager(new LinearLayoutManager(getContext()));
+        refresh_noticias = vista.findViewById(R.id.swipe_noticias);
+        refresh_noticias.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaNoticias.clear();
+                cargarWebService_Noticias();
+            }
+        });
 
         request = Volley.newRequestQueue(getContext());
         cargarWebService_Noticias();
+        refresh_noticias.setRefreshing(true);
 
         return vista;
     }
@@ -75,6 +86,7 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Noticias,null,this,this);
         request.add(jsonObjectRequest);
 
+        refresh_noticias.setRefreshing(false);
 
     }
 
@@ -84,6 +96,7 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_noticias.setRefreshing(false);
 
     }
 
@@ -145,6 +158,8 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh_noticias.setRefreshing(false);
+
 
     }
 }

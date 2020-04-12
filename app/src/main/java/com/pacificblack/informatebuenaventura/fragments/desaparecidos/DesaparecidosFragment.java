@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,8 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
     RecyclerView recyclerDesaparecidos;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    private SwipeRefreshLayout refresh_desaparecidos;
+
 
 
     public DesaparecidosFragment() {
@@ -60,9 +63,19 @@ View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false
         recyclerDesaparecidos = vista.findViewById(R.id.recycler_desaparecidos);
         recyclerDesaparecidos.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_desaparecidos = vista.findViewById(R.id.swipe_desaparecidos);
+        refresh_desaparecidos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaDesaparecidos.clear();
+                cargarWebService_Desaparecidos();
+            }
+        });
 
         request = Volley.newRequestQueue(getContext());
         cargarWebService_Desaparecidos();
+
+        refresh_desaparecidos.setRefreshing(true);
 
         return vista;
 
@@ -74,6 +87,7 @@ View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Desaparecidos,null,this,this);
         request.add(jsonObjectRequest);
+        refresh_desaparecidos.setRefreshing(false);
 
 
     }
@@ -144,5 +158,7 @@ View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false
            Log.i("ERROR",response.toString());
            e.printStackTrace();
        }
+        refresh_desaparecidos.setRefreshing(false);
+
     }
 }

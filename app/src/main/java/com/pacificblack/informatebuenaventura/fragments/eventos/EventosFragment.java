@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,15 +38,12 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 public class EventosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     RecyclerView recyclerEventos;
-
     ArrayList<Eventos> listaEventos;
-
-    //TODO: Aqui va todo lo de obtener de la base de datos
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
-//TODO: Aqui va todo lo de obtener de la base de datos
+    private SwipeRefreshLayout refresh_eventos;
+
 
     public EventosFragment() {
         // Required empty public constructor
@@ -55,25 +53,29 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-View vista = inflater.inflate(R.layout.fragment_eventos, container, false);
+        View vista = inflater.inflate(R.layout.fragment_eventos, container, false);
 
 
         listaEventos = new ArrayList<>();
         recyclerEventos = vista.findViewById(R.id.recycler_eventos);
         recyclerEventos.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //TODO: Aqui va todo lo de obtener de la base de datos
+        refresh_eventos = vista.findViewById(R.id.swipe_eventos);
+        refresh_eventos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaEventos.clear();
+                cargarWebService_Eventos();
+            }
+        });
 
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Eventos();
 
-        //TODO: Aqui va todo lo de obtener de la base de datos
+        refresh_eventos.setRefreshing(true);
 
-
-
-
-return vista;
+        return vista;
     }
 
     //TODO: Aqui va todo lo de obtener de la base de datos
@@ -85,6 +87,7 @@ return vista;
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_eventos,null,this,this);
         request.add(jsonObjectRequest);
 
+        refresh_eventos.setRefreshing(false);
 
     }
 
@@ -96,6 +99,7 @@ return vista;
 
         Log.i("ERROR",error.toString());
 
+        refresh_eventos.setRefreshing(false);
 
     }
 
@@ -138,13 +142,8 @@ return vista;
             Log.i("ERROR",response.toString());
             e.printStackTrace();
         }
+        refresh_eventos.setRefreshing(false);
 
     }
-
-
-    //TODO: Aqui va todo lo de obtener de la base de datos
-
-
-
 
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    private SwipeRefreshLayout refresh_ofertaempleos;
+
 
     public OfertaEmpleosFragment() {
         // Required empty public constructor
@@ -56,11 +59,20 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
         listaEmpleos = new ArrayList<>();
         recyclerEmpleos = vista.findViewById(R.id.recycler_ofertaempleos);
         recyclerEmpleos.setLayoutManager(new LinearLayoutManager(getContext()));
+        refresh_ofertaempleos = vista.findViewById(R.id.swipe_ofertaempleos);
+        refresh_ofertaempleos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaEmpleos.clear();
+                cargarWebService_Empleos();
+            }
+        });
 
 
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Empleos();
+        refresh_ofertaempleos.setRefreshing(true);
 
         return vista;
     }
@@ -71,6 +83,7 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Empleos,null,this,this);
         request.add(jsonObjectRequest);
+        refresh_ofertaempleos.setRefreshing(false);
 
 
     }
@@ -81,6 +94,7 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_ofertaempleos.setRefreshing(false);
 
     }
 
@@ -117,6 +131,8 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh_ofertaempleos.setRefreshing(false);
+
 
     }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,8 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    private SwipeRefreshLayout refresh_donaciones;
+
 
     public DonacionesFragment() {
         // Required empty public constructor
@@ -60,9 +63,21 @@ listaDonaciones = new ArrayList<>();
 recyclerDonacion = vista.findViewById(R.id.recycler_donaciones);
 recyclerDonacion.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
+        refresh_donaciones = vista.findViewById(R.id.swipe_donaciones);
+        refresh_donaciones.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaDonaciones.clear();
+                cargarWebService_Donaciones();
+            }
+        });
+
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Donaciones();
+
+        refresh_donaciones.setRefreshing(true);
 
         return vista;
     }
@@ -73,6 +88,7 @@ recyclerDonacion.setLayoutManager(new LinearLayoutManager(getContext()));
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Donaciones,null,this,this);
         request.add(jsonObjectRequest);
+        refresh_donaciones.setRefreshing(false);
 
 
     }
@@ -83,6 +99,7 @@ recyclerDonacion.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_donaciones.setRefreshing(false);
 
     }
 
@@ -136,6 +153,7 @@ recyclerDonacion.setLayoutManager(new LinearLayoutManager(getContext()));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh_donaciones.setRefreshing(false);
 
     }
 }

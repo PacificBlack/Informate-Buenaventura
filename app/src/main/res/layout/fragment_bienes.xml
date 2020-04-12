@@ -5,8 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".fragments.bienesraizes.BienesFragment">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_bienes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blanco">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_bienes"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </FrameLayout>

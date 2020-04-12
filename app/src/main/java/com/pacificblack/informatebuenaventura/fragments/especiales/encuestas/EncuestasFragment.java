@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
+    private SwipeRefreshLayout refresh_encuestas;
 
 
 
@@ -63,10 +65,19 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
         recyclerEncuestas = vista.findViewById(R.id.recycler_encuestas);
         recyclerEncuestas.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_encuestas = vista.findViewById(R.id.swipe_encuestas);
+        refresh_encuestas.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaEncuestas.clear();
+                cargarWebService_Encuestas();
+            }
+        });
 
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Encuestas();
+        refresh_encuestas.setRefreshing(true);
 
         return vista;
     }
@@ -79,12 +90,16 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Encuestas,null,this,this);
         request.add(jsonObjectRequest);
+        refresh_encuestas.setRefreshing(false);
+
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_encuestas.setRefreshing(false);
+
 
     }
 
@@ -140,5 +155,7 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        refresh_encuestas.setRefreshing(false);
+
     }
 }

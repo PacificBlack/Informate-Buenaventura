@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,8 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
+    private SwipeRefreshLayout refresh_ultimahora;
+
 
     public UltimaHoraFragment() {
         // Required empty public constructor
@@ -59,9 +62,19 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
             recyclerUltima = vista.findViewById(R.id.recycler_ultimahora);
             recyclerUltima.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_ultimahora = vista.findViewById(R.id.swipe_ultimahora);
+        refresh_ultimahora.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaUltimaHora.clear();
+                cargarWebService_UltimaHora();
+            }
+        });
+
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_UltimaHora();
+        refresh_ultimahora.setRefreshing(true);
 
 
         return vista;
@@ -73,6 +86,7 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_UltimaHora,null,this,this);
         request.add(jsonObjectRequest);
+        refresh_ultimahora.setRefreshing(false);
 
 
     }
@@ -83,6 +97,7 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_ultimahora.setRefreshing(false);
 
     }
 
@@ -115,5 +130,7 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh_ultimahora.setRefreshing(false);
+
     }
 }

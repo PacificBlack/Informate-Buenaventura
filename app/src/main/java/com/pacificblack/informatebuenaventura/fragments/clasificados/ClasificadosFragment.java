@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,12 +43,11 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 public class ClasificadosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerClasificados;
-
     ArrayList<Clasificados> listaClasificados;
-
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+
+    private SwipeRefreshLayout refresh_clasificados;
 
 
     public ClasificadosFragment() {
@@ -65,10 +65,19 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
         recyclerClasificados = vista.findViewById(R.id.recycler_clasificados);
         recyclerClasificados.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_clasificados = vista.findViewById(R.id.swipe_clasificados);
+        refresh_clasificados.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaClasificados.clear();
+                cargarWebService_Clasificados();
+            }
+        });
 
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Clasificados();
+        refresh_clasificados.setRefreshing(true);
 
         return vista;
     }
@@ -80,6 +89,8 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Clasificados,null,this,this);
         request.add(jsonObjectRequest);
 
+        refresh_clasificados.setRefreshing(false);
+
 
     }
 
@@ -89,6 +100,8 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_clasificados.setRefreshing(false);
+
 
     }
 
@@ -147,6 +160,7 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
             Log.i("ERROR",response.toString());
             e.printStackTrace();
         }
+        refresh_clasificados.setRefreshing(false);
 
 
     }

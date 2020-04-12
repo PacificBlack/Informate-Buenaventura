@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +42,8 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
+    private SwipeRefreshLayout refresh_directorios;
+
 
     public DirectoriosFragment() {
         // Required empty public constructor
@@ -57,8 +60,19 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
             recyclerDirectorios = vista.findViewById(R.id.recycler_directorios);
             recyclerDirectorios.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        refresh_directorios = vista.findViewById(R.id.swipe_directorios);
+        refresh_directorios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listaDirectorios.clear();
+                cargarWebService_Directorios();
+            }
+        });
+
         request = Volley.newRequestQueue(getContext());
         cargarWebService_Directorios();
+
+        refresh_directorios.setRefreshing(true);
 
 
         return vista;
@@ -70,6 +84,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Directorios,null,this,this);
         request.add(jsonObjectRequest);
+        refresh_directorios.setRefreshing(false);
 
 
     }
@@ -80,6 +95,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
         Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        refresh_directorios.setRefreshing(false);
 
     }
 
@@ -114,5 +130,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
         } catch (Exception e) {
             e.printStackTrace();
         }
+        refresh_directorios.setRefreshing(false);
+
     }
 }
