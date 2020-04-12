@@ -24,6 +24,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -38,6 +39,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -59,7 +61,6 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPubl
 
 public class PublicarEventos extends AppCompatActivity {
 
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_eventos;
     Uri imageneseventosUri;
     List<Uri> listaimagenes_eventos =  new ArrayList<>();
@@ -71,13 +72,12 @@ public class PublicarEventos extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
 
     TextInputLayout titulo_publicar_eventos,descripcioncorta_publicar_eventos,lugar_publicar_eventos;
     Button publicarfinal_eventos,subirimagenes;
 
     private InterstitialAd anuncioeventos;
-
+     Cargando cargando = new Cargando(PublicarEventos.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class PublicarEventos extends AppCompatActivity {
         lugar_publicar_eventos = findViewById(R.id.publicar_lugar_eventos);
         publicarfinal_eventos = findViewById(R.id.publicar_final_eventos);
 
+
         publicarfinal_eventos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +98,7 @@ public class PublicarEventos extends AppCompatActivity {
                     return;
                 }
                 Subirimagen_eventos();
+                cargando.iniciarprogress();
 
             }
 
@@ -214,12 +216,13 @@ public class PublicarEventos extends AppCompatActivity {
         stringRequest_eventos= new StringRequest(Request.Method.POST, url_eventos, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                String resul = "Registrada exitosamente";
+                String resul = "Registrado exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
 
+                    cargando.cancelarprogress();
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEventos.this);
 
                     mensaje.setMessage(response)
@@ -258,8 +261,8 @@ public class PublicarEventos extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
+                        cargando.cancelarprogress();
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
                         Log.i("ERROR",error.toString());
 
 

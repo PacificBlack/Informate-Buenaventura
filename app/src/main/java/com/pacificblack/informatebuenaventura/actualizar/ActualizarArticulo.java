@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -86,6 +87,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     ImageView imagen1_actualizar_comprayventa,imagen2_actualizar_comprayventa, imagen3_actualizar_comprayventa;
 
     private InterstitialAd anuncioAdopcion_actualizar;
+    Cargando cargando = new Cargando(ActualizarArticulo.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +152,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
                             if (listaimagenes_comprayventa.size() == 3){
                                 Subirimagen_comprayventa_update();
+                                cargando.iniciarprogress();
+
                             }
 
                         }
@@ -156,6 +161,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_comprayventa();
+                            cargando.iniciarprogress();
+
                         }
                     });
 
@@ -177,6 +184,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
                 if (!validarid()){return;}
                 cargarBusqueda_comprayventa();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -378,6 +387,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -433,6 +444,9 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_comprayventa);
 
+        cargando.cancelarprogress();
+
+
     }
 
     private void cargarActualizarSinImagen_comprayventa() {
@@ -448,6 +462,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
 
@@ -473,6 +489,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
 
                 }
             }
@@ -481,6 +499,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -534,6 +554,9 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
 
                     mensaje.setMessage(response)
@@ -557,6 +580,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -565,6 +590,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

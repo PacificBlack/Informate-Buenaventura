@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -79,6 +80,8 @@ public class PublicarClasificados extends AppCompatActivity {
     Button publicarfinal_clasificados,subirimagenes;
 
     private InterstitialAd anuncioClasificados;
+    Cargando cargando = new Cargando(PublicarClasificados.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,8 @@ public class PublicarClasificados extends AppCompatActivity {
                 }
 
                 Subirimagen_clasificados();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -261,6 +266,9 @@ public class PublicarClasificados extends AppCompatActivity {
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
 
                     mensaje.setMessage(response)
@@ -286,8 +294,9 @@ public class PublicarClasificados extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-
                     Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
 
                 }
             }
@@ -297,10 +306,8 @@ public class PublicarClasificados extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
 
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-
                         Log.i("ERROR",error.toString());
-
-
+                        cargando.cancelarprogress();
                     }
                 }){
             @SuppressLint("LongLogTag")

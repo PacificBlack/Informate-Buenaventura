@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -85,8 +86,9 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     StringRequest stringRequest_adopcion_actualizar;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    //TODO: Aqui finaliza
 
+
+    Cargando cargando = new Cargando(ActualizarAdopcion.this);
 
     private InterstitialAd anuncioAdopcion_actualizar;
 
@@ -101,8 +103,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         descripcion1_actualizar_adopcion = findViewById(R.id.actualizar_descripcion1_adopcion);
         descripcion2_actualizar_adopcion = findViewById(R.id.actualizar_descripcion2_adopcion);
 
-
-        //TODO: Modificar y Eliminar
         imagenes_adopcion_actualizar = findViewById(R.id.imagenes_actualizar_adopcion);
         imagen1_actualizar_adopcion = findViewById(R.id.imagen1_actualizar_adopcion);
         imagen2_actualizar_adopcion = findViewById(R.id.imagen2_actualizar_adopcion);
@@ -129,6 +129,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                             if (listaimagenes_adopcion_actualizar.size() == 4){
                                 Subirimagen_adopcion_update();
+                                cargando.iniciarprogress();
+
                             }
 
                         }
@@ -136,6 +138,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_adopcion();
+                            cargando.iniciarprogress();
+
                         }
                     });
 
@@ -157,18 +161,14 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 if (!validarid()){return;}
 
                 cargarBusqueda_adopcion();
+                cargando.iniciarprogress();
+
             }
         });
-        //TODO: Modificar y Eliminar
-
-        //TODO: Anuncios
 
         anuncioAdopcion_actualizar = new InterstitialAd(this);
         anuncioAdopcion_actualizar.setAdUnitId(AnuncioActualizar);
         anuncioAdopcion_actualizar.loadAd(new AdRequest.Builder().build());
-        //TODO: Anuncios
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
         actualizar_gvImagenes_adopcion = findViewById(R.id.actualizar_grid_adopcion);
         actualizarimagenes = findViewById(R.id.actualizar_imagenes_adopcion);
@@ -193,13 +193,9 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 }
             }
         });
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-    }
+   }
 
 
-
-
-//TODO: AQUI VA LO DE ACTUALIZAR Y ELIMINAR
 
     private boolean validarid(){
         String idinput = buscar_actualizar_adopcion.getEditText().getText().toString().trim();
@@ -317,7 +313,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     }
 
 
-    //TODO:-------------------------------------------------------------------------------------------------------------------------------------------------
     private void cargarBusqueda_adopcion() {
 
         String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_actualizar_adopcion.getEditText().getText().toString().trim();
@@ -327,6 +322,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -382,6 +379,9 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_actualizar_adopcion);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -398,6 +398,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
 
@@ -423,6 +425,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -431,6 +435,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -478,6 +484,9 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
 
                     mensaje.setMessage(response)
@@ -501,6 +510,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -509,6 +520,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

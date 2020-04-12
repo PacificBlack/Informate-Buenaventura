@@ -38,6 +38,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class PublicarServicios extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
+    Cargando cargando = new Cargando(PublicarServicios.this);
 
 
     @Override
@@ -108,11 +109,11 @@ public class PublicarServicios extends AppCompatActivity {
             public void onClick(View v) {
                 if (!validartitulo() | !validardescripcion() | !validarnececidad()  | !validarfoto()){return;}
                 Subirimagen_servicios();
+                cargando.iniciarprogress();
+
             }
         });
 
-
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
 
         gvImagenes_servicios = findViewById(R.id.grid_servicios);
         subirimagenes = findViewById(R.id.subir_imagenes_servicios);
@@ -232,6 +233,8 @@ public class PublicarServicios extends AppCompatActivity {
 
                 if (match.find()) {
 
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarServicios.this);
 
                     mensaje.setMessage(response)
@@ -259,10 +262,8 @@ public class PublicarServicios extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-
                     Log.i("Error",response);
-
-
+                    cargando.cancelarprogress();
                 }
             }
         },
@@ -271,10 +272,8 @@ public class PublicarServicios extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
 
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
                         Log.i("ERROR",error.toString());
-
-
+                        cargando.cancelarprogress();
                     }
                 }){
             @SuppressLint("LongLogTag")

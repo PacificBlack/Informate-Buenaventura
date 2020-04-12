@@ -28,6 +28,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaServicios;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -55,6 +56,9 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
     StringRequest stringRequest_servicios;
     ImageView imagen1_eliminar_servicios;
     private InterstitialAd anuncioservicios;
+
+    Cargando cargando = new Cargando(EliminarServicios.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_servicios();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -101,6 +107,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
 
                 if (!validarid()){return;}
                 cargarBusqueda_servicios();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -141,6 +149,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -172,6 +182,9 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_servicios);
+
+        cargando.cancelarprogress();
+
     }
 
     private void cargarEliminar_servicios() {
@@ -187,6 +200,9 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarServicios.this);
 
@@ -214,6 +230,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -222,6 +240,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

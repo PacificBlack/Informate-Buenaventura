@@ -39,6 +39,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -75,15 +76,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-
-
-    TextInputLayout id_actualizar_funebres,
-            titulo_actualizar_funebres,
-            descripcioncorta_actualizar_funebres,
-            descripcion1_actualizar_funebres,
-            descripcion2_actualizar_funebres;
+    TextInputLayout id_actualizar_funebres, titulo_actualizar_funebres, descripcioncorta_actualizar_funebres, descripcion1_actualizar_funebres, descripcion2_actualizar_funebres;
 
     Button subirimagenes;
 
@@ -92,6 +85,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_funebres,imagen2_actualizar_funebres,imagen3_actualizar_funebres;
     private InterstitialAd anunciofunebres;
+    Cargando cargando = new Cargando(ActualizarFunebres.this);
+
 
 
     @Override
@@ -127,12 +122,16 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
 
                             if (listaimagenes_funebres.size() == 3){
                                 Subirimagen_funebres_update();
+                                cargando.iniciarprogress();
+
                             }
                         }
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_funebres();
+                            cargando.iniciarprogress();
+
                         }
                     });
                     AlertDialog titulo2 = mensaje.create();
@@ -151,6 +150,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
 
                 if (!validarid()){return;}
                 cargarBusqueda_funebres();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -314,6 +315,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -362,6 +365,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_funebres);
 
+        cargando.cancelarprogress();
+
 
     }
 
@@ -379,6 +384,9 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
 
@@ -406,6 +414,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -414,6 +424,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -466,6 +478,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
 
@@ -493,6 +507,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -501,6 +517,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

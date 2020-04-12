@@ -39,6 +39,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -73,6 +74,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_bienes,imagen2_eliminar_bienes,imagen3_eliminar_bienes,imagen4_eliminar_bienes;
     private InterstitialAd anunciobienes_eliminar;
+    Cargando cargando = new Cargando(EliminarBienes.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_bienes();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -125,6 +130,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -162,6 +169,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -219,6 +228,9 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_bienes);
+
+        cargando.cancelarprogress();
+
     }
 
     private void cargarEliminar_bienes() {
@@ -235,6 +247,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarBienes.this);
 
@@ -263,6 +277,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -272,6 +288,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
 
                     }
                 }){

@@ -48,6 +48,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -99,6 +100,9 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     StringRequest stringRequest_desaparicion;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
+
+    Cargando cargando = new Cargando(ActualizarDesaparicion.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +171,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
                             if (listaimagenes_desaparicion.size() == 3){
                                 Subirimagen_desaparicion_update();
+                                cargando.iniciarprogress();
+
                             }
 
                         }
@@ -174,6 +180,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_desaparicion();
+                            cargando.iniciarprogress();
+
                         }
                     });
 
@@ -192,6 +200,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
 
                 if (!validarid()){return;}
                 cargarBusqueda_desaparicion();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -442,6 +452,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -501,6 +513,9 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_desaparicion);
 
+        cargando.cancelarprogress();
+
+
     }
 
     private void cargarActualizarConImagen_desaparicion(){
@@ -516,6 +531,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
 
@@ -543,6 +560,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -552,6 +571,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -610,6 +631,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
 
@@ -637,6 +660,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -646,6 +671,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

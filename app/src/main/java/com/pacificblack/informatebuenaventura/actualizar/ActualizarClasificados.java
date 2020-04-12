@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -84,6 +85,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
     TextInputLayout titulo_actualizar_clasificados, descripcioncorta_actualizar_clasificados,video_clasificados,descripcion1_actualizar_clasificados, descripcion2_actualizar_clasificados, buscar_actualizar_clasificados;
     Button actualizarimagenes;
     private InterstitialAd anuncioClasificados_actualizar;
+    Cargando cargando = new Cargando(ActualizarClasificados.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +145,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                             if (listaimagenesclasificados.size() == 4){
                                 Subirimagen_clasificados_update();
+                                cargando.iniciarprogress();
+
                             }
 
                         }
@@ -149,6 +154,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_clasificados();
+                            cargando.iniciarprogress();
+
                         }
                     });
 
@@ -168,6 +175,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                 if (!validarid()){return;}
                 cargarBusqueda_clasificados();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -324,6 +333,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
 
     }
 
@@ -368,6 +379,9 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
         Picasso.get().load(clasificados.getImagen3_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen3_actualizar_clasificados);
 
         Picasso.get().load(clasificados.getImagen4_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen4_actualizar_clasificados);
+
+        cargando.cancelarprogress();
+
     }
 
     private void cargarActualizarSinImagen_clasificados() {
@@ -383,6 +397,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarClasificados.this);
 
@@ -410,6 +426,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -418,6 +436,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -469,6 +489,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarClasificados.this);
 
                     mensaje.setMessage(response)
@@ -500,6 +522,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -508,6 +532,8 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

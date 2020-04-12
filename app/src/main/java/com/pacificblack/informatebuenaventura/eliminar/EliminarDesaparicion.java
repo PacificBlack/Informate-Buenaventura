@@ -30,6 +30,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -61,6 +62,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     JsonObjectRequest jsonObjectRequestBuscar_eliminar;
     ImageView imagen1_eliminar_desaparicion,imagen2_eliminar_desaparicion,imagen3_eliminar_desaparicion;
     private InterstitialAd anunciodesaparicion_eliminar;
+    Cargando cargando = new Cargando(EliminarDesaparicion.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_desaparicion();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -116,8 +121,9 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
 
                 if (!validarid()){return;}
-
                 cargarBusqueda_desaparicion();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -157,6 +163,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -215,6 +223,9 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_desaparicion);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -232,6 +243,9 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarDesaparicion.this);
 
@@ -260,6 +274,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -268,6 +284,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

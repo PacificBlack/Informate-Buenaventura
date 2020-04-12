@@ -38,6 +38,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -77,6 +78,9 @@ public class PublicarEmpleos extends AppCompatActivity {
 
     private InterstitialAd anuncioempleos;
 
+    Cargando cargando = new Cargando(PublicarEmpleos.this);
+
+
 
 
     @Override
@@ -107,6 +111,8 @@ public class PublicarEmpleos extends AppCompatActivity {
                     return;
                 }
                 Subirimagen_empleos();
+                cargando.iniciarprogress();
+
             }
 
          }
@@ -225,6 +231,8 @@ public class PublicarEmpleos extends AppCompatActivity {
 
                 if (match.find()) {
 
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEmpleos.this);
 
                     mensaje.setMessage(response)
@@ -254,11 +262,9 @@ public class PublicarEmpleos extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-
+                    cargando.cancelarprogress();
 
                 }
-
-
             }
         },
                 new Response.ErrorListener() {
@@ -266,9 +272,8 @@ public class PublicarEmpleos extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
 
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
-
                         Log.i("ERROR",error.toString());
-
+                        cargando.cancelarprogress();
 
                     }
                 }){

@@ -41,6 +41,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -75,6 +76,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
     ImageView imagen1_eliminar_comprayventa,imagen2_eliminar_comprayventa,imagen3_eliminar_comprayventa;
 
     private InterstitialAd anuncioAdopcion_eliminar;
+    Cargando cargando = new Cargando(EliminarArticulo.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +115,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_comprayventa();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -129,8 +134,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
             public void onClick(View v) {
 
                 if (!validarid()){return;}
-
                 cargarBusqueda_comprayventa();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -165,6 +171,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
+        Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
     }
 
     @Override
@@ -221,6 +229,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_comprayventa);
 
+        cargando.cancelarprogress();
+
+
     }
 
     private void cargarEliminar_comprayventa() {
@@ -237,6 +248,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarArticulo.this);
 
@@ -261,6 +275,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -269,6 +285,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

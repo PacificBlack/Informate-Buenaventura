@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -80,6 +81,8 @@ public class PublicarArticulo extends AppCompatActivity {
     Button publicarfinal_comprayventa,subirimagenes;
 
     private InterstitialAd anuncioArticulo;
+    Cargando cargando = new Cargando(PublicarArticulo.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +129,8 @@ public class PublicarArticulo extends AppCompatActivity {
                     return;
                 }
                 Subirimagen_comprayventa();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -311,6 +316,8 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
 
                     mensaje.setMessage(response)
@@ -336,8 +343,9 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-
                     Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
 
                 }
 
@@ -349,6 +357,8 @@ public class PublicarArticulo extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                         Log.i("Error",error.toString());
+                        cargando.cancelarprogress();
+
 
                     }
                 }){

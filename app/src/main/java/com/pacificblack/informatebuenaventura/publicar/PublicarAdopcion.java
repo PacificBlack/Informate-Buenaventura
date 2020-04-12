@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,7 +59,6 @@ public class PublicarAdopcion extends AppCompatActivity {
     TextInputLayout titulo_publicar_adopcion, descripcioncorta_publicar_adopcion, descripcion1_publicar_adopcion, descripcion2_publicar_adopcion;
     Button publicarfinal_adopcion,subirimagenes;
 
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_adopcion;
     Uri imagenesadopcionUri;
     List<Uri> listaimagenes_adopcion =  new ArrayList<>();
@@ -70,7 +70,7 @@ public class PublicarAdopcion extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
+    Cargando cargando = new Cargando(PublicarAdopcion.this);
 
     private InterstitialAd anuncioAdopcion;
 
@@ -119,6 +119,8 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){return;}
                 Subirimagen_adopcion();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -233,6 +235,8 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
 
                     mensaje.setMessage(response)
@@ -257,6 +261,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
 
                 }
 
@@ -266,6 +271,8 @@ public class PublicarAdopcion extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

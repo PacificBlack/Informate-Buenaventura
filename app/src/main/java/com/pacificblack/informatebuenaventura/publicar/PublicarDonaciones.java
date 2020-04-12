@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -79,6 +80,8 @@ public class PublicarDonaciones extends AppCompatActivity{
     private InterstitialAd anuncioDonaciones;
     TextInputLayout titulo_publicar_donaciones, descripcioncorta_publicar_donaciones, descripcion1_publicar_donaciones, meta_publicar_donaciones;
     Button publicar_final_donaciones,subirimagenes;
+    Cargando cargando = new Cargando(PublicarDonaciones.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +128,9 @@ public class PublicarDonaciones extends AppCompatActivity{
 
                 if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarmeta()| ! validarfoto()){return;}
                 Subirimagen_donaciones();
+                cargando.iniciarprogress();
+
+
             }
         });
     }
@@ -235,6 +241,9 @@ public class PublicarDonaciones extends AppCompatActivity{
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDonaciones.this);
                     mensaje.setMessage(response)
                             .setCancelable(false)
@@ -259,6 +268,8 @@ public class PublicarDonaciones extends AppCompatActivity{
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -267,6 +278,8 @@ public class PublicarDonaciones extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

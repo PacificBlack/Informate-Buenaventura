@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -80,6 +81,8 @@ public class PublicarBienes extends AppCompatActivity  {
     StringRequest stringRequest_bienes;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
+    Cargando cargando = new Cargando(PublicarBienes.this);
+
 
 
     @Override
@@ -105,7 +108,7 @@ public class PublicarBienes extends AppCompatActivity  {
                 }
 
                 Subirimagen_bienes();
-
+                cargando.iniciarprogress();
 
             }
         });
@@ -259,6 +262,9 @@ public class PublicarBienes extends AppCompatActivity  {
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
 
                     mensaje.setMessage(response)
@@ -286,6 +292,8 @@ public class PublicarBienes extends AppCompatActivity  {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
 
                 }
             }
@@ -295,6 +303,8 @@ public class PublicarBienes extends AppCompatActivity  {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

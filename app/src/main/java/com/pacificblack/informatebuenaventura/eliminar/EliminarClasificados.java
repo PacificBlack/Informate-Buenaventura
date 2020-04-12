@@ -41,6 +41,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -75,6 +76,9 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
     TextInputLayout buscar_eliminar_clasificados;
 
     private InterstitialAd anuncioClasificados_eliminar;
+
+    Cargando cargando = new Cargando(EliminarClasificados.this);
+
 
 
     @Override
@@ -111,6 +115,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_clasificados();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -128,6 +134,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
                 if (!validarid()){return;}
                 cargarBusqueda_clasificados();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -168,6 +176,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
 
     }
 
@@ -225,6 +235,9 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_clasificados);
+
+        cargando.cancelarprogress();
+
     }
 
     private void cargarEliminar_clasificados() {
@@ -241,6 +254,9 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarClasificados.this);
 
@@ -269,6 +285,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
 
             }
@@ -279,6 +297,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
 
                     }
                 }){

@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaServicios;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -88,6 +89,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
     String servi[] = new String[]{"Hoy mismo","Cuando quiera","Cada 3 años"};
 
+    Cargando cargando = new Cargando(ActualizarServicios.this);
+
 
 
     @Override
@@ -118,13 +121,17 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                                                               public void onClick(DialogInterface dialog, int which) {
                        if (listaimagenes_servicios.size() == 1){
                                     Subirimagen_servicios_update();
-                                    }
+                           cargando.iniciarprogress();
+
+                       }
               }
                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                                                               @Override
                                                               public void onClick(DialogInterface dialog, int which) {
                            cargarActualizarSinImagen_servicios();
-                   }
+                                                                  cargando.iniciarprogress();
+
+                                                              }
                                                           });
                    AlertDialog titulo2 = mensaje.create();
                      titulo2.setTitle("Modificar Publicación");
@@ -142,6 +149,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
                 if (!validarid()){return;}
                 cargarBusqueda_servicios();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -285,6 +294,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -316,6 +327,9 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_servicios);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -332,6 +346,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarServicios.this);
 
@@ -359,6 +375,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -367,6 +385,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -416,6 +436,9 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
                 if (match.find()) {
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarServicios.this);
 
                     mensaje.setMessage(response)
@@ -442,6 +465,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -450,6 +475,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

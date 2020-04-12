@@ -27,6 +27,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -55,6 +56,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
     ImageView imagen1_eliminar_eventos;
     StringRequest stringRequest_eventos;
     private InterstitialAd anuncioeventos;
+    Cargando cargando = new Cargando(EliminarEventos.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,8 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_eventos();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -101,6 +105,8 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
 
                 if (!validarid()){return;}
                 cargarBusqueda_eventos();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -139,6 +145,8 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -170,6 +178,9 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_eventos);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -186,6 +197,9 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarEventos.this);
 
@@ -213,6 +227,8 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },

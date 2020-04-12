@@ -39,6 +39,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -89,6 +90,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     ImageView imagen1_actualizar_eventos;
     private InterstitialAd anuncioeventos;
 
+    Cargando cargando = new Cargando(ActualizarEventos.this);
 
 
     @Override
@@ -119,13 +121,17 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
 
                                 if (listaimagenes_eventos.size() == 1){
                                      Subirimagen_eventos_update();
-                                                                  }
+                                    cargando.iniciarprogress();
+
+                                }
                           }
                                                           }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                @Override
                 public void onClick(DialogInterface dialog, int which) {
                            cargarActualizarSinImagen_eventos();
-                                                              }
+                   cargando.iniciarprogress();
+
+               }
                                                           });
                            AlertDialog titulo2 = mensaje.create();
                             titulo2.setTitle("Modificar Publicación");
@@ -143,6 +149,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
 
                 if (!validarid()){return;}
                 cargarBusqueda_eventos();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -285,6 +293,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -316,6 +326,9 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_eventos);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -332,6 +345,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
 
@@ -359,6 +374,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -367,6 +384,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -415,6 +434,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
 
@@ -442,6 +463,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -450,6 +473,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

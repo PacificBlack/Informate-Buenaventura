@@ -9,8 +9,6 @@
     android:orientation="vertical"
     tools:context=".publicar.PublicarEventos">
 
-
-
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="match_parent"
@@ -85,8 +83,9 @@
                 android:hint="Ingrese el lugar del evento"
                 android:inputType="textPersonName" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
+
+
 
             <GridView
                 android:id="@+id/grid_eventos"

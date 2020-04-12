@@ -41,6 +41,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -76,8 +77,9 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     HorizontalScrollView eliminar_imagenes_adopcion;
     ImageView imagen1_eliminar_adopcion,imagen2_eliminar_adopcion,imagen3_eliminar_adopcion,imagen4_eliminar_adopcion;
     StringRequest stringRequest_adopcion_eliminar;
-
     private InterstitialAd anuncioAdopcion_eliminar;
+    Cargando cargando = new Cargando(EliminarAdopcion.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +118,8 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_adopcion();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -132,6 +136,8 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_adopcion();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -168,6 +174,8 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -225,6 +233,9 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_adopcion);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -241,6 +252,9 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarAdopcion.this);
 
@@ -266,7 +280,9 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
-                    }
+                    cargando.cancelarprogress();
+
+                }
 
             }
         },
@@ -274,6 +290,8 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

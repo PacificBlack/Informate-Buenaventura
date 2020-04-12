@@ -41,6 +41,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaEmpleos;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -87,8 +88,10 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     ImageButton actualizar_empleos,actualizar_buscar_empleos;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-        ImageView imagen1_actualizar_empleos;
+    ImageView imagen1_actualizar_empleos;
     private InterstitialAd anuncioempleos;
+    Cargando cargando = new Cargando(ActualizarEmpleos.this);
+
 
 
     @Override
@@ -120,15 +123,19 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
          if (listaimagenes_empleos.size() == 1){
                Subirimagen_empleos_update();
-                     }
+             cargando.iniciarprogress();
+
+         }
              }
             }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
           @Override
            public void onClick(DialogInterface dialog, int which) {
 
             cargarActualizarSinImagen_empleos();
+              cargando.iniciarprogress();
 
-           }
+
+          }
               });
              AlertDialog titulo = mensaje.create();
               titulo.setTitle("Modificar Publicación");
@@ -146,6 +153,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
                 if (!validarid()){return;}
                 cargarBusqueda_empleos();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -286,6 +295,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -318,6 +329,9 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_empleos);
+
+        cargando.cancelarprogress();
+
     }
 
 
@@ -334,6 +348,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
 
@@ -361,6 +377,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -369,6 +387,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
@@ -418,6 +438,9 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
 
                     mensaje.setMessage(response)
@@ -444,6 +467,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -452,6 +477,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

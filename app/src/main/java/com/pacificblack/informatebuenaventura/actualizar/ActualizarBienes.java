@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -87,6 +88,10 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
+    Cargando cargando = new Cargando(ActualizarBienes.this);
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +134,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                             if (listaimagenes_bienes.size() == 4){
                                 Subirimagen_bienes_update();
+                                cargando.iniciarprogress();
+
                             }
 
                         }
@@ -137,6 +144,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                         public void onClick(DialogInterface dialog, int which) {
 
                             cargarActualizarSinImagen_bienes();
+                            cargando.iniciarprogress();
+
 
                         }
                     });
@@ -158,6 +167,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -327,6 +338,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -386,6 +399,9 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_actualizar_bienes);
+
+        cargando.cancelarprogress();
+
     }
 
     private void cargarActualizarSinImagen_bienes() {
@@ -402,6 +418,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
 
@@ -432,6 +450,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
 
 
                 }
@@ -445,6 +465,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
 
 
                     }
@@ -498,6 +520,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
 
@@ -527,7 +551,10 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
+
 
             }
         },
@@ -536,6 +563,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

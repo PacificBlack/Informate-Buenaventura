@@ -35,6 +35,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -65,10 +66,6 @@ public class PublicarFunebres extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
 
-    //TODO: Aqui finaliza
-
-
-
     TextInputLayout
             titulo_publicar_funebres,
             descripcioncorta_publicar_funebres,
@@ -79,6 +76,7 @@ public class PublicarFunebres extends AppCompatActivity {
 
     private InterstitialAd anunciofunebres;
 
+    Cargando cargando = new Cargando(PublicarFunebres.this);
 
 
     @Override
@@ -118,8 +116,6 @@ public class PublicarFunebres extends AppCompatActivity {
             }
         });
 
-        //TODO: Aqui va todo lo del grid para mostrar en la pantalla
-
 
         publicar_final_funebres = findViewById(R.id.publicar_final_funebres);
         publicar_final_funebres.setOnClickListener(new View.OnClickListener() {
@@ -132,9 +128,9 @@ public class PublicarFunebres extends AppCompatActivity {
                         ! validardescripcion2()|
                         ! validarfoto()){return;}
 
-                //TODO: Aqui se hace el envio a la base de datos
-
                 Subirimagen_funebres();
+                cargando.iniciarprogress();
+
 
             }
         });
@@ -259,6 +255,8 @@ public class PublicarFunebres extends AppCompatActivity {
 
                 if (match.find()) {
 
+                    cargando.cancelarprogress();
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarFunebres.this);
 
                     mensaje.setMessage(response)
@@ -273,8 +271,6 @@ public class PublicarFunebres extends AppCompatActivity {
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
-
                                 }
                             });
 
@@ -288,7 +284,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-
+                    cargando.cancelarprogress();
 
                 }
             }
@@ -300,7 +296,7 @@ public class PublicarFunebres extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
-
+                        cargando.cancelarprogress();
 
                     }
                 }){

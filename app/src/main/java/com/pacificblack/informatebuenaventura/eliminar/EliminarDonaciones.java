@@ -38,6 +38,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -72,6 +73,9 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
     StringRequest stringRequest_donaciones;
     ImageView imagen1_eliminar_donaciones,imagen2_eliminar_donaciones;
 
+    Cargando cargando = new Cargando(EliminarDonaciones.this);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +106,8 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_donaciones();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -119,6 +125,8 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
 
                 if (!validarid()){return;}
                 cargarBusqueda_donaciones();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -156,6 +164,8 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
 
     @Override
@@ -197,6 +207,10 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen2_eliminar_donaciones);
+
+        cargando.cancelarprogress();
+
+
     }
     private void cargarEliminar_donaciones() {
 
@@ -211,6 +225,9 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
+
+                    cargando.cancelarprogress();
+
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarDonaciones.this);
                     mensaje.setMessage(response)
@@ -237,6 +254,8 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -245,6 +264,8 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

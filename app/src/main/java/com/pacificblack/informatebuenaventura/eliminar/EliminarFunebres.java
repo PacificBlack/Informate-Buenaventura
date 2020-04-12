@@ -27,6 +27,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -51,10 +52,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
 
     TextInputLayout id_eliminar_funebres;
 
-    TextView titulo_eliminar_funebres,
-            descripcioncorta_eliminar_funebres,
-            descripcion1_eliminar_funebres,
-            descripcion2_eliminar_funebres;
+    TextView titulo_eliminar_funebres, descripcioncorta_eliminar_funebres, descripcion1_eliminar_funebres, descripcion2_eliminar_funebres;
 
     ImageButton eliminar_funebres,eliminar_buscar_funebres;
     RequestQueue requestbuscar;
@@ -62,6 +60,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
     ImageView imagen1_eliminar_funebres,imagen2_eliminar_funebres,imagen3_eliminar_funebres;
     private InterstitialAd anunciofunebres;
 
+    Cargando cargando = new Cargando(EliminarFunebres.this);
 
 
     @Override
@@ -96,6 +95,8 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_funebres();
+                        cargando.iniciarprogress();
+
                     }
                 });
 
@@ -114,6 +115,8 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_funebres();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -153,6 +156,8 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
+        cargando.cancelarprogress();
+
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -201,6 +206,9 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_funebres);
 
+        cargando.cancelarprogress();
+
+
 
     }
 
@@ -218,6 +226,8 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
+
+                    cargando.cancelarprogress();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarFunebres.this);
 
@@ -245,6 +255,8 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -253,6 +265,8 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")

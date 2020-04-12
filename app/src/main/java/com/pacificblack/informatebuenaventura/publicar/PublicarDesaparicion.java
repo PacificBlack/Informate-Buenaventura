@@ -45,6 +45,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.MainActivity;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,6 +87,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
     Button publicar_final_desaparicion,subirimagenes;
     String estado[] = new String[]{"Desaparecido","Encontrado"};
     String quees[]  = new String[]{"Animal","Persona","Dococumento","Vehiculo","Otro objeto"};
+
+    Cargando cargando = new Cargando(PublicarDesaparicion.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +184,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
                 if (!validartitulo()| !validardescripcioncorta()| !validarrecompensa()| !validardiadesa()| ! validarultimolugar()| ! validardescripcion1()| ! validardescripcion2()| ! validarqueseperdio()| ! validarestado()| ! validarfoto()){return;}
                 Subirimagen_desaparicion();
+                cargando.iniciarprogress();
+
             }
         });
 
@@ -367,6 +373,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
                 if (match.find()){
 
+                    cargando.cancelarprogress();
+
+
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
 
                     mensaje.setMessage(response)
@@ -393,6 +402,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
                 }
             }
         },
@@ -401,6 +412,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
                     }
                 }){
             @SuppressLint("LongLogTag")
