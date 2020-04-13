@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity   {
                 R.id.nav_especiales ,R.id.nav_compartir, R.id.nav_quienes,
                 R.id.nav_directorio,R.id.nav_ofertaservicios,R.id.nav_bienes,
                 R.id.nav_ofertaempleos,R.id.nav_encuestas,R.id.nav_donaciones,
-                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion)
+                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion,R.id.nav_buscar)
 
                 .setDrawerLayout(drawer)
                 .build();
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity   {
         if (item.getItemId() == R.id.nav_configuraciones) {
             Intent intent = new Intent(this, Configuraciones.class);
             this.startActivity(intent);
-        } else {
+        }else {
             super.onOptionsItemSelected(item);
         }
 
