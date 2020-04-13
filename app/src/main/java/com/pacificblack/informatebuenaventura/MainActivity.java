@@ -1,6 +1,7 @@
 package com.pacificblack.informatebuenaventura;
 
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -57,78 +58,72 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity   {
 
-    private AppBarConfiguration mAppBarConfiguration;
-
     Dialog dialog;
+    ImageButton abrirmenu,abrirconfiguracion;
+    TextView textobarra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dialog = new Dialog(this);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_inicio, R.id.nav_desaparecidos, R.id.nav_clasificados,
-                R.id.nav_noticias,R.id.nav_comprayventa, R.id.nav_eventos,
-                R.id.nav_especiales ,R.id.nav_compartir, R.id.nav_quienes,
-                R.id.nav_directorio,R.id.nav_ofertaservicios,R.id.nav_bienes,
-                R.id.nav_ofertaempleos,R.id.nav_encuestas,R.id.nav_donaciones,
-                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion,R.id.nav_buscar)
 
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        abrirmenu = findViewById(R.id.abrir_menu);
+        abrirconfiguracion = findViewById(R.id.abrir_configuracion);
+        textobarra = findViewById(R.id.texto_barra);
+        abrirmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                drawer.openDrawer(Gravity.LEFT);
-
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);drawer.openDrawer(Gravity.LEFT);
             }
         });
+        abrirconfiguracion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Configuraciones.class);
+                startActivity(intent);
+            }
+        });
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        cambiartitulo("Inicio");
 
     }
+
+     public void cambiartitulo(String s){
+        textobarra.setText(s);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.activity_main_drawer, menu);
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == R.id.nav_configuraciones) {
-            Intent intent = new Intent(this, Configuraciones.class);
-            this.startActivity(intent);
-        }else {
-            super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+
+            case R.id.nav_adopcion:
+                cambiartitulo("Adopcion");
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return true;
     }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-
-
 
     public void ShowPopup(View v) {
         TextView txtclose;
@@ -306,6 +301,8 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, ActualizarServicios.class);
         startActivity(intent);
     }
+
+
 
 }
 

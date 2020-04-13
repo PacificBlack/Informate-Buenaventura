@@ -6,23 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ocultar"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:background="@color/azulClaro"
+        android:orientation="vertical">
 
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
+            android:id="@+id/ocultar_barra"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/azulOscuro"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <ImageButton
+                android:id="@+id/abrir_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginRight="40dp"
+                android:scrollbarSize="5dp"
+                tools:src="@android:drawable/ic_dialog_dialer"></ImageButton>
 
-    <include layout="@layout/content_main" />
+            <TextView
+                android:id="@+id/texto_barra"
+                android:layout_width="214dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:fontFamily="@font/amaranth_bold"
+                android:text="TextView"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/abrir_configuracion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="40dp"
+                android:scrollbarSize="5dp"
+                app:srcCompat="@android:drawable/ic_menu_manage" />
+        </LinearLayout>
+
+        <include layout="@layout/content_main" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
