@@ -12,12 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarAdopcion;
@@ -62,68 +65,72 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity   {
-
+    private AppBarConfiguration mAppBarConfiguration;
+    AppBarLayout mostrar;
     Dialog dialog;
-    ImageButton abrirmenu,abrirconfiguracion;
-    TextView textobarra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dialog = new Dialog(this);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        abrirmenu = findViewById(R.id.abrir_menu);
-        abrirconfiguracion = findViewById(R.id.abrir_configuracion);
-        textobarra = findViewById(R.id.texto_barra);
-        abrirmenu.setOnClickListener(new View.OnClickListener() {
+        mostrar = findViewById(R.id.boton);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_inicio, R.id.nav_desaparecidos, R.id.nav_clasificados,
+                R.id.nav_noticias,R.id.nav_comprayventa, R.id.nav_eventos,
+                R.id.nav_especiales ,R.id.nav_compartir, R.id.nav_quienes,
+                R.id.nav_directorio,R.id.nav_ofertaservicios,R.id.nav_bienes,
+                R.id.nav_ofertaempleos,R.id.nav_encuestas,R.id.nav_donaciones,
+                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion,R.id.nav_buscar)
+
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);drawer.openDrawer(Gravity.LEFT);
+
             }
         });
-        abrirconfiguracion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Configuraciones.class);
-                startActivity(intent);
-            }
-        });
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(navigationView, navController);
 
-        cambiartitulo("Inicio");
 
     }
-
-     public void cambiartitulo(String s){
-        textobarra.setText(s);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_drawer, menu);
-
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
 
-            case R.id.nav_adopcion:
-                cambiartitulo("Adopcion");
-                return true;
+        super.onOptionsItemSelected(item);
 
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+
+        return true;
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
+
 
     public void ShowPopup(View v) {
         TextView txtclose;
