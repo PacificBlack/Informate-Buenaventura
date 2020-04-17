@@ -14,8 +14,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -49,6 +54,7 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
     private SwipeRefreshLayout refresh_clasificados;
 
+    AdaptadorClasificados adaptadorC;
 
     public ClasificadosFragment() {
         // Required empty public constructor
@@ -60,6 +66,7 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
                              Bundle savedInstanceState) {
 
         View vista= inflater.inflate(R.layout.fragment_clasificados, container, false);
+        setHasOptionsMenu(true);
 
         listaClasificados = new ArrayList<>();
         recyclerClasificados = vista.findViewById(R.id.recycler_clasificados);
@@ -135,7 +142,7 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
             }
 
-            AdaptadorClasificados adaptadorC = new AdaptadorClasificados(listaClasificados);
+             adaptadorC = new AdaptadorClasificados(listaClasificados);
             recyclerClasificados.setAdapter(adaptadorC);
             adaptadorC.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -163,5 +170,28 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
         refresh_clasificados.setRefreshing(false);
 
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese el clasificado que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptadorC.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }

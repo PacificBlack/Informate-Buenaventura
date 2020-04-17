@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.encuestas;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +15,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorEncuestas extends RecyclerView.Adapter<AdaptadorEncuestas.EncuestasHolder>implements View.OnClickListener {
+public class AdaptadorEncuestas extends RecyclerView.Adapter<AdaptadorEncuestas.EncuestasHolder>implements View.OnClickListener, Filterable {
 
-    ArrayList<Encuestas> listaEncuestas;
+    List<Encuestas> listaEncuestas;
+    List<Encuestas> listaEncuestasFull;
     private View.OnClickListener listener;
 
-    public AdaptadorEncuestas(ArrayList<Encuestas> listaEncuestas) {
+    public AdaptadorEncuestas(List<Encuestas> listaEncuestas) {
         this.listaEncuestas = listaEncuestas;
+        listaEncuestasFull = new ArrayList<>(listaEncuestas);
     }
 
 
@@ -77,6 +82,41 @@ public class AdaptadorEncuestas extends RecyclerView.Adapter<AdaptadorEncuestas.
     public int getItemCount() {
         return listaEncuestas.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaEncuestasFiltro;
+    }
+
+    private Filter listaEncuestasFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Encuestas> filtroListaEncuestas = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaEncuestas.addAll(listaEncuestasFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Encuestas itemEvento : listaEncuestasFull){
+                    if(itemEvento.getTitulo_row_encuestas().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_encuestas().toLowerCase().contains(filtroparametro)){
+                        filtroListaEncuestas.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaEncuestas;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaEncuestas.clear();
+            listaEncuestas.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class EncuestasHolder extends RecyclerView.ViewHolder {
 

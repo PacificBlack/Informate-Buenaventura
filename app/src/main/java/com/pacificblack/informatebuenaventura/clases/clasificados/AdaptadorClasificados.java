@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.clasificados;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +15,18 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorClasificados extends RecyclerView.Adapter<AdaptadorClasificados.ClasificadosHolder>implements View.OnClickListener {
+public class AdaptadorClasificados extends RecyclerView.Adapter<AdaptadorClasificados.ClasificadosHolder>implements View.OnClickListener, Filterable {
 
-   ArrayList<Clasificados> listaClasificados;
+   List<Clasificados> listaClasificados;
+   List<Clasificados> listaClasificadosFull;
+
    private View.OnClickListener listener;
 
-    public AdaptadorClasificados(ArrayList<Clasificados> listaClasificados) {
+    public AdaptadorClasificados(List<Clasificados> listaClasificados) {
         this.listaClasificados = listaClasificados;
+        listaClasificadosFull = new ArrayList<>(listaClasificados);
     }
 
     @Override
@@ -74,6 +80,42 @@ public class AdaptadorClasificados extends RecyclerView.Adapter<AdaptadorClasifi
     public int getItemCount() {
         return listaClasificados.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaClasificadosFiltro;
+    }
+
+
+    private Filter listaClasificadosFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Clasificados> filtroListaClasificados = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaClasificados.addAll(listaClasificadosFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Clasificados itemEvento : listaClasificadosFull){
+                    if(itemEvento.getTitulo_row_clasificados().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_clasificados().toLowerCase().contains(filtroparametro)){
+                        filtroListaClasificados.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaClasificados;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaClasificados.clear();
+            listaClasificados.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class ClasificadosHolder extends RecyclerView.ViewHolder {
 

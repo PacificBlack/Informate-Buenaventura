@@ -6,11 +6,17 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,17 +55,18 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
     private SwipeRefreshLayout refresh_adopcion;
 
+    AdaptadorAdopcion adaptador;
+
     public AdopcionFragment() {
         // Required empty public constructor
     }
 
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-
-
          View vista = inflater.inflate(R.layout.fragment_adopcion, container, false);
+
+         setHasOptionsMenu(true);
 
         listaAdopcion = new ArrayList<>();
         recyclerAdopcion = vista.findViewById(R.id.recycler_adopcion);
@@ -140,7 +147,7 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
             }
 
-            AdaptadorAdopcion adaptador = new AdaptadorAdopcion(listaAdopcion);
+             adaptador = new AdaptadorAdopcion(listaAdopcion);
             recyclerAdopcion.setAdapter(adaptador);
 
             adaptador.setOnClickListener(new View.OnClickListener() {
@@ -171,5 +178,25 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese la adopción que desea buscar");
 
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptador.getFilter().filter(newText);
+                return false;
+            }
+        });    }
 }

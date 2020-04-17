@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.comprayventa;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +15,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorComprayVenta.ComprayVentaHolder>implements View.OnClickListener {
+public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorComprayVenta.ComprayVentaHolder>implements View.OnClickListener, Filterable {
 
-    ArrayList<ComprayVenta> listaComprayVenta;
+    List<ComprayVenta> listaComprayVenta;
+    List<ComprayVenta> listaComprayVentaFull;
     private View.OnClickListener listener;
 
-    public AdaptadorComprayVenta(ArrayList<ComprayVenta> listaComprayVenta) {
+    public AdaptadorComprayVenta(List<ComprayVenta> listaComprayVenta) {
         this.listaComprayVenta = listaComprayVenta;
+        listaComprayVentaFull = new ArrayList<>(listaComprayVenta);
     }
 
     @Override
@@ -85,6 +90,42 @@ public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorCompray
 
         this.listener=listener;
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaComprayVentaFiltro;
+    }
+
+
+    private Filter listaComprayVentaFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ComprayVenta> filtroListaComprayVenta = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaComprayVenta.addAll(listaComprayVentaFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (ComprayVenta itemEvento : listaComprayVentaFull){
+                    if(itemEvento.getTitulo_row_comprayventa().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_comprayventa().toLowerCase().contains(filtroparametro)){
+                        filtroListaComprayVenta.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaComprayVenta;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaComprayVenta.clear();
+            listaComprayVenta.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class ComprayVentaHolder extends RecyclerView.ViewHolder {
 

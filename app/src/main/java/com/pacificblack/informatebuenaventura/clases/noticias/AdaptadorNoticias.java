@@ -4,6 +4,8 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -15,14 +17,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.NoticiasHolder>implements View.OnClickListener {
+public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.NoticiasHolder>implements View.OnClickListener, Filterable {
 
-    ArrayList<Noticias> listaNoticias;
+    List<Noticias> listaNoticias;
+    List<Noticias> listaNoticiasFull;
     private View.OnClickListener listener;
 
-    public AdaptadorNoticias(ArrayList<Noticias> listaNoticias) {
+    public AdaptadorNoticias(List<Noticias> listaNoticias) {
         this.listaNoticias = listaNoticias;
+        listaNoticiasFull = new ArrayList<>(listaNoticias);
     }
 
     @Override
@@ -79,6 +84,41 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
     public int getItemCount() {
         return listaNoticias.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaNoticiasFiltro;
+    }
+
+    private Filter listaNoticiasFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Noticias> filtroListaNoticias = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaNoticias.addAll(listaNoticiasFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Noticias itemEvento : listaNoticiasFull){
+                    if(itemEvento.getTitulo_row_noticias().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_noticias().toLowerCase().contains(filtroparametro)){
+                        filtroListaNoticias.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaNoticias;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaNoticias.clear();
+            listaNoticias.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class NoticiasHolder extends RecyclerView.ViewHolder {
 

@@ -3,6 +3,7 @@ package com.pacificblack.informatebuenaventura.fragments.directorios;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,8 +11,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -43,6 +49,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
     JsonObjectRequest jsonObjectRequest;
 
     private SwipeRefreshLayout refresh_directorios;
+    AdaptadorDirectorio adaptadorDirectorio;
 
 
     public DirectoriosFragment() {
@@ -55,6 +62,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
                              Bundle savedInstanceState) {
 
         View vista =inflater.inflate(R.layout.fragment_directorios, container, false);
+        setHasOptionsMenu(true);
 
             listaDirectorios = new ArrayList<>();
             recyclerDirectorios = vista.findViewById(R.id.recycler_directorios);
@@ -124,7 +132,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
             }
 
-            AdaptadorDirectorio adaptadorDirectorio  = new AdaptadorDirectorio(listaDirectorios);
+           adaptadorDirectorio  = new AdaptadorDirectorio(listaDirectorios);
             recyclerDirectorios.setAdapter(adaptadorDirectorio);
 
         } catch (Exception e) {
@@ -132,5 +140,28 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
         }
         refresh_directorios.setRefreshing(false);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese el evento que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptadorDirectorio.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }

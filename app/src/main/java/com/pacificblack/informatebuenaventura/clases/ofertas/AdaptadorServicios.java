@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.ofertas;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +15,18 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.ServiciosHolder> {
+public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.ServiciosHolder> implements Filterable {
 
-    ArrayList<OfertaServicios> listaServicios;
+    List<OfertaServicios> listaServicios;
+    List<OfertaServicios> listaServiciosFull;
 
-    public AdaptadorServicios(ArrayList<OfertaServicios> listaServicios) {
+
+    public AdaptadorServicios(List<OfertaServicios> listaServicios) {
         this.listaServicios = listaServicios;
+        listaServiciosFull = new ArrayList<>(listaServicios);
+
     }
 
     @NonNull
@@ -58,6 +65,41 @@ public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.
     public int getItemCount() {
         return listaServicios.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaServiciosFiltro;
+    }
+
+    private Filter listaServiciosFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<OfertaServicios> filtroListaOfertaServicios = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaOfertaServicios.addAll(listaServiciosFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (OfertaServicios itemEvento : listaServiciosFull){
+                    if(itemEvento.getTitulo_row_ofertaservicios().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_ofertaservicios().toLowerCase().contains(filtroparametro)){
+                        filtroListaOfertaServicios.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaOfertaServicios;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaServicios.clear();
+            listaServicios.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class ServiciosHolder extends RecyclerView.ViewHolder {
 

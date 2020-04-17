@@ -4,6 +4,7 @@ package com.pacificblack.informatebuenaventura.fragments.especiales.encuestas;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,8 +12,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -48,6 +54,8 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
 
     private SwipeRefreshLayout refresh_encuestas;
 
+    AdaptadorEncuestas adaptadorEncuestas;
+
 
 
     public EncuestasFragment() {
@@ -60,6 +68,8 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_encuestas, container, false);
+
+        setHasOptionsMenu(true);
 
         listaEncuestas = new ArrayList<>();
         recyclerEncuestas = vista.findViewById(R.id.recycler_encuestas);
@@ -135,7 +145,7 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
 
             }
 
-            AdaptadorEncuestas adaptadorEncuestas = new AdaptadorEncuestas(listaEncuestas);
+            adaptadorEncuestas = new AdaptadorEncuestas(listaEncuestas);
             recyclerEncuestas.setAdapter(adaptadorEncuestas);
             adaptadorEncuestas.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,5 +167,28 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
         }
         refresh_encuestas.setRefreshing(false);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese la encuesta que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptadorEncuestas.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }

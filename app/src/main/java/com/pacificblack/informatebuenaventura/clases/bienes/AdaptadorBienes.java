@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.bienes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +15,18 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorBienes extends RecyclerView.Adapter<AdaptadorBienes.BienesHolder>implements View.OnClickListener {
+public class AdaptadorBienes extends RecyclerView.Adapter<AdaptadorBienes.BienesHolder>implements View.OnClickListener, Filterable {
 
-   ArrayList<Bienes> listaBienes;
+   List<Bienes> listaBienes;
+   List<Bienes> listaBienesFull;
+
    private View.OnClickListener listener;
 
-    public AdaptadorBienes(ArrayList<Bienes> listaBienes) {
+    public AdaptadorBienes(List<Bienes> listaBienes) {
         this.listaBienes = listaBienes;
+        listaBienesFull = new ArrayList<>(listaBienes);
     }
 
 
@@ -78,6 +84,42 @@ public class AdaptadorBienes extends RecyclerView.Adapter<AdaptadorBienes.Bienes
     public int getItemCount() {
         return listaBienes.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaBienesFiltro;
+    }
+
+
+    private Filter listaBienesFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Bienes> filtroListaBienes = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaBienes.addAll(listaBienesFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Bienes itemEvento : listaBienesFull){
+                    if(itemEvento.getTitulo_row_bienes().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_bienes().toLowerCase().contains(filtroparametro)){
+                        filtroListaBienes.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaBienes;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaBienes.clear();
+            listaBienes.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class BienesHolder extends RecyclerView.ViewHolder {
 

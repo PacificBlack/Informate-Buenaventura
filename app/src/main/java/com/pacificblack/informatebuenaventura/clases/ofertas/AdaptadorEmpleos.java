@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.ofertas;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +15,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.EmpleosHolder> {
+public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.EmpleosHolder> implements Filterable {
 
-    ArrayList<OfertaEmpleos> listaEmpleos;
+    List<OfertaEmpleos> listaEmpleos;
+    List<OfertaEmpleos> listaEmpleosFull;
 
-    public AdaptadorEmpleos(ArrayList<OfertaEmpleos> listaEmpleos) {
+
+    public AdaptadorEmpleos(List<OfertaEmpleos> listaEmpleos) {
         this.listaEmpleos = listaEmpleos;
+        listaEmpleosFull = new ArrayList<>(listaEmpleos);
     }
 
 
@@ -62,6 +68,41 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
     public int getItemCount() {
         return listaEmpleos.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaEmpleosFiltro;
+    }
+
+    private Filter listaEmpleosFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<OfertaEmpleos> filtroListaEmpleos = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaEmpleos.addAll(listaEmpleosFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (OfertaEmpleos itemEvento : listaEmpleosFull){
+                    if(itemEvento.getTitulo_row_ofertasempleos().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_ofertasempleos().toLowerCase().contains(filtroparametro)){
+                        filtroListaEmpleos.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaEmpleos;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaEmpleos.clear();
+            listaEmpleos.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class EmpleosHolder extends RecyclerView.ViewHolder {
 

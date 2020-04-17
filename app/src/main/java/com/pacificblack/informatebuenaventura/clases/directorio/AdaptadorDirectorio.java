@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.directorio;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +15,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectorio.DirectorioHolder> {
+public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectorio.DirectorioHolder> implements Filterable {
 
-    ArrayList<Directorio> listaDirectorio;
+    List<Directorio> listaDirectorio;
+    List<Directorio> listaDirectorioFull;
 
-    public AdaptadorDirectorio(ArrayList<Directorio> listaDirectorio) {
+
+    public AdaptadorDirectorio(List<Directorio> listaDirectorio) {
         this.listaDirectorio = listaDirectorio;
+        listaDirectorioFull = new ArrayList<>(listaDirectorio);
     }
 
     @NonNull
@@ -56,6 +62,41 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
     public int getItemCount() {
         return listaDirectorio.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaDirectorioFiltro;
+    }
+
+    private Filter listaDirectorioFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Directorio> filtroListaDirectorio = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaDirectorio.addAll(listaDirectorioFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Directorio itemEvento : listaDirectorioFull){
+                    if(itemEvento.getTitulo_row_directorio().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_directorio().toLowerCase().contains(filtroparametro)){
+                        filtroListaDirectorio.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaDirectorio;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaDirectorio.clear();
+            listaDirectorio.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class DirectorioHolder extends RecyclerView.ViewHolder {
 

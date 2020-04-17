@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.funebres;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,28 +15,27 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorFunebres extends RecyclerView.Adapter<AdaptadorFunebres.FunebresHolder>implements View.OnClickListener {
+public class AdaptadorFunebres extends RecyclerView.Adapter<AdaptadorFunebres.FunebresHolder>implements View.OnClickListener, Filterable {
 
-    ArrayList<Funebres> listaFunebres;
+    List<Funebres> listaFunebres;
+    List<Funebres> listaFunebresFull;
     private View.OnClickListener listener;
 
-    public AdaptadorFunebres(ArrayList<Funebres> listaFunebres) {
+    public AdaptadorFunebres(List<Funebres> listaFunebres) {
         this.listaFunebres = listaFunebres;
+        listaFunebresFull = new ArrayList<>(listaFunebres);
     }
 
     @Override
     public void onClick(View v) {
-
         if (listener!=null){
-
             listener.onClick(v);
         }
-
     }
 
     public void setOnClickListener(View.OnClickListener listener){
-
         this.listener=listener;
     }
 
@@ -78,6 +79,42 @@ public class AdaptadorFunebres extends RecyclerView.Adapter<AdaptadorFunebres.Fu
     public int getItemCount() {
         return listaFunebres.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaFunebresFiltro;
+    }
+
+
+    private Filter listaFunebresFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Funebres> filtroListaFunebres = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaFunebres.addAll(listaFunebresFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Funebres itemEvento : listaFunebresFull){
+                    if(itemEvento.getTitulo_row_funebres().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_funebres().toLowerCase().contains(filtroparametro)){
+                        filtroListaFunebres.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaFunebres;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaFunebres.clear();
+            listaFunebres.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class FunebresHolder extends RecyclerView.ViewHolder {
 

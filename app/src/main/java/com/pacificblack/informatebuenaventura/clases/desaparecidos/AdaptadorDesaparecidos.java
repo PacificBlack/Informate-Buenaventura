@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.desaparecidos;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +15,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorDesaparecidos extends RecyclerView.Adapter<AdaptadorDesaparecidos.DesaparecidosHolder>implements View.OnClickListener {
+public class AdaptadorDesaparecidos extends RecyclerView.Adapter<AdaptadorDesaparecidos.DesaparecidosHolder>implements View.OnClickListener, Filterable {
 
-    ArrayList<Desaparecidos> listaDesaparecidos;
+    List<Desaparecidos> listaDesaparecidos;
+    List<Desaparecidos> listaDesaparecidosFull;
     private View.OnClickListener listener;
 
-    public AdaptadorDesaparecidos(ArrayList<Desaparecidos> listaDesaparecidos) {
+    public AdaptadorDesaparecidos(List<Desaparecidos> listaDesaparecidos) {
         this.listaDesaparecidos = listaDesaparecidos;
+        listaDesaparecidosFull = new ArrayList<>(listaDesaparecidos);
     }
 
 
@@ -83,6 +88,41 @@ public class AdaptadorDesaparecidos extends RecyclerView.Adapter<AdaptadorDesapa
     public int getItemCount() {
         return listaDesaparecidos.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaDesaparecidosFiltro;
+    }
+
+    private Filter listaDesaparecidosFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Desaparecidos> filtroListaDesaparecidos = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaDesaparecidos.addAll(listaDesaparecidosFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Desaparecidos itemEvento : listaDesaparecidosFull){
+                    if(itemEvento.getTitulo_row_desaparecidos().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_desaparecidos().toLowerCase().contains(filtroparametro)){
+                        filtroListaDesaparecidos.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaDesaparecidos;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaDesaparecidos.clear();
+            listaDesaparecidos.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class DesaparecidosHolder extends RecyclerView.ViewHolder {
 

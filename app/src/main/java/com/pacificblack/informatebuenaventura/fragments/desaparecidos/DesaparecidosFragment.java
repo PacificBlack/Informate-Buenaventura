@@ -4,6 +4,7 @@ package com.pacificblack.informatebuenaventura.fragments.desaparecidos;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,8 +12,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,6 +51,7 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_desaparecidos;
+    AdaptadorDesaparecidos adaptadorDesaparecidos;
 
 
 
@@ -56,8 +63,9 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false);
+        View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false);
 
+        setHasOptionsMenu(true);
 
         listaDesaparecidos = new ArrayList<>();
         recyclerDesaparecidos = vista.findViewById(R.id.recycler_desaparecidos);
@@ -134,7 +142,7 @@ View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false
 
            }
 
-           AdaptadorDesaparecidos adaptadorDesaparecidos = new AdaptadorDesaparecidos(listaDesaparecidos);
+           adaptadorDesaparecidos = new AdaptadorDesaparecidos(listaDesaparecidos);
 
            recyclerDesaparecidos.setAdapter(adaptadorDesaparecidos);
            adaptadorDesaparecidos.setOnClickListener(new View.OnClickListener() {
@@ -160,5 +168,28 @@ View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false
        }
         refresh_desaparecidos.setRefreshing(false);
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese el desaparecido que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptadorDesaparecidos.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }

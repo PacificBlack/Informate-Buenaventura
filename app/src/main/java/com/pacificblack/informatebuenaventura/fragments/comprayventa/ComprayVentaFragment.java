@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,8 +13,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,6 +51,7 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_comprayventa;
+    AdaptadorComprayVenta adaptadorComprayVenta;
 
 
 
@@ -59,6 +66,7 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
 
 
         View vista = inflater.inflate(R.layout.fragment_compray_venta, container, false);
+        setHasOptionsMenu(true);
 
 
         listaComprayVenta = new ArrayList<>();
@@ -134,7 +142,7 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
                 listaComprayVenta.add(comprayVenta);
 
             }
-            AdaptadorComprayVenta adaptadorComprayVenta = new AdaptadorComprayVenta(listaComprayVenta);
+            adaptadorComprayVenta = new AdaptadorComprayVenta(listaComprayVenta);
             recyclerComprayventa.setAdapter(adaptadorComprayVenta);
             adaptadorComprayVenta.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,6 +169,30 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
             e.printStackTrace();
         }
         refresh_comprayventa.setRefreshing(false);
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese el evento que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptadorComprayVenta.getFilter().filter(newText);
+                return false;
+            }
+        });
 
     }
 }

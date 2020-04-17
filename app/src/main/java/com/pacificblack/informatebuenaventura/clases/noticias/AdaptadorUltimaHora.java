@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.noticias;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +15,18 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHora.UltimaHolder> {
+public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHora.UltimaHolder> implements Filterable {
 
-    ArrayList<UltimaHora> listaUltimaHora;
+    List<UltimaHora> listaUltimaHora;
+    List<UltimaHora> listaUltimaHoraFull;
 
-    public AdaptadorUltimaHora(ArrayList<UltimaHora> listaUltimaHora) {
+
+    public AdaptadorUltimaHora(List<UltimaHora> listaUltimaHora) {
         this.listaUltimaHora = listaUltimaHora;
+        listaUltimaHoraFull = new ArrayList<>(listaUltimaHora);
+
     }
 
     @NonNull
@@ -56,6 +63,41 @@ public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHor
     public int getItemCount() {
         return listaUltimaHora.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaUltimaHoraFiltro;
+    }
+
+    private Filter listaUltimaHoraFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<UltimaHora> filtroListaUltimaHora = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaUltimaHora.addAll(listaUltimaHoraFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (UltimaHora itemEvento : listaUltimaHoraFull){
+                    if(itemEvento.getTitulo_row_ultimahora().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_ultimahora().toLowerCase().contains(filtroparametro)){
+                        filtroListaUltimaHora.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaUltimaHora;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaUltimaHora.clear();
+            listaUltimaHora.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class UltimaHolder extends RecyclerView.ViewHolder {
 

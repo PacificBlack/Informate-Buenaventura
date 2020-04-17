@@ -4,6 +4,8 @@ package com.pacificblack.informatebuenaventura.clases.adopcion;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,14 +17,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.AdopcionHolder> implements View.OnClickListener {
+public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.AdopcionHolder> implements View.OnClickListener, Filterable {
 
-    ArrayList<Adopcion> listaAdopcion;
+    List<Adopcion> listaAdopcion;
+    List<Adopcion> listaAdopcionFull;
     private View.OnClickListener listener;
 
-    public AdaptadorAdopcion(ArrayList<Adopcion> listaAdopcion) {
+    public AdaptadorAdopcion(List<Adopcion> listaAdopcion) {
         this.listaAdopcion = listaAdopcion;
+        listaAdopcionFull = new ArrayList<>(listaAdopcion);
     }
 
 
@@ -86,6 +91,41 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
 
         this.listener=listener;
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaAdopcionFiltro;
+    }
+
+    private Filter listaAdopcionFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Adopcion> filtroListaAdopcion = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaAdopcion.addAll(listaAdopcionFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Adopcion itemEvento : listaAdopcionFull){
+                    if(itemEvento.getTitulo_row_adopcion().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_adopcion().toLowerCase().contains(filtroparametro)){
+                        filtroListaAdopcion.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaAdopcion;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaAdopcion.clear();
+            listaAdopcion.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
 
     public class AdopcionHolder extends RecyclerView.ViewHolder {

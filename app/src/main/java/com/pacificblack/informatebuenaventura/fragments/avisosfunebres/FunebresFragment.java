@@ -4,6 +4,7 @@ package com.pacificblack.informatebuenaventura.fragments.avisosfunebres;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,8 +12,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,6 +51,7 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_funebres;
+    AdaptadorFunebres adaptadorFunebres;
 
     public FunebresFragment() {
         // Required empty public constructor
@@ -56,7 +63,7 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_funebres, container, false);
-
+        setHasOptionsMenu(true);
         listaFunebres = new ArrayList<>();
         recyclerFunebres = vista.findViewById(R.id.recycler_funebres);
         recyclerFunebres.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,7 +136,7 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
             }
 
 
-            AdaptadorFunebres adaptadorFunebres = new AdaptadorFunebres(listaFunebres);
+            adaptadorFunebres = new AdaptadorFunebres(listaFunebres);
             recyclerFunebres.setAdapter(adaptadorFunebres);
             adaptadorFunebres.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,5 +164,28 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
         }
 
         refresh_funebres.setRefreshing(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese el entierro que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptadorFunebres.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }

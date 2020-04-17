@@ -88,7 +88,6 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         return vista;
     }
 
-    //TODO: Aqui va todo lo de obtener de la base de datos
 
     private void cargarWebService_Eventos() {
 

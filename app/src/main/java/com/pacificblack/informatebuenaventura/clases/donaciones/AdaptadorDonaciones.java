@@ -3,6 +3,8 @@ package com.pacificblack.informatebuenaventura.clases.donaciones;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,14 +15,18 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonaciones.DonacionesHolder> implements View.OnClickListener {
+public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonaciones.DonacionesHolder> implements View.OnClickListener, Filterable {
 
-    ArrayList<Donaciones> listaDonaciones;
+    List<Donaciones> listaDonaciones;
+    List<Donaciones> listaDonacionesFull;
+
     private View.OnClickListener listener;
 
-    public AdaptadorDonaciones(ArrayList<Donaciones> listaDonaciones) {
+    public AdaptadorDonaciones(List<Donaciones> listaDonaciones) {
         this.listaDonaciones = listaDonaciones;
+        listaDonacionesFull = new ArrayList<>(listaDonaciones);
     }
 
     @Override
@@ -81,6 +87,41 @@ public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonacione
     public int getItemCount() {
         return listaDonaciones.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaDonacionesFiltro;
+    }
+
+    private Filter listaDonacionesFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Donaciones> filtroListaDonaciones = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaDonaciones.addAll(listaDonacionesFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Donaciones itemEvento : listaDonacionesFull){
+                    if(itemEvento.getTitulo_row_donaciones().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_donaciones().toLowerCase().contains(filtroparametro)){
+                        filtroListaDonaciones.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaDonaciones;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaDonaciones.clear();
+            listaDonaciones.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class DonacionesHolder extends RecyclerView.ViewHolder {
 
