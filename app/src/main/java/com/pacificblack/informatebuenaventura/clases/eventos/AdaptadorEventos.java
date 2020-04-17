@@ -1,9 +1,12 @@
 package com.pacificblack.informatebuenaventura.clases.eventos;
 
+import android.content.Context;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,14 +18,17 @@ import com.pacificblack.informatebuenaventura.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.EventosHolder> {
+public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.EventosHolder> implements Filterable {
 
 
-    ArrayList<Eventos> listaEventos;
+    List<Eventos> listaEventos;
+    List<Eventos> listaEventosFull;
 
-    public AdaptadorEventos(ArrayList<Eventos> listaEventos) {
+    public AdaptadorEventos(List<Eventos> listaEventos) {
         this.listaEventos = listaEventos;
+        listaEventosFull = new ArrayList<>(listaEventos);
     }
 
     @NonNull
@@ -69,6 +75,41 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
     public int getItemCount() {
         return listaEventos.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return listaEventosFiltro;
+    }
+
+    private Filter listaEventosFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Eventos> filtroListaEventos = new ArrayList<>();
+            if (constraint==null || constraint.length()==0){
+                filtroListaEventos.addAll(listaEventosFull);
+
+            }else {
+                String filtroparametro = constraint.toString().toLowerCase().trim();
+                for (Eventos itemEvento : listaEventosFull){
+                    if(itemEvento.getTitulo_row_eventos().toLowerCase().contains(filtroparametro) || itemEvento.getDescripcion_row_eventos().toLowerCase().contains(filtroparametro)){
+                        filtroListaEventos.add(itemEvento);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtroListaEventos;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            listaEventos.clear();
+            listaEventos.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
     public class EventosHolder extends RecyclerView.ViewHolder {
 

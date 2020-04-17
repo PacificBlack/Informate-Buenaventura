@@ -1,18 +1,23 @@
 package com.pacificblack.informatebuenaventura;
 
 import android.app.Dialog;
+import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import android.view.Gravity;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -62,6 +67,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity   {
@@ -88,7 +94,7 @@ public class MainActivity extends AppCompatActivity   {
                 R.id.nav_especiales ,R.id.nav_compartir, R.id.nav_quienes,
                 R.id.nav_directorio,R.id.nav_ofertaservicios,R.id.nav_bienes,
                 R.id.nav_ofertaempleos,R.id.nav_encuestas,R.id.nav_donaciones,
-                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion,R.id.nav_buscar)
+                R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion)
 
                 .setDrawerLayout(drawer)
                 .build();
@@ -100,7 +106,6 @@ public class MainActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);drawer.openDrawer(Gravity.LEFT);
-
             }
         });
 
@@ -109,18 +114,24 @@ public class MainActivity extends AppCompatActivity   {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+    getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        if (item.getItemId() == R.id.nav_configuraciones) {
+            Intent intent = new Intent(this, Configuraciones.class);
+            this.startActivity(intent);
+        }if (item.getItemId() == R.id.buscar){
 
-        super.onOptionsItemSelected(item);
 
-
+        }else {
+            super.onOptionsItemSelected(item);
+        }
         return true;
     }
 

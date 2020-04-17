@@ -3,6 +3,7 @@ package com.pacificblack.informatebuenaventura.fragments.eventos;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,8 +11,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,20 +35,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
+public class EventosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerEventos;
-    ArrayList<Eventos> listaEventos;
+    List<Eventos> listaEventos;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
     private SwipeRefreshLayout refresh_eventos;
+
+    AdaptadorEventos adaptadorEventos;
 
 
     public EventosFragment() {
@@ -55,6 +64,7 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_eventos, container, false);
 
+        setHasOptionsMenu(true);
 
         listaEventos = new ArrayList<>();
         recyclerEventos = vista.findViewById(R.id.recycler_eventos);
@@ -131,7 +141,7 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         }
 
 
-            AdaptadorEventos adaptadorEventos = new AdaptadorEventos(listaEventos);
+            adaptadorEventos = new AdaptadorEventos(listaEventos);
             recyclerEventos.setAdapter(adaptadorEventos);
 
 
@@ -145,5 +155,32 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         refresh_eventos.setRefreshing(false);
 
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.buscadora,menu);
+        MenuItem searchItem = menu.findItem(R.id.buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Ingrese el evento que desea buscar");
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               adaptadorEventos.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+
+    }
+
 
 }
