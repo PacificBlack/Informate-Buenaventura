@@ -63,8 +63,6 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
         holder.descripcionnoticias.setText(listaNoticias.get(position).getDescripcion_row_noticias());
         holder.fechanoticias.setText(listaNoticias.get(position).getFechapublicacion_row_noticias());
         holder.vistanoticias.setText(String.valueOf(listaNoticias.get(position).getVistas_noticias()));
-        holder.likenoticias.setText(String.valueOf(listaNoticias.get(position).getLikes_noticias()));
-        holder.dislikenoticias.setText(String.valueOf(listaNoticias.get(position).getDislikes_noticias()));
 
         if (listaNoticias.get(position).getImagen1_noticias() != null){
 
@@ -124,7 +122,6 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
 
         TextView titulonoticias,descripcionnoticias,fechanoticias,vistanoticias;
         ImageView imagennoticias;
-        RadioButton likenoticias, dislikenoticias;
 
 
         public NoticiasHolder(@NonNull View itemView) {
@@ -135,8 +132,6 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
             fechanoticias = itemView.findViewById(R.id.fecha_row_noticias);
             vistanoticias = itemView.findViewById(R.id.vista_row_noticias);
             imagennoticias = itemView.findViewById(R.id.imagen_row_noticias);
-            likenoticias = itemView.findViewById(R.id.gusta_row_noticias);
-            dislikenoticias = itemView.findViewById(R.id.nogusta_row_noticias);
         }
     }
 }

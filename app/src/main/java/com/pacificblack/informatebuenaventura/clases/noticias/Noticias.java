@@ -10,7 +10,7 @@ public class Noticias implements Serializable {
     private int id_noticias;
     private String titulo_row_noticias,descripcion_row_noticias,fechapublicacion_row_noticias;
     private String imagen1_noticias,imagen2_noticias,imagen3_noticias,imagen4_noticias;
-    private int likes_noticias,dislikes_noticias,vistas_noticias;
+    private int vistas_noticias;
     private String descripcion1_noticias,descripcion2_noticias,descripcion3_noticias,video;
 
     public Noticias() {
@@ -24,8 +24,6 @@ public class Noticias implements Serializable {
         this.imagen2_noticias = imagen2_noticias;
         this.imagen3_noticias = imagen3_noticias;
         this.imagen4_noticias = imagen4_noticias;
-        this.likes_noticias = likes_noticias;
-        this.dislikes_noticias = dislikes_noticias;
         this.vistas_noticias = vistas_noticias;
         this.descripcion1_noticias = descripcion1_noticias;
         this.descripcion2_noticias = descripcion2_noticias;
@@ -104,22 +102,6 @@ public class Noticias implements Serializable {
 
     public void setImagen4_noticias(String imagen4_noticias) {
         this.imagen4_noticias = imagen4_noticias;
-    }
-
-    public int getLikes_noticias() {
-        return likes_noticias;
-    }
-
-    public void setLikes_noticias(int likes_noticias) {
-        this.likes_noticias = likes_noticias;
-    }
-
-    public int getDislikes_noticias() {
-        return dislikes_noticias;
-    }
-
-    public void setDislikes_noticias(int dislikes_noticias) {
-        this.dislikes_noticias = dislikes_noticias;
     }
 
     public int getVistas_noticias() {

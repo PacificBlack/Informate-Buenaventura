@@ -63,37 +63,6 @@ android:layout_height="match_parent"
                 android:orientation="horizontal">
 
 
-                <RadioGroup
-                    android:layout_width="93dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/gusta_row_noticias"
-                        style="@android:style/Widget.DeviceDefault.Light.Button"
-                        android:layout_width="9sp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#00FFFFFF"
-                        android:baselineAligned="false"
-                        android:button="@drawable/ic_like_on"
-                        android:fontFamily="@font/bree_serif"
-                        android:text="@string/cero" />
-
-                    <RadioButton
-                        android:id="@+id/nogusta_row_noticias"
-                        style="@android:style/Widget.DeviceDefault.Light.Button"
-                        android:layout_width="9sp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#00FFFFFF"
-                        android:baselineAligned="false"
-                        android:button="@drawable/ic_unlike_on"
-                        android:fontFamily="@font/bree_serif"
-                        android:text="@string/cero" />
-                </RadioGroup>
-
                 <TextView
                     android:id="@+id/vista_row_noticias"
                     android:layout_width="wrap_content"

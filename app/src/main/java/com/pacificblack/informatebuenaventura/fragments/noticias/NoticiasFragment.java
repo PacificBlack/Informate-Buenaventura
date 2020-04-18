@@ -131,8 +131,6 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
                 noticias.setImagen2_noticias(jsonObject.optString("imagen2_noticias"));
                 noticias.setImagen3_noticias(jsonObject.optString("imagen3_noticias"));
                 noticias.setImagen4_noticias(jsonObject.optString("imagen4_noticias"));
-                noticias.setLikes_noticias(jsonObject.optInt("likes_noticias"));
-                noticias.setDislikes_noticias(jsonObject.optInt("dislikes_noticias"));
                 noticias.setVistas_noticias(jsonObject.optInt("vistas_noticias"));
                 noticias.setDescripcion1_noticias(jsonObject.optString("descripcion1_noticias"));
                 noticias.setDescripcion2_noticias(jsonObject.optString("descripcion2_noticias"));

@@ -198,5 +198,8 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
                 adaptador.getFilter().filter(newText);
                 return false;
             }
-        });    }
+        });
+
+    }
+
 }
