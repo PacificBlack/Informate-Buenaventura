@@ -44,40 +44,89 @@
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
 
-            <RadioGroup
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/opcion1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="RadioButton" />
+                <RadioGroup
+                    android:layout_width="192dp"
+                    android:layout_height="match_parent">
 
-                <RadioButton
-                    android:id="@+id/opcion2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="RadioButton" />
+                    <RadioButton
+                        android:id="@+id/opcion1"
+                        android:layout_width="211dp"
+                        android:layout_height="wrap_content"
+                        android:text="RadioButton" />
 
-                <RadioButton
-                    android:id="@+id/opcion3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="RadioButton" />
+                    <RadioButton
+                        android:id="@+id/opcion2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RadioButton" />
 
-                <RadioButton
-                    android:id="@+id/opcion4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="RadioButton" />
-            </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/opcion3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/opcion4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="RadioButton" />
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="198dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/votos1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/signika"
+                        android:text="TextView"
+                        android:layout_marginTop="5dp"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/votos2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:layout_marginTop="5dp"
+                        android:textSize="18sp"                        android:fontFamily="@font/signika"
+                        />
+
+                    <TextView
+                        android:id="@+id/votos3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/signika"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/votos4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/signika"
+                        android:text="TextView"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/votar_encuesta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="seleccionado"
                 android:text="Votar" />
 
 
