@@ -2,9 +2,12 @@ package com.pacificblack.informatebuenaventura.actividades;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,12 +19,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.noticias.Noticias;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -102,7 +107,57 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
                     .error(R.drawable.imagennodisponible)
                     .into(imagen4_noticias);
 
+
+            final String imagen1_link = noticias.getImagen1_noticias();
+            imagen1_noticias.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentNoticias = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentNoticias.putExtras(envioimg);
+                    startActivity(intentNoticias);
+                }
+            });
+            final String imagen2_link = noticias.getImagen2_noticias();
+            imagen2_noticias.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentNoticias = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentNoticias.putExtras(envioimg);
+                    startActivity(intentNoticias);
+                }
+            });
+            final String imagen3_link = noticias.getImagen3_noticias();
+            imagen3_noticias.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentNoticias = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen3_link);
+                    intentNoticias.putExtras(envioimg);
+                    startActivity(intentNoticias);
+                }
+            });
+            final String imagen4_link = noticias.getImagen4_noticias();
+            imagen4_noticias.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentNoticias = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen4_link);
+                    intentNoticias.putExtras(envioimg);
+                    startActivity(intentNoticias);
+                }
+            });
+
+
             video = noticias.getVideo();
+
+
+
 
             //TODO://////////////////////////////////////////////////////////////
 

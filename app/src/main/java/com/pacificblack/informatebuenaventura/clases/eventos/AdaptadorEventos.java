@@ -1,7 +1,9 @@
 package com.pacificblack.informatebuenaventura.clases.eventos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.toolbox.ImageRequest;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,6 +29,9 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
 
     List<Eventos> listaEventos;
     List<Eventos> listaEventosFull;
+    Context context;
+
+
 
     public AdaptadorEventos(List<Eventos> listaEventos) {
         this.listaEventos = listaEventos;
@@ -36,6 +43,7 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
     public EventosHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_eventos,null,false);
+        context = view.getContext();
 
         return new EventosHolder(view);
     }
@@ -58,6 +66,19 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(holder.imageneventos);
+
+            final String imagen1_link = listaEventos.get(position).getImagen1_eventos();
+            holder.imageneventos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentultima = new Intent(context, FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentultima.putExtras(envioimg);
+                    context.startActivity(intentultima);
+                }
+            });
+
 
 
         }else{

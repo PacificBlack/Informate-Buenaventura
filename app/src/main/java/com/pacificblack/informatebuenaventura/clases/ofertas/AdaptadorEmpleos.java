@@ -1,5 +1,8 @@
 package com.pacificblack.informatebuenaventura.clases.ofertas;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +25,8 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
 
     List<OfertaEmpleos> listaEmpleos;
     List<OfertaEmpleos> listaEmpleosFull;
+    Context context;
+
 
 
     public AdaptadorEmpleos(List<OfertaEmpleos> listaEmpleos) {
@@ -34,6 +40,7 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
     public AdaptadorEmpleos.EmpleosHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ofertaempleos,null,false);
+        context = view.getContext();
 
         return new EmpleosHolder(view);
     }
@@ -53,6 +60,18 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(holder.imagenempleos);
+
+            final String imagen1_link = listaEmpleos.get(position).getImagen1_ofertasempleos();
+            holder.imagenempleos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentultima = new Intent(context, FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentultima.putExtras(envioimg);
+                    context.startActivity(intentultima);
+                }
+            });
 
 
         }else{

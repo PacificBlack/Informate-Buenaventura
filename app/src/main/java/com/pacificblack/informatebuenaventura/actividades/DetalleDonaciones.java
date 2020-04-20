@@ -3,8 +3,10 @@ package com.pacificblack.informatebuenaventura.actividades;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -69,7 +72,29 @@ public class DetalleDonaciones extends AppCompatActivity {
 
             metadonaciones.setText(String.valueOf(dona.getMeta_row_donaciones()));
 
-            //TODO://////////////////////////////////////////////////////////////
+
+            final String imagen1_link = dona.getImagen1_donaciones();
+            imagen1donaciones.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentdonaciones = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentdonaciones.putExtras(envioimg);
+                    startActivity(intentdonaciones);
+                }
+            });
+            final String imagen2_link = dona.getImagen2_donaciones();
+            imagen2donaciones.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentdonaciones = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentdonaciones.putExtras(envioimg);
+                    startActivity(intentdonaciones);
+                }
+            });
 
             String url_donaciones = DireccionServidor+"wsnJSONActualizarVista.php?";
 

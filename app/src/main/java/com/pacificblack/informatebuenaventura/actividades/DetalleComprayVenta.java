@@ -3,8 +3,10 @@ package com.pacificblack.informatebuenaventura.actividades;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -81,7 +84,41 @@ public class DetalleComprayVenta extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_comprayventa);
 
-            //TODO://////////////////////////////////////////////////////////////
+
+
+            final String imagen1_link = comprayventa.getImagen1_comprayventa();
+            imagen1_comprayventa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentcomprayventa = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentcomprayventa.putExtras(envioimg);
+                    startActivity(intentcomprayventa);
+                }
+            });
+            final String imagen2_link = comprayventa.getImagen2_comprayventa();
+            imagen2_comprayventa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentcomprayventa = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentcomprayventa.putExtras(envioimg);
+                    startActivity(intentcomprayventa);
+                }
+            });
+            final String imagen3_link = comprayventa.getImagen3̣̣_comprayventa();
+            imagen3_comprayventa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentcomprayventa = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen3_link);
+                    intentcomprayventa.putExtras(envioimg);
+                    startActivity(intentcomprayventa);
+                }
+            });
 
 
 

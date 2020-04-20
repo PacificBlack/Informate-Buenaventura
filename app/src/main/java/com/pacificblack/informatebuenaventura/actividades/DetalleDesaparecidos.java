@@ -3,8 +3,10 @@ package com.pacificblack.informatebuenaventura.actividades;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -82,8 +85,40 @@ public class DetalleDesaparecidos extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_desaparecidos);
 
-            //TODO://////////////////////////////////////////////////////////////
 
+            final String imagen1_link = desaparecidos.getImagen1_desaparecidos();
+            imagen1_desaparecidos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentdesaparecidos = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentdesaparecidos.putExtras(envioimg);
+                    startActivity(intentdesaparecidos);
+                }
+            });
+            final String imagen2_link = desaparecidos.getImagen2_desaparecidos();
+            imagen2_desaparecidos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentdesaparecidos = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentdesaparecidos.putExtras(envioimg);
+                    startActivity(intentdesaparecidos);
+                }
+            });
+            final String imagen3_link = desaparecidos.getImagen3̣̣_desaparecidos();
+            imagen3_desaparecidos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentdesaparecidos = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen3_link);
+                    intentdesaparecidos.putExtras(envioimg);
+                    startActivity(intentdesaparecidos);
+                }
+            });
 
 
             String url_desaparecidos = DireccionServidor+"wsnJSONActualizarVista.php?";

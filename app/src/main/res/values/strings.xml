@@ -98,5 +98,9 @@
 
     <string name="supera">Ha superado el limite de caracteres</string>
 
+    <string name="title_activity_fullscreen_imagen">Imagen</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 
 </resources>

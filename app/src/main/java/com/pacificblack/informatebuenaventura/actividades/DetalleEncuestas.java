@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.encuestas.Encuestas;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 
@@ -101,6 +103,18 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagenencuesta);
+
+            final String imagen1_link = encuesta.getImagen1_encuestas();
+            imagenencuesta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentencuestas = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentencuestas.putExtras(envioimg);
+                    startActivity(intentencuestas);
+                }
+            });
 
             opcion1encuesta.setText(encuesta.getOpcion1());
             opcion2encuesta.setText(encuesta.getOpcion2());

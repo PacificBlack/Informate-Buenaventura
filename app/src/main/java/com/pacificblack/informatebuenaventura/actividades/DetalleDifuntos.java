@@ -3,8 +3,10 @@ package com.pacificblack.informatebuenaventura.actividades;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -75,8 +78,40 @@ public class DetalleDifuntos extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_funebres);
 
-            //TODO://////////////////////////////////////////////////////////////
 
+            final String imagen1_link = funebres.getImagen1_funebres();
+            imagen1_funebres.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentfunebres = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentfunebres.putExtras(envioimg);
+                    startActivity(intentfunebres);
+                }
+            });
+            final String imagen2_link = funebres.getImagen2_funebres();
+            imagen2_funebres.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentfunebres = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentfunebres.putExtras(envioimg);
+                    startActivity(intentfunebres);
+                }
+            });
+            final String imagen3_link = funebres.getImagen3_funebres();
+            imagen3_funebres.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentfunebres = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen3_link);
+                    intentfunebres.putExtras(envioimg);
+                    startActivity(intentfunebres);
+                }
+            });
 
 
             String url_funebres = DireccionServidor+"wsnJSONActualizarVista.php?";

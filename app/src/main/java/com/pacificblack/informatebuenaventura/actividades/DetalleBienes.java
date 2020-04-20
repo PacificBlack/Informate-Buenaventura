@@ -3,8 +3,10 @@ package com.pacificblack.informatebuenaventura.actividades;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -82,7 +85,55 @@ public class DetalleBienes extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen4_bienes);
 
-            //TODO://////////////////////////////////////////////////////////////
+            final String imagen1_link = bienes.getImagen1_bienes();
+            imagen1_bienes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentbienes = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentbienes.putExtras(envioimg);
+                    startActivity(intentbienes);
+                }
+            });
+            final String imagen2_link = bienes.getImagen2_bienes();
+            imagen2_bienes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentbienes = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentbienes.putExtras(envioimg);
+                    startActivity(intentbienes);
+                }
+            });
+            final String imagen3_link = bienes.getImagen3_bienes();
+            imagen3_bienes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentbienes = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen3_link);
+                    intentbienes.putExtras(envioimg);
+                    startActivity(intentbienes);
+                }
+            });
+            final String imagen4_link = bienes.getImagen4_bienes();
+            imagen4_bienes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentbienes = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen4_link);
+                    intentbienes.putExtras(envioimg);
+                    startActivity(intentbienes);
+                }
+            });
+
+
+
+
+
 
             String url_bienes = DireccionServidor+"wsnJSONActualizarVista.php?";
 

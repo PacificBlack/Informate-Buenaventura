@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -92,7 +95,51 @@ public class DetalleAdopcion extends AppCompatActivity {
                     .error(R.drawable.imagennodisponible)
                     .into(imagen4_adopcion);
 
-        //TODO://////////////////////////////////////////////////////////////
+            final String imagen1_link = adopcion.getImagen1_adopcion();
+            imagen1_adopcion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentadopcion = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentadopcion.putExtras(envioimg);
+                    startActivity(intentadopcion);
+                }
+            });
+            final String imagen2_link = adopcion.getImagen2_adopcion();
+            imagen2_adopcion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentadopcion = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen2_link);
+                    intentadopcion.putExtras(envioimg);
+                    startActivity(intentadopcion);
+                }
+            });
+            final String imagen3_link = adopcion.getImagen3_adopcion();
+            imagen3_adopcion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentadopcion = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen3_link);
+                    intentadopcion.putExtras(envioimg);
+                    startActivity(intentadopcion);
+                }
+            });
+            final String imagen4_link = adopcion.getImagen4_adopcion();
+            imagen4_adopcion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentadopcion = new Intent(getApplicationContext(), FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen4_link);
+                    intentadopcion.putExtras(envioimg);
+                    startActivity(intentadopcion);
+                }
+            });
+
 
 
 
