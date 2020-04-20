@@ -22,6 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -43,12 +44,13 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 public class InicioFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     String API_KEY = "AIzaSyCjplldkmscSZfu1yMY7eJr4xiSjuAbZgo";
-    String VIDEO_ID = "EGy39OMyHzw";
+    String videotraido;
 
     RecyclerView recyclerInicio;
     ArrayList<Inicio> listaInicio;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    StringRequest videeos;
 
     private SwipeRefreshLayout refresh_inicio;
 
@@ -66,6 +68,8 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
         View vista = inflater.inflate(R.layout.fragment_inicio, container, false);
 
+        cargarvideo();
+
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -76,7 +80,7 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (!wasRestored) {
-                    player.cueVideo(VIDEO_ID);
+                    player.cueVideo(videotraido);
                 }
             }
 
@@ -111,6 +115,32 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
         return vista;
     }
 
+
+    private void cargarvideo() {
+        String url_videos = DireccionServidor+"wsnJSONLlenarVideos.php?";
+
+        videeos = new StringRequest(Request.Method.POST, url_videos, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                videotraido = response.toString();
+                Log.i("Video traido ", videotraido);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("No actualizo","Vista Negativa");
+
+            }
+        });
+
+        RequestQueue request_encuestas_eliminar = Volley.newRequestQueue(getContext());
+        request_encuestas_eliminar.add(videeos);
+
+    }
+
+
     private void cargarWebService_Inicio() {
 
         String url_Inicio = DireccionServidor+"wsnJSONllenarInicio.php";
@@ -121,6 +151,7 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
         refresh_inicio.setRefreshing(false);
 
     }
+
 
 
     @Override
