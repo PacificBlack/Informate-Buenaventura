@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,6 +36,7 @@
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
+
             <TextView
                 android:id="@+id/descricion1_detalle_noticias"
                 android:layout_width="match_parent"
@@ -42,6 +44,14 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/baner_noticias1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
+
 
             <ImageView
                 android:id="@+id/imagen2_detalle_noticias"
@@ -58,6 +68,14 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/baner_noticias2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
+
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -99,6 +117,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:id="@+id/video_noticias"/>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/baner_noticias3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
+
 
 
         </LinearLayout>

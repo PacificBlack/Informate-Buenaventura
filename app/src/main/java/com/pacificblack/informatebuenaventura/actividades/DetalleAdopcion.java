@@ -24,6 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -44,6 +46,8 @@ public class DetalleAdopcion extends AppCompatActivity {
     ImageView imagen1_adopcion,imagen2_adopcion,imagen3_adopcion,imagen4_adopcion;
     StringRequest stringRequest_adopcion_actualizar;
     int id_actualizar;
+    private AdView baner1,baner2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +183,17 @@ public class DetalleAdopcion extends AppCompatActivity {
             request_adopcion_eliminar.add(stringRequest_adopcion_actualizar);
 
         }
+
+
+        baner1 = findViewById(R.id.baner_adopcion1);
+        baner2 = findViewById(R.id.baner_adopcion2);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
+
 
     }
 

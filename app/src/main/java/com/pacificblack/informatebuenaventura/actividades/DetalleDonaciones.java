@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -33,6 +35,8 @@ public class DetalleDonaciones extends AppCompatActivity {
     ImageView imagen1donaciones,imagen2donaciones;
     StringRequest stringRequest_donaciones_actualizar;
     int id_actualizar;
+    private AdView baner1,baner2;
+
 
 
 
@@ -134,6 +138,14 @@ public class DetalleDonaciones extends AppCompatActivity {
         }
 
 
+        baner1 = findViewById(R.id.baner_donacion1);
+        baner2 = findViewById(R.id.baner_donacion2);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
 
     }
 }

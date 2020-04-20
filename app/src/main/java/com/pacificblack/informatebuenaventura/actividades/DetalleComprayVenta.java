@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -33,6 +35,8 @@ public class DetalleComprayVenta extends AppCompatActivity {
     ImageView imagen1_comprayventa,imagen2_comprayventa,imagen3_comprayventa;
     StringRequest stringRequest_comprayventa_actualizar;
     int id_actualizar;
+    private AdView baner1,baner2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,16 @@ public class DetalleComprayVenta extends AppCompatActivity {
             request_comprayventa_eliminar.add(stringRequest_comprayventa_actualizar);
 
         }
+
+        baner1 = findViewById(R.id.baner_comprayventa1);
+        baner2 = findViewById(R.id.baner_comprayventa2);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
+
 
 
     }

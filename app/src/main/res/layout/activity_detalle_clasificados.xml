@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".actividades.DetalleClasificados">
-
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,6 +43,14 @@
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
 
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/baner_clasificados1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_clasificados"></com.google.android.gms.ads.AdView>
+
+
             <ImageView
                 android:id="@+id/imagen2_detalle_clasificados"
                 android:layout_width="match_parent"
@@ -59,6 +66,13 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/baner_clasificados2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_clasificados"></com.google.android.gms.ads.AdView>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"

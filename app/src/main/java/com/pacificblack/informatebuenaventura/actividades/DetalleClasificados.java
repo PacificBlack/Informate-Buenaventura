@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -33,6 +35,8 @@ public class DetalleClasificados extends AppCompatActivity {
     ImageView imagen1_clasificados,imagen2_clasificados,imagen3_clasificados,imagen4_clasificados;
     StringRequest stringRequest_clasificados_actualizar;
     int id_actualizar;
+    private AdView baner1,baner2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,5 +169,16 @@ public class DetalleClasificados extends AppCompatActivity {
             request_clasificados_eliminar.add(stringRequest_clasificados_actualizar);
 
         }
+
+        baner1 = findViewById(R.id.baner_clasificados1);
+        baner2 = findViewById(R.id.baner_clasificados2);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
+
+
     }
 }

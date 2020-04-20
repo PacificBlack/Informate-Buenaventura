@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -33,6 +35,8 @@ public class DetalleDifuntos extends AppCompatActivity {
     ImageView imagen1_funebres,imagen2_funebres,imagen3_funebres;
     StringRequest stringRequest_funebres_actualizar;
     int id_actualizar;
+    private AdView baner1,baner2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,5 +154,13 @@ public class DetalleDifuntos extends AppCompatActivity {
             request_funebres_eliminar.add(stringRequest_funebres_actualizar);
 
         }
+
+        baner1 = findViewById(R.id.baner_difuntos1);
+        baner2 = findViewById(R.id.baner_difuntos2);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
     }
 }

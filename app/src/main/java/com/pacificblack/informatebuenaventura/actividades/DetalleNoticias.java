@@ -20,6 +20,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -51,6 +54,8 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
 
     StringRequest stringRequest_noticias_actualizar;
     int id_actualizar;
+
+    private AdView baner1,baner2,baner3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +206,18 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
 
 
         }
+
+        baner1 = findViewById(R.id.baner_noticias1);
+        baner2 = findViewById(R.id.baner_noticias2);
+        baner3 = findViewById(R.id.baner_noticias3);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
+        baner3.loadAd(adRequest);
+
 
 
 

@@ -103,4 +103,17 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
+
+    <!-- Los Anuncios aqui van los id's -->
+
+    <string name="banner_noticias">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_adopcion">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_bienes">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_clasificados">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_comprayventa">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_desaparecidos">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_difuntos">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_donacion">ca-app-pub-3940256099942544/6300978111</string>
+
+
 </resources>

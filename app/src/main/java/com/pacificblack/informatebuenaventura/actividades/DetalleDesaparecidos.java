@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -33,6 +35,8 @@ public class DetalleDesaparecidos extends AppCompatActivity {
     ImageView imagen1_desaparecidos,imagen2_desaparecidos,imagen3_desaparecidos;
     StringRequest stringRequest_desaparecidos_actualizar;
     int id_actualizar;
+    private AdView baner1,baner2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +163,15 @@ public class DetalleDesaparecidos extends AppCompatActivity {
         }
 
 
+
+
+        baner1 = findViewById(R.id.baner_desaparecidos1);
+        baner2 = findViewById(R.id.baner_desaparecidos2);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        baner1.loadAd(adRequest);
+        baner2.loadAd(adRequest);
 
 
     }
