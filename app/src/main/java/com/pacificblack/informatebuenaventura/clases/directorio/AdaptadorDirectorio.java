@@ -1,5 +1,8 @@
 package com.pacificblack.informatebuenaventura.clases.directorio;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.FullImagen;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +25,8 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
 
     List<Directorio> listaDirectorio;
     List<Directorio> listaDirectorioFull;
+    Context context;
+
 
 
     public AdaptadorDirectorio(List<Directorio> listaDirectorio) {
@@ -32,6 +38,7 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
     @Override
     public DirectorioHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_directorios,null,false);
+        context = view.getContext();
 
         return new DirectorioHolder(view);
     }
@@ -51,6 +58,19 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(holder.imagendirectorio);
+
+            final String imagen1_link = listaDirectorio.get(position).getImagen1_directorio();
+            holder.imagendirectorio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentultima = new Intent(context, FullImagen.class);
+                    Bundle envioimg = new Bundle();
+                    envioimg.putString("imagen", imagen1_link);
+                    intentultima.putExtras(envioimg);
+                    context.startActivity(intentultima);
+                }
+            });
+
 
 
         }else{
