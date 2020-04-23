@@ -75,7 +75,6 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
         refresh_desaparecidos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaDesaparecidos.clear();
                 cargarWebService_Desaparecidos();
             }
         });
@@ -115,6 +114,8 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
         Desaparecidos desaparecidos = null;
         JSONArray json_desaparecidos = response.optJSONArray("desaparecidos");
 
+        listaDesaparecidos.clear();
+
        try {
            for (int i = 0; i < json_desaparecidos.length() ; i++) {
 
@@ -145,6 +146,8 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
            adaptadorDesaparecidos = new AdaptadorDesaparecidos(listaDesaparecidos);
 
            recyclerDesaparecidos.setAdapter(adaptadorDesaparecidos);
+           adaptadorDesaparecidos.notifyDataSetChanged();
+
            adaptadorDesaparecidos.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {

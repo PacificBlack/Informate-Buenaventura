@@ -72,7 +72,6 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
         refresh_funebres.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaFunebres.clear();
                 cargarWebService_Funebres();
             }
         });
@@ -112,6 +111,8 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
         JSONArray json_funebres = response.optJSONArray("funebres");
 
+        listaFunebres.clear();
+
         try {
 
             for (int i=0; i<json_funebres.length(); i++){
@@ -138,6 +139,8 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
             adaptadorFunebres = new AdaptadorFunebres(listaFunebres);
             recyclerFunebres.setAdapter(adaptadorFunebres);
+            adaptadorFunebres.notifyDataSetChanged();
+
             adaptadorFunebres.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -78,7 +78,6 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
         refresh_bienes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaBienes.clear();
                 cargarWebService_Bienes();
             }
         });
@@ -119,6 +118,8 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
         JSONArray json_bienes = response.optJSONArray("bienes");
 
+        listaBienes.clear();
+
 
         try {
 
@@ -147,6 +148,8 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
             adaptadorB = new AdaptadorBienes(listaBienes);
             recyclerBienes.setAdapter(adaptadorB);
+            adaptadorB.notifyDataSetChanged();
+
             adaptadorB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -80,7 +80,7 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (!wasRestored) {
-                    player.cueVideo(videotraido);
+                    player.cueVideo("OGkss7DFrMs");
                 }
             }
 
@@ -101,7 +101,6 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
         refresh_inicio.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaInicio.clear();
                 cargarWebService_Inicio();
             }
         });
@@ -172,6 +171,8 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
         JSONArray json_Inicio = response.optJSONArray("inicio");
 
+        listaInicio.clear();
+
 
         try {
 
@@ -191,7 +192,7 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
             adaptadorInicio = new AdaptadorInicio(listaInicio);
             recyclerInicio.setAdapter(adaptadorInicio);
-
+            adaptadorInicio.notifyDataSetChanged();
 
         }catch (JSONException e) {
 

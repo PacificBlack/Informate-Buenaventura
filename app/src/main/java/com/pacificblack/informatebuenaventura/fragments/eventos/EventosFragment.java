@@ -74,7 +74,6 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         refresh_eventos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaEventos.clear();
                 cargarWebService_Eventos();
             }
         });
@@ -119,6 +118,8 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
         JSONArray json_eventos = response.optJSONArray("eventos");
 
+        listaEventos.clear();
+
 
         try {
 
@@ -137,12 +138,13 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
             listaEventos.add(eventos);
 
+
         }
 
 
             adaptadorEventos = new AdaptadorEventos(listaEventos);
             recyclerEventos.setAdapter(adaptadorEventos);
-
+            adaptadorEventos.notifyDataSetChanged();
 
             }catch (JSONException e) {
 

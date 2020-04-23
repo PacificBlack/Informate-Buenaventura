@@ -95,18 +95,13 @@ public class PublicarAdopcion extends AppCompatActivity {
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
 
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
@@ -117,7 +112,9 @@ public class PublicarAdopcion extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){return;}
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){
+                    return;
+                }
                 Subirimagen_adopcion();
                 cargando.iniciarprogress();
 
@@ -205,12 +202,12 @@ public class PublicarAdopcion extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenes_adopcion.size() > 4){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
+        else if (listaimagenes_adopcion.size() > 3){
+            Toast.makeText(getApplicationContext(),"Solo se agregaran",Toast.LENGTH_LONG).show();
             return true;
         }
 
-        else if (listaimagenes_adopcion.size() < 4){
+        else if (listaimagenes_adopcion.size() < 3){
             Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_adopcion.size()+" imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
             return false;
 
@@ -270,8 +267,8 @@ public class PublicarAdopcion extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         cargando.cancelarprogress();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                     }
                 }){
@@ -285,18 +282,22 @@ public class PublicarAdopcion extends AppCompatActivity {
                 String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_adopcion",tituloinput);
                 parametros.put("descripcionrow_adopcion",descripcioncortainput);
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
                 parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("imagen_adopcion0",cadena.get(0));
+                parametros.put("imagen_adopcion1",cadena.get(1));
+                parametros.put("imagen_adopcion2",cadena.get(2));
+                parametros.put("imagen_adopcion3",cadena.get(3));
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
 
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
+                //for (int h = 0; h<nombre.size();h++){
+                  //  parametros.put(nombre.get(h),cadena.get(h));
+                //}
 
                 return parametros;
             }
@@ -313,6 +314,7 @@ public class PublicarAdopcion extends AppCompatActivity {
         cadena.clear();
 
         for (int i = 0; i < listaimagenes_adopcion.size(); i++){
+
             try {
                 InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -320,7 +322,10 @@ public class PublicarAdopcion extends AppCompatActivity {
                 nombre.add( "imagen_adopcion"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
-            }catch (IOException e){        }
+
+            }catch (IOException e){
+
+            }
 
         }
         cargarWebService_adopcion();
@@ -378,7 +383,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion.add(imagenesadopcionUri);
             }else {
-                for (int i = 0; i< 4; i++){
+                for (int i = 0; i< 1; i++){
                     listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
                 }
             }

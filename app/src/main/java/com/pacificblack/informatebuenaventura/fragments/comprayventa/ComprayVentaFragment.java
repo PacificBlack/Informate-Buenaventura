@@ -77,7 +77,6 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
         refresh_comprayventa.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaComprayVenta.clear();
                 cargarWebService_ComprayVenta();
             }
         });
@@ -116,6 +115,8 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
         ComprayVenta comprayVenta = null;
         JSONArray json_comprayventa = response.optJSONArray("comprayventa");
 
+        listaComprayVenta.clear();
+
         try {
 
             for (int i = 0; i < json_comprayventa.length() ; i++) {
@@ -144,6 +145,8 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
             }
             adaptadorComprayVenta = new AdaptadorComprayVenta(listaComprayVenta);
             recyclerComprayventa.setAdapter(adaptadorComprayVenta);
+            adaptadorComprayVenta.notifyDataSetChanged();
+
             adaptadorComprayVenta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -76,7 +76,6 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
         refresh_clasificados.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaClasificados.clear();
                 cargarWebService_Clasificados();
             }
         });
@@ -117,6 +116,8 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
         Clasificados clasificados = null;
         JSONArray json_clasificados = response.optJSONArray("clasificados");
 
+        listaClasificados.clear();
+
         try {
 
             for (int i = 0; i < json_clasificados.length() ; i++) {
@@ -144,6 +145,8 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
              adaptadorC = new AdaptadorClasificados(listaClasificados);
             recyclerClasificados.setAdapter(adaptadorC);
+            adaptadorC.notifyDataSetChanged();
+
             adaptadorC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

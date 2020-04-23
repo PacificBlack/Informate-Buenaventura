@@ -73,7 +73,6 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
         refresh_ofertaservicios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaServicios.clear();
                 cargarWebService_Servicios();
             }
         });
@@ -114,6 +113,8 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
         OfertaServicios servicios  = null;
         JSONArray json_servicios = response.optJSONArray("servicios");
 
+        listaServicios.clear();
+
         try {
 
             for (int i = 0; i < json_servicios.length() ; i++) {
@@ -136,7 +137,7 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
             adaptadorServicios = new AdaptadorServicios(listaServicios);
             recyclerServicios.setAdapter(adaptadorServicios);
-
+            adaptadorServicios.notifyDataSetChanged();
 
         } catch (Exception e) {
             e.printStackTrace();

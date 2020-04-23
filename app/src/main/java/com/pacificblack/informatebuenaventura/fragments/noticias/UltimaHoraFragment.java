@@ -73,7 +73,6 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
         refresh_ultimahora.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaUltimaHora.clear();
                 cargarWebService_UltimaHora();
             }
         });
@@ -112,6 +111,9 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
     public void onResponse(JSONObject response) {
         UltimaHora ultimaHora = null;
         JSONArray json_ultimahora = response.optJSONArray("ultimahora");
+
+        listaUltimaHora.clear();
+
         try {
 
             for (int i = 0; i < json_ultimahora.length(); i++) {
@@ -133,6 +135,8 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
 
             adaptadorUltimaHora = new AdaptadorUltimaHora(listaUltimaHora);
             recyclerUltima.setAdapter(adaptadorUltimaHora);
+            adaptadorUltimaHora.notifyDataSetChanged();
+
 
         } catch (Exception e) {
             e.printStackTrace();

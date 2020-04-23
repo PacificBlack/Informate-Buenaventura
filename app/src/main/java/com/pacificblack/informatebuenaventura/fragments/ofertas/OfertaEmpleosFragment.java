@@ -70,7 +70,6 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
         refresh_ofertaempleos.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaEmpleos.clear();
                 cargarWebService_Empleos();
             }
         });
@@ -111,6 +110,8 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
         OfertaEmpleos empleos  = null;
         JSONArray json_empleos = response.optJSONArray("empleos");
 
+        listaEmpleos.clear();
+
         try {
 
             for (int i = 0; i < json_empleos.length() ; i++) {
@@ -133,6 +134,7 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
             adaptadorEmpleos = new AdaptadorEmpleos(listaEmpleos);
             recyclerEmpleos.setAdapter(adaptadorEmpleos);
+            adaptadorEmpleos.notifyDataSetChanged();
 
 
         } catch (Exception e) {

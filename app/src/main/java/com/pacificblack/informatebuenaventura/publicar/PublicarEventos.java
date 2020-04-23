@@ -250,9 +250,7 @@ public class PublicarEventos extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-
-                    Log.i("Error",response);
-
+                    cargando.cancelarprogress();
 
                 }
             }
@@ -276,18 +274,8 @@ public class PublicarEventos extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_eventos.getEditText().getText().toString().trim();
                 String lugarinput = lugar_publicar_eventos.getEditText().getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
-
-
                 Map<String,String> parametros = new HashMap<>();
+
                 parametros.put("titulo_eventos",tituloinput);
                 parametros.put("descripcionrow_eventos",descripcioncortainput);
                 parametros.put("vistas_eventos","0");

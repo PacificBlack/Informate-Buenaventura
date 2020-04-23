@@ -76,7 +76,6 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
         refresh_donaciones.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaDonaciones.clear();
                 cargarWebService_Donaciones();
             }
         });
@@ -117,6 +116,8 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
         Donaciones donacion = null;
         JSONArray json_donaciones = response.optJSONArray("donaciones");
 
+        listaDonaciones.clear();
+
         try {
             for (int i = 0; i < json_donaciones.length() ; i++) {
 
@@ -140,6 +141,7 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
             adapatadorDonaciones = new AdaptadorDonaciones(listaDonaciones);
             recyclerDonacion.setAdapter(adapatadorDonaciones);
+            adapatadorDonaciones.notifyDataSetChanged();
             adapatadorDonaciones.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

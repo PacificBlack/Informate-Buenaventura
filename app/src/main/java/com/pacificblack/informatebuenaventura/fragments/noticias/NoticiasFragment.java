@@ -74,7 +74,6 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         refresh_noticias.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaNoticias.clear();
                 cargarWebService_Noticias();
             }
         });
@@ -114,6 +113,8 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         Noticias noticias = null;
         JSONArray json_noticias = response.optJSONArray("noticias");
 
+        listaNoticias.clear();
+
         try {
 
             for (int i = 0; i < json_noticias.length() ; i++) {
@@ -141,6 +142,8 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
             }
             adaptadorNoticias = new AdaptadorNoticias(listaNoticias);
             recyclerNoticias.setAdapter(adaptadorNoticias);
+           adaptadorNoticias.notifyDataSetChanged();
+
             adaptadorNoticias.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -76,7 +76,6 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
         refresh_adopcion.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaAdopcion.clear();
                 cargarWebService_Adopcion();
             }
         });
@@ -122,6 +121,8 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
         JSONArray json_adopcion = response.optJSONArray("adopcion");
 
+        listaAdopcion.clear();
+
 
         try {
 
@@ -149,6 +150,7 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
              adaptador = new AdaptadorAdopcion(listaAdopcion);
             recyclerAdopcion.setAdapter(adaptador);
+            adaptador.notifyDataSetChanged();
 
             adaptador.setOnClickListener(new View.OnClickListener() {
                 @Override

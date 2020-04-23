@@ -72,7 +72,6 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
         refresh_directorios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listaDirectorios.clear();
                 cargarWebService_Directorios();
             }
         });
@@ -113,6 +112,8 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
         Directorio directorio = null;
         JSONArray json_directorio = response.optJSONArray("directorio");
 
+        listaDirectorios.clear();
+
         try {
             for (int i = 0; i < json_directorio.length() ; i++) {
 
@@ -134,6 +135,8 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
            adaptadorDirectorio  = new AdaptadorDirectorio(listaDirectorios);
             recyclerDirectorios.setAdapter(adaptadorDirectorio);
+            adaptadorDirectorio.notifyDataSetChanged();
+
 
         } catch (Exception e) {
             e.printStackTrace();

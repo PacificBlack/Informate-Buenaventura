@@ -86,8 +86,6 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
 
         }
 
-
-
     }
 
 
@@ -131,6 +129,8 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
 
         }
     };
+
+
 
     public class EventosHolder extends RecyclerView.ViewHolder {
 
