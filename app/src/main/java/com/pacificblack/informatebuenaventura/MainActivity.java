@@ -72,11 +72,7 @@ public class MainActivity extends AppCompatActivity   {
     AppBarLayout mostrar;
     Dialog dialog;
     StringRequest videeos;
-   public static String traer;
-
-
-
-
+    public static String traer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +80,11 @@ public class MainActivity extends AppCompatActivity   {
         setContentView(R.layout.activity_main);
         dialog = new Dialog(this);
 
+           //Todo: ----------------------------------------------------------------------------------
            cargarvideo();
-
-            RequestQueue request_encuestas_eliminar = Volley.newRequestQueue(getApplicationContext());
-            request_encuestas_eliminar.add(videeos);
-
-
+           RequestQueue request_encuestas_eliminar = Volley.newRequestQueue(getApplicationContext());
+           request_encuestas_eliminar.add(videeos);
+           //Todo: ----------------------------------------------------------------------------------
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
