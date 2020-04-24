@@ -202,22 +202,315 @@ public class PublicarAdopcion extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenes_adopcion.size() > 3){
+        else if (listaimagenes_adopcion.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran",Toast.LENGTH_LONG).show();
             return true;
         }
 
-        else if (listaimagenes_adopcion.size() < 3){
-            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_adopcion.size()+" imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
-            return false;
-
-        }
 
         else {
             return true;}
 
     }
 
+    public void Subirimagen_adopcion(){
+
+        listaBase64_adopcion.clear();
+        nombre.clear();
+        cadena.clear();
+
+        for (int i = 0; i < listaimagenes_adopcion.size(); i++){
+
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                nombre.add( "imagen_adopcion"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+
+            }catch (IOException e){
+
+            }
+
+        }
+
+        if (nombre.size() == 1){
+            cargarWebService_adopcion_uno();
+        }
+        if (nombre.size() == 2){
+            cargarWebService_adopcion_dos();
+        }
+        if (nombre.size() == 3){
+            cargarWebService_adopcion_tres();
+        }
+        if (nombre.size() == 4){
+            cargarWebService_adopcion();
+        }
+
+    }
+
+    private void cargarWebService_adopcion_uno() {
+
+        String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
+
+        stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        cargando.cancelarprogress();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_adopcion2","vacio");
+                parametros.put("imagen_adopcion3","vacio");
+                parametros.put("imagen_adopcion4","vacio");
+
+
+                Log.i("Lo que se sube",parametros.toString());
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        request_adopcion.add(stringRequest_adopcion);
+
+    }
+    private void cargarWebService_adopcion_dos() {
+
+        String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
+
+        stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        cargando.cancelarprogress();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_adopcion3","vacio");
+                parametros.put("imagen_adopcion4","vacio");
+
+
+                Log.i("Lo que se sube",parametros.toString());
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        request_adopcion.add(stringRequest_adopcion);
+
+    }
+    private void cargarWebService_adopcion_tres() {
+
+        String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
+
+        stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion.isLoaded()) {
+                                        anuncioAdopcion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    cargando.cancelarprogress();
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        cargando.cancelarprogress();
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put("imagen_adopcion4","vacio");
+
+
+                Log.i("Lo que se sube",parametros.toString());
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        request_adopcion.add(stringRequest_adopcion);
+
+    }
     private void cargarWebService_adopcion() {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
@@ -288,17 +581,19 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
                 parametros.put("descripcion2_adopcion",descripcion2input);
-                parametros.put("imagen_adopcion0",cadena.get(0));
-                parametros.put("imagen_adopcion1",cadena.get(1));
-                parametros.put("imagen_adopcion2",cadena.get(2));
-                parametros.put("imagen_adopcion3",cadena.get(3));
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put(nombre.get(3),cadena.get(3));
+
 
                 //for (int h = 0; h<nombre.size();h++){
-                  //  parametros.put(nombre.get(h),cadena.get(h));
+                // parametros.put(nombre.get(h),cadena.get(h));
                 //}
 
+                Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
         };
@@ -306,29 +601,6 @@ public class PublicarAdopcion extends AppCompatActivity {
         RequestQueue request_adopcion = Volley.newRequestQueue(this);
         request_adopcion.add(stringRequest_adopcion);
 
-    }
-    public void Subirimagen_adopcion(){
-
-        listaBase64_adopcion.clear();
-        nombre.clear();
-        cadena.clear();
-
-        for (int i = 0; i < listaimagenes_adopcion.size(); i++){
-
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-                nombre.add( "imagen_adopcion"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-
-            }catch (IOException e){
-
-            }
-
-        }
-        cargarWebService_adopcion();
     }
 
     public String convertirUriEnBase64(Bitmap bmp){
@@ -383,7 +655,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion.add(imagenesadopcionUri);
             }else {
-                for (int i = 0; i< 1; i++){
+                for (int i = 0; i< 3; i++){
                     listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
                 }
             }

@@ -222,15 +222,9 @@ public class PublicarFunebres extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenes_funebres.size() > 3){
+        else if (listaimagenes_funebres.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 3 imagenes",Toast.LENGTH_LONG).show();
             return true;
-        }
-
-        else if (listaimagenes_funebres.size() < 3){
-            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_funebres.size()+"imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return false;
-
         }
 
         else {
@@ -238,9 +232,216 @@ public class PublicarFunebres extends AppCompatActivity {
 
     }
 
+    public void Subirimagen_funebres(){
 
-    //TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
 
+        listaBase64_funebres.clear();
+        nombre.clear();
+        cadena.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
+        for (int i = 0; i < listaimagenes_funebres.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_funebres.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                nombre.add( "imagen_funebres"+i);
+
+                cadena.add(convertirUriEnBase64(bitmap));
+
+                bitmap.recycle();
+
+
+            }catch (IOException e){
+
+            }
+
+        }
+
+        if (nombre.size() == 1){cargarWebService_funebres_uno();}
+        if (nombre.size()== 2){cargarWebService_funebres_dos();}
+        if (nombre.size() == 3 ){cargarWebService_funebres();}
+
+
+    }
+
+    private void cargarWebService_funebres_uno() {
+
+        String url_funebres = DireccionServidor+"wsnJSONRegistroFunebres.php?";
+
+
+        stringRequest_funebres= new StringRequest(Request.Method.POST, url_funebres, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String resul = "Registrada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()) {
+
+                    cargando.cancelarprogress();
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarFunebres.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciofunebres.isLoaded()) {
+                                        anunciofunebres.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+                    cargando.cancelarprogress();
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_funebres.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_funebres.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_funebres.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_funebres.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("titulo_funebres",tituloinput);
+                parametros.put("descripcionrow_funebres",descripcioncortainput);
+                parametros.put("vistas_funebres","0");
+                parametros.put("descripcion1_funebres",descripcion1input);
+                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Funebres");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_funebres1","vacio");
+                parametros.put("imagen_funebres2","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_funebres = Volley.newRequestQueue(this);
+        request_funebres.add(stringRequest_funebres);
+
+    }
+    private void cargarWebService_funebres_dos() {
+
+        String url_funebres = DireccionServidor+"wsnJSONRegistroFunebres.php?";
+
+
+        stringRequest_funebres= new StringRequest(Request.Method.POST, url_funebres, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String resul = "Registrada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()) {
+
+                    cargando.cancelarprogress();
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarFunebres.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciofunebres.isLoaded()) {
+                                        anunciofunebres.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+                    cargando.cancelarprogress();
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_funebres.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_funebres.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_funebres.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_funebres.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("titulo_funebres",tituloinput);
+                parametros.put("descripcionrow_funebres",descripcioncortainput);
+                parametros.put("vistas_funebres","0");
+                parametros.put("descripcion1_funebres",descripcion1input);
+                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Funebres");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_funebres2","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_funebres = Volley.newRequestQueue(this);
+        request_funebres.add(stringRequest_funebres);
+
+    }
     private void cargarWebService_funebres() {
 
         String url_funebres = DireccionServidor+"wsnJSONRegistroFunebres.php?";
@@ -309,17 +510,6 @@ public class PublicarFunebres extends AppCompatActivity {
                 String descripcion1input = descripcion1_publicar_funebres.getEditText().getText().toString().trim();
                 String descripcion2input = descripcion2_publicar_funebres.getEditText().getText().toString().trim();
 
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    Log.i("Mostrar name------------------------------------------------------------------",nombre.get(h));
-
-                    Log.i("Mostrar**********************************************************************",cadena.get(h));
-
-                }
-
-
-
                 Map<String,String> parametros = new HashMap<>();
                 parametros.put("titulo_funebres",tituloinput);
                 parametros.put("descripcionrow_funebres",descripcioncortainput);
@@ -328,14 +518,9 @@ public class PublicarFunebres extends AppCompatActivity {
                 parametros.put("descripcion2_funebres",descripcion2input);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Funebres");
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
-
-
-
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
 
                 return parametros;
             }
@@ -345,37 +530,8 @@ public class PublicarFunebres extends AppCompatActivity {
         request_funebres.add(stringRequest_funebres);
 
     }
-    public void Subirimagen_funebres(){
 
 
-        listaBase64_funebres.clear();
-        nombre.clear();
-        cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
-        for (int i = 0; i < listaimagenes_funebres.size(); i++){
-
-            try {
-
-                InputStream is = getContentResolver().openInputStream(listaimagenes_funebres.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-//Solucionar para poder guardar
-
-                nombre.add( "imagen_funebres"+i);
-
-                cadena.add(convertirUriEnBase64(bitmap));
-
-                bitmap.recycle();
-
-
-            }catch (IOException e){
-
-            }
-
-        }
-        cargarWebService_funebres();
-
-    }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
@@ -415,7 +571,6 @@ public class PublicarFunebres extends AppCompatActivity {
 
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -442,8 +597,4 @@ public class PublicarFunebres extends AppCompatActivity {
 
 
     }
-
-
-
-
 }

@@ -212,15 +212,9 @@ public class PublicarDonaciones extends AppCompatActivity{
             return false;
         }
 
-        else if (listaimagenes_donaciones.size() > 2){
+        else if (listaimagenes_donaciones.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
             return true;
-        }
-
-        else if (listaimagenes_donaciones.size() < 2){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_donaciones.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return false;
-
         }
 
         else {
@@ -228,7 +222,33 @@ public class PublicarDonaciones extends AppCompatActivity{
 
     }
 
-    private void cargarWebService_donaciones() {
+    public void Subirimagen_donaciones(){
+
+        listaBase64_donaciones.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenes_donaciones.size(); i++){
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenes_donaciones.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                nombre.add("imagen_donaciones" + i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+            }catch (IOException e){
+
+            }
+        }
+
+        if (nombre.size() == 1){
+            cargarWebService_donaciones_uno();
+        }
+        if (nombre.size() == 2){
+            cargarWebService_donaciones();
+        }
+
+    }
+
+    private void cargarWebService_donaciones_uno() {
 
         String url_donaciones = DireccionServidor+"wsnJSONRegistroDonaciones.php?";
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -248,16 +268,16 @@ public class PublicarDonaciones extends AppCompatActivity{
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                            if (anuncioDonaciones.isLoaded()) {
-                                anuncioDonaciones.show();
-                            } else {
-                                Log.d("TAG", "The interstitial wasn't loaded yet.");
-                            }
-                        }
-                    });
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                    if (anuncioDonaciones.isLoaded()) {
+                                        anuncioDonaciones.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
 
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Recuerda");
@@ -300,11 +320,9 @@ public class PublicarDonaciones extends AppCompatActivity{
                 parametros.put("meta_donaciones",metainput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_donaciones1","vacio");
 
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
 
                 return parametros;
             }
@@ -314,24 +332,91 @@ public class PublicarDonaciones extends AppCompatActivity{
         request_funebres.add(stringRequest_donaciones);
 
     }
-    public void Subirimagen_donaciones(){
+    private void cargarWebService_donaciones() {
 
-        listaBase64_donaciones.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenes_donaciones.size(); i++){
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_donaciones.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                nombre.add("imagen_donaciones" + i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-            }catch (IOException e){
+        String url_donaciones = DireccionServidor+"wsnJSONRegistroDonaciones.php?";
+        stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDonaciones.this);
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                    if (anuncioDonaciones.isLoaded()) {
+                                        anuncioDonaciones.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    cargando.cancelarprogress();
+
+                }
             }
-        }
-        cargarWebService_donaciones();
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_donaciones.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_donaciones.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_donaciones.getEditText().getText().toString().trim();
+                String metainput = meta_publicar_donaciones.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_donaciones",tituloinput);
+                parametros.put("descripcionrow_donaciones",descripcioncortainput);
+                parametros.put("vistas_donaciones","0");
+                parametros.put("descripcion1_donaciones",descripcion1input);
+                parametros.put("meta_donaciones",metainput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Donaciones");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_funebres = Volley.newRequestQueue(this);
+        request_funebres.add(stringRequest_donaciones);
+
     }
+
+
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);

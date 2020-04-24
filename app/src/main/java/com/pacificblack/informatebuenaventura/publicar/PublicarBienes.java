@@ -231,15 +231,9 @@ public class PublicarBienes extends AppCompatActivity  {
             return false;
         }
 
-        else if (listaimagenes_bienes.size() > 4){
+        else if (listaimagenes_bienes.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
             return true;
-        }
-
-        else if (listaimagenes_bienes.size() < 4){
-            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_bienes.size()+"imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
-            return false;
-
         }
 
         else {
@@ -247,6 +241,319 @@ public class PublicarBienes extends AppCompatActivity  {
 
     }
 
+    public void Subirimagen_bienes(){
+
+        listaBase64_bienes.clear();
+        nombre.clear();
+        cadena.clear();
+        //Tratar de solucionar el borrado de los arreglos de envio
+        for (int i = 0; i < listaimagenes_bienes.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                nombre.add("imagen_bienes"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+
+            }catch (IOException e){
+            }
+        }
+        if (nombre.size() == 1){
+            cargarWebService_bienes_1();
+        }
+        if (nombre.size() == 2){
+            cargarWebService_bienes_2();
+        }
+        if (nombre.size() == 3){
+            cargarWebService_bienes_3();
+        }
+        if (nombre.size() == 4){
+            cargarWebService_bienes();
+        }
+    }
+
+    private void cargarWebService_bienes_1() {
+
+        String url_bienes = DireccionServidor+"wsnJSONRegistroBienes.php?";
+
+
+        stringRequest_bienes= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_bienes1","vacio");
+                parametros.put("imagen_bienes2","vacio");
+                parametros.put("imagen_bienes3","vacio");
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes = Volley.newRequestQueue(this);
+        request_bienes.add(stringRequest_bienes);
+
+    }
+    private void cargarWebService_bienes_2() {
+
+        String url_bienes = DireccionServidor+"wsnJSONRegistroBienes.php?";
+
+
+        stringRequest_bienes= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_bienes2","vacio");
+                parametros.put("imagen_bienes3","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes = Volley.newRequestQueue(this);
+        request_bienes.add(stringRequest_bienes);
+
+    }
+    private void cargarWebService_bienes_3() {
+
+        String url_bienes = DireccionServidor+"wsnJSONRegistroBienes.php?";
+
+
+        stringRequest_bienes= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put("imagen_bienes3","vacio");
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes = Volley.newRequestQueue(this);
+        request_bienes.add(stringRequest_bienes);
+
+    }
     private void cargarWebService_bienes() {
 
         String url_bienes = DireccionServidor+"wsnJSONRegistroBienes.php?";
@@ -327,11 +634,10 @@ public class PublicarBienes extends AppCompatActivity  {
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Bienes");
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put(nombre.get(3),cadena.get(3));
 
                 return parametros;
             }
@@ -341,29 +647,8 @@ public class PublicarBienes extends AppCompatActivity  {
         request_bienes.add(stringRequest_bienes);
 
     }
-    public void Subirimagen_bienes(){
 
-        listaBase64_bienes.clear();
-        nombre.clear();
-        cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
-        for (int i = 0; i < listaimagenes_bienes.size(); i++){
 
-            try {
-
-                InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-                nombre.add("imagen_bienes"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-
-            }catch (IOException e){
-            }
-        }
-        cargarWebService_bienes();
-
-    }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
@@ -414,7 +699,7 @@ public class PublicarBienes extends AppCompatActivity  {
                 imagenesbienesUri = data.getData();
                 listaimagenes_bienes.add(imagenesbienesUri);
             }else {
-                for (int i = 0; i< 4; i++){
+                for (int i = 0; i< 3; i++){
                     listaimagenes_bienes.add(clipData.getItemAt(i).getUri());
                 }
             }

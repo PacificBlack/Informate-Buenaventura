@@ -214,9 +214,6 @@ public class PublicarEmpleos extends AppCompatActivity {
 
     }
 
-
-//TODO: De aquí para abajo va todo lo que tiene que ver con la subidad de datos a la BD De la seccion desaparecidos
-
     private void cargarWebService_empleos() {
 
         String url_empleos = DireccionServidor+"wsnJSONRegistroEmpleos.php?";
@@ -316,7 +313,6 @@ public class PublicarEmpleos extends AppCompatActivity {
         listaBase64_empleos.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
         for (int i = 0; i < listaimagenes_empleos.size(); i++){
 
             try {
@@ -324,7 +320,6 @@ public class PublicarEmpleos extends AppCompatActivity {
                 InputStream is = getContentResolver().openInputStream(listaimagenes_empleos.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
 
-//Solucionar para poder guardar
 
                 nombre.add( "imagen_empleos"+i);
 

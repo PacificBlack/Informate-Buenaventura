@@ -235,15 +235,9 @@ public class PublicarClasificados extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenesclasificados.size() > 4){
+        else if (listaimagenesclasificados.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
             return true;
-        }
-
-        else if (listaimagenesclasificados.size() < 4){
-            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenesclasificados.size()+"imagenes, pero deben ser 4",Toast.LENGTH_LONG).show();
-            return false;
-
         }
 
         else {
@@ -251,6 +245,319 @@ public class PublicarClasificados extends AppCompatActivity {
 
     }
 
+    public void Subirimagen_clasificados(){
+
+
+        listaBase64clasificados.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenesclasificados.size(); i++){
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenesclasificados.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                nombre.add( "imagen_clasificados"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+
+            }catch (IOException e){
+
+            }
+        }
+
+        if (nombre.size() == 1){
+            cargarWebService_clasificados_uno();
+        }
+        if (nombre.size() == 2){
+            cargarWebService_clasificados_dos();
+        }
+        if (nombre.size() == 3){
+            cargarWebService_clasificados_tres();
+        }
+        if (nombre.size() == 4){
+            cargarWebService_clasificados();
+        }
+
+    }
+
+    private void cargarWebService_clasificados_uno() {
+
+        String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
+
+
+        stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioClasificados.isLoaded()) {
+                                        anuncioClasificados.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
+                String videoinput = video_clasificados.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_clasificados",tituloinput);
+                parametros.put("descripcionrow_clasificados",descripcioncortainput);
+                parametros.put("video_clasificados",videoinput);
+                parametros.put("vistas_clasificados","0");
+                parametros.put("descripcion1_clasificados",descripcion1input);
+                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Clasificados");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_clasificados1","vacio");
+                parametros.put("imagen_clasificados2","vacio");
+                parametros.put("imagen_clasificados3","vacio");
+
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        request_clasificados.add(stringRequestclasificados);
+
+    }
+    private void cargarWebService_clasificados_dos() {
+
+        String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
+
+
+        stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioClasificados.isLoaded()) {
+                                        anuncioClasificados.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
+                String videoinput = video_clasificados.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_clasificados",tituloinput);
+                parametros.put("descripcionrow_clasificados",descripcioncortainput);
+                parametros.put("video_clasificados",videoinput);
+                parametros.put("vistas_clasificados","0");
+                parametros.put("descripcion1_clasificados",descripcion1input);
+                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Clasificados");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_clasificados2","vacio");
+                parametros.put("imagen_clasificados3","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        request_clasificados.add(stringRequestclasificados);
+
+    }
+    private void cargarWebService_clasificados_tres() {
+
+        String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
+
+
+        stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioClasificados.isLoaded()) {
+                                        anuncioClasificados.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
+                String videoinput = video_clasificados.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_clasificados",tituloinput);
+                parametros.put("descripcionrow_clasificados",descripcioncortainput);
+                parametros.put("video_clasificados",videoinput);
+                parametros.put("vistas_clasificados","0");
+                parametros.put("descripcion1_clasificados",descripcion1input);
+                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Clasificados");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put("imagen_clasificados3","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        request_clasificados.add(stringRequestclasificados);
+
+    }
     private void cargarWebService_clasificados() {
 
         String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
@@ -330,11 +637,10 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put("descripcion2_clasificados",descripcion2input);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Clasificados");
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put(nombre.get(3),cadena.get(3));
 
                 return parametros;
             }
@@ -344,28 +650,8 @@ public class PublicarClasificados extends AppCompatActivity {
         request_clasificados.add(stringRequestclasificados);
 
     }
-    public void Subirimagen_clasificados(){
 
 
-        listaBase64clasificados.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenesclasificados.size(); i++){
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenesclasificados.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-                nombre.add( "imagen_clasificados"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-
-            }catch (IOException e){
-
-            }
-        }
-        cargarWebService_clasificados();
-
-    }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);

@@ -345,15 +345,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenes_desaparicion.size() > 3){
+        else if (listaimagenes_desaparicion.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 3 imagenes",Toast.LENGTH_LONG).show();
             return true;
-        }
-
-        else if (listaimagenes_desaparicion.size() < 3){
-            Toast.makeText(getApplicationContext(),"Has agregado"+listaimagenes_desaparicion.size()+"imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return false;
-
         }
 
         else {
@@ -361,6 +355,325 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
     }
 
+    public void Subirimagen_desaparicion(){
+
+
+        listaBase64_desaparicion.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenes_desaparicion.size(); i++){
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenes_desaparicion.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                nombre.add("imagen_desaparecidos" + i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+            }catch (IOException e){
+
+            }
+        }
+
+        if (nombre.size() == 1){
+            cargarWebService_desaparicion_uno();
+        }
+        if (nombre.size() == 2){
+            cargarWebService_desaparicion_dos();
+        }
+        if (nombre.size() == 3){
+            cargarWebService_desaparicion_tres();
+        }
+        if (nombre.size() == 4){
+            cargarWebService_desaparicion();
+        }
+
+    }
+
+    private void cargarWebService_desaparicion_uno() {
+
+        String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+
+        stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioActualizardesaparicion.isLoaded()) {
+                                        anuncioActualizardesaparicion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
+                String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
+                String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
+                String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_desaparecidos",tituloinput);
+                parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
+                parametros.put("recompensa_desaparecidos",recompensainput);
+                parametros.put("vistas_desaparecidos","0");
+                parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
+                parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
+                parametros.put("descripcion1_desaparecidos",descripcion1input);
+                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("que_desaparecidos",queseperdioinput);
+                parametros.put("estado_desaparecidos",estadoinput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Desaparicion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_desaparecidos1","vacio");
+                parametros.put("imagen_desaparecidos2","vacio");
+                parametros.put("imagen_desaparecidos3","vacio");
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        request_desaparicion.add(stringRequest_desaparicion);
+
+    }
+    private void cargarWebService_desaparicion_dos() {
+
+        String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+
+        stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioActualizardesaparicion.isLoaded()) {
+                                        anuncioActualizardesaparicion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
+                String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
+                String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
+                String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_desaparecidos",tituloinput);
+                parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
+                parametros.put("recompensa_desaparecidos",recompensainput);
+                parametros.put("vistas_desaparecidos","0");
+                parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
+                parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
+                parametros.put("descripcion1_desaparecidos",descripcion1input);
+                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("que_desaparecidos",queseperdioinput);
+                parametros.put("estado_desaparecidos",estadoinput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Desaparicion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_desaparecidos2","vacio");
+                parametros.put("imagen_desaparecidos3","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        request_desaparicion.add(stringRequest_desaparicion);
+
+    }
+    private void cargarWebService_desaparicion_tres() {
+
+        String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+
+        stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {String resul = "Registrado exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    cargando.cancelarprogress();
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioActualizardesaparicion.isLoaded()) {
+                                        anuncioActualizardesaparicion.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Registrado exitosamente");
+                    titulo.show();
+
+                    Log.i("Muestra",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+                    Log.i("SA",response.toString());
+                    cargando.cancelarprogress();
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        cargando.cancelarprogress();
+
+                    }
+                }){
+            @SuppressLint("LongLogTag")
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
+                String recompensainput = recompensa_publicar_desaparicion.getEditText().getText().toString().trim();
+                String ultimolugarinput = ultimolugar_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_publicar_desaparicion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_publicar_desaparicion.getEditText().getText().toString().trim();
+                String queseperdioinput = queseperdio_publicar_desaparicion.getText().toString().trim();
+                String estadoinput = estado_publicar_desaparicion.getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_desaparecidos",tituloinput);
+                parametros.put("descripcionrow_desaparecidos",descripcioncortainput);
+                parametros.put("recompensa_desaparecidos",recompensainput);
+                parametros.put("vistas_desaparecidos","0");
+                parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
+                parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
+                parametros.put("descripcion1_desaparecidos",descripcion1input);
+                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("que_desaparecidos",queseperdioinput);
+                parametros.put("estado_desaparecidos",estadoinput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Desaparicion");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put("imagen_desaparecidos3","vacio");
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        request_desaparicion.add(stringRequest_desaparicion);
+
+    }
     private void cargarWebService_desaparicion() {
 
         String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
@@ -443,11 +756,10 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Desaparicion");
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put(nombre.get(3),cadena.get(3));
 
                 return parametros;
             }
@@ -457,25 +769,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
         request_desaparicion.add(stringRequest_desaparicion);
 
     }
-    public void Subirimagen_desaparicion(){
 
 
-        listaBase64_desaparicion.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenes_desaparicion.size(); i++){
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_desaparicion.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                nombre.add("imagen_desaparecidos" + i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-            }catch (IOException e){
-
-            }
-        }
-        cargarWebService_desaparicion();
-    }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
