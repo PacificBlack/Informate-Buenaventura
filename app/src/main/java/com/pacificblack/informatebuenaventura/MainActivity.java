@@ -1,10 +1,6 @@
 package com.pacificblack.informatebuenaventura;
 
 import android.app.Dialog;
-import android.app.FragmentTransaction;
-import android.app.SearchManager;
-import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,15 +8,11 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -31,9 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarAdopcion;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarArticulo;
@@ -73,8 +63,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
-import android.widget.ImageButton;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
@@ -83,6 +71,10 @@ public class MainActivity extends AppCompatActivity   {
     private AppBarConfiguration mAppBarConfiguration;
     AppBarLayout mostrar;
     Dialog dialog;
+    StringRequest videeos;
+   public static String traer;
+
+
 
 
 
@@ -91,6 +83,13 @@ public class MainActivity extends AppCompatActivity   {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dialog = new Dialog(this);
+
+           cargarvideo();
+
+            RequestQueue request_encuestas_eliminar = Volley.newRequestQueue(getApplicationContext());
+            request_encuestas_eliminar.add(videeos);
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -120,17 +119,35 @@ public class MainActivity extends AppCompatActivity   {
             }
         });
 
-
     }
 
+    private void cargarvideo() {
+
+        String url_videos = DireccionServidor+"wsnJSONLlenarVideos.php?";
+
+        videeos = new StringRequest(Request.Method.POST, url_videos, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Video traido ", response);
+                traer = response;
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("No actualizo","Vista Negativa");
+
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

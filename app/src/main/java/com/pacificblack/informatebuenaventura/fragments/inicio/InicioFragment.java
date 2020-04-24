@@ -27,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.pacificblack.informatebuenaventura.MainActivity;
 import com.pacificblack.informatebuenaventura.R;
 
 import org.json.JSONArray;
@@ -44,23 +45,17 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 public class InicioFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     String API_KEY = "AIzaSyCjplldkmscSZfu1yMY7eJr4xiSjuAbZgo";
-    String videotraido;
 
     RecyclerView recyclerInicio;
     ArrayList<Inicio> listaInicio;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-    StringRequest videeos;
-
     private SwipeRefreshLayout refresh_inicio;
-
     AdaptadorInicio adaptadorInicio;
 
     public InicioFragment() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,30 +63,6 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
         View vista = inflater.inflate(R.layout.fragment_inicio, container, false);
 
-        cargarvideo();
-
-        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.youtube_layout, youTubePlayerFragment).commit();
-
-        youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
-
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                if (!wasRestored) {
-                    player.cueVideo("OGkss7DFrMs");
-                }
-            }
-
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
-                // YouTube error
-                String errorMessage = error.toString();
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                Log.d("errorMessage:", errorMessage);
-            }
-        });
 
         listaInicio = new ArrayList<>();
         recyclerInicio = vista.findViewById(R.id.recycler_inicio);
@@ -115,29 +86,7 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
     }
 
 
-    private void cargarvideo() {
-        String url_videos = DireccionServidor+"wsnJSONLlenarVideos.php?";
 
-        videeos = new StringRequest(Request.Method.POST, url_videos, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                videotraido = response.toString();
-                Log.i("Video traido ", videotraido);
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("No actualizo","Vista Negativa");
-
-            }
-        });
-
-        RequestQueue request_encuestas_eliminar = Volley.newRequestQueue(getContext());
-        request_encuestas_eliminar.add(videeos);
-
-    }
 
 
     private void cargarWebService_Inicio() {
@@ -172,6 +121,29 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
         JSONArray json_Inicio = response.optJSONArray("inicio");
 
         listaInicio.clear();
+
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.youtube_layout, youTubePlayerFragment).commit();
+
+        youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    player.cueVideo(MainActivity.traer);
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                // YouTube error
+                String errorMessage = error.toString();
+                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                Log.d("errorMessage:", errorMessage);
+            }
+        });
 
 
         try {
