@@ -521,15 +521,14 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imageneseventosUri = data.getData();
                 listaimagenes_eventos.add(imageneseventosUri);
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_eventos.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_eventos.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
@@ -543,7 +542,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         eventos.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
             eventos.show();
-        } if(Mostrar.equals("Ver")){
+        } if(Mostrar.equals("Ocultar")){
             eventos.hide();
         }
     }

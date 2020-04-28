@@ -866,15 +866,14 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion_actualizar.add(imagenesadopcionUri);
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_adopcion_actualizar.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_adopcion_actualizar.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }

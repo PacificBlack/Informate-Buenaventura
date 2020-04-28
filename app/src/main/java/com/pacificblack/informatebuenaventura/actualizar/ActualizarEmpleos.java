@@ -528,15 +528,14 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenesempleosUri = data.getData();
                 listaimagenes_empleos.add(imagenesempleosUri);
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_empleos.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_empleos.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
@@ -551,7 +550,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         empleos.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
             empleos.show();
-        } if(Mostrar.equals("Ver")){
+        } if(Mostrar.equals("Ocultar")){
             empleos.hide();
         }
     }

@@ -621,18 +621,17 @@ public class PublicarAdopcion extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion.add(imagenesadopcionUri);
             }
 
             else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_adopcion.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
@@ -648,7 +647,7 @@ public class PublicarAdopcion extends AppCompatActivity {
         adopcion.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
             adopcion.show();
-        } if(Mostrar.equals("Ver")){
+        } if(Mostrar.equals("Ocultar")){
             adopcion.hide();
         }
     }

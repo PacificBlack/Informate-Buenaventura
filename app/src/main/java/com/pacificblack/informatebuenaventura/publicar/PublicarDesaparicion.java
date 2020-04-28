@@ -763,15 +763,14 @@ public class PublicarDesaparicion extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenesdesaparicionUri = data.getData();
                 listaimagenes_desaparicion.add(imagenesdesaparicionUri);
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_desaparicion.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_desaparicion.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }

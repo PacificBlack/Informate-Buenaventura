@@ -735,15 +735,14 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenesfunebresUri = data.getData();
                 listaimagenes_funebres.add(imagenesfunebresUri);
             }else {
                 for (int i = 0; i< 3; i++){
-                    listaimagenes_funebres.add(clipData.getItemAt(i).getUri());
+                    listaimagenes_funebres.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
@@ -757,7 +756,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         funebres.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
             funebres.show();
-        } if(Mostrar.equals("Ver")){
+        } if(Mostrar.equals("Ocultar")){
             funebres.hide();
         }
     }

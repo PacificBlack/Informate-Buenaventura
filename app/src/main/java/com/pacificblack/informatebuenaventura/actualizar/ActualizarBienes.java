@@ -953,15 +953,14 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenesbienesUri = data.getData();
                 listaimagenes_bienes.add(imagenesbienesUri);
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_bienes.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_bienes.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
@@ -975,7 +974,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         bienes.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
             bienes.show();
-        } if(Mostrar.equals("Ver")){
+        } if(Mostrar.equals("Ocultar")){
             bienes.hide();
         }
     }

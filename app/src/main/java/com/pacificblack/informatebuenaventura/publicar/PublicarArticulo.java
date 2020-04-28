@@ -617,16 +617,15 @@ public class PublicarArticulo extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            if (clipData == null){
+            if (data.getClipData() == null){
                 imagenescomprayventaUri = data.getData();
                 listaimagenes_comprayventa.add(imagenescomprayventaUri);
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_comprayventa.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+                    listaimagenes_comprayventa.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
 
@@ -642,7 +641,7 @@ public class PublicarArticulo extends AppCompatActivity {
         articulo.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
             articulo.show();
-        } if(Mostrar.equals("Ver")){
+        } if(Mostrar.equals("Ocultar")){
             articulo.hide();
         }
     }

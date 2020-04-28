@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -307,15 +309,16 @@ public class PublicarEventos extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        ClipData clipData = data.getClipData();
 
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            if (clipData == null){
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE ){
+            if (data.getClipData() == null){
                 imageneseventosUri = data.getData();
                 listaimagenes_eventos.add(imageneseventosUri);
+
             }else {
-                for (int i = 0; i< clipData.getItemCount(); i++){
-                    listaimagenes_eventos.add(clipData.getItemAt(i).getUri());
+                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+
+                    listaimagenes_eventos.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
