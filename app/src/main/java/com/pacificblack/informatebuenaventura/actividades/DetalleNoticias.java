@@ -184,7 +184,7 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
                             Log.i("No actualizo","Vista Negativa");
                         }
                     }){
-                @SuppressLint("LongLogTag")
+
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 

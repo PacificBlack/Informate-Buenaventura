@@ -4,18 +4,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,7 +28,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaServicios;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -40,6 +39,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -56,8 +56,9 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
     StringRequest stringRequest_servicios;
     ImageView imagen1_eliminar_servicios;
     private InterstitialAd anuncioservicios;
+    private ProgressDialog servicios;
 
-    Cargando cargando = new Cargando(EliminarServicios.this);
+
 
 
     @Override
@@ -88,7 +89,7 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_servicios();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -107,7 +108,7 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
 
                 if (!validarid()){return;}
                 cargarBusqueda_servicios();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -149,7 +150,7 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
     @Override
@@ -183,7 +184,7 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_servicios);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -201,17 +202,13 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarServicios.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                     finish();
                                     if (anuncioservicios.isLoaded()) {
                                         anuncioservicios.show();
@@ -220,18 +217,14 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                                     }
                                 }
                             });
-
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Recuerda");
                     titulo.show();
-
                     Log.i("Funciona : ",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
@@ -240,31 +233,32 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
                 String idinput = id_eliminar_servicios.getEditText().getText().toString().trim();
-
                 Map<String,String> parametros = new HashMap<>();
-
                 parametros.put("id_ofertaservicios",idinput);
                 parametros.put("publicacion","Servicios");
-
                 return parametros;
             }
         };
-
         RequestQueue request_servicios = Volley.newRequestQueue(this);
+        stringRequest_servicios.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_servicios.add(stringRequest_servicios);
-
     }
 
-
-
-
+    private void CargandoSubida(String Mostrar){
+        servicios=new ProgressDialog(this);
+        servicios.setMessage("Subiendo su Empleos");
+        servicios.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        servicios.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            servicios.show();
+        }if(Mostrar.equals("Ocultar")){
+            servicios.hide();
+        }
+    }
 }

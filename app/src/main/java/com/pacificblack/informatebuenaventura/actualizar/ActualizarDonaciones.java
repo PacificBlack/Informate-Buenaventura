@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,7 +42,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,12 +58,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class ActualizarDonaciones extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
@@ -87,7 +87,8 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
     JsonObjectRequest jsonObjectRequestBuscar;
     HorizontalScrollView imagenes_donaciones;
     ImageView imagen1_actualizar_donaciones,imagen2_actualizar_donaciones;
-    Cargando cargando = new Cargando(ActualizarDonaciones.this);
+    private ProgressDialog donaciones;
+
 
 
     @Override
@@ -122,14 +123,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                             .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
-                            imagenes_donaciones.setVisibility(View.GONE);
-
-                            if (listaimagenes_donaciones.size() == 2){
                                 Subirimagen_donaciones_update();
-                                cargando.iniciarprogress();
-
-                            }
 
                         }
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
@@ -137,7 +131,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                         public void onClick(DialogInterface dialog, int which) {
 
                             cargarActualizarSinImagen_donaciones();
-                            cargando.iniciarprogress();
+                            CargandoSubida("Ver");
 
 
                         }
@@ -163,7 +157,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
                 if (!validarid()){return;}
                 cargarBusqueda_donaciones();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -225,7 +219,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -269,10 +263,39 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 .error(R.drawable.imagennodisponible)
                 .into(imagen2_actualizar_donaciones);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
 
     }
+
+    public void Subirimagen_donaciones_update(){
+        listaBase64_donaciones.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenes_donaciones.size(); i++){
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenes_donaciones.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                nombre.add( "imagen_donaciones"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+            }catch (IOException e){
+            }
+
+        }
+        if (nombre.size() == 1){
+            cargarActualizarConImagen_donaciones_uno();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 2){
+            cargarActualizarConImagen_donaciones();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size()>2){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 2 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     private void cargarActualizarSinImagen_donaciones() {
         String url_donaciones = DireccionServidor+"wsnJSONActualizarSinImageneDonaciones.php?";
@@ -287,7 +310,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDonaciones.this);
 
@@ -315,7 +338,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -326,11 +349,11 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -355,12 +378,12 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 return parametros;
             }
         };
-
         RequestQueue request_donaciones_actualizar = Volley.newRequestQueue(this);
+        stringRequest_donaciones.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_donaciones_actualizar.add(stringRequest_donaciones);
 
     }
-    private void cargarActualizarConImagen_donaciones() {
+    private void cargarActualizarConImagen_donaciones_uno() {
 
         String url_donaciones = DireccionServidor+"wsnJSONActualizarConImagenDonaciones.php?";
         stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -373,7 +396,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDonaciones.this);
 
@@ -401,7 +424,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -411,11 +434,11 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -432,8 +455,8 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 parametros.put("descripcionrow_donaciones",descripcioncortainput);
                 parametros.put("vistas_donaciones","0");
                 parametros.put("descripcion1_donaciones",descripcion1input);
-                parametros.put("imagen_donaciones0",cadena.get(0));
-                parametros.put("imagen_donaciones1",cadena.get(1));
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_donaciones1","vacio");
                 parametros.put("meta_donaciones",metainput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
@@ -445,8 +468,96 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         };
 
         RequestQueue request_donaciones_actualizar = Volley.newRequestQueue(this);
+        stringRequest_donaciones.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_donaciones_actualizar.add(stringRequest_donaciones);
+    }
+    private void cargarActualizarConImagen_donaciones() {
 
+        String url_donaciones = DireccionServidor+"wsnJSONActualizarConImagenDonaciones.php?";
+        stringRequest_donaciones= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()){
+
+                    CargandoSubida("Ocultar");
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDonaciones.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioActualizarDonaciones.isLoaded()) {
+                                        anuncioActualizarDonaciones.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_actualizar_donaciones.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_donaciones.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_donaciones.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_donaciones.getEditText().getText().toString().trim();
+                String metainput = meta_actualizar_donaciones.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_donaciones",idinput);
+                parametros.put("titulo_donaciones",tituloinput);
+                parametros.put("descripcionrow_donaciones",descripcioncortainput);
+                parametros.put("vistas_donaciones","0");
+                parametros.put("descripcion1_donaciones",descripcion1input);
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("meta_donaciones",metainput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Donaciones");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_donaciones_actualizar = Volley.newRequestQueue(this);
+        stringRequest_donaciones.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_donaciones_actualizar.add(stringRequest_donaciones);
     }
 
     private boolean validartitulo(){
@@ -519,7 +630,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         }
 
     }
-      private boolean validarfotoupdate(){
+    private boolean validarfotoupdate(){
 
         if (listaimagenes_donaciones.size() == 0){
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
@@ -546,23 +657,6 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         }
     }
 
-    public void Subirimagen_donaciones_update(){
-        listaBase64_donaciones.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenes_donaciones.size(); i++){
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_donaciones.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                nombre.add( "imagen_donaciones"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-            }catch (IOException e){
-            }
-
-        }
-        cargarActualizarConImagen_donaciones();
-    }
 
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -575,30 +669,26 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
     public void seleccionarimagen() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 2 imagenes"),IMAGE_PICK_CODE);
 
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
 
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(ActualizarDonaciones.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
                 }
             }
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -610,12 +700,23 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 imagenesdonacionesUri = data.getData();
                 listaimagenes_donaciones.add(imagenesdonacionesUri);
             }else {
-                for (int i = 0; i< 2; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_donaciones.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
         baseAdapter = new GridViewAdapter(ActualizarDonaciones.this,listaimagenes_donaciones);
         gvImagenes_donaciones.setAdapter(baseAdapter);
+    }
+    private void CargandoSubida(String Mostrar){
+        donaciones=new ProgressDialog(this);
+        donaciones.setMessage("Subiendo su Empleos");
+        donaciones.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        donaciones.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            donaciones.show();
+        } if(Mostrar.equals("Ver")){
+            donaciones.hide();
+        }
     }
 }

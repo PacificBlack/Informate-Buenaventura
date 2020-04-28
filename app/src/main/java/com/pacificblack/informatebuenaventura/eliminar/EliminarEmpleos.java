@@ -4,17 +4,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +28,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaEmpleos;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -58,7 +59,8 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_empleos;
     private InterstitialAd anuncioempleos;
-    Cargando cargando = new Cargando(EliminarEmpleos.this);
+    private ProgressDialog empleos;
+
 
 
     @Override
@@ -89,7 +91,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_empleos();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -108,7 +110,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
 
                 if (!validarid()){return;}
                 cargarBusqueda_empleos();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -148,7 +150,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -183,7 +185,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_empleos);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -201,7 +203,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarEmpleos.this);
@@ -230,7 +232,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -240,11 +242,11 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -258,10 +260,21 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 return parametros;
             }
         };
-
         RequestQueue request_empleos = Volley.newRequestQueue(this);
+        stringRequest_empleos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_empleos.add(stringRequest_empleos);
 
+    }
+    private void CargandoSubida(String Mostrar){
+        empleos=new ProgressDialog(this);
+        empleos.setMessage("Subiendo su Empleos");
+        empleos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        empleos.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            empleos.show();
+        }if(Mostrar.equals("Ocultar")){
+            empleos.hide();
+        }
     }
 
 

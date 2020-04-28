@@ -143,7 +143,7 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
                             Log.i("No actualizo","Vista Negativa");
                         }
                     }){
-                @SuppressLint("LongLogTag")
+
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -303,7 +303,7 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
                         Log.i("No actualizo","Voto Negativa");
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -341,7 +341,7 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
                         Log.i("No actualizo","Voto Negativa");
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -379,7 +379,7 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
                         Log.i("No actualizo","Voto Negativa");
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -417,7 +417,7 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
                         Log.i("No actualizo","Voto Negativa");
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 

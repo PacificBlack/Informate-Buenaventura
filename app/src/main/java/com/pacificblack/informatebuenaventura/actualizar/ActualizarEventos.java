@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,7 +41,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -56,18 +57,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
-
 public class ActualizarEventos extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_eventos;
     Uri imageneseventosUri;
     List<Uri> listaimagenes_eventos =  new ArrayList<>();
@@ -78,20 +75,14 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     StringRequest stringRequest_eventos;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
-    //TODO: Aqui finaliza
-
     TextInputLayout titulo_actualizar_eventos,id_actualizar_eventos,descripcioncorta_actualizar_eventos,lugar_actualizar_eventos;
     Button subirimagenes;
-
     ImageButton actualizar_eventos,actualizar_buscar_eventos;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_eventos;
     private InterstitialAd anuncioeventos;
-
-    Cargando cargando = new Cargando(ActualizarEventos.this);
-
+    private ProgressDialog eventos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,18 +109,13 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                             .setCancelable(false).setNegativeButton("Modificar tambien las imagenes", new DialogInterface.OnClickListener() {
                                                               @Override
                                                               public void onClick(DialogInterface dialog, int which) {
-
-                                if (listaimagenes_eventos.size() == 1){
                                      Subirimagen_eventos_update();
-                                    cargando.iniciarprogress();
-
-                                }
                           }
                                                           }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                @Override
                 public void onClick(DialogInterface dialog, int which) {
                            cargarActualizarSinImagen_eventos();
-                   cargando.iniciarprogress();
+                   CargandoSubida("Ver");
 
                }
                                                           });
@@ -149,7 +135,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
 
                 if (!validarid()){return;}
                 cargarBusqueda_eventos();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -252,48 +238,25 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
             return true;
         }
     }
-
-
     private boolean validarfotoupdate(){
-
         if (listaimagenes_eventos.size() == 0){
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_eventos.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_eventos.size() < 1){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_eventos.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_eventos.size() == 1){
-            return false;
-        }
-
         else {
             return true;
         }
     }
-
     private void cargarBusqueda_eventos() {
-
         String url_buscar_eventos = DireccionServidor+"wsnJSONBuscarEventos.php?id_eventos="+id_actualizar_eventos.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_eventos,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
     @Override
@@ -327,10 +290,9 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_eventos);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
-
 
     private void cargarActualizarConImagen_eventos() {
 
@@ -346,7 +308,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
 
@@ -374,7 +336,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -384,11 +346,11 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -406,21 +368,17 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 parametros.put("lugar_eventos",lugarinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Eventos");
-
                 for (int h = 0; h<nombre.size();h++){
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
-
                 return parametros;
             }
         };
-
         RequestQueue request_eventos = Volley.newRequestQueue(this);
+        stringRequest_eventos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_eventos.add(stringRequest_eventos);
 
     }
-
-
     private void cargarActualizarSinImagen_eventos() {
 
         String url_eventos = DireccionServidor+"wsnJSONActualizarSinnImagenEventos.php?";
@@ -434,7 +392,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
@@ -463,7 +421,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -473,11 +431,11 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -498,8 +456,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 return parametros;
             }
         };
-
         RequestQueue request_eventos = Volley.newRequestQueue(this);
+        stringRequest_eventos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_eventos.add(stringRequest_eventos);
 
     }
@@ -520,25 +478,26 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
             }catch (IOException e){
             }
         }
-        cargarActualizarConImagen_eventos();
+        if (nombre.size() == 1) {
+            cargarActualizarConImagen_eventos();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size()>1){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
     }
-
-
 
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
 
@@ -548,19 +507,13 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(ActualizarEventos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
 
@@ -575,13 +528,24 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 imageneseventosUri = data.getData();
                 listaimagenes_eventos.add(imageneseventosUri);
             }else {
-                for (int i = 0; i< 1; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_eventos.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
         baseAdapter = new GridViewAdapter(ActualizarEventos.this,listaimagenes_eventos);
         gvImagenes_eventos.setAdapter(baseAdapter);
+    }
+    private void CargandoSubida(String Mostrar){
+        eventos=new ProgressDialog(this);
+        eventos.setMessage("Subiendo su Empleos");
+        eventos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        eventos.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            eventos.show();
+        } if(Mostrar.equals("Ver")){
+            eventos.hide();
+        }
     }
 
 }

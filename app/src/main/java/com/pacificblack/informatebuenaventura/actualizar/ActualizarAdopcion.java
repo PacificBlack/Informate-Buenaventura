@@ -1,5 +1,4 @@
 package com.pacificblack.informatebuenaventura.actualizar;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -7,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,7 +41,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,20 +57,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
-
-//TODO: Esta full adopcion solo faltan retoques
-
-
 public class ActualizarAdopcion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     TextInputLayout titulo_actualizar_adopcion, descripcioncorta_actualizar_adopcion, descripcion1_actualizar_adopcion, descripcion2_actualizar_adopcion, buscar_actualizar_adopcion;
     Button actualizarimagenes;
-
     ImageButton actualizar_editar_adopcion,actualizar_buscar_adopcion;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
@@ -86,12 +82,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     StringRequest stringRequest_adopcion_actualizar;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
-
-    Cargando cargando = new Cargando(ActualizarAdopcion.this);
-
     private InterstitialAd anuncioAdopcion_actualizar;
-
+    private ProgressDialog adopcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,27 +118,19 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             imagenes_adopcion_actualizar.setVisibility(View.GONE);
-
-                            if (listaimagenes_adopcion_actualizar.size() == 4){
                                 Subirimagen_adopcion_update();
-                                cargando.iniciarprogress();
-
-                            }
-
                         }
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_adopcion();
-                            cargando.iniciarprogress();
-
+                            CargandoSubida("Ver");
                         }
                     });
 
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
-
                     return; }
 
             }
@@ -155,14 +139,9 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         actualizar_buscar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                actualizarimagenes.setText("Actualizar Imagenes");
-
                 if (!validarid()){return;}
-
                 cargarBusqueda_adopcion();
-                cargando.iniciarprogress();
-
+                CargandoSubida("Ver");
             }
         });
 
@@ -177,25 +156,17 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
         });
    }
-
-
 
     private boolean validarid(){
         String idinput = buscar_actualizar_adopcion.getEditText().getText().toString().trim();
@@ -205,7 +176,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
             return false;
         }
         else if(idinput.length()>15){
-
             buscar_actualizar_adopcion.setError(""+R.string.supera);
             return false;
         }
@@ -291,30 +261,58 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_adopcion_actualizar.size() > 4){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_adopcion_actualizar.size() < 4){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_adopcion_actualizar.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_adopcion_actualizar.size() == 4){
-            return false;
-        }
-
         else {
             return true;
         }
     }
 
+    public void Subirimagen_adopcion_update(){
+
+        listaBase64_adopcion_actualizar.clear();
+        nombre.clear();
+        cadena.clear();
+
+        for (int i = 0; i < listaimagenes_adopcion_actualizar.size(); i++){
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion_actualizar.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                nombre.add( "imagen_adopcion"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+
+                bitmap.recycle();
+            }catch (IOException e){
+
+            }
+
+        }
+        if (nombre.size() == 1){
+            cargarActualizarConImagen_adopcion_uno();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 2){
+            cargarActualizarConImagen_adopcion_dos();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 3){
+            cargarActualizarConImagen_adopcion_tres();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 4){
+            cargarActualizarConImagen_adopcion();
+            CargandoSubida("Ver");
+        }
+
+        if (nombre.size()>4){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
 
     private void cargarBusqueda_adopcion() {
-
         String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarAdopcion.php?id_adopcion="+buscar_actualizar_adopcion.getEditText().getText().toString().trim();
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_adopcion,null,this,this);
         requestbuscar.add(jsonObjectRequestBuscar);
@@ -322,8 +320,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
-        cargando.cancelarprogress();
-
+        CargandoSubida("Ocultar");
     }
 
     @Override
@@ -380,7 +377,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_actualizar_adopcion);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -399,7 +396,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
 
@@ -425,7 +422,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -435,11 +432,11 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -468,10 +465,11 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         };
 
         RequestQueue request_adopcion_actualizar = Volley.newRequestQueue(this);
+        stringRequest_adopcion_actualizar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion_actualizar.add(stringRequest_adopcion_actualizar);
 
     }
-    private void cargarActualizarConImagen_adopcion() {
+    private void cargarActualizarConImagen_adopcion_uno() {
 
         String url_adopcion = DireccionServidor+"wsnJSONActualizarConImagenAdopcion.php?";
 
@@ -485,7 +483,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
 
@@ -510,7 +508,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -520,11 +518,278 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_actualizar_adopcion.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_adopcion.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_adopcion",idinput);
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("imagen_adopcion0",cadena.get(0));
+                parametros.put("imagen_adopcion1","Vacio");
+                parametros.put("imagen_adopcion2","Vacio");
+                parametros.put("imagen_adopcion3","Vacio");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion_actualizar = Volley.newRequestQueue(this);
+        stringRequest_adopcion_actualizar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_adopcion_actualizar.add(stringRequest_adopcion_actualizar);
+
+    }
+    private void cargarActualizarConImagen_adopcion_dos() {
+
+        String url_adopcion = DireccionServidor+"wsnJSONActualizarConImagenAdopcion.php?";
+
+        stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+
+                    CargandoSubida("Ocultar");
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion_actualizar.isLoaded()) {
+                                        anuncioAdopcion_actualizar.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    CargandoSubida("Ocultar");
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_actualizar_adopcion.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_adopcion.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_adopcion",idinput);
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("imagen_adopcion0",cadena.get(0));
+                parametros.put("imagen_adopcion1",cadena.get(1));
+                parametros.put("imagen_adopcion2","Vacio");
+                parametros.put("imagen_adopcion3","Vacio");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion_actualizar = Volley.newRequestQueue(this);
+        stringRequest_adopcion_actualizar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_adopcion_actualizar.add(stringRequest_adopcion_actualizar);
+
+    }
+    private void cargarActualizarConImagen_adopcion_tres() {
+
+        String url_adopcion = DireccionServidor+"wsnJSONActualizarConImagenAdopcion.php?";
+
+        stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+
+                    CargandoSubida("Ocultar");
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion_actualizar.isLoaded()) {
+                                        anuncioAdopcion_actualizar.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    CargandoSubida("Ocultar");
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = buscar_actualizar_adopcion.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_adopcion.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_adopcion.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_adopcion",idinput);
+                parametros.put("titulo_adopcion",tituloinput);
+                parametros.put("descripcionrow_adopcion",descripcioncortainput);
+                parametros.put("vistas_adopcion","0");
+                parametros.put("descripcion1_adopcion",descripcion1input);
+                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("imagen_adopcion0",cadena.get(0));
+                parametros.put("imagen_adopcion1",cadena.get(1));
+                parametros.put("imagen_adopcion2",cadena.get(2));
+                parametros.put("imagen_adopcion3","Vacio");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Adopcion");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_adopcion_actualizar = Volley.newRequestQueue(this);
+        stringRequest_adopcion_actualizar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_adopcion_actualizar.add(stringRequest_adopcion_actualizar);
+
+    }
+    private void cargarActualizarConImagen_adopcion() {
+
+        String url_adopcion = DireccionServidor+"wsnJSONActualizarConImagenAdopcion.php?";
+
+        stringRequest_adopcion_actualizar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+
+                    CargandoSubida("Ocultar");
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarAdopcion.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anuncioAdopcion_actualizar.isLoaded()) {
+                                        anuncioAdopcion_actualizar.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    CargandoSubida("Ocultar");
+
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -556,34 +821,11 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         };
 
         RequestQueue request_adopcion_actualizar = Volley.newRequestQueue(this);
+        stringRequest_adopcion_actualizar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion_actualizar.add(stringRequest_adopcion_actualizar);
 
     }
 
-    public void Subirimagen_adopcion_update(){
-
-        listaBase64_adopcion_actualizar.clear();
-        nombre.clear();
-        cadena.clear();
-
-        for (int i = 0; i < listaimagenes_adopcion_actualizar.size(); i++){
-            try {
-
-                InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion_actualizar.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-                nombre.add( "imagen_adopcion"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-
-                bitmap.recycle();
-            }catch (IOException e){
-
-            }
-
-        }
-        cargarActualizarConImagen_adopcion();
-
-    }
 
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -597,7 +839,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     public void seleccionarimagen() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
     }
@@ -608,12 +850,10 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
 
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(ActualizarAdopcion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
 
                 }
@@ -629,21 +869,29 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         ClipData clipData = data.getClipData();
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
             if (clipData == null){
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion_actualizar.add(imagenesadopcionUri);
             }else {
-                for (int i = 0; i< 4; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_adopcion_actualizar.add(clipData.getItemAt(i).getUri());
                 }
             }
-
         }
-
         baseAdapter_actualizar = new GridViewAdapter(ActualizarAdopcion.this,listaimagenes_adopcion_actualizar);
         actualizar_gvImagenes_adopcion.setAdapter(baseAdapter_actualizar);
     }
+    private void CargandoSubida(String Mostrar){
+        adopcion=new ProgressDialog(this);
+        adopcion.setMessage("Subiendo su Empleos");
+        adopcion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        adopcion.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            adopcion.show();
+        }if(Mostrar.equals("Ocultar")){
+            adopcion.hide();
+        }
+    }
+
 
 }

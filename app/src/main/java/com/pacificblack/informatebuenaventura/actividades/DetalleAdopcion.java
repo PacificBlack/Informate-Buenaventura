@@ -163,7 +163,7 @@ public class DetalleAdopcion extends AppCompatActivity {
                             Log.i("No actualizo","Vista Negativa");
                         }
                     }){
-                @SuppressLint("LongLogTag")
+
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 

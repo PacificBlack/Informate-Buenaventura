@@ -1,9 +1,16 @@
 package com.pacificblack.informatebuenaventura.fragments.eventos;
 
-
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,25 +44,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class EventosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerEventos;
     List<Eventos> listaEventos;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-
     private SwipeRefreshLayout refresh_eventos;
-
     AdaptadorEventos adaptadorEventos;
 
 
     public EventosFragment() {
-        // Required empty public constructor
     }
 
 
@@ -117,9 +119,7 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         Eventos eventos = null;
 
         JSONArray json_eventos = response.optJSONArray("eventos");
-
         listaEventos.clear();
-
 
         try {
 
@@ -138,10 +138,7 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
             listaEventos.add(eventos);
 
-
         }
-
-
             adaptadorEventos = new AdaptadorEventos(listaEventos);
             recyclerEventos.setAdapter(adaptadorEventos);
             adaptadorEventos.notifyDataSetChanged();
@@ -156,6 +153,7 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         refresh_eventos.setRefreshing(false);
 
     }
+
 
 
     @Override
@@ -182,6 +180,8 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
 
     }
+
+
 
 
 }

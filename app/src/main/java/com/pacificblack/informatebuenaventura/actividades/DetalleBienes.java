@@ -155,7 +155,7 @@ public class DetalleBienes extends AppCompatActivity {
                             Log.i("No actualizo",error.toString());
                         }
                     }){
-                @SuppressLint("LongLogTag")
+
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 

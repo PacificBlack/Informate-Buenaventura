@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,12 +23,12 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -41,7 +42,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaEmpleos;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -58,14 +58,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
 
 public class ActualizarEmpleos extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
@@ -90,9 +88,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_empleos;
     private InterstitialAd anuncioempleos;
-    Cargando cargando = new Cargando(ActualizarEmpleos.this);
-
-
+    private ProgressDialog empleos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,21 +116,13 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
                @Override
                 public void onClick(DialogInterface dialog, int which) {
-
-         if (listaimagenes_empleos.size() == 1){
                Subirimagen_empleos_update();
-             cargando.iniciarprogress();
-
-         }
              }
             }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
           @Override
            public void onClick(DialogInterface dialog, int which) {
-
             cargarActualizarSinImagen_empleos();
-              cargando.iniciarprogress();
-
-
+              CargandoSubida("Ver");
           }
               });
              AlertDialog titulo = mensaje.create();
@@ -145,48 +133,35 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
              }
                                }
         );
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_empleos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validarid()){return;}
                 cargarBusqueda_empleos();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
-
         anuncioempleos = new InterstitialAd(this);
         anuncioempleos.setAdUnitId(AnuncioActualizar);
         anuncioempleos.loadAd(new AdRequest.Builder().build());
-
-
         gvImagenes_empleos = findViewById(R.id.actualizar_grid_empleos);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
         });
-
-
     }
 
     private boolean validarid(){
@@ -261,41 +236,21 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_empleos.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_empleos.size() < 1){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_empleos.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_empleos.size() == 1){
-            return false;
-        }
-
         else {
             return true;
         }
 
     }
-
     private void cargarBusqueda_empleos() {
-
         String url_buscar_empleos = DireccionServidor+"wsnJSONBuscarEmpleos.php?id_ofertaempleos="+id_actualizar_empleos.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_empleos,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -330,7 +285,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_empleos);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -349,7 +304,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
 
@@ -377,7 +332,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -387,11 +342,11 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -417,13 +372,11 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 return parametros;
             }
         };
-
         RequestQueue request_empleos = Volley.newRequestQueue(this);
+        stringRequest_empleos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_empleos.add(stringRequest_empleos);
 
     }
-
-
     private void cargarActualizarSinImagen_empleos() {
 
         String url_empleos = DireccionServidor+"wsnJSONActualizarSinnImagenEmpleos.php?";
@@ -438,7 +391,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
@@ -467,7 +420,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -477,11 +430,11 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -504,8 +457,8 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 return parametros;
             }
         };
-
         RequestQueue request_empleos = Volley.newRequestQueue(this);
+        stringRequest_empleos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_empleos.add(stringRequest_empleos);
 
     }
@@ -526,25 +479,26 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             }catch (IOException e){
             }
         }
-        cargarActualizarConImagen_empleos();
+        if (nombre.size() == 1) {
+            cargarActualizarConImagen_empleos();
+            CargandoSubida("Ver");
+        }
+
+        if (nombre.size()>1){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
     }
-
-
-
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
 
@@ -581,13 +535,25 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 imagenesempleosUri = data.getData();
                 listaimagenes_empleos.add(imagenesempleosUri);
             }else {
-                for (int i = 0; i<= 1; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_empleos.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
         baseAdapter = new GridViewAdapter(ActualizarEmpleos.this,listaimagenes_empleos);
         gvImagenes_empleos.setAdapter(baseAdapter);
+    }
+
+    private void CargandoSubida(String Mostrar){
+        empleos=new ProgressDialog(this);
+        empleos.setMessage("Subiendo su Empleos");
+        empleos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        empleos.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            empleos.show();
+        } if(Mostrar.equals("Ver")){
+            empleos.hide();
+        }
     }
 
 }

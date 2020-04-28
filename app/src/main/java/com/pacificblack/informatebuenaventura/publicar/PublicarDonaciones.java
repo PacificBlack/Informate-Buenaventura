@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,17 +21,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
@@ -39,13 +36,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,12 +47,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
 
 public class PublicarDonaciones extends AppCompatActivity{
 
@@ -76,12 +64,10 @@ public class PublicarDonaciones extends AppCompatActivity{
     StringRequest stringRequest_donaciones;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
     private InterstitialAd anuncioDonaciones;
     TextInputLayout titulo_publicar_donaciones, descripcioncorta_publicar_donaciones, descripcion1_publicar_donaciones, meta_publicar_donaciones;
     Button publicar_final_donaciones,subirimagenes;
-    Cargando cargando = new Cargando(PublicarDonaciones.this);
-
+    private ProgressDialog donaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,33 +90,22 @@ public class PublicarDonaciones extends AppCompatActivity{
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
         });
-
         publicar_final_donaciones = findViewById(R.id.publicar_final_donaciones);
         publicar_final_donaciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarmeta()| ! validarfoto()){return;}
                 Subirimagen_donaciones();
-                cargando.iniciarprogress();
-
-
             }
         });
     }
@@ -211,15 +186,8 @@ public class PublicarDonaciones extends AppCompatActivity{
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_donaciones.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return true;
-        }
-
         else {
             return true;}
-
     }
 
     public void Subirimagen_donaciones(){
@@ -235,17 +203,19 @@ public class PublicarDonaciones extends AppCompatActivity{
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
             }catch (IOException e){
-
             }
         }
-
         if (nombre.size() == 1){
             cargarWebService_donaciones_uno();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 2){
             cargarWebService_donaciones();
+            CargandoSubida("Ver");
         }
-
+        if (nombre.size()>2){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 2 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
     }
 
     private void cargarWebService_donaciones_uno() {
@@ -260,10 +230,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDonaciones.this);
                     mensaje.setMessage(response)
                             .setCancelable(false)
@@ -288,8 +255,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
@@ -298,11 +264,9 @@ public class PublicarDonaciones extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -323,12 +287,12 @@ public class PublicarDonaciones extends AppCompatActivity{
                 parametros.put(nombre.get(0),cadena.get(0));
                 parametros.put("imagen_donaciones1","vacio");
 
-
                 return parametros;
             }
         };
 
         RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_donaciones.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_funebres.add(stringRequest_donaciones);
 
     }
@@ -344,10 +308,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDonaciones.this);
                     mensaje.setMessage(response)
                             .setCancelable(false)
@@ -372,8 +333,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
@@ -382,11 +342,9 @@ public class PublicarDonaciones extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -410,12 +368,10 @@ public class PublicarDonaciones extends AppCompatActivity{
                 return parametros;
             }
         };
-
         RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_donaciones.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_funebres.add(stringRequest_donaciones);
-
     }
-
 
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -427,14 +383,12 @@ public class PublicarDonaciones extends AppCompatActivity{
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 2 imagenes"),IMAGE_PICK_CODE);
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
@@ -453,7 +407,6 @@ public class PublicarDonaciones extends AppCompatActivity{
             }
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -465,12 +418,23 @@ public class PublicarDonaciones extends AppCompatActivity{
                 imagenesdonacionesUri = data.getData();
                 listaimagenes_donaciones.add(imagenesdonacionesUri);
             }else {
-                for (int i = 0; i< 2; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_donaciones.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
         baseAdapter = new GridViewAdapter(PublicarDonaciones.this,listaimagenes_donaciones);
         gvImagenes_donaciones.setAdapter(baseAdapter);
+    }
+    private void CargandoSubida(String Mostrar){
+        donaciones=new ProgressDialog(this);
+        donaciones.setMessage("Subiendo su Empleos");
+        donaciones.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        donaciones.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            donaciones.show();
+        } if(Mostrar.equals("Ver")){
+            donaciones.hide();
+        }
     }
 }

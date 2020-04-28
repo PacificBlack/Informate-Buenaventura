@@ -4,6 +4,7 @@ public class Servidor {
 
     public static String DireccionServidor = "https://skleqrbc.lucusvirtual.es/InformateDB/";
     //public static String DireccionServidor = "http://192.168.0.14/InformateDB/";
+    //public static String DireccionServidor = "http://192.168.1.3/InformateDB/";
 
     public static String Nohayinternet = "Revise su conexión a internet para hacer una publicación.";
 

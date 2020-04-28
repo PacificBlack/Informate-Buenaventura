@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,17 +21,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
@@ -39,13 +36,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,12 +47,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
 
 public class PublicarClasificados extends AppCompatActivity {
     GridView gvImagenes_clasificados;
@@ -75,12 +63,11 @@ public class PublicarClasificados extends AppCompatActivity {
     StringRequest stringRequestclasificados;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
     TextInputLayout titulo_publicar_clasificados,descripcioncorta_publicar_clasificados,video_clasificados,descripcion1_publicar_clasificados,descripcion2_publicar_clasificados,buscar_publicar_clasificados;
     Button publicarfinal_clasificados,subirimagenes;
-
     private InterstitialAd anuncioClasificados;
-    Cargando cargando = new Cargando(PublicarClasificados.this);
+    private ProgressDialog clasificados;
+
 
 
     @Override
@@ -96,18 +83,13 @@ public class PublicarClasificados extends AppCompatActivity {
         publicarfinal_clasificados = findViewById(R.id.publicar_final_clasificados);
         gvImagenes_clasificados = findViewById(R.id.grid_clasificados);
         subirimagenes = findViewById(R.id.subir_imagenes_clasificados);
-
-
         publicarfinal_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto() | !validarvideo()){
                     return;
                 }
-
                 Subirimagen_clasificados();
-                cargando.iniciarprogress();
-
             }
         });
 
@@ -116,17 +98,13 @@ public class PublicarClasificados extends AppCompatActivity {
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
 
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
@@ -247,7 +225,6 @@ public class PublicarClasificados extends AppCompatActivity {
 
     public void Subirimagen_clasificados(){
 
-
         listaBase64clasificados.clear();
         nombre.clear();
         cadena.clear();
@@ -255,35 +232,37 @@ public class PublicarClasificados extends AppCompatActivity {
             try {
                 InputStream is = getContentResolver().openInputStream(listaimagenesclasificados.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
                 nombre.add( "imagen_clasificados"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
-
             }catch (IOException e){
-
             }
         }
 
         if (nombre.size() == 1){
             cargarWebService_clasificados_uno();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 2){
             cargarWebService_clasificados_dos();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 3){
             cargarWebService_clasificados_tres();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 4){
             cargarWebService_clasificados();
+            CargandoSubida("Ver");
         }
-
+        if (nombre.size()>4){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
     }
 
     private void cargarWebService_clasificados_uno() {
 
         String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
-
 
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
@@ -295,11 +274,9 @@ public class PublicarClasificados extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -324,23 +301,19 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
@@ -364,21 +337,17 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put("imagen_clasificados2","vacio");
                 parametros.put("imagen_clasificados3","vacio");
 
-
-
                 return parametros;
             }
         };
-
         RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        stringRequestclasificados.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_clasificados.add(stringRequestclasificados);
 
     }
     private void cargarWebService_clasificados_dos() {
 
         String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
-
-
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -389,11 +358,9 @@ public class PublicarClasificados extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -418,23 +385,19 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
@@ -463,14 +426,13 @@ public class PublicarClasificados extends AppCompatActivity {
         };
 
         RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        stringRequestclasificados.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_clasificados.add(stringRequestclasificados);
 
     }
     private void cargarWebService_clasificados_tres() {
 
         String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
-
-
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -481,11 +443,9 @@ public class PublicarClasificados extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -510,23 +470,19 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-                    }
+                        CargandoSubida("Ocultar");
+                        }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
@@ -549,20 +505,16 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put(nombre.get(1),cadena.get(1));
                 parametros.put(nombre.get(2),cadena.get(2));
                 parametros.put("imagen_clasificados3","vacio");
-
                 return parametros;
             }
         };
-
         RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        stringRequestclasificados.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_clasificados.add(stringRequestclasificados);
-
     }
     private void cargarWebService_clasificados() {
 
         String url_clasificados = DireccionServidor+"wsnJSONRegistroClasificados.php?";
-
-
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -573,11 +525,9 @@ public class PublicarClasificados extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -602,9 +552,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
@@ -614,11 +562,10 @@ public class PublicarClasificados extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
@@ -647,8 +594,8 @@ public class PublicarClasificados extends AppCompatActivity {
         };
 
         RequestQueue request_clasificados = Volley.newRequestQueue(this);
+        stringRequestclasificados.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_clasificados.add(stringRequestclasificados);
-
     }
 
 
@@ -664,7 +611,7 @@ public class PublicarClasificados extends AppCompatActivity {
     public void seleccionarimagen() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
     }
@@ -698,7 +645,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 imagenesclasificadosUri = data.getData();
                 listaimagenesclasificados.add(imagenesclasificadosUri);
             }else {
-                for (int i = 0; i< 4; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenesclasificados.add(clipData.getItemAt(i).getUri());
                 }
             }
@@ -706,5 +653,16 @@ public class PublicarClasificados extends AppCompatActivity {
 
         baseAdapter = new GridViewAdapter(PublicarClasificados.this,listaimagenesclasificados);
         gvImagenes_clasificados.setAdapter(baseAdapter);
+    }
+    private void CargandoSubida(String Mostrar){
+        clasificados=new ProgressDialog(this);
+        clasificados.setMessage("Subiendo su Empleos");
+        clasificados.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        clasificados.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            clasificados.show();
+        }if(Mostrar.equals("Ocultar")){
+            clasificados.hide();
+        }
     }
 }

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,10 +23,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,7 +38,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,12 +49,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
 
 public class PublicarEmpleos extends AppCompatActivity {
 
@@ -73,15 +70,12 @@ public class PublicarEmpleos extends AppCompatActivity {
     List<String> cadena = new ArrayList<>();
     List<String> nombre = new ArrayList<>();
     StringRequest stringRequest_empleos;
-    private static final int IMAGE_PICK_CODE = 100;
-    private static final int PERMISSON_CODE = 1001;
+    private static final int IMAGE_PICK_CODE = 1;
+    private static final int PERMISSON_CODE = 11;
 
     private InterstitialAd anuncioempleos;
 
-    Cargando cargando = new Cargando(PublicarEmpleos.this);
-
-
-
+    private ProgressDialog empleos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +105,9 @@ public class PublicarEmpleos extends AppCompatActivity {
                     return;
                 }
                 Subirimagen_empleos();
-                cargando.iniciarprogress();
-
             }
 
          }
-
         );
 
         gvImagenes_empleos = findViewById(R.id.grid_empleos);
@@ -142,7 +133,6 @@ public class PublicarEmpleos extends AppCompatActivity {
                 }
             }
         });
-
 
         anuncioempleos = new InterstitialAd(this);
         anuncioempleos.setAdUnitId(AnuncioPublicar);
@@ -206,15 +196,41 @@ public class PublicarEmpleos extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenes_empleos.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregara una imagen",Toast.LENGTH_LONG).show();
-            return true;
-        }else {
+       else {
             return true;}
 
     }
+    public void Subirimagen_empleos(){
+
+        listaBase64_empleos.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenes_empleos.size(); i++){
+
+            try {
+
+                InputStream is = getContentResolver().openInputStream(listaimagenes_empleos.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                nombre.add( "imagen_empleos"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+            }catch (IOException e){
+            }
+        }
+        if (nombre.size() == 1) {
+            cargarWebService_empleos();
+            CargandoSubida("Ver");
+        }
+
+        if (nombre.size()>1){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
     private void cargarWebService_empleos() {
+
 
         String url_empleos = DireccionServidor+"wsnJSONRegistroEmpleos.php?";
 
@@ -228,7 +244,7 @@ public class PublicarEmpleos extends AppCompatActivity {
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEmpleos.this);
 
@@ -244,8 +260,6 @@ public class PublicarEmpleos extends AppCompatActivity {
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
-
                                 }
                             });
 
@@ -259,7 +273,7 @@ public class PublicarEmpleos extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -270,11 +284,10 @@ public class PublicarEmpleos extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -292,65 +305,28 @@ public class PublicarEmpleos extends AppCompatActivity {
                 parametros.put("publicacion","Empleos");
 
                 for (int h = 0; h<nombre.size();h++){
-
                     parametros.put(nombre.get(h),cadena.get(h));
                 }
-
-
-
 
                 return parametros;
             }
         };
 
         RequestQueue request_empleos = Volley.newRequestQueue(this);
+        stringRequest_empleos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_empleos.add(stringRequest_empleos);
-
-    }
-    public void Subirimagen_empleos(){
-
-
-        listaBase64_empleos.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenes_empleos.size(); i++){
-
-            try {
-
-                InputStream is = getContentResolver().openInputStream(listaimagenes_empleos.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-
-                nombre.add( "imagen_empleos"+i);
-
-                cadena.add(convertirUriEnBase64(bitmap));
-
-                bitmap.recycle();
-
-
-            }catch (IOException e){
-
-            }
-
-        }
-        cargarWebService_empleos();
 
     }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
         return imagenString;
     }
     public void seleccionarimagen() {
-
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
 
@@ -362,11 +338,9 @@ public class PublicarEmpleos extends AppCompatActivity {
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(PublicarEmpleos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
                 }
             }
@@ -386,7 +360,7 @@ public class PublicarEmpleos extends AppCompatActivity {
                 imagenesempleosUri = data.getData();
                 listaimagenes_empleos.add(imagenesempleosUri);
             }else {
-                for (int i = 0; i< 1; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_empleos.add(clipData.getItemAt(i).getUri());
                 }
             }
@@ -394,4 +368,19 @@ public class PublicarEmpleos extends AppCompatActivity {
         baseAdapter = new GridViewAdapter(PublicarEmpleos.this,listaimagenes_empleos);
         gvImagenes_empleos.setAdapter(baseAdapter);
     }
+
+    private void CargandoSubida(String Mostrar){
+        empleos=new ProgressDialog(this);
+        empleos.setMessage("Subiendo su Empleos");
+        empleos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        empleos.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            empleos.show();
+        } if(Mostrar.equals("Ver")){
+            empleos.hide();
+        }
+    }
+
 }
+
+

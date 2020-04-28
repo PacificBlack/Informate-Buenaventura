@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -34,7 +35,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,19 +46,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
-
-//TODO: Esta full adopcion solo faltan retoques
 
 
 public class PublicarAdopcion extends AppCompatActivity {
 
     TextInputLayout titulo_publicar_adopcion, descripcioncorta_publicar_adopcion, descripcion1_publicar_adopcion, descripcion2_publicar_adopcion;
     Button publicarfinal_adopcion,subirimagenes;
-
     GridView gvImagenes_adopcion;
     Uri imagenesadopcionUri;
     List<Uri> listaimagenes_adopcion =  new ArrayList<>();
@@ -69,10 +67,9 @@ public class PublicarAdopcion extends AppCompatActivity {
     StringRequest stringRequest_adopcion;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
-    Cargando cargando = new Cargando(PublicarAdopcion.this);
-
     private InterstitialAd anuncioAdopcion;
+    private ProgressDialog adopcion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +113,6 @@ public class PublicarAdopcion extends AppCompatActivity {
                     return;
                 }
                 Subirimagen_adopcion();
-                cargando.iniciarprogress();
-
             }
         });
 
@@ -201,18 +196,9 @@ public class PublicarAdopcion extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_adopcion.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran",Toast.LENGTH_LONG).show();
-            return true;
-        }
-
-
         else {
             return true;}
-
     }
-
     public void Subirimagen_adopcion(){
 
         listaBase64_adopcion.clear();
@@ -237,22 +223,33 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         if (nombre.size() == 1){
             cargarWebService_adopcion_uno();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 2){
             cargarWebService_adopcion_dos();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 3){
             cargarWebService_adopcion_tres();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 4){
             cargarWebService_adopcion();
+            CargandoSubida("Ver");
+        }
+
+        if (nombre.size()>4){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
         }
 
     }
 
     private void cargarWebService_adopcion_uno() {
 
+
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
+
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
@@ -264,7 +261,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
 
@@ -290,7 +287,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -299,12 +296,11 @@ public class PublicarAdopcion extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -331,9 +327,9 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
-        };
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        };
+        stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
 
     }
@@ -341,6 +337,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
 
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -351,10 +348,8 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -377,21 +372,18 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -414,13 +406,12 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("imagen_adopcion3","vacio");
                 parametros.put("imagen_adopcion4","vacio");
 
-
                 Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
         };
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
 
     }
@@ -428,6 +419,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
 
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -438,10 +430,8 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -464,21 +454,17 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -501,19 +487,19 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put(nombre.get(2),cadena.get(2));
                 parametros.put("imagen_adopcion4","vacio");
 
-
                 Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
         };
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
-
     }
     private void cargarWebService_adopcion() {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
+
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
@@ -525,8 +511,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
 
                     mensaje.setMessage(response)
@@ -551,7 +536,7 @@ public class PublicarAdopcion extends AppCompatActivity {
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -560,12 +545,11 @@ public class PublicarAdopcion extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -588,17 +572,11 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put(nombre.get(2),cadena.get(2));
                 parametros.put(nombre.get(3),cadena.get(3));
 
-
-                //for (int h = 0; h<nombre.size();h++){
-                // parametros.put(nombre.get(h),cadena.get(h));
-                //}
-
-                Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
         };
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
+        stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
 
     }
@@ -614,13 +592,11 @@ public class PublicarAdopcion extends AppCompatActivity {
     }
     public void seleccionarimagen() {
 
-        //intent para seleccionar imagen
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
-
+        startActivityForResult(Intent.createChooser(intent, "Selecciona las 4 imagenes"), IMAGE_PICK_CODE);
     }
 
     @Override
@@ -629,12 +605,10 @@ public class PublicarAdopcion extends AppCompatActivity {
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
 
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(PublicarAdopcion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
 
                 }
@@ -654,8 +628,10 @@ public class PublicarAdopcion extends AppCompatActivity {
             if (clipData == null){
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion.add(imagenesadopcionUri);
-            }else {
-                for (int i = 0; i< 3; i++){
+            }
+
+            else {
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_adopcion.add(clipData.getItemAt(i).getUri());
                 }
             }
@@ -665,4 +641,16 @@ public class PublicarAdopcion extends AppCompatActivity {
         gvImagenes_adopcion.setAdapter(baseAdapter);
 
     }
+    private void CargandoSubida(String Mostrar){
+        adopcion=new ProgressDialog(this);
+        adopcion.setMessage("Subiendo su Empleos");
+        adopcion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        adopcion.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            adopcion.show();
+        } if(Mostrar.equals("Ver")){
+            adopcion.hide();
+        }
+    }
+
 }

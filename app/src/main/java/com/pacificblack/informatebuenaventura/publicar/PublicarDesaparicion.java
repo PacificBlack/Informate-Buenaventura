@@ -6,8 +6,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,10 +15,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Picture;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -33,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -43,9 +42,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
-import com.pacificblack.informatebuenaventura.MainActivity;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,12 +55,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class PublicarDesaparicion extends AppCompatActivity {
 
@@ -78,7 +74,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
     private InterstitialAd anuncioActualizardesaparicion;
-
     TextInputLayout titulo_publicar_desaparicion, descripcioncorta_publicar_desaparicion, recompensa_publicar_desaparicion, ultimolugar_publicar_desaparicion, descripcion1_publicar_desaparicion, descripcion2_publicar_desaparicion;
     TextView  diadesa_publicar_desaparicion;
     String dia_desaparicion;
@@ -87,9 +82,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
     Button publicar_final_desaparicion,subirimagenes;
     String estado[] = new String[]{"Desaparecido","Encontrado"};
     String quees[]  = new String[]{"Animal","Persona","Dococumento","Vehiculo","Otro objeto"};
-
-    Cargando cargando = new Cargando(PublicarDesaparicion.this);
-
+    private ProgressDialog desaparicion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,12 +120,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
                 int mesi =month+1;
                 dia_desaparicion = year+"/"+mesi+"/"+dayOfMonth;
-
                 diadesa_publicar_desaparicion.setText(dia_desaparicion);
-
             }
         };
 
@@ -141,7 +131,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
                         //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
                         //Mostrar emergente del menu
@@ -181,15 +170,10 @@ public class PublicarDesaparicion extends AppCompatActivity {
         publicar_final_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validartitulo()| !validardescripcioncorta()| !validarrecompensa()| !validardiadesa()| ! validarultimolugar()| ! validardescripcion1()| ! validardescripcion2()| ! validarqueseperdio()| ! validarestado()| ! validarfoto()){return;}
                 Subirimagen_desaparicion();
-                cargando.iniciarprogress();
-
             }
         });
-
-
         anuncioActualizardesaparicion = new InterstitialAd(this);
         anuncioActualizardesaparicion.setAdUnitId(AnuncioActualizar);
         anuncioActualizardesaparicion.loadAd(new AdRequest.Builder().build());
@@ -204,7 +188,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
             return false;
         }
         else if(tituloinput.length()>120){
-
             titulo_publicar_desaparicion.setError(""+R.string.supera);
             return false;
         }
@@ -215,7 +198,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
     }
     private boolean  validardescripcioncorta(){
         String descripcioncortainput = descripcioncorta_publicar_desaparicion.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
             descripcioncorta_publicar_desaparicion.setError(""+R.string.error_descripcioncorta);
             return false;
@@ -345,18 +327,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
             return false;
         }
 
-        else if (listaimagenes_desaparicion.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 3 imagenes",Toast.LENGTH_LONG).show();
-            return true;
-        }
-
         else {
             return true;}
 
     }
 
     public void Subirimagen_desaparicion(){
-
 
         listaBase64_desaparicion.clear();
         nombre.clear();
@@ -375,15 +351,25 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         if (nombre.size() == 1){
             cargarWebService_desaparicion_uno();
+            CargandoSubida("Ver");
         }
         if (nombre.size() == 2){
             cargarWebService_desaparicion_dos();
+            CargandoSubida("Ver");
+
         }
         if (nombre.size() == 3){
             cargarWebService_desaparicion_tres();
+            CargandoSubida("Ver");
+
         }
         if (nombre.size() == 4){
             cargarWebService_desaparicion();
+            CargandoSubida("Ver");
+
+        }
+        if (nombre.size()>4){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -399,18 +385,13 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                     finish();
                                     if (anuncioActualizardesaparicion.isLoaded()) {
                                         anuncioActualizardesaparicion.show();
@@ -423,14 +404,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Registrado exitosamente");
                     titulo.show();
-
                     Log.i("Muestra",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
@@ -439,11 +418,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -479,8 +456,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
 
     }
@@ -495,12 +472,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -525,8 +498,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
             }
         },
@@ -535,11 +507,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -574,10 +544,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
-
     }
     private void cargarWebService_desaparicion_tres() {
 
@@ -590,12 +559,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -620,7 +585,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -630,11 +595,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -669,10 +632,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
-
     }
     private void cargarWebService_desaparicion() {
 
@@ -685,12 +647,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDesaparicion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -715,7 +673,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
+                   CargandoSubida("Ocultar");
 
                 }
             }
@@ -725,11 +683,9 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -764,12 +720,10 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
-
     }
-
 
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -781,15 +735,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
-
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
@@ -808,7 +759,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
 
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -820,7 +770,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 imagenesdesaparicionUri = data.getData();
                 listaimagenes_desaparicion.add(imagenesdesaparicionUri);
             }else {
-                for (int i = 0; i< 3; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_desaparicion.add(clipData.getItemAt(i).getUri());
                 }
             }
@@ -829,4 +779,16 @@ public class PublicarDesaparicion extends AppCompatActivity {
         baseAdapter = new GridViewAdapter(PublicarDesaparicion.this,listaimagenes_desaparicion);
         gvImagenes_desaparicion.setAdapter(baseAdapter);
     }
+    private void CargandoSubida(String Mostrar){
+        desaparicion=new ProgressDialog(this);
+        desaparicion.setMessage("Subiendo su Empleos");
+        desaparicion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        desaparicion.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            desaparicion.show();
+        }if(Mostrar.equals("Ocultar")){
+            desaparicion.hide();
+        }
+    }
+
 }

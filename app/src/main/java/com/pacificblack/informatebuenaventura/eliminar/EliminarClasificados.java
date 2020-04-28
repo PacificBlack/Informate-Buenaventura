@@ -1,33 +1,21 @@
 package com.pacificblack.informatebuenaventura.eliminar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,26 +26,20 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
-import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
@@ -74,12 +56,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
     ImageView imagen1_eliminar_clasificados, imagen2_eliminar_clasificados, imagen3_eliminar_clasificados, imagen4_eliminar_clasificados;
     TextView titulo_eliminar_clasificados, descripcioncorta_eliminar_clasificados, video_eliminar_clasificados, descripcion1_eliminar_clasificados, descripcion2_eliminar_clasificados;
     TextInputLayout buscar_eliminar_clasificados;
-
     private InterstitialAd anuncioClasificados_eliminar;
-
-    Cargando cargando = new Cargando(EliminarClasificados.this);
-
-
+    private ProgressDialog clasificados;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +93,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_clasificados();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -134,7 +112,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
                 if (!validarid()){return;}
                 cargarBusqueda_clasificados();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -176,7 +154,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
 
     }
@@ -236,7 +214,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_clasificados);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -255,7 +233,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarClasificados.this);
@@ -285,7 +263,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -297,12 +275,12 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -319,8 +297,21 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         };
 
         RequestQueue request_clasificados_actualizar = Volley.newRequestQueue(this);
+        stringRequestclasificados.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_clasificados_actualizar.add(stringRequestclasificados);
 
     }
+    private void CargandoSubida(String Mostrar){
+        clasificados=new ProgressDialog(this);
+        clasificados.setMessage("Subiendo su Empleos");
+        clasificados.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        clasificados.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            clasificados.show();
+        }if(Mostrar.equals("Ocultar")){
+            clasificados.hide();
+        }
+    }
+
 
 }

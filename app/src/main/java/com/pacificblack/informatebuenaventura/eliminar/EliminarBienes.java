@@ -1,31 +1,21 @@
 package com.pacificblack.informatebuenaventura.eliminar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,26 +26,20 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
-import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -74,14 +58,12 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_bienes,imagen2_eliminar_bienes,imagen3_eliminar_bienes,imagen4_eliminar_bienes;
     private InterstitialAd anunciobienes_eliminar;
-    Cargando cargando = new Cargando(EliminarBienes.this);
-
+    private ProgressDialog bienes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_bienes);
-
 
         titulo_eliminar_bienes = findViewById(R.id.eliminar_titulo_bienes);
         descripcioncorta_eliminar_bienes = findViewById(R.id.eliminar_descripcioncorta_bienes);
@@ -112,7 +94,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_bienes();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -130,7 +112,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -169,7 +151,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -229,7 +211,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_bienes);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -248,7 +230,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarBienes.this);
 
@@ -277,7 +259,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -288,12 +270,12 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -310,7 +292,20 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         };
 
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_bienes_actualizar.add(stringRequest_bienes);
 
     }
+    private void CargandoSubida(String Mostrar){
+        bienes=new ProgressDialog(this);
+        bienes.setMessage("Subiendo su Empleos");
+        bienes.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        bienes.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            bienes.show();
+        }if(Mostrar.equals("Ocultar")){
+            bienes.hide();
+        }
+    }
+
 }

@@ -4,17 +4,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +28,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -56,7 +57,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
     ImageView imagen1_eliminar_eventos;
     StringRequest stringRequest_eventos;
     private InterstitialAd anuncioeventos;
-    Cargando cargando = new Cargando(EliminarEventos.this);
+    private ProgressDialog eventos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_eventos();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -105,7 +106,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
 
                 if (!validarid()){return;}
                 cargarBusqueda_eventos();
-                cargando.iniciarprogress();
+                //CargandoSubida("Ver");
 
             }
         });
@@ -145,7 +146,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
     @Override
@@ -179,7 +180,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_eventos);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -198,7 +199,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarEventos.this);
@@ -227,7 +228,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -239,7 +240,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                         Log.i("ERROR",error.toString());
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -253,10 +254,21 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 return parametros;
             }
         };
-
         RequestQueue request_eventos = Volley.newRequestQueue(this);
+        stringRequest_eventos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_eventos.add(stringRequest_eventos);
 
+    }
+    private void CargandoSubida(String Mostrar){
+        eventos=new ProgressDialog(this);
+        eventos.setMessage("Subiendo su Empleos");
+        eventos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        eventos.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            eventos.show();
+        }if(Mostrar.equals("Ocultar")){
+            eventos.hide();
+        }
     }
 
 

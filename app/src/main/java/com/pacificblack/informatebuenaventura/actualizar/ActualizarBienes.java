@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,12 +22,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,7 +41,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,6 +57,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -69,14 +70,11 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
     TextInputLayout titulo_actualizar_bienes, descripcioncorta_actualizar_bienes, descripcion1_actualizar_bienes, descripcion2_actualizar_bienes, precio_actualizar_bienes, buscar_actualizar_bienes;
     Button actualizarimagenes;
-
     ImageButton actualizar_editar_bienes,actualizar_buscar_bienes;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_bienes,imagen2_actualizar_bienes,imagen3_actualizar_bienes,imagen4_actualizar_bienes;
-
     private InterstitialAd anunciobienes;
-
     GridView gvImagenes_bienes;
     Uri imagenesbienesUri;
     List<Uri> listaimagenes_bienes =  new ArrayList<>();
@@ -87,10 +85,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     StringRequest stringRequest_bienes;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
-    Cargando cargando = new Cargando(ActualizarBienes.this);
-
-
+    private ProgressDialog bienes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +126,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                             .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
-                            if (listaimagenes_bienes.size() == 4){
                                 Subirimagen_bienes_update();
-                                cargando.iniciarprogress();
-
-                            }
 
                         }
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
@@ -144,7 +134,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                         public void onClick(DialogInterface dialog, int which) {
 
                             cargarActualizarSinImagen_bienes();
-                            cargando.iniciarprogress();
+                            CargandoSubida("Ver");
 
 
                         }
@@ -167,7 +157,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -255,7 +245,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             descripcion1_actualizar_bienes.setError("" + R.string.error_descripcion1);
             return false;
         } else if (descripcion1input.length() > 150) {
-
             descripcion1_actualizar_bienes.setError("" + R.string.supera);
             return false;
         } else {
@@ -277,8 +266,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         } else {
             descripcion2_actualizar_bienes.setError(null);
             return true;
-
-
         }
     }
     private boolean validarprecio() {
@@ -295,8 +282,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         } else {
             precio_actualizar_bienes.setError(null);
             return true;
-
-
         }
     }
     private boolean validarfotoupdate(){
@@ -305,43 +290,23 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_bienes.size() > 4){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_bienes.size() < 4){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_bienes.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_bienes.size() == 4){
-            return false;
-        }
-
         else {
             return true;
         }
     }
 
     private void cargarBusqueda_bienes() {
-
         String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarBienes.php?id_bienes="+buscar_actualizar_bienes.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
-
     @Override
     public void onResponse(JSONObject response) {
 
@@ -400,10 +365,48 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_actualizar_bienes);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
+    public void Subirimagen_bienes_update(){
+        listaBase64_bienes.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenes_bienes.size(); i++){
 
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                nombre.add("imagen_bienes"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+            }catch (IOException e){
+
+            }
+
+        }
+        if (nombre.size() == 1){
+            cargarActualizarConImagen_bienes_1();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 2){
+            cargarActualizarConImagen_bienes_2();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 3){
+            cargarActualizarConImagen_bienes_3();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 4){
+            cargarActualizarConImagen_bienes();
+
+            CargandoSubida("Ver");
+        }
+        if (nombre.size()>4){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
+
+    }
     private void cargarActualizarSinImagen_bienes() {
 
         String url_bienes = DireccionServidor+"wsnJSONActualizarSinImagenBienes.php?";
@@ -419,7 +422,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
 
@@ -450,7 +453,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
 
@@ -465,13 +468,13 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
 
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -502,10 +505,11 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         };
 
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_bienes_actualizar.add(stringRequest_bienes);
 
     }
-    private void cargarActualizarConImagen_bienes() {
+    private void cargarActualizarConImagen_bienes_1() {
 
         String url_bienes = DireccionServidor+"wsnJSONActualizarConImagenBienes.php?";
 
@@ -520,7 +524,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
@@ -551,7 +555,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -563,11 +567,11 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -591,11 +595,10 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Bienes");
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_bienes1","vacio");
+                parametros.put("imagen_bienes2","vacio");
+                parametros.put("imagen_bienes3","vacio");
 
                 Log.i("Parametros", String.valueOf(parametros));
 
@@ -604,27 +607,314 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         };
 
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_bienes_actualizar.add(stringRequest_bienes);
 
     }
-    public void Subirimagen_bienes_update(){
-        listaBase64_bienes.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenes_bienes.size(); i++){
+    private void cargarActualizarConImagen_bienes_2() {
 
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_bienes.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                nombre.add("imagen_bienes"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-            }catch (IOException e){
+        String url_bienes = DireccionServidor+"wsnJSONActualizarConImagenBienes.php?";
+
+        stringRequest_bienes = new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+                    CargandoSubida("Ocultar");
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+
 
             }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
 
-        }
-        cargarActualizarConImagen_bienes();
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+
+                String idinput = buscar_actualizar_bienes.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
+
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_bienes",idinput);
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_bienes2","vacio");
+                parametros.put("imagen_bienes3","vacio");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_bienes_actualizar.add(stringRequest_bienes);
+
+    }
+    private void cargarActualizarConImagen_bienes_3() {
+
+        String url_bienes = DireccionServidor+"wsnJSONActualizarConImagenBienes.php?";
+
+        stringRequest_bienes = new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+                    CargandoSubida("Ocultar");
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+
+                String idinput = buscar_actualizar_bienes.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
+
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_bienes",idinput);
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put("imagen_bienes3","vacio");
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_bienes_actualizar.add(stringRequest_bienes);
+
+    }
+    private void cargarActualizarConImagen_bienes() {
+
+        String url_bienes = DireccionServidor+"wsnJSONActualizarConImagenBienes.php?";
+
+        stringRequest_bienes = new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+
+                if (match.find()){
+                    CargandoSubida("Ocultar");
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciobienes.isLoaded()) {
+                                        anunciobienes.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+
+
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+
+                String idinput = buscar_actualizar_bienes.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
+                String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
+
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_bienes",idinput);
+                parametros.put("titulo_bienes",tituloinput);
+                parametros.put("descripcionrow_bienes",descripcioncortainput);
+                parametros.put("descripcion1_bienes",descripcion1input);
+                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("precio_bienes",precioinput);
+                parametros.put("vistas_bienes","0");
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Bienes");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
+                parametros.put(nombre.get(3),cadena.get(3));
+
+                Log.i("Parametros", String.valueOf(parametros));
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_bienes_actualizar.add(stringRequest_bienes);
 
     }
 
@@ -640,29 +930,22 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     public void seleccionarimagen() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(ActualizarBienes.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
 
@@ -677,13 +960,24 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 imagenesbienesUri = data.getData();
                 listaimagenes_bienes.add(imagenesbienesUri);
             }else {
-                for (int i = 0; i< 4; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_bienes.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
         baseAdapter = new GridViewAdapter(ActualizarBienes.this,listaimagenes_bienes);
         gvImagenes_bienes.setAdapter(baseAdapter);
-
     }
+    private void CargandoSubida(String Mostrar){
+        bienes=new ProgressDialog(this);
+        bienes.setMessage("Subiendo su Empleos");
+        bienes.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        bienes.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            bienes.show();
+        } if(Mostrar.equals("Ver")){
+            bienes.hide();
+        }
+    }
+
 }

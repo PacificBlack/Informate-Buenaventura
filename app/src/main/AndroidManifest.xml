@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -81,34 +82,24 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarDonaciones"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarFunebres"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarClasificados"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarBienes"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarEmpleos"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarServicios"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarEventos"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarArticulo"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarAdopcion"
-        android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".publicar.PublicarDesaparicion"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".actividades.DetalleNoticias"
             android:screenOrientation="portrait"

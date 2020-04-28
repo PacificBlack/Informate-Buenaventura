@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,7 +42,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaServicios;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,6 +58,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -75,23 +77,16 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     StringRequest stringRequest_servicios;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
     TextInputLayout id_actualizar_servicios,titulo_actualizar_servicios,descripcioncorta_actualizar_servicios;
     AutoCompleteTextView necesidad_actualizar_servicios;
     Button subirimagenes;
-
     ImageButton actualizar_servicios,actualizar_buscar_servicios;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_servicios;
     private InterstitialAd anuncioservicios;
-
-
+    private ProgressDialog servicios;
     String servi[] = new String[]{"Hoy mismo","Cuando quiera","Cada 3 años"};
-
-    Cargando cargando = new Cargando(ActualizarServicios.this);
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,17 +114,14 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 .setCancelable(false).setNegativeButton("Modificar tambien las imagenes", new DialogInterface.OnClickListener() {
                                                               @Override
                                                               public void onClick(DialogInterface dialog, int which) {
-                       if (listaimagenes_servicios.size() == 1){
                                     Subirimagen_servicios_update();
-                           cargando.iniciarprogress();
 
-                       }
               }
                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                                                               @Override
                                                               public void onClick(DialogInterface dialog, int which) {
                            cargarActualizarSinImagen_servicios();
-                                                                  cargando.iniciarprogress();
+                                                                  CargandoSubida("Ver");
 
                                                               }
                                                           });
@@ -149,7 +141,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
                 if (!validarid()){return;}
                 cargarBusqueda_servicios();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -255,27 +247,10 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         }
     }
     private boolean validarfotoupdate(){
-
         if (listaimagenes_servicios.size() == 0){
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_servicios.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_servicios.size() < 1){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_servicios.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_servicios.size() == 1){
-            return false;
-        }
-
         else {
             return true;
         }
@@ -283,18 +258,15 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     }
 
     private void cargarBusqueda_servicios() {
-
         String url_buscar_servicios = DireccionServidor+"wsnJSONBuscarServicios.php?id_ofertaservicios="+id_actualizar_servicios.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_servicios,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
     @Override
@@ -328,7 +300,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_servicios);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -336,7 +308,6 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     private void cargarActualizarConImagen_servicios() {
 
         String url_servicios = DireccionServidor+"wsnJSONActualizarConImagenServicios.php?";
-
         stringRequest_servicios= new StringRequest(Request.Method.POST, url_servicios, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -347,7 +318,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarServicios.this);
 
@@ -375,7 +346,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -385,11 +356,11 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -417,6 +388,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         };
 
         RequestQueue request_servicios = Volley.newRequestQueue(this);
+        stringRequest_servicios.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_servicios.add(stringRequest_servicios);
 
     }
@@ -436,7 +408,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarServicios.this);
@@ -465,7 +437,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -475,11 +447,11 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -503,6 +475,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         };
 
         RequestQueue request_servicios = Volley.newRequestQueue(this);
+        stringRequest_servicios.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_servicios.add(stringRequest_servicios);
 
     }
@@ -523,7 +496,13 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
             }catch (IOException e){
             }
         }
-        cargarActualizarConImagen_servicios();
+        if (nombre.size() == 1) {
+            cargarActualizarConImagen_servicios();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size()>1){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 3 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -541,7 +520,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
 
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
 
@@ -551,22 +530,17 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
                     //Permiso denegado
                     Toast.makeText(ActualizarServicios.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -578,13 +552,24 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 imagenesserviciosUri = data.getData();
                 listaimagenes_servicios.add(imagenesserviciosUri);
             }else {
-                for (int i = 0; i< 1; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_servicios.add(clipData.getItemAt(i).getUri());
                 }
             }
         }
         baseAdapter = new GridViewAdapter(ActualizarServicios.this,listaimagenes_servicios);
         gvImagenes_servicios.setAdapter(baseAdapter);
+    }
+    private void CargandoSubida(String Mostrar){
+        servicios=new ProgressDialog(this);
+        servicios.setMessage("Subiendo su Empleos");
+        servicios.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        servicios.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            servicios.show();
+        } if(Mostrar.equals("Ver")){
+            servicios.hide();
+        }
     }
 
 }

@@ -1,33 +1,21 @@
 package com.pacificblack.informatebuenaventura.eliminar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,26 +26,20 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
-import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
@@ -74,9 +56,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_comprayventa,imagen2_eliminar_comprayventa,imagen3_eliminar_comprayventa;
-
     private InterstitialAd anuncioAdopcion_eliminar;
-    Cargando cargando = new Cargando(EliminarArticulo.this);
+    private ProgressDialog articulo;
+
 
 
     @Override
@@ -115,7 +97,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_comprayventa();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -135,7 +117,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_comprayventa();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -172,7 +154,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
     }
 
     @Override
@@ -229,7 +211,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_comprayventa);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
 
     }
@@ -249,7 +231,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarArticulo.this);
@@ -275,7 +257,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
 
@@ -285,11 +267,11 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -302,8 +284,20 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 return parametros;
             }
         };
-
         RequestQueue request_comprayventa_eliminar = Volley.newRequestQueue(this);
+        stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_comprayventa_eliminar.add(stringRequest_comprayventa);
     }
+    private void CargandoSubida(String Mostrar){
+        articulo=new ProgressDialog(this);
+        articulo.setMessage("Subiendo su Empleos");
+        articulo.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        articulo.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            articulo.show();
+        }if(Mostrar.equals("Ocultar")){
+            articulo.hide();
+        }
+    }
+
 }

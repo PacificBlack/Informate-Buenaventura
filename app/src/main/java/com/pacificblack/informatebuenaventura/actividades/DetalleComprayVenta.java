@@ -142,7 +142,7 @@ public class DetalleComprayVenta extends AppCompatActivity {
                             Log.i("No actualizo","Vista Negativa");
                         }
                     }){
-                @SuppressLint("LongLogTag")
+
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 

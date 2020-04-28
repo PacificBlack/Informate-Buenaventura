@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,7 +41,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -56,6 +57,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -63,8 +65,6 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActu
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
 public class ActualizarFunebres extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
-
-    //TODO: Aqui comienza todo lo que se necesita para lo de la bd y el grid de subir
     GridView gvImagenes_funebres;
     Uri imagenesfunebresUri;
     List<Uri> listaimagenes_funebres =  new ArrayList<>();
@@ -75,19 +75,14 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     StringRequest stringRequest_funebres;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
     TextInputLayout id_actualizar_funebres, titulo_actualizar_funebres, descripcioncorta_actualizar_funebres, descripcion1_actualizar_funebres, descripcion2_actualizar_funebres;
-
     Button subirimagenes;
-
     ImageButton actualizar_funebres,actualizar_buscar_funebres;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_funebres,imagen2_actualizar_funebres,imagen3_actualizar_funebres;
     private InterstitialAd anunciofunebres;
-    Cargando cargando = new Cargando(ActualizarFunebres.this);
-
-
+    private ProgressDialog funebres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +99,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         imagen3_actualizar_funebres = findViewById(R.id.imagen3_actualizar_funebres);
         actualizar_funebres = findViewById(R.id.actualizar_final_funebres);
         actualizar_buscar_funebres = findViewById(R.id.actualizar_buscar_funebres);
-
-
         actualizar_funebres.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,19 +112,13 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                             .setCancelable(false).setNegativeButton("Modificar tambien las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
-                            if (listaimagenes_funebres.size() == 3){
                                 Subirimagen_funebres_update();
-                                cargando.iniciarprogress();
-
-                            }
                         }
                     }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_funebres();
-                            cargando.iniciarprogress();
-
+                            CargandoSubida("Ver");
                         }
                     });
                     AlertDialog titulo2 = mensaje.create();
@@ -142,16 +129,13 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
 
             }
         });
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_funebres.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validarid()){return;}
                 cargarBusqueda_funebres();
-                cargando.iniciarprogress();
-
+                CargandoSubida("Ver");
             }
         });
 
@@ -166,18 +150,12 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
@@ -185,8 +163,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
 
 
     }
-
-
     private boolean validarid(){
         String idinput = id_actualizar_funebres.getEditText().getText().toString().trim();
 
@@ -195,7 +171,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             return false;
         }
         else if(idinput.length()>15){
-
             id_actualizar_funebres.setError(""+R.string.supera);
             return false;
         }
@@ -204,7 +179,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             return true;
         }
     }
-
     private boolean validartitulo(){
         String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
 
@@ -277,45 +251,25 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     }
 
     private boolean validarfotoupdate(){
-
         if (listaimagenes_funebres.size() == 0){
             Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_funebres.size() > 3){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 2 imagenes",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        else if (listaimagenes_funebres.size() < 3){
-            Toast.makeText(getApplicationContext(),"Has agregado "+listaimagenes_funebres.size()+" imagenes, pero deben ser 3",Toast.LENGTH_LONG).show();
-            return true;
-
-        }
-
-        else if(listaimagenes_funebres.size() == 3){
-            return false;
-        }
-
         else {
             return true;
         }
     }
 
     private void cargarBusqueda_funebres() {
-
         String url_buscar_funebres = DireccionServidor+"wsnJSONBuscarFunebres.php?id_funebres="+id_actualizar_funebres.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_funebres,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
     @Override
@@ -365,12 +319,215 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_funebres);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
 
     }
 
+    public void Subirimagen_funebres_update(){
 
+        listaBase64_funebres.clear();
+        nombre.clear();
+        cadena.clear();
+        for (int i = 0; i < listaimagenes_funebres.size(); i++){
+            try {
+                InputStream is = getContentResolver().openInputStream(listaimagenes_funebres.get(i));
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                nombre.add( "imagen_funebres"+i);
+                cadena.add(convertirUriEnBase64(bitmap));
+                bitmap.recycle();
+            }catch (IOException e){
+            }
+        }
+        if (nombre.size() == 1){
+            cargarActualizarConImagen_funebres_uno();
+            CargandoSubida("Ver"); }
+        if (nombre.size()== 2){
+            cargarActualizarConImagen_funebres_dos();
+            CargandoSubida("Ver");}
+        if (nombre.size() == 3 ){
+            cargarActualizarConImagen_funebres();
+            CargandoSubida("Ver"); }
+        if (nombre.size()>3){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 3 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
+    }
+    private void cargarActualizarConImagen_funebres_uno() {
+
+        String url_funebres = DireccionServidor+"wsnJSONActualizarConImagenFunebres.php?";
+
+        stringRequest_funebres= new StringRequest(Request.Method.POST, url_funebres, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()) {
+
+                    CargandoSubida("Ocultar");
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciofunebres.isLoaded()) {
+                                        anunciofunebres.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = id_actualizar_funebres.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_funebres",idinput);
+                parametros.put("titulo_funebres",tituloinput);
+                parametros.put("descripcionrow_funebres",descripcioncortainput);
+                parametros.put("vistas_funebres","0");
+                parametros.put("descripcion1_funebres",descripcion1input);
+                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Funebres");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put("imagen_funebres1","vacio");
+                parametros.put("imagen_funebres2","vacio");
+                return parametros;
+            }
+        };
+        RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_funebres.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_funebres.add(stringRequest_funebres);
+
+    }
+    private void cargarActualizarConImagen_funebres_dos() {
+
+        String url_funebres = DireccionServidor+"wsnJSONActualizarConImagenFunebres.php?";
+
+        stringRequest_funebres= new StringRequest(Request.Method.POST, url_funebres, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Actualizada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()) {
+
+                    CargandoSubida("Ocultar");
+
+
+                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
+
+                    mensaje.setMessage(response)
+                            .setCancelable(false)
+                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                    if (anunciofunebres.isLoaded()) {
+                                        anunciofunebres.show();
+                                    } else {
+                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
+                                    }
+                                }
+                            });
+
+                    AlertDialog titulo = mensaje.create();
+                    titulo.setTitle("Recuerda");
+                    titulo.show();
+
+                    Log.i("Funciona : ",response);
+
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String idinput = id_actualizar_funebres.getEditText().getText().toString().trim();
+                String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
+                String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
+                String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("id_funebres",idinput);
+                parametros.put("titulo_funebres",tituloinput);
+                parametros.put("descripcionrow_funebres",descripcioncortainput);
+                parametros.put("vistas_funebres","0");
+                parametros.put("descripcion1_funebres",descripcion1input);
+                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Funebres");
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put("imagen_funebres2","vacio");
+                return parametros;
+            }
+        };
+        RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_funebres.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_funebres.add(stringRequest_funebres);
+
+    }
     private void cargarActualizarConImagen_funebres() {
 
         String url_funebres = DireccionServidor+"wsnJSONActualizarConImagenFunebres.php?";
@@ -385,7 +542,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
@@ -414,7 +571,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -424,11 +581,11 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -448,23 +605,18 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 parametros.put("descripcion2_funebres",descripcion2input);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Funebres");
-
-                for (int h = 0; h<nombre.size();h++){
-
-                    parametros.put(nombre.get(h),cadena.get(h));
-                }
-
+                parametros.put(nombre.get(0),cadena.get(0));
+                parametros.put(nombre.get(1),cadena.get(1));
+                parametros.put(nombre.get(2),cadena.get(2));
 
                 return parametros;
             }
         };
-
         RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_funebres.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_funebres.add(stringRequest_funebres);
 
     }
-
-
     private void cargarActualizarSinImagen_funebres() {
 
         String url_funebres = DireccionServidor+"wsnJSONActualizarSinImagenFunebres.php?";
@@ -478,7 +630,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
@@ -507,7 +659,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -517,11 +669,11 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -545,33 +697,11 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 return parametros;
             }
         };
-
         RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_funebres.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_funebres.add(stringRequest_funebres);
 
     }
-
-    public void Subirimagen_funebres_update(){
-
-        listaBase64_funebres.clear();
-        nombre.clear();
-        cadena.clear();
-        for (int i = 0; i < listaimagenes_funebres.size(); i++){
-            try {
-                InputStream is = getContentResolver().openInputStream(listaimagenes_funebres.get(i));
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-                nombre.add( "imagen_funebres"+i);
-                cadena.add(convertirUriEnBase64(bitmap));
-                bitmap.recycle();
-            }catch (IOException e){
-            }
-        }
-        cargarActualizarConImagen_funebres();
-    }
-
-
-
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
@@ -582,35 +712,25 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
-
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(ActualizarFunebres.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -630,6 +750,15 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         baseAdapter = new GridViewAdapter(ActualizarFunebres.this,listaimagenes_funebres);
         gvImagenes_funebres.setAdapter(baseAdapter);
     }
-
-
+    private void CargandoSubida(String Mostrar){
+        funebres=new ProgressDialog(this);
+        funebres.setMessage("Subiendo su Empleos");
+        funebres.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        funebres.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            funebres.show();
+        } if(Mostrar.equals("Ver")){
+            funebres.hide();
+        }
+    }
 }

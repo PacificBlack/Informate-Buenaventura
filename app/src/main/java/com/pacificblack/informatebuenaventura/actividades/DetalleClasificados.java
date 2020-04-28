@@ -163,7 +163,7 @@ public class DetalleClasificados extends YouTubeBaseActivity implements YouTubeP
                             Log.i("No actualizo","Vista Negativa");
                         }
                     }){
-                @SuppressLint("LongLogTag")
+
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 

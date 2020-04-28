@@ -4,17 +4,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +28,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -48,19 +49,15 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobusc
 public class EliminarFunebres extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener  {
 
     StringRequest stringRequest_funebres;
-
-
     TextInputLayout id_eliminar_funebres;
-
     TextView titulo_eliminar_funebres, descripcioncorta_eliminar_funebres, descripcion1_eliminar_funebres, descripcion2_eliminar_funebres;
-
     ImageButton eliminar_funebres,eliminar_buscar_funebres;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_funebres,imagen2_eliminar_funebres,imagen3_eliminar_funebres;
     private InterstitialAd anunciofunebres;
+    private ProgressDialog funebres;
 
-    Cargando cargando = new Cargando(EliminarFunebres.this);
 
 
     @Override
@@ -95,7 +92,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_funebres();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -115,7 +112,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_funebres();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -156,7 +153,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
     @Override
@@ -206,7 +203,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_funebres);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
 
 
@@ -227,7 +224,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
 
                 if (match.find()) {
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarFunebres.this);
 
@@ -255,7 +252,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -265,11 +262,11 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -285,8 +282,20 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         };
 
         RequestQueue request_funebres = Volley.newRequestQueue(this);
+        stringRequest_funebres.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_funebres.add(stringRequest_funebres);
 
+    }
+    private void CargandoSubida(String Mostrar){
+        funebres=new ProgressDialog(this);
+        funebres.setMessage("Subiendo su Empleos");
+        funebres.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        funebres.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            funebres.show();
+        }if(Mostrar.equals("Ocultar")){
+            funebres.hide();
+        }
     }
 
 

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,17 +21,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
@@ -39,13 +36,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
-import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,12 +47,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class PublicarArticulo extends AppCompatActivity {
 
@@ -76,12 +65,11 @@ public class PublicarArticulo extends AppCompatActivity {
     StringRequest stringRequest_comprayventa;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
     TextInputLayout titulo_publicar_comprayventa, descripcioncorta_publicar_comprayventa, descripcion_publicar_comprayventa, descripcionextra_publicar_comprayventa, precio_publicar_comprayventa, ubicacion_publicar_comprayventa, cantidad_publicar_comprayventa, contacto_publicar_comprayventa, buscar_publicar_comprayventa;
     Button publicarfinal_comprayventa,subirimagenes;
-
     private InterstitialAd anuncioArticulo;
-    Cargando cargando = new Cargando(PublicarArticulo.this);
+    private ProgressDialog articulo;
+
 
 
     @Override
@@ -101,22 +89,17 @@ public class PublicarArticulo extends AppCompatActivity {
         gvImagenes_comprayventa = findViewById(R.id.grid_comprayventa);
         subirimagenes = findViewById(R.id.subir_imagenes_comprayventa);
 
-
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
@@ -129,11 +112,9 @@ public class PublicarArticulo extends AppCompatActivity {
                     return;
                 }
                 Subirimagen_comprayventa();
-                cargando.iniciarprogress();
 
             }
         });
-
         anuncioArticulo = new InterstitialAd(this);
         anuncioArticulo.setAdUnitId(AnuncioPublicar);
         anuncioArticulo.loadAd(new AdRequest.Builder().build());
@@ -280,20 +261,16 @@ public class PublicarArticulo extends AppCompatActivity {
         }
     }
     private boolean validarfoto(){
-
         if (listaimagenes_comprayventa.size() == 0){
             Toast.makeText(getApplicationContext(),"Debe agregar 3 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-
         else if (listaimagenes_comprayventa.size() > 1){
             Toast.makeText(getApplicationContext(),"Solo se agregaran 3 imagenes",Toast.LENGTH_LONG).show();
             return true;
         }
-
         else {
             return true;}
-
     }
 
     public void Subirimagen_comprayventa(){
@@ -301,25 +278,28 @@ public class PublicarArticulo extends AppCompatActivity {
         listaBase64_comprayventa.clear();
         nombre.clear();
         cadena.clear();
-        //Tratar de solucionar el borrado de los arreglos de envio
         for (int i = 0; i < listaimagenes_comprayventa.size(); i++){
-
             try {
-
                 InputStream is = getContentResolver().openInputStream(listaimagenes_comprayventa.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 nombre.add( "imagen_comprayventa"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
             }catch (IOException e){
-
             }
-
         }
-
-        if (nombre.size() == 1){cargarWebService_comprayventa_uno();}
-        if (nombre.size() == 2){cargarWebService_comprayventa_dos();}
-        if (nombre.size() == 3){cargarWebService_comprayventa(); }
+        if (nombre.size() == 1){cargarWebService_comprayventa_uno();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 2){cargarWebService_comprayventa_dos();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size() == 3){cargarWebService_comprayventa();
+            CargandoSubida("Ver");
+        }
+        if (nombre.size()>3){
+            Toast.makeText(getApplicationContext(),"Solo se pueden subir 3 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -337,10 +317,8 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
@@ -359,15 +337,12 @@ public class PublicarArticulo extends AppCompatActivity {
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Registrado exitosamente");
                     titulo.show();
-
                     Log.i("Muestra",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
 
             }
@@ -376,15 +351,11 @@ public class PublicarArticulo extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-
                         Log.i("Error",error.toString());
-                        cargando.cancelarprogress();
-
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_comprayventa.getEditText().getText().toString().trim();
@@ -419,6 +390,7 @@ public class PublicarArticulo extends AppCompatActivity {
         };
 
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_comprayventa);
 
     }
@@ -436,8 +408,7 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
 
                     mensaje.setMessage(response)
@@ -464,9 +435,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
 
             }
@@ -475,15 +444,11 @@ public class PublicarArticulo extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-
                         Log.i("Error",error.toString());
-                        cargando.cancelarprogress();
-
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_comprayventa.getEditText().getText().toString().trim();
@@ -518,6 +483,7 @@ public class PublicarArticulo extends AppCompatActivity {
         };
 
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_comprayventa);
 
     }
@@ -535,16 +501,13 @@ public class PublicarArticulo extends AppCompatActivity {
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarArticulo.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                     finish();
                                     if (anuncioArticulo.isLoaded()) {
                                         anuncioArticulo.show();
@@ -563,9 +526,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                 }
 
             }
@@ -574,15 +535,11 @@ public class PublicarArticulo extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-
                         Log.i("Error",error.toString());
-                        cargando.cancelarprogress();
-
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
-            @Override
+                @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 String tituloinput = titulo_publicar_comprayventa.getEditText().getText().toString().trim();
@@ -617,6 +574,7 @@ public class PublicarArticulo extends AppCompatActivity {
         };
 
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
+        stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_comprayventa);
 
     }
@@ -626,22 +584,17 @@ public class PublicarArticulo extends AppCompatActivity {
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
-
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
@@ -650,12 +603,10 @@ public class PublicarArticulo extends AppCompatActivity {
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
                     //Permiso denegado
                     Toast.makeText(PublicarArticulo.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
 
@@ -674,15 +625,25 @@ public class PublicarArticulo extends AppCompatActivity {
                 imagenescomprayventaUri = data.getData();
                 listaimagenes_comprayventa.add(imagenescomprayventaUri);
             }else {
-                for (int i = 0; i< 3; i++){
+                for (int i = 0; i< clipData.getItemCount(); i++){
                     listaimagenes_comprayventa.add(clipData.getItemAt(i).getUri());
                 }
             }
 
         }
-
         baseAdapter = new GridViewAdapter(PublicarArticulo.this,listaimagenes_comprayventa);
         gvImagenes_comprayventa.setAdapter(baseAdapter);
 
+    }
+    private void CargandoSubida(String Mostrar){
+        articulo=new ProgressDialog(this);
+        articulo.setMessage("Subiendo su Empleos");
+        articulo.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        articulo.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            articulo.show();
+        } if(Mostrar.equals("Ver")){
+            articulo.hide();
+        }
     }
 }

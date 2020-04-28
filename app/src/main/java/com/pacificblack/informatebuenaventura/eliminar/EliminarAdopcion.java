@@ -1,26 +1,14 @@
 package com.pacificblack.informatebuenaventura.eliminar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,39 +27,29 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
-import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 
-//TODO: Esta full adopcion solo faltan retoques
-
 public class EliminarAdopcion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     TextView titulo_eliminar_adopcion,descripcioncorta_eliminar_adopcion, descripcion1_eliminar_adopcion, descripcion2_eliminar_adopcion;
     TextInputLayout  buscar_eliminar_adopcion;
-
-    //TODO: Modificar y Eliminar
     ImageButton publicar_eliminar_adopcion, publicar_buscar_adopcion;
     RequestQueue requestbuscar_eliminar;
     JsonObjectRequest jsonObjectRequestBuscar_eliminar;
@@ -78,8 +57,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     ImageView imagen1_eliminar_adopcion,imagen2_eliminar_adopcion,imagen3_eliminar_adopcion,imagen4_eliminar_adopcion;
     StringRequest stringRequest_adopcion_eliminar;
     private InterstitialAd anuncioAdopcion_eliminar;
-    Cargando cargando = new Cargando(EliminarAdopcion.this);
-
+    private ProgressDialog adopcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +68,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         descripcioncorta_eliminar_adopcion = findViewById(R.id.eliminar_descripcioncorta_adopcion);
         descripcion1_eliminar_adopcion = findViewById(R.id.eliminar_descripcion1_adopcion);
         descripcion2_eliminar_adopcion = findViewById(R.id.eliminar_descripcion2_adopcion);
-
         eliminar_imagenes_adopcion = findViewById(R.id.imagenes_eliminar_adopcion);
         imagen1_eliminar_adopcion = findViewById(R.id.imagen1_eliminar_adopcion);
         imagen2_eliminar_adopcion = findViewById(R.id.imagen2_eliminar_adopcion);
@@ -99,7 +76,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         buscar_eliminar_adopcion = findViewById(R.id.eliminar_id_adopcion);
         publicar_eliminar_adopcion = findViewById(R.id.eliminar_adopcion);
         publicar_buscar_adopcion = findViewById(R.id.eliminar_buscar_adopcion);
-
 
         publicar_eliminar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,15 +87,12 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                         .setCancelable(false).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-
                     }
                 }).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_adopcion();
-                        cargando.iniciarprogress();
-
+                        CargandoSubida("Ver");
                     }
                 });
 
@@ -136,7 +109,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_adopcion();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -174,7 +147,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -201,7 +174,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
             adopcion.setDescripcion1_adopcion(jsonObject.getString("descripcion1_adopcion"));
             adopcion.setDescripcion2_adopcion(jsonObject.getString("descripcion2_adopcion"));
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -210,8 +182,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         descripcioncorta_eliminar_adopcion.setText(adopcion.getDescripcion_row_adopcion());
         descripcion1_eliminar_adopcion.setText(adopcion.getDescripcion1_adopcion());
         descripcion2_eliminar_adopcion.setText(adopcion.getDescripcion2_adopcion());
-
-
         eliminar_imagenes_adopcion.setVisibility(View.VISIBLE);
 
         Picasso.get().load(adopcion.getImagen1_adopcion())
@@ -233,71 +203,54 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_adopcion);
-
-        cargando.cancelarprogress();
-
+        CargandoSubida("Ocultar");
     }
 
 
     private void cargarEliminar_adopcion() {
-
         String url_adopcion = DireccionServidor+"wsnJSONEliminar.php?";
-
         stringRequest_adopcion_eliminar= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                    cargando.cancelarprogress();
-
-
+                    CargandoSubida("Ocultar");
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarAdopcion.this);
-
                     mensaje.setMessage(response)
                             .setCancelable(false)
                             .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                     finish();
                                     if (anuncioAdopcion_eliminar.isLoaded()) {
                                         anuncioAdopcion_eliminar.show();
                                     } else {
                                         Log.d("TAG", "The interstitial wasn't loaded yet.");
                                     }
-
                                 }
                             });
-
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Eliminada exitosamente");
                     titulo.show();
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
-                    cargando.cancelarprogress();
-
+                    CargandoSubida("Ocultar");
                 }
-
             }
-        },
-                new Response.ErrorListener() {
+        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        cargando.cancelarprogress();
-
+                        CargandoSubida("Ocultar");
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
                 String idinput = buscar_eliminar_adopcion.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
@@ -305,14 +258,24 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 parametros.put("publicacion","Adopcion");
 
                 Log.i("Parametros", String.valueOf(parametros));
-
                 return parametros;
             }
         };
-
         RequestQueue request_adopcion_eliminar = Volley.newRequestQueue(this);
+        stringRequest_adopcion_eliminar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion_eliminar.add(stringRequest_adopcion_eliminar);
 
+    }
+    private void CargandoSubida(String Mostrar){
+        adopcion=new ProgressDialog(this);
+        adopcion.setMessage("Subiendo su Empleos");
+        adopcion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        adopcion.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            adopcion.show();
+        }if(Mostrar.equals("Ocultar")){
+            adopcion.hide();
+        }
     }
 
 }

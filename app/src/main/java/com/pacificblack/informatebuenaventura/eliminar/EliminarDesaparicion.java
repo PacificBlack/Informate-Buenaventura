@@ -4,20 +4,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,20 +28,18 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
-import com.pacificblack.informatebuenaventura.extras.Cargando;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
@@ -62,7 +58,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     JsonObjectRequest jsonObjectRequestBuscar_eliminar;
     ImageView imagen1_eliminar_desaparicion,imagen2_eliminar_desaparicion,imagen3_eliminar_desaparicion;
     private InterstitialAd anunciodesaparicion_eliminar;
-    Cargando cargando = new Cargando(EliminarDesaparicion.this);
+    private ProgressDialog desaparicion;
 
 
     @Override
@@ -101,7 +97,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_desaparicion();
-                        cargando.iniciarprogress();
+                        CargandoSubida("Ver");
 
                     }
                 });
@@ -122,7 +118,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
                 if (!validarid()){return;}
                 cargarBusqueda_desaparicion();
-                cargando.iniciarprogress();
+                CargandoSubida("Ver");
 
             }
         });
@@ -163,7 +159,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -224,7 +220,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_desaparicion);
 
-        cargando.cancelarprogress();
+        CargandoSubida("Ocultar");
 
     }
 
@@ -244,7 +240,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarDesaparicion.this);
@@ -274,7 +270,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    cargando.cancelarprogress();
+                    CargandoSubida("Ocultar");
 
                 }
             }
@@ -284,11 +280,11 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        cargando.cancelarprogress();
+                        CargandoSubida("Ocultar");
 
                     }
                 }){
-            @SuppressLint("LongLogTag")
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -304,6 +300,19 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
             }
         };
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
+        stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_bienes_actualizar.add(stringRequest_desaparicion);
     }
+    private void CargandoSubida(String Mostrar){
+        desaparicion=new ProgressDialog(this);
+        desaparicion.setMessage("Subiendo su Empleos");
+        desaparicion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        desaparicion.setIndeterminate(true);
+        if(Mostrar.equals("Ver")){
+            desaparicion.show();
+        }if(Mostrar.equals("Ocultar")){
+            desaparicion.hide();
+        }
+    }
+
 }
