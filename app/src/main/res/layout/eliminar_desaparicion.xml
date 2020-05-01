@@ -156,14 +156,16 @@
                     android:hint="@string/inserte_descripcion1"/>
 
 
-                <TextView
-                    android:id="@+id/eliminar_descripcionextra_desaparicion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/inserte_descripcion2" />
+            <TextView
+                android:id="@+id/eliminar_descripcionextra_desaparicion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/inserte_descripcion2"
+                android:visibility="gone"
+                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/eliminar_quese_desaparicion"

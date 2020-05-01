@@ -37,7 +37,6 @@ public class DetalleDesaparecidos extends AppCompatActivity {
     int id_actualizar;
     private AdView baner1,baner2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,17 +52,11 @@ public class DetalleDesaparecidos extends AppCompatActivity {
         imagen1_desaparecidos = findViewById(R.id.imagen1_detalle_desaparecidos);
         imagen2_desaparecidos = findViewById(R.id.imagen2_detalle_desaparecidos);
         imagen3_desaparecidos = findViewById(R.id.imagen3_detalle_desaparecidos);
-
-
-
         Bundle objetoDesaparecidos = getIntent().getExtras();
-
         Desaparecidos desaparecidos = null;
 
         if (objetoDesaparecidos !=null){
-
             desaparecidos = (Desaparecidos) objetoDesaparecidos.getSerializable("objeto5");
-
             id_actualizar = desaparecidos.getId_desaparecidos();
             titulo_desaparecidos.setText(desaparecidos.getTitulo_row_desaparecidos());
             descripcion1_desaparecidos.setText(desaparecidos.getDescripcion1_desaparecidos());
@@ -72,24 +65,18 @@ public class DetalleDesaparecidos extends AppCompatActivity {
             fechadesaparicion_desaparecidos.setText(desaparecidos.getFechadesaparecido_desaparecidos());
             recompensa_desaparecidos.setText(desaparecidos.getRecompensa_row_desaparecidos());
             estado_desaparecidos.setText(desaparecidos.getEstado_desaparecidos());
-
             Picasso.get().load(desaparecidos.getImagen1_desaparecidos())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen1_desaparecidos);
-
-
             Picasso.get().load(desaparecidos.getImagen2_desaparecidos())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen2_desaparecidos);
-
             Picasso.get().load(desaparecidos.getImagen3̣̣_desaparecidos())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen3_desaparecidos);
-
-
             final String imagen1_link = desaparecidos.getImagen1_desaparecidos();
             imagen1_desaparecidos.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,16 +110,11 @@ public class DetalleDesaparecidos extends AppCompatActivity {
                     startActivity(intentdesaparecidos);
                 }
             });
-
-
             String url_desaparecidos = DireccionServidor+"wsnJSONActualizarVista.php?";
-
             stringRequest_desaparecidos_actualizar= new StringRequest(Request.Method.POST, url_desaparecidos, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-
                     Log.i("Si actualizo","Vista Positiva");
-
                 }
             },
                     new Response.ErrorListener() {
@@ -141,38 +123,23 @@ public class DetalleDesaparecidos extends AppCompatActivity {
                             Log.i("No actualizo","Vista Negativa");
                         }
                     }){
-
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
-
                     String idinput = String.valueOf(id_actualizar);
-
                     Map<String,String> parametros = new HashMap<>();
                     parametros.put("id_desaparicion",idinput);
                     parametros.put("publicacion","Desaparicion");
-
                     Log.i("Parametros", String.valueOf(parametros));
-
                     return parametros;
                 }
             };
-
             RequestQueue request_desaparecidos_eliminar = Volley.newRequestQueue(this);
             request_desaparecidos_eliminar.add(stringRequest_desaparecidos_actualizar);
-
         }
-
-
-
-
         baner1 = findViewById(R.id.baner_desaparecidos1);
         baner2 = findViewById(R.id.baner_desaparecidos2);
-
         AdRequest adRequest = new AdRequest.Builder().build();
-
         baner1.loadAd(adRequest);
         baner2.loadAd(adRequest);
-
-
     }
 }

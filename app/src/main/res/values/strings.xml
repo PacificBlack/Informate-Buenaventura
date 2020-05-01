@@ -76,7 +76,7 @@
 
     <!-- Los hints que se ven de fondo -->
 
-    <string name="inserte_titulo">Ingrese un titulo para su publicación</string>
+    <string name="inserte_titulo">Ingrese un título para su publicación, este título debe ser claro y puntual para lograr una mejor recepcion</string>
     <string name="inserte_corta">Ingrese una descripción corta para su publicación</string>
     <string name="inserte_descripcion1">Ingrese la primera descripción detallada de su publicacion</string>
     <string name="inserte_descripcion2">Ingrese la segunda descripción detallada de su publicacion</string>
@@ -114,6 +114,12 @@
     <string name="banner_desaparecidos">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_difuntos">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_donacion">ca-app-pub-3940256099942544/6300978111</string>
+
+
+
+
+    <string name="texto_850">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure.</string>
 
 
 </resources>

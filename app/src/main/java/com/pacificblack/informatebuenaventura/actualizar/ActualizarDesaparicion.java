@@ -64,8 +64,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_noimagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.queseperdio_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.recompensa_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.ultimolugar_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
@@ -78,8 +89,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     DatePickerDialog.OnDateSetListener dateSetListener;
     AutoCompleteTextView queseperdio_actualizar_desaparicion, estado_actualizar_desaparicion;
     Button subirimagenes;
-    String estado[] = new String[]{"Desaparecido","Encontrado"};
-    String quees[]  = new String[]{"Animal","Persona","Dococumento","Vehiculo","Otro objeto"};
+    String[] estado = new String[]{"Encontrado"};
+    String[] quees = new String[]{"Animal","Persona","Documentos","Vehiculo","Otro objeto"};
     ImageButton actualizar_editar_desaparicion, buscar_desaparicion;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
@@ -95,7 +106,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     StringRequest stringRequest_desaparicion;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    private ProgressDialog desaparicion;
+    ProgressDialog desaparicion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +142,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 dialog.show();
             }
         });
-
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -140,21 +150,19 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 diadesa_actualizar_desaparicion.setText(dia_desaparicion);
             }
         };
-
         actualizar_editar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validarrecompensa()| !validardiadesa()| ! validarultimolugar()| ! validardescripcion1()| ! validardescripcion2()| ! validarqueseperdio()| ! validarestado()){return;}
+                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validarrecompensa()| !validardiadesa()| ! validarultimolugar()| ! validardescripcion1()| ! validarqueseperdio()| ! validarestado()){return;}
                 if (!validarfotoupdate()){
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
-                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-                            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+                    mensaje.setMessage(aviso_actualizar).setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                                 Subirimagen_desaparicion_update();
                         }
-                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+                    }).setPositiveButton(aviso_actualizar_noimagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_desaparicion();
@@ -171,16 +179,14 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         buscar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validarid()){return;}
                 cargarBusqueda_desaparicion();
                 CargandoSubida("Ver");
             }
         });
         anunciodesaparicion = new InterstitialAd(this);
-        anunciodesaparicion.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anunciodesaparicion.setAdUnitId(AnuncioActualizar);
         anunciodesaparicion.loadAd(new AdRequest.Builder().build());
-
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,38 +202,32 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }
             }
         });
-
         ArrayAdapter<String> adapterque = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,quees);
         queseperdio_actualizar_desaparicion.setAdapter(adapterque);
         ArrayAdapter<String>esta = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,estado);
         estado_actualizar_desaparicion.setAdapter(esta);
-
         queseperdio_actualizar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 queseperdio_actualizar_desaparicion.showDropDown();
             }
         });
-
         estado_actualizar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 estado_actualizar_desaparicion.showDropDown();
             }
         });
-
     }
 
     private boolean validarid(){
         String idinput = buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            buscar_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
+            buscar_actualizar_desaparicion.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            buscar_actualizar_desaparicion.setError(""+R.string.supera);
+            buscar_actualizar_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -237,14 +237,12 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private boolean validartitulo(){
         String tituloinput = titulo_actualizar_desaparicion.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_actualizar_desaparicion.setError(""+R.string.error_titulo);
+            titulo_actualizar_desaparicion.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_actualizar_desaparicion.setError(""+R.string.supera);
+            titulo_actualizar_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -254,14 +252,12 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private boolean  validardescripcioncorta(){
         String descripcioncortainput = descripcioncorta_actualizar_desaparicion.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_desaparicion.setError(descripcion_vacio);
             return false;
         }
         else if(descripcioncortainput.length()>150){
-
-            descripcioncorta_actualizar_desaparicion.setError(""+R.string.supera);
+            descripcioncorta_actualizar_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -271,14 +267,12 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private boolean validarrecompensa(){
         String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
-
         if (recompensainput.isEmpty()){
-            recompensa_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
+            recompensa_actualizar_desaparicion.setError(recompensa_vacio);
             return false;
         }
         else if(recompensainput.length()>15){
-
-            recompensa_actualizar_desaparicion.setError(""+R.string.supera);
+            recompensa_actualizar_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -289,21 +283,19 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     private boolean validardiadesa(){
 
         if (dia_desaparicion.isEmpty()){
-            diadesa_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
+            diadesa_actualizar_desaparicion.setError("Debe ingresar la fecha en la que desaparecio");
             return false;
         }
         return true;
     }
     private boolean validarultimolugar(){
         String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
-
         if (ultimolugarinput.isEmpty()){
-            ultimolugar_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
+            ultimolugar_actualizar_desaparicion.setError(ultimolugar_vacio);
             return false;
         }
         else if(ultimolugarinput.length()>250){
-
-            ultimolugar_actualizar_desaparicion.setError(""+R.string.supera);
+            ultimolugar_actualizar_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -312,16 +304,13 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         }
     }
     private boolean validardescripcion1(){
-
         String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()){
-            descripcion1_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
+            descripcion1_actualizar_desaparicion.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcion1input.length()>740){
-
-            descripcion1_actualizar_desaparicion.setError(""+R.string.supera);
+        else if(descripcion1input.length()>850){
+            descripcion1_actualizar_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -329,33 +318,14 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             return true;
         }
     }
-    private boolean validardescripcion2(){
-        String descripcion2input = descripcion2_actualizar_desaparicion.getEditText().getText().toString().trim();
-
-        if (descripcion2input.isEmpty()){
-            descripcion2_actualizar_desaparicion.setError(""+R.string.error_descripcioncorta);
-            return false;
-        }
-        else if(descripcion2input.length()>740){
-
-            descripcion2_actualizar_desaparicion.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            descripcion2_actualizar_desaparicion.setError(null);
-            return true;
-        }
-
-    }
     private boolean validarqueseperdio() {
         String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
 
         if (queseperdioinput.toString().isEmpty()) {
-            queseperdio_actualizar_desaparicion.setError("" + R.string.error_descripcioncorta);
+            queseperdio_actualizar_desaparicion.setError(queseperdio_vacio);
             return false;
         } else if (queseperdioinput.length() > 15) {
-
-            queseperdio_actualizar_desaparicion.setError("" + R.string.supera);
+            queseperdio_actualizar_desaparicion.setError(texto_superado);
             return false;
         } else {
             queseperdio_actualizar_desaparicion.setError(null);
@@ -366,11 +336,10 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
 
         if (estadoinput.isEmpty()) {
-            estado_actualizar_desaparicion.setError("" + estadoinput);
+            estado_actualizar_desaparicion.setError("Ingrese el estado de la publicación");
             return false;
         } else if (estadoinput.length() > 15) {
-
-            estado_actualizar_desaparicion.setError("" + estadoinput);
+            estado_actualizar_desaparicion.setError(texto_superado);
             return false;
         } else {
             estado_actualizar_desaparicion.setError(null);
@@ -561,7 +530,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_desaparicion.getEditText().getText().toString().trim();
+
                 String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
                 String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
 
@@ -575,7 +544,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
                 parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
                 parametros.put("descripcion1_desaparecidos",descripcion1input);
-                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("descripcion2_desaparecidos","vacio");
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");
@@ -659,7 +628,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_desaparicion.getEditText().getText().toString().trim();
+
                 String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
                 String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
 
@@ -673,7 +642,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
                 parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
                 parametros.put("descripcion1_desaparecidos",descripcion1input);
-                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("descripcion2_desaparecidos","vacio");
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");
@@ -759,7 +728,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_desaparicion.getEditText().getText().toString().trim();
+
                 String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
                 String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
 
@@ -773,7 +742,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
                 parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
                 parametros.put("descripcion1_desaparecidos",descripcion1input);
-                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("descripcion2_desaparecidos","vacio");
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");
@@ -859,7 +828,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_desaparicion.getEditText().getText().toString().trim();
+
                 String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
                 String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
 
@@ -873,7 +842,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
                 parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
                 parametros.put("descripcion1_desaparecidos",descripcion1input);
-                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("descripcion2_desaparecidos","vacio");
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");
@@ -959,7 +928,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_desaparicion.getEditText().getText().toString().trim();
+
                 String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
                 String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
 
@@ -973,7 +942,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 parametros.put("fechadesaparecido_desaparecidos",dia_desaparicion);
                 parametros.put("ultimolugar_desaparecidos",ultimolugarinput);
                 parametros.put("descripcion1_desaparecidos",descripcion1input);
-                parametros.put("descripcion2_desaparecidos",descripcion2input);
+                parametros.put("descripcion2_desaparecidos","vacio");
                 parametros.put("que_desaparecidos",queseperdioinput);
                 parametros.put("estado_desaparecidos",estadoinput);
                 parametros.put("subida","pendiente");

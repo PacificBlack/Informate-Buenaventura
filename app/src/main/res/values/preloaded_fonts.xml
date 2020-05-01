@@ -10,6 +10,8 @@
         <item>@font/dancing_script</item>
         <item>@font/noto_sans</item>
         <item>@font/pattaya</item>
+        <item>@font/roboto</item>
+        <item>@font/roboto_bold</item>
         <item>@font/signika</item>
     </array>
 </resources>
