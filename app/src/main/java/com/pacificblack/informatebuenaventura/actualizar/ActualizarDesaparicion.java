@@ -1,4 +1,5 @@
 package com.pacificblack.informatebuenaventura.actualizar;
+//Todo: Clase completamente lista.
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -7,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,16 +25,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -48,6 +56,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+import com.pacificblack.informatebuenaventura.publicar.PublicarDesaparicion;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -64,6 +73,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.internal.Util;
+
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
@@ -71,6 +84,7 @@ import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualiz
 import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.queseperdio_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.recompensa_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
@@ -82,16 +96,15 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 
 public class ActualizarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
-
+    private int ultimoAnio, ultimoMes, ultimoDiaDelMes;
+    ProgressBar cargandoactualizar;
+    RadioButton opcion1_desaparicion,opcion2_desaparicion,opcion3_desaparicion,opcion4_desaparicion,opcion5_desaparicion; String estado_texto = "Ninguno";
+    RadioButton opcion1_desaparicion_que,opcion2_desaparicion_que,opcion3_desaparicion_que,opcion4_desaparicion_que,opcion5_desaparicion_que; String estado_texto_que = "Ninguno";
     TextInputLayout titulo_actualizar_desaparicion, descripcioncorta_actualizar_desaparicion, recompensa_actualizar_desaparicion, ultimolugar_actualizar_desaparicion, descripcion1_actualizar_desaparicion, descripcion2_actualizar_desaparicion, buscar_actualizar_desaparicion;
-    TextView diadesa_actualizar_desaparicion;
-    String dia_desaparicion;
-    DatePickerDialog.OnDateSetListener dateSetListener;
-    AutoCompleteTextView queseperdio_actualizar_desaparicion, estado_actualizar_desaparicion;
-    Button subirimagenes;
-    String[] estado = new String[]{"Encontrado"};
-    String[] quees = new String[]{"Animal","Persona","Documentos","Vehiculo","Otro objeto"};
-    ImageButton actualizar_editar_desaparicion, buscar_desaparicion;
+    EditText diadesa_actualizar_desaparicion;
+    public static String dia_desaparicion;
+    Button actualizar_editar_desaparicion,subirimagenes;
+    ImageButton  buscar_desaparicion;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_desaparicion,imagen2_actualizar_desaparicion, imagen3_actualizar_desaparicion;
@@ -106,13 +119,26 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     StringRequest stringRequest_desaparicion;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    ProgressDialog desaparicion;
+    Toolbar barra_desaparicion;
+    ImageView whatsapp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_desaparicion);
 
+        whatsapp = findViewById(R.id.whatsapp_actualizar_desaparicion);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(ActualizarDesaparicion.this,Whatsapp);
+            }
+        });
+        cargandoactualizar = findViewById(R.id.CargandoActualizar_desaparicion);
+        cargandoactualizar.setVisibility(View.GONE);
+        barra_desaparicion = findViewById(R.id.toolbar_publicar_desaparicion);
+        barra_desaparicion.setTitle("Actualizar Desaparicion");
         titulo_actualizar_desaparicion = findViewById(R.id.actualizar_titulo_desaparicion);
         descripcioncorta_actualizar_desaparicion= findViewById(R.id.actualizar_descripcioncorta_desaparicion);
         recompensa_actualizar_desaparicion = findViewById(R.id.actualizar_recompensa_desaparicion);
@@ -128,34 +154,25 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         buscar_desaparicion = findViewById(R.id.actualizar_buscar_desaparicion);
         gvImagenes_desaparicion = findViewById(R.id.grid_actualizar_desaparicion);
         subirimagenes = findViewById(R.id.actualizar_imagenes_desaparicion);
-        queseperdio_actualizar_desaparicion = findViewById(R.id.actualizar_quese_desapariciom);
-        estado_actualizar_desaparicion = findViewById(R.id.actualizar_estadodes_desapariciom);
+        opcion1_desaparicion = findViewById(R.id.opcion1_estado_desaparicion_actualizar); opcion1_desaparicion.setText("Desaparecido");
+        opcion2_desaparicion = findViewById(R.id.opcion2_estado_desaparicion_actualizar); opcion2_desaparicion.setText("Escondido");
+        opcion3_desaparicion = findViewById(R.id.opcion3_estado_desaparicion_actualizar); opcion3_desaparicion.setText("Robado");
+        opcion4_desaparicion = findViewById(R.id.opcion4_estado_desaparicion_actualizar); opcion4_desaparicion.setText("Secuestrado");
+        opcion5_desaparicion = findViewById(R.id.opcion5_estado_desaparicion_actualizar); opcion5_desaparicion.setText("Encontrado");
+        opcion1_desaparicion_que = findViewById(R.id.opcion1_estado_desaparicion_que_actualizar); opcion1_desaparicion_que.setText("Animal");
+        opcion2_desaparicion_que = findViewById(R.id.opcion2_estado_desaparicion_que_actualizar); opcion2_desaparicion_que.setText("Persona");
+        opcion3_desaparicion_que = findViewById(R.id.opcion3_estado_desaparicion_que_actualizar); opcion3_desaparicion_que.setText("Documentos");
+        opcion4_desaparicion_que = findViewById(R.id.opcion4_estado_desaparicion_que_actualizar); opcion4_desaparicion_que.setText("Vehiculo");
+        opcion5_desaparicion_que = findViewById(R.id.opcion5_estado_desaparicion_que_actualizar); opcion5_desaparicion_que.setText("Otro objeto");
         diadesa_actualizar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                int año = cal.get(Calendar.YEAR);
-                int mes = cal.get(Calendar.MONTH);
-                int dia = cal.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog dialog = new DatePickerDialog(ActualizarDesaparicion.this, android.R.style.Theme_Material_Dialog_MinWidth,dateSetListener, año,mes,dia);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
+            public void onClick(View v) { mostrarDialogoFecha(); }
         });
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                int mesi =month+1;
-                dia_desaparicion = year+"/"+mesi+"/"+dayOfMonth;
-                diadesa_actualizar_desaparicion.setText(dia_desaparicion);
-            }
-        };
         actualizar_editar_desaparicion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validarrecompensa()| !validardiadesa()| ! validarultimolugar()| ! validardescripcion1()| ! validarqueseperdio()| ! validarestado()){return;}
+                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validarrecompensa()| ! validarultimolugar()| ! validardescripcion1()| ! validarqueseperdio()| ! validarestado()){return;}
                 if (!validarfotoupdate()){
-
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
                     mensaje.setMessage(aviso_actualizar).setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                         @Override
@@ -172,7 +189,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
-                    return; }
+                    return;
+                }
             }
         });
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
@@ -200,22 +218,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else{
                     seleccionarimagen();
                 }
-            }
-        });
-        ArrayAdapter<String> adapterque = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,quees);
-        queseperdio_actualizar_desaparicion.setAdapter(adapterque);
-        ArrayAdapter<String>esta = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,estado);
-        estado_actualizar_desaparicion.setAdapter(esta);
-        queseperdio_actualizar_desaparicion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                queseperdio_actualizar_desaparicion.showDropDown();
-            }
-        });
-        estado_actualizar_desaparicion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                estado_actualizar_desaparicion.showDropDown();
             }
         });
     }
@@ -280,14 +282,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             return true;
         }
     }
-    private boolean validardiadesa(){
-
-        if (dia_desaparicion.isEmpty()){
-            diadesa_actualizar_desaparicion.setError("Debe ingresar la fecha en la que desaparecio");
-            return false;
-        }
-        return true;
-    }
     private boolean validarultimolugar(){
         String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
         if (ultimolugarinput.isEmpty()){
@@ -319,31 +313,19 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         }
     }
     private boolean validarqueseperdio() {
-        String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
-
-        if (queseperdioinput.toString().isEmpty()) {
-            queseperdio_actualizar_desaparicion.setError(queseperdio_vacio);
-            return false;
-        } else if (queseperdioinput.length() > 15) {
-            queseperdio_actualizar_desaparicion.setError(texto_superado);
-            return false;
-        } else {
-            queseperdio_actualizar_desaparicion.setError(null);
+        if (opcion1_desaparicion_que.isChecked() || opcion2_desaparicion_que.isChecked() || opcion3_desaparicion_que.isChecked() || opcion4_desaparicion_que.isChecked() || opcion5_desaparicion_que.isChecked()){
             return true;
+        }else {
+            Toast.makeText(getApplicationContext(),"Marque que se perdio",Toast.LENGTH_LONG).show();
+            return false;
         }
     }
     private boolean validarestado(){
-        String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
-
-        if (estadoinput.isEmpty()) {
-            estado_actualizar_desaparicion.setError("Ingrese el estado de la publicación");
-            return false;
-        } else if (estadoinput.length() > 15) {
-            estado_actualizar_desaparicion.setError(texto_superado);
-            return false;
-        } else {
-            estado_actualizar_desaparicion.setError(null);
+        if (opcion1_desaparicion.isChecked() || opcion2_desaparicion.isChecked() || opcion3_desaparicion.isChecked() || opcion4_desaparicion.isChecked() || opcion5_desaparicion.isChecked()){
             return true;
+        }else {
+            Toast.makeText(getApplicationContext(),"Selecione el estado actual de esta publicacion",Toast.LENGTH_LONG).show();
+            return false;
         }
     }
     private boolean validarfotoupdate(){
@@ -351,11 +333,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             Toast.makeText(getApplicationContext(),"Debe agregar 3 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
             return false;
         }
-        else {
-            return true;
-        }
+        else { return true; }
     }
-
     private void cargarBusqueda_desaparicion() {
         String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarDesaparicion.php?id_desaparecidos="+buscar_actualizar_desaparicion.getEditText().getText().toString().trim();
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
@@ -364,14 +343,12 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-        Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
     }
     @Override
     public void onResponse(JSONObject response) {
 
         Desaparecidos desaparecidos = new Desaparecidos();
-
         JSONArray json = response.optJSONArray("desaparecidos");
         JSONObject jsonObject = null;
 
@@ -406,8 +383,18 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         ultimolugar_actualizar_desaparicion.getEditText().setText(desaparecidos.getUltimolugar_desaparecidos());
         descripcion1_actualizar_desaparicion.getEditText().setText(desaparecidos.getDescripcion1_desaparecidos());
         descripcion2_actualizar_desaparicion.getEditText().setText(desaparecidos.getDescripcion2_desaparecidos());
-        queseperdio_actualizar_desaparicion.setText(desaparecidos.getQue_desaparecidos());
-        estado_actualizar_desaparicion.setText(desaparecidos.getEstado_desaparecidos());
+
+        if (desaparecidos.getQue_desaparecidos().equals("Animal")){opcion1_desaparicion_que.setChecked(true);}
+        if (desaparecidos.getQue_desaparecidos().equals("Persona")){opcion2_desaparicion_que.setChecked(true);}
+        if (desaparecidos.getQue_desaparecidos().equals("Documentos")){opcion3_desaparicion_que.setChecked(true);}
+        if (desaparecidos.getQue_desaparecidos().equals("Vehiculo")){opcion4_desaparicion_que.setChecked(true); }
+        if (desaparecidos.getQue_desaparecidos().equals("Otro objeto")){ opcion5_desaparicion_que.setChecked(true);}
+
+        if (desaparecidos.getEstado_desaparecidos().equals("Desaparecido")){opcion1_desaparicion.setChecked(true);}
+        if (desaparecidos.getEstado_desaparecidos().equals("Escondido")){opcion2_desaparicion.setChecked(true);}
+        if (desaparecidos.getEstado_desaparecidos().equals("Robado")){opcion3_desaparicion.setChecked(true);}
+        if (desaparecidos.getEstado_desaparecidos().equals("Secuestrado")){opcion4_desaparicion.setChecked(true);}
+        if (desaparecidos.getEstado_desaparecidos().equals("Encontrado")){opcion5_desaparicion.setChecked(true);}
 
         Picasso.get().load(desaparecidos.getImagen1_desaparecidos())
                 .placeholder(R.drawable.imagennodisponible)
@@ -425,8 +412,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 .into(imagen3_actualizar_desaparicion);
 
         CargandoSubida("Ocultar");
-
-
     }
     public void Subirimagen_desaparicion_update(){
         listaBase64_desaparicion.clear();
@@ -436,34 +421,30 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             try {
                 InputStream is = getContentResolver().openInputStream(listaimagenes_desaparicion.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
                 nombre.add( "imagen_desaparecidos"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
             }catch (IOException e){
             }
         }
-        if (nombre.size() == 1){
-            cargarActualizarConImagen_desaparicion_uno();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size() == 2){
-            cargarActualizarConImagen_desaparicion_dos();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size() == 3){
-            cargarActualizarConImagen_desaparicion_tres();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size() == 4){
-            cargarActualizarConImagen_desaparicion();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size()>4){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
-        }
+        if (nombre.size() == 1){ cargarActualizarConImagen_desaparicion_uno(); CargandoSubida("Ver"); }
+        if (nombre.size() == 2){ cargarActualizarConImagen_desaparicion_dos(); CargandoSubida("Ver"); }
+        if (nombre.size() == 3){ cargarActualizarConImagen_desaparicion_tres(); CargandoSubida("Ver"); }
+        if (nombre.size() == 4){ cargarActualizarConImagen_desaparicion(); CargandoSubida("Ver"); }
+        if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show(); }
     }
     private void cargarActualizarConImagen_desaparicion_uno(){
+
+        if (opcion1_desaparicion.isChecked()){ estado_texto = opcion1_desaparicion.getText().toString(); }
+        if (opcion2_desaparicion.isChecked()){ estado_texto = opcion2_desaparicion.getText().toString(); }
+        if (opcion3_desaparicion.isChecked()){ estado_texto = opcion3_desaparicion.getText().toString(); }
+        if (opcion4_desaparicion.isChecked()){ estado_texto = opcion4_desaparicion.getText().toString(); }
+        if (opcion5_desaparicion.isChecked()){ estado_texto = opcion5_desaparicion.getText().toString(); }
+        if (opcion1_desaparicion_que.isChecked()){ estado_texto_que = opcion1_desaparicion_que.getText().toString(); }
+        if (opcion2_desaparicion_que.isChecked()){ estado_texto_que = opcion2_desaparicion_que.getText().toString(); }
+        if (opcion3_desaparicion_que.isChecked()){ estado_texto_que = opcion3_desaparicion_que.getText().toString(); }
+        if (opcion4_desaparicion_que.isChecked()){ estado_texto_que = opcion4_desaparicion_que.getText().toString(); }
+        if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
 
         String url_desaparicion = DireccionServidor+"wsnJSONActualizarConImagenDesaparicion.php?";
 
@@ -476,39 +457,37 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciodesaparicion.isLoaded()) {
-                                        anunciodesaparicion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciodesaparicion.isLoaded()) {
+                                anunciodesaparicion.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
                     CargandoSubida("Ocultar");
-
                 }
-
             }
         },
                 new Response.ErrorListener() {
@@ -517,7 +496,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
-
                     }
                 }){
 
@@ -530,9 +508,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-
-                String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
-                String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
+                String queseperdioinput = estado_texto_que;
+                String estadoinput = estado_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -563,6 +540,18 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private void cargarActualizarConImagen_desaparicion_dos(){
 
+        if (opcion1_desaparicion.isChecked()){ estado_texto = opcion1_desaparicion.getText().toString(); }
+        if (opcion2_desaparicion.isChecked()){ estado_texto = opcion2_desaparicion.getText().toString(); }
+        if (opcion3_desaparicion.isChecked()){ estado_texto = opcion3_desaparicion.getText().toString();}
+        if (opcion4_desaparicion.isChecked()){ estado_texto = opcion4_desaparicion.getText().toString();}
+        if (opcion5_desaparicion.isChecked()){ estado_texto = opcion5_desaparicion.getText().toString(); }
+
+        if (opcion1_desaparicion_que.isChecked()){ estado_texto_que = opcion1_desaparicion_que.getText().toString(); }
+        if (opcion2_desaparicion_que.isChecked()){ estado_texto_que = opcion2_desaparicion_que.getText().toString(); }
+        if (opcion3_desaparicion_que.isChecked()){ estado_texto_que = opcion3_desaparicion_que.getText().toString(); }
+        if (opcion4_desaparicion_que.isChecked()){ estado_texto_que = opcion4_desaparicion_que.getText().toString(); }
+        if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
+
         String url_desaparicion = DireccionServidor+"wsnJSONActualizarConImagenDesaparicion.php?";
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
@@ -574,31 +563,37 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
 
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                                    finish();
-                                    if (anunciodesaparicion.isLoaded()) {
-                                        anunciodesaparicion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
 
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
 
-                    Log.i("Funciona : ",response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciodesaparicion.isLoaded()) {
+                                anunciodesaparicion.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+
+                    Log.i("Muestra",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
@@ -629,8 +624,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
 
-                String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
-                String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
+                String queseperdioinput = estado_texto_que;
+                String estadoinput = estado_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -663,6 +658,18 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private void cargarActualizarConImagen_desaparicion_tres(){
 
+        if (opcion1_desaparicion.isChecked()){ estado_texto = opcion1_desaparicion.getText().toString(); }
+        if (opcion2_desaparicion.isChecked()){ estado_texto = opcion2_desaparicion.getText().toString(); }
+        if (opcion3_desaparicion.isChecked()){ estado_texto = opcion3_desaparicion.getText().toString();}
+        if (opcion4_desaparicion.isChecked()){ estado_texto = opcion4_desaparicion.getText().toString();}
+        if (opcion5_desaparicion.isChecked()){ estado_texto = opcion5_desaparicion.getText().toString(); }
+
+        if (opcion1_desaparicion_que.isChecked()){ estado_texto_que = opcion1_desaparicion_que.getText().toString(); }
+        if (opcion2_desaparicion_que.isChecked()){ estado_texto_que = opcion2_desaparicion_que.getText().toString(); }
+        if (opcion3_desaparicion_que.isChecked()){ estado_texto_que = opcion3_desaparicion_que.getText().toString(); }
+        if (opcion4_desaparicion_que.isChecked()){ estado_texto_que = opcion4_desaparicion_que.getText().toString(); }
+        if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
+
         String url_desaparicion = DireccionServidor+"wsnJSONActualizarConImagenDesaparicion.php?";
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
@@ -674,31 +681,37 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
 
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                                    finish();
-                                    if (anunciodesaparicion.isLoaded()) {
-                                        anunciodesaparicion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
 
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
 
-                    Log.i("Funciona : ",response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciodesaparicion.isLoaded()) {
+                                anunciodesaparicion.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+
+                    Log.i("Muestra",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
@@ -728,9 +741,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-
-                String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
-                String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
+                String queseperdioinput = estado_texto_que;
+                String estadoinput = estado_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -763,6 +775,18 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private void cargarActualizarConImagen_desaparicion(){
 
+        if (opcion1_desaparicion.isChecked()){ estado_texto = opcion1_desaparicion.getText().toString(); }
+        if (opcion2_desaparicion.isChecked()){ estado_texto = opcion2_desaparicion.getText().toString(); }
+        if (opcion3_desaparicion.isChecked()){ estado_texto = opcion3_desaparicion.getText().toString();}
+        if (opcion4_desaparicion.isChecked()){ estado_texto = opcion4_desaparicion.getText().toString();}
+        if (opcion5_desaparicion.isChecked()){ estado_texto = opcion5_desaparicion.getText().toString(); }
+
+        if (opcion1_desaparicion_que.isChecked()){ estado_texto_que = opcion1_desaparicion_que.getText().toString(); }
+        if (opcion2_desaparicion_que.isChecked()){ estado_texto_que = opcion2_desaparicion_que.getText().toString(); }
+        if (opcion3_desaparicion_que.isChecked()){ estado_texto_que = opcion3_desaparicion_que.getText().toString(); }
+        if (opcion4_desaparicion_que.isChecked()){ estado_texto_que = opcion4_desaparicion_que.getText().toString(); }
+        if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
+
         String url_desaparicion = DireccionServidor+"wsnJSONActualizarConImagenDesaparicion.php?";
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
@@ -774,31 +798,37 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
 
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                                    finish();
-                                    if (anunciodesaparicion.isLoaded()) {
-                                        anunciodesaparicion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
 
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
 
-                    Log.i("Funciona : ",response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciodesaparicion.isLoaded()) {
+                                anunciodesaparicion.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+
+                    Log.i("Muestra",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
@@ -828,9 +858,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-
-                String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
-                String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
+                String queseperdioinput = estado_texto_que;
+                String estadoinput = estado_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -863,6 +892,19 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     }
     private void cargarActualizarSinImagen_desaparicion(){
 
+        if (opcion1_desaparicion.isChecked()){ estado_texto = opcion1_desaparicion.getText().toString(); }
+        if (opcion2_desaparicion.isChecked()){ estado_texto = opcion2_desaparicion.getText().toString(); }
+        if (opcion3_desaparicion.isChecked()){ estado_texto = opcion3_desaparicion.getText().toString();}
+        if (opcion4_desaparicion.isChecked()){ estado_texto = opcion4_desaparicion.getText().toString();}
+        if (opcion5_desaparicion.isChecked()){ estado_texto = opcion5_desaparicion.getText().toString(); }
+
+        if (opcion1_desaparicion_que.isChecked()){ estado_texto_que = opcion1_desaparicion_que.getText().toString(); }
+        if (opcion2_desaparicion_que.isChecked()){ estado_texto_que = opcion2_desaparicion_que.getText().toString(); }
+        if (opcion3_desaparicion_que.isChecked()){ estado_texto_que = opcion3_desaparicion_que.getText().toString(); }
+        if (opcion4_desaparicion_que.isChecked()){ estado_texto_que = opcion4_desaparicion_que.getText().toString(); }
+        if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
+
+
         String url_desaparicion = DireccionServidor+"wsnJSONActualizarSinImagenDesaparicion.php?";
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
@@ -876,29 +918,35 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 if (match.find()){
                     CargandoSubida("Ocultar");
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDesaparicion.this);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
 
-                                    finish();
-                                    if (anunciodesaparicion.isLoaded()) {
-                                        anunciodesaparicion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
 
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciodesaparicion.isLoaded()) {
+                                anunciodesaparicion.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
 
-                    Log.i("Funciona : ",response);
+                    Log.i("Muestra",response);
 
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
@@ -928,9 +976,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 String recompensainput = recompensa_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String ultimolugarinput = ultimolugar_actualizar_desaparicion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_desaparicion.getEditText().getText().toString().trim();
-
-                String queseperdioinput = queseperdio_actualizar_desaparicion.getText().toString().trim();
-                String estadoinput = estado_actualizar_desaparicion.getText().toString().trim();
+                String queseperdioinput = estado_texto_que;
+                String estadoinput = estado_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -963,10 +1010,8 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
         return imagenString;
     }
     public void seleccionarimagen() {
@@ -980,20 +1025,14 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    seleccionarimagen();
-                }
-                else{
-                    Toast.makeText(ActualizarDesaparicion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-                }
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){ seleccionarimagen(); }
+                else{ Toast.makeText(ActualizarDesaparicion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG); }
             }
         }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
@@ -1009,14 +1048,67 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         gvImagenes_desaparicion.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        desaparicion=new ProgressDialog(this);
-        desaparicion.setMessage("Subiendo su Empleos");
-        desaparicion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        desaparicion.setIndeterminate(true);
+
         if(Mostrar.equals("Ver")){
-            desaparicion.show();
-        } if(Mostrar.equals("Ocultar")){
-            desaparicion.hide();
+            cargandoactualizar.setVisibility(View.VISIBLE);
+            cargandoactualizar.isShown();
+            final int totalProgressTime = 100;
+            final Thread t = new Thread() {
+                @Override
+                public void run() {
+                    int jumpTime = 0;
+
+                    while(jumpTime < totalProgressTime) {
+                        try {
+                            jumpTime += 5;
+                            cargandoactualizar.setProgress(jumpTime);
+                            sleep(200);
+                        }
+                        catch (InterruptedException e) {
+                            Log.e("Cargando Barra", e.getMessage());
+                        }
+                    }
+                }
+            };
+            t.start();
+
+        }if(Mostrar.equals("Ocultar")){ cargandoactualizar.setVisibility(View.GONE);        }
+    }
+    private DatePickerDialog.OnDateSetListener listenerDeDatePicker = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            ultimoAnio = year;
+            ultimoMes = month;
+            ultimoDiaDelMes = dayOfMonth;
+            refrescarFechaEnEditText();
+        }
+    };
+    private void refrescarFechaEnEditText() {
+        String fecha = ultimoAnio+"/"+(ultimoMes+1)+"/"+ultimoDiaDelMes;
+        diadesa_actualizar_desaparicion.setText(fecha);
+        dia_desaparicion = fecha;
+    }
+    private void mostrarDialogoFecha() {
+        DatePickerDialog dialogoFecha = new DatePickerDialog(this, listenerDeDatePicker, ultimoAnio, ultimoMes, ultimoDiaDelMes);
+        dialogoFecha.show();
+    }
+    @SuppressLint("NewApi")
+    public static void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
+
 }

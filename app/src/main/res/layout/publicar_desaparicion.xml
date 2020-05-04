@@ -11,10 +11,32 @@
     android:layout_gravity="center"
     tools:context=".publicar.PublicarDesaparicion">
 
-    <ScrollView
+    <Toolbar
+        android:id="@+id/toolbar_publicar_desaparicion"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/azulOscuro"
+        android:titleTextColor="@color/blanco"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.PopupOverlay" />
+
+    <ProgressBar
+        android:id="@+id/CargandoPublicar_desaparicion"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:max="100"
+        android:progressTint="#F44336"/>
+
+    <ScrollView
+        android:paddingTop="@android:dimen/app_icon_size"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,6 +68,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
                     android:src="@drawable/ic_login_hero" />
+
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -121,21 +144,64 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Ingrese el dia de la desaparición:"/>
+
+                    <EditText
                         android:id="@+id/publicar_fechade_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
                         android:drawableRight="@android:drawable/ic_menu_my_calendar"
-                        android:hint="Ingrese que dia se desaparecio"
-                        android:textSize="18sp" />
+                        android:focusable="false"
+                        android:hint=""
+                        android:inputType="date"
+                        android:maxLines="1" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/publicar_estadodes_desapariciom"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Presione dos veces para seleccionar el estado de la publicación" />
+                        android:text="Selecione el estado actual de esta publicacion:" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <RadioGroup
+                            android:layout_width="180dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp">
+
+                            <RadioButton
+                                android:id="@+id/opcion1_estado_desaparicion"
+                                android:layout_width="211dp"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion2_estado_desaparicion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+                            <RadioButton
+                                android:id="@+id/opcion3_estado_desaparicion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion4_estado_desaparicion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+                        </RadioGroup>
+
+                    </LinearLayout>
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/publicar_ultimolugar_desaparicion"
@@ -168,9 +234,12 @@
 
                     <Button
                         android:id="@+id/subir_imagenes_desaparicion"
-                        android:layout_width="wrap_content"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:text="Subir imagenes" />
+                        android:background="@drawable/estilo_botones"
+                        android:text="Subir imagenes"
+                        android:textColor="@color/blanco" />
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -217,18 +286,64 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/publicar_quese_desapariciom"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Presione dos veces para seleccionar ingrese que se desaparecio" />
+                        android:text="Selecione que se desaparecio:" />
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:layout_width="180dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:layout_marginTop="10dp">
+
+                            <RadioButton
+                                android:id="@+id/opcion1_estado_desaparicion_que"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion2_estado_desaparicion_que"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion3_estado_desaparicion_que"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+                            <RadioButton
+                                android:id="@+id/opcion4_estado_desaparicion_que"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion5_estado_desaparicion_que"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                        </RadioGroup>
+
+
+                    </LinearLayout>
 
                     <Button
                         android:id="@+id/publicar_final_desaparicion"
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/blanco"
+                        android:layout_gravity="center"
+                        android:background="@drawable/estilo_botones"
                         android:text="@string/publicar_adopcion" />
 
                 </LinearLayout>
@@ -276,18 +391,14 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_facebook" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_google_plus" />
+                    android:src="@drawable/whatsapp"
+                    android:id="@+id/whatsapp_publicar_desaparicion"
+                    />
             </LinearLayout>
 
 
         </LinearLayout>
-</ScrollView>
+    </ScrollView>
 
 
 </RelativeLayout>

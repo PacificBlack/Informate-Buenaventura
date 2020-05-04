@@ -4,15 +4,22 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -39,33 +46,49 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
+//Todo: Clase completamente lista.
 
 public class EliminarDesaparicion extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     StringRequest stringRequest_desaparicion;
     TextInputLayout id_desaparicion;
     TextView titulo_eliminar_desaparicion, descripcioncorta_eliminar_desaparicion,recompensa_eliminar_desaparicion, ultimolugar_eliminar_desaparicion, descripcion1_eliminar_desaparicion, descripcion2_eliminar_desaparicion,diadesa_eliminar_desaparicion,queseperdio_eliminar_desaparicion, estado_eliminar_desaparicion;
-    ImageButton eliminar_buscar_adopcion,eliminar_desaparicion;
+    ImageButton eliminar_buscar_adopcion;
+    Button eliminar_desaparicion;
     RequestQueue requestbuscar_eliminar;
     JsonObjectRequest jsonObjectRequestBuscar_eliminar;
     ImageView imagen1_eliminar_desaparicion,imagen2_eliminar_desaparicion,imagen3_eliminar_desaparicion;
     private InterstitialAd anunciodesaparicion_eliminar;
-    private ProgressDialog desaparicion;
-
+    Toolbar barra_desaparicion;
+    ImageView whatsapp;
+    ProgressBar cargandopublicar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_desaparicion);
 
+        whatsapp = findViewById(R.id.whatsapp_eliminar_desaparicion);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(EliminarDesaparicion.this,Whatsapp);
+            }
+        });
+        barra_desaparicion = findViewById(R.id.toolbar_eliminar_desaparicion);
+        cargandopublicar = findViewById(R.id.CargandoEliminar_desaparicion);
+        barra_desaparicion.setTitle("Eliminar Desaparicion");
+        cargandopublicar.setVisibility(View.GONE);
         titulo_eliminar_desaparicion = findViewById(R.id.eliminar_titulo_desaparicion);
         descripcioncorta_eliminar_desaparicion= findViewById(R.id.eliminar_descripcioncorta_desaparicion);
         recompensa_eliminar_desaparicion = findViewById(R.id.eliminar_recompensa_desaparicion);
@@ -127,18 +150,14 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         anunciodesaparicion_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         anunciodesaparicion_eliminar.loadAd(new AdRequest.Builder().build());
     }
-
-
     private boolean validarid(){
         String idinput = id_desaparicion.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            id_desaparicion.setError(""+R.string.error_descripcioncorta);
+            id_desaparicion.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            id_desaparicion.setError(""+R.string.supera);
+            id_desaparicion.setError(texto_superado);
             return false;
         }
         else {
@@ -148,11 +167,8 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     }
 
     private void cargarBusqueda_desaparicion() {
-
         String url_buscar_bienes = DireccionServidor+"wsnJSONBuscarDesaparicion.php?id_desaparecidos="+id_desaparicion.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar_eliminar = new JsonObjectRequest(Request.Method.GET,url_buscar_bienes,null,this,this);
-
         requestbuscar_eliminar.add(jsonObjectRequestBuscar_eliminar);
     }
     @Override
@@ -160,7 +176,6 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
     }
 
     @Override
@@ -223,9 +238,6 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         CargandoSubida("Ocultar");
 
     }
-
-
-
     private void cargarEliminar_desaparicion() {
 
         String url_desaparicion = DireccionServidor+"wsnJSONEliminar.php?";
@@ -239,39 +251,32 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarDesaparicion.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciodesaparicion_eliminar.isLoaded()) {
-                                        anunciodesaparicion_eliminar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Eliminada exitosamente");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EliminarDesaparicion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciodesaparicion_eliminar.isLoaded()) { anunciodesaparicion_eliminar.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
                     CargandoSubida("Ocultar");
-
                 }
             }
         },
@@ -281,7 +286,6 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
-
                     }
                 }){
 
@@ -304,14 +308,47 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         request_bienes_actualizar.add(stringRequest_desaparicion);
     }
     private void CargandoSubida(String Mostrar){
-        desaparicion=new ProgressDialog(this);
-        desaparicion.setMessage("Subiendo su Empleos");
-        desaparicion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        desaparicion.setIndeterminate(true);
         if(Mostrar.equals("Ver")){
-            desaparicion.show();
-        }if(Mostrar.equals("Ocultar")){
-            desaparicion.hide();
+            cargandopublicar.setVisibility(View.VISIBLE);
+            cargandopublicar.isShown();
+            final int totalProgressTime = 100;
+            final Thread t = new Thread() {
+                @Override
+                public void run() {
+                    int jumpTime = 0;
+
+                    while(jumpTime < totalProgressTime) {
+                        try {
+                            jumpTime += 5;
+                            cargandopublicar.setProgress(jumpTime);
+                            sleep(200);
+                        }
+                        catch (InterruptedException e) {
+                            Log.e("Cargando Barra", e.getMessage());
+                        }
+                    }
+                }
+            };
+            t.start();
+
+        }if(Mostrar.equals("Ocultar")){ cargandopublicar.setVisibility(View.GONE);        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 

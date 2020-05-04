@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.internal.NavigationMenu;
 import com.google.android.material.navigation.NavigationView;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarAdopcion;
 import com.pacificblack.informatebuenaventura.actualizar.ActualizarArticulo;
@@ -65,6 +66,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
+
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
 public class MainActivity extends AppCompatActivity   {
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity   {
     Dialog dialog;
     StringRequest videeos;
     public static String traer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +108,7 @@ public class MainActivity extends AppCompatActivity   {
 
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -114,19 +119,68 @@ public class MainActivity extends AppCompatActivity   {
             }
         });
 
+        FabSpeedDial fabSpeedDial = findViewById(R.id.fabs);
+        fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
+            @Override
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                return true;
+            }
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                if (menuItem.getItemId()== R.id.flotante_publicar){
+                    TextView txtclose;
+                    dialog.setContentView(R.layout.ventana);
+                    txtclose =(TextView) dialog.findViewById(R.id.txtclose);
+                    txtclose.setText("X");
+                    txtclose.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
+                }
+                if (menuItem.getItemId()== R.id.flotante_eliminar){
+                    TextView txtclose;
+                    dialog.setContentView(R.layout.ventana_eliminar);
+                    txtclose =(TextView) dialog.findViewById(R.id.txtclose_eliminar);
+                    txtclose.setText("X");
+                    txtclose.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
+                }
+                if (menuItem.getItemId()== R.id.flotante_editar){TextView txtclose;
+                    dialog.setContentView(R.layout.ventana_actualizar);
+                    txtclose =(TextView) dialog.findViewById(R.id.txtclose_eliminar);
+                    txtclose.setText("X");
+                    txtclose.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
+                }
+                return true;
+            }
+        });
+
     }
 
     private void cargarvideo() {
-
         String url_videos = DireccionServidor+"wsnJSONLlenarVideos.php?";
-
         videeos = new StringRequest(Request.Method.POST, url_videos, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("Video traido ", response);
                 traer = response;
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -135,7 +189,6 @@ public class MainActivity extends AppCompatActivity   {
 
             }
         });
-
     }
 
     @Override
@@ -151,8 +204,6 @@ public class MainActivity extends AppCompatActivity   {
             Intent intent = new Intent(this, Configuraciones.class);
             this.startActivity(intent);
         }if (item.getItemId() == R.id.buscar){
-
-
         }else {
             super.onOptionsItemSelected(item);
         }
@@ -164,22 +215,6 @@ public class MainActivity extends AppCompatActivity   {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-
-    public void ShowPopup(View v) {
-        TextView txtclose;
-        dialog.setContentView(R.layout.ventana);
-        txtclose =(TextView) dialog.findViewById(R.id.txtclose);
-        txtclose.setText("X");
-        txtclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
     }
 
     public void PublicarAdopcion(View v){
@@ -230,21 +265,6 @@ public class MainActivity extends AppCompatActivity   {
 
 /////////////////////////////////////////////////////////////////
 
-    public void MostrarEliminar(View view){
-        TextView txtclose;
-        dialog.setContentView(R.layout.ventana_eliminar);
-        txtclose =(TextView) dialog.findViewById(R.id.txtclose_eliminar);
-        txtclose.setText("X");
-        txtclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
     public void EliminarAdopcion(View view){
         Intent intent = new Intent(MainActivity.this, EliminarAdopcion.class);
         startActivity(intent);
@@ -288,21 +308,6 @@ public class MainActivity extends AppCompatActivity   {
 
 /////////////////////////////////////////////////////////////
 
-    public void MostrarActualizar(View view){
-        TextView txtclose;
-        dialog.setContentView(R.layout.ventana_actualizar);
-        txtclose =(TextView) dialog.findViewById(R.id.txtclose_eliminar);
-        txtclose.setText("X");
-        txtclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
     public void ActualizarAdopcion(View view){
         Intent intent = new Intent(MainActivity.this, ActualizarAdopcion.class);
         startActivity(intent);
@@ -343,6 +348,13 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, ActualizarServicios.class);
         startActivity(intent);
     }
+
+
+    public void MostrarWhatsapp(View view){
+        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
+        startActivity(launchIntent);
+    }
+
 }
 
 

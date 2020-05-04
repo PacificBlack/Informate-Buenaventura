@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/flotante_publicar"
+        android:icon="@drawable/fab_add_clear_selector"
+        android:title="Crear una publicación" />
+    <item
+        android:id="@+id/flotante_editar"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Editar Publicacíon" />
+    <item
+        android:id="@+id/flotante_eliminar"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Eliminar Publicación" />
+</menu>

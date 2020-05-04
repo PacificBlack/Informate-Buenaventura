@@ -1,6 +1,7 @@
 package com.pacificblack.informatebuenaventura.fragments.inicio;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,11 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.pacificblack.informatebuenaventura.MainActivity;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.Imagenes;
+import com.pacificblack.informatebuenaventura.extras.SliderAdaptador;
+import com.smarteist.autoimageslider.IndicatorAnimations;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,10 +54,12 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
     RecyclerView recyclerInicio;
     ArrayList<Inicio> listaInicio;
+    List<Imagenes> listaImagenes;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_inicio;
     AdaptadorInicio adaptadorInicio;
+    SliderView sliderView;
 
     public InicioFragment() {
         // Required empty public constructor
@@ -62,7 +70,7 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_inicio, container, false);
-
+        sliderView = vista.findViewById(R.id.imageSlider);
 
         listaInicio = new ArrayList<>();
         recyclerInicio = vista.findViewById(R.id.recycler_inicio);
@@ -154,12 +162,32 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
                 JSONObject jsonObject = null;
                 jsonObject = json_Inicio.getJSONObject(i);
 
+
+
                 Inicio.setDescripcion_corta(jsonObject.optString("descripcion_inicio"));
                 Inicio.setImagen_inicio(jsonObject.optString("imagen_inicio"));
 
                 listaInicio.add(Inicio);
 
             }
+
+            listaImagenes = new ArrayList<>();
+            listaImagenes.add(new Imagenes("https://images.alphacoders.com/105/thumb-350-1050187.jpg"));
+            listaImagenes.add(new Imagenes("https://image.winudf.com/v2/image1/Y29tLmJlc3QubGl2ZS53YWxscGFwZXIuYmFja2dyb3VuZHMuaGQudGhlbWUuZ2lybHkud2FsbHBhcGVycy5pbWFnZXMubHdwLm5lb24uYW5pbWFscy5saXZlLndhbGxwYXBlcl9zY3JlZW5fMTFfMTU0NzIxOTY2Nl8wMjg/screen-11.jpg?fakeurl=1&type=.jpg"));
+            listaImagenes.add(new Imagenes("https://www.tuexpertomovil.com/wp-content/uploads/2019/03/fondos-de-pantalla-fortnite-movil-celular-hd.jpg"));
+            listaImagenes.add(new Imagenes("https://img-l3.xvideos-cdn.com/videos/thumbslll/37/10/a5/3710a5ca0eb9b7d5b835e6ccbe265595/3710a5ca0eb9b7d5b835e6ccbe265595.16.jpg"));
+            listaImagenes.add(new Imagenes("https://di1.ypncdn.com/201207/05/7811529/original/8/the-most-beautiful-erotic-babe-malena-8(m=eKw7Kgaaaa).jpg"));
+
+
+            sliderView.setSliderAdapter(new SliderAdaptador(getContext(),listaImagenes));
+
+            sliderView.setIndicatorAnimation(IndicatorAnimations.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+            sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+            sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+            sliderView.setIndicatorSelectedColor(Color.WHITE);
+            sliderView.setIndicatorUnselectedColor(Color.GRAY);
+            sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
+            sliderView.startAutoCycle();
 
 
             adaptadorInicio = new AdaptadorInicio(listaInicio);
