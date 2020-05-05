@@ -262,10 +262,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         }
     }
     private boolean validarfoto(){
-        if (listaimagenes_desaparicion.size() == 0){
-            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
-            return false;
-        }
+        if (listaimagenes_desaparicion.size() == 0){ Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show(); return false; }
         else { return true;}
     }
     public void Subirimagen_desaparicion(){
@@ -711,7 +708,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
                 imagenesdesaparicionUri = data.getData();
@@ -722,7 +718,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 }
             }
         }
-
         baseAdapter = new GridViewAdapter(PublicarDesaparicion.this,listaimagenes_desaparicion);
         gvImagenes_desaparicion.setAdapter(baseAdapter);
     }
@@ -770,9 +765,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
     private void mostrarDialogoFecha() {
         DatePickerDialog dialogoFecha = new DatePickerDialog(this, listenerDeDatePicker, ultimoAnio, ultimoMes, ultimoDiaDelMes);
         dialogoFecha.show();
-
     }
-
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

@@ -92,15 +92,12 @@
                         app:counterEnabled="true"
                         app:counterMaxLength="120"
                         app:errorEnabled="true">
-
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
-
-
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -344,7 +341,7 @@
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
                         android:background="@drawable/estilo_botones"
-                        android:text="@string/publicar_adopcion" />
+                        android:text="Publicar Desaparicion" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

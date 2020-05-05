@@ -5,8 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,10 +20,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -46,15 +54,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
+//Todo: Clase completamente lista.
 
 
 public class PublicarAdopcion extends AppCompatActivity {
-
     TextInputLayout titulo_publicar_adopcion, descripcioncorta_publicar_adopcion, descripcion1_publicar_adopcion, descripcion2_publicar_adopcion;
     Button publicarfinal_adopcion,subirimagenes;
     GridView gvImagenes_adopcion;
@@ -68,23 +85,33 @@ public class PublicarAdopcion extends AppCompatActivity {
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
     private InterstitialAd anuncioAdopcion;
-    private ProgressDialog adopcion;
-
+    Toolbar barra_adopcion;
+    ImageView whatsapp;
+    ProgressBar cargandopublicar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_adopcion);
 
+        whatsapp = findViewById(R.id.whatsapp_publicar_adopcion);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(PublicarAdopcion.this,Whatsapp);
+            }
+        });
+        barra_adopcion = findViewById(R.id.toolbar_publicar_adopcion);
+        cargandopublicar = findViewById(R.id.CargandoPublicar_adopcion);
+        barra_adopcion.setTitle("Publicar Adopción");
+        cargandopublicar.setVisibility(View.GONE);
         titulo_publicar_adopcion = findViewById(R.id.publicar_titulo_adopcion);
         descripcioncorta_publicar_adopcion = findViewById(R.id.publicar_descripcioncorta_adopcion);
         descripcion1_publicar_adopcion = findViewById(R.id.publicar_descripcion1_adopcion);
         descripcion2_publicar_adopcion = findViewById(R.id.publicar_descripcion2_adopcion);
-
         anuncioAdopcion = new InterstitialAd(this);
         anuncioAdopcion.setAdUnitId(AnuncioPublicar);
         anuncioAdopcion.loadAd(new AdRequest.Builder().build());
-
         gvImagenes_adopcion = findViewById(R.id.grid_adopcion);
         subirimagenes = findViewById(R.id.subir_imagenes_adopcion);
         subirimagenes.setOnClickListener(new View.OnClickListener() {
@@ -93,14 +120,9 @@ public class PublicarAdopcion extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        requestPermissions(permisos,PERMISSON_CODE);
-                    }else {
-                        seleccionarimagen();
-                    }
-
-                }else{
-                    seleccionarimagen();
-                }
+                        requestPermissions(permisos,PERMISSON_CODE); }
+                    else { seleccionarimagen(); }
+                }else{ seleccionarimagen(); }
             }
         });
 
@@ -108,27 +130,19 @@ public class PublicarAdopcion extends AppCompatActivity {
         publicarfinal_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto()){
-                    return;
-                }
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validarfoto()){ return; }
                 Subirimagen_adopcion();
             }
         });
-
-
     }
-
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_publicar_adopcion.setError(""+R.string.error_titulo);
+            titulo_publicar_adopcion.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_publicar_adopcion.setError(""+R.string.supera);
+            titulo_publicar_adopcion.setError(texto_superado);
             return false;
         }
         else {
@@ -137,16 +151,13 @@ public class PublicarAdopcion extends AppCompatActivity {
         }
     }
     private boolean validardescripcioncorta(){
-
         String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_adopcion.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_publicar_adopcion.setError(descripcion_vacio);
             return false;
         }
         else if(descripcioncortainput.length()>150){
-
-            descripcioncorta_publicar_adopcion.setError(""+R.string.supera);
+            descripcioncorta_publicar_adopcion.setError(texto_superado);
             return false;
         }
         else {
@@ -157,14 +168,12 @@ public class PublicarAdopcion extends AppCompatActivity {
     }
     private boolean validardescripcion1(){
         String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()){
-            descripcion1_publicar_adopcion.setError(""+R.string.error_descripcion1);
+            descripcion1_publicar_adopcion.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcion1input.length()>150){
-
-            descripcion1_publicar_adopcion.setError(""+R.string.supera);
+        else if(descripcion1input.length()>850){
+            descripcion1_publicar_adopcion.setError(texto_superado);
             return false;
         }
         else {
@@ -172,84 +181,35 @@ public class PublicarAdopcion extends AppCompatActivity {
             return true;
         }
     }
-    private boolean validardescripcion2(){
-
-        String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
-
-        if (descripcion2input.isEmpty()){
-            descripcion2_publicar_adopcion.setError(""+R.string.error_descripcion2);
-            return false;
-        }
-        else if(descripcion2input.length()>150){
-
-            descripcion2_publicar_adopcion.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            descripcion2_publicar_adopcion.setError(null);
-            return true;
-        }
-    }
     private boolean validarfoto(){
-
-        if (listaimagenes_adopcion.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else {
-            return true;}
+        if (listaimagenes_adopcion.size() == 0){ Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show(); return false; }
+        else { return true;}
     }
     public void Subirimagen_adopcion(){
 
         listaBase64_adopcion.clear();
         nombre.clear();
         cadena.clear();
-
         for (int i = 0; i < listaimagenes_adopcion.size(); i++){
-
             try {
                 InputStream is = getContentResolver().openInputStream(listaimagenes_adopcion.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-
                 nombre.add( "imagen_adopcion"+i);
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
-
             }catch (IOException e){
-
             }
-
         }
 
-        if (nombre.size() == 1){
-            cargarWebService_adopcion_uno();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size() == 2){
-            cargarWebService_adopcion_dos();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size() == 3){
-            cargarWebService_adopcion_tres();
-            CargandoSubida("Ver");
-        }
-        if (nombre.size() == 4){
-            cargarWebService_adopcion();
-            CargandoSubida("Ver");
-        }
-
-        if (nombre.size()>4){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
-        }
-
+        if (nombre.size() == 1){ cargarWebService_adopcion_uno(); CargandoSubida("Ver"); }
+        if (nombre.size() == 2){ cargarWebService_adopcion_dos(); CargandoSubida("Ver"); }
+        if (nombre.size() == 3){ cargarWebService_adopcion_tres(); CargandoSubida("Ver"); }
+        if (nombre.size() == 4){ cargarWebService_adopcion(); CargandoSubida("Ver"); }
+        if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show(); }
     }
-
     private void cargarWebService_adopcion_uno() {
 
-
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
-
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
 
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
@@ -260,31 +220,28 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion.isLoaded()) {
-                                        anuncioAdopcion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion.isLoaded()) { anuncioAdopcion.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -307,7 +264,6 @@ public class PublicarAdopcion extends AppCompatActivity {
                 String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -315,7 +271,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("descripcionrow_adopcion",descripcioncortainput);
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
-                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("descripcion2_adopcion","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -323,12 +279,12 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("imagen_adopcion3","vacio");
                 parametros.put("imagen_adopcion4","vacio");
 
-
                 Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
 
         };
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
 
@@ -337,7 +293,6 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -347,29 +302,28 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion.isLoaded()) {
-                                        anuncioAdopcion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion.isLoaded()) { anuncioAdopcion.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -390,7 +344,6 @@ public class PublicarAdopcion extends AppCompatActivity {
                 String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -398,7 +351,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("descripcionrow_adopcion",descripcioncortainput);
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
-                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("descripcion2_adopcion","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -410,7 +363,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 return parametros;
             }
         };
-
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
 
@@ -419,7 +372,6 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -429,29 +381,28 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion.isLoaded()) {
-                                        anuncioAdopcion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion.isLoaded()) { anuncioAdopcion.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -471,7 +422,6 @@ public class PublicarAdopcion extends AppCompatActivity {
                 String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -479,19 +429,18 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("descripcionrow_adopcion",descripcioncortainput);
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
-                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("descripcion2_adopcion","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
                 parametros.put(nombre.get(0),cadena.get(0));
                 parametros.put(nombre.get(1),cadena.get(1));
                 parametros.put(nombre.get(2),cadena.get(2));
                 parametros.put("imagen_adopcion4","vacio");
-
                 Log.i("Lo que se sube",parametros.toString());
                 return parametros;
             }
         };
-
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
     }
@@ -499,8 +448,6 @@ public class PublicarAdopcion extends AppCompatActivity {
 
         String url_adopcion = DireccionServidor+"wsnJSONRegistroAdopcion.php?";
 
-        RequestQueue request_adopcion = Volley.newRequestQueue(this);
-
         stringRequest_adopcion= new StringRequest(Request.Method.POST, url_adopcion, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -510,34 +457,31 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
-                CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarAdopcion.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion.isLoaded()) {
-                                        anuncioAdopcion.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    CargandoSubida("Ocultar");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion.isLoaded()) { anuncioAdopcion.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
-
                 }
 
             }
@@ -547,16 +491,13 @@ public class PublicarAdopcion extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         CargandoSubida("Ocultar");
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-
                     }
                 }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
                 String tituloinput = titulo_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_adopcion.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_adopcion.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_adopcion.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -564,7 +505,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 parametros.put("descripcionrow_adopcion",descripcioncortainput);
                 parametros.put("vistas_adopcion","0");
                 parametros.put("descripcion1_adopcion",descripcion1input);
-                parametros.put("descripcion2_adopcion",descripcion2input);
+                parametros.put("descripcion2_adopcion","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Adopcion");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -575,81 +516,97 @@ public class PublicarAdopcion extends AppCompatActivity {
                 return parametros;
             }
         };
-
+        RequestQueue request_adopcion = Volley.newRequestQueue(this);
         stringRequest_adopcion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion.add(stringRequest_adopcion);
-
     }
-
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
-
         return imagenString;
     }
     public void seleccionarimagen() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Selecciona las 4 imagenes"), IMAGE_PICK_CODE);
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     seleccionarimagen();
-
                 }
                 else{
                     Toast.makeText(PublicarAdopcion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-            if (data.getClipData() == null){
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+            if (data.getClipData() == null) {
                 imagenesadopcionUri = data.getData();
                 listaimagenes_adopcion.add(imagenesadopcionUri);
-            }
-
-            else {
-                for (int i = 0; i< data.getClipData().getItemCount(); i++){
+            } else {
+                for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                     listaimagenes_adopcion.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
         }
-
-        baseAdapter = new GridViewAdapter(PublicarAdopcion.this,listaimagenes_adopcion);
+        baseAdapter = new GridViewAdapter(PublicarAdopcion.this, listaimagenes_adopcion);
         gvImagenes_adopcion.setAdapter(baseAdapter);
-
     }
     private void CargandoSubida(String Mostrar){
-        adopcion=new ProgressDialog(this);
-        adopcion.setMessage("Subiendo su Empleos");
-        adopcion.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        adopcion.setIndeterminate(true);
+
         if(Mostrar.equals("Ver")){
-            adopcion.show();
-        } if(Mostrar.equals("Ocultar")){
-            adopcion.hide();
+            cargandopublicar.setVisibility(View.VISIBLE);
+            cargandopublicar.isShown();
+            final int totalProgressTime = 100;
+            final Thread t = new Thread() {
+                @Override
+                public void run() {
+                    int jumpTime = 0;
+
+                    while(jumpTime < totalProgressTime) {
+                        try {
+                            jumpTime += 5;
+                            cargandopublicar.setProgress(jumpTime);
+                            sleep(200);
+                        }
+                        catch (InterruptedException e) {
+                            Log.e("Cargando Barra", e.getMessage());
+                        }
+                    }
+                }
+            };
+            t.start();
+
+        }if(Mostrar.equals("Ocultar")){ cargandopublicar.setVisibility(View.GONE);        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
-
 }

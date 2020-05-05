@@ -85,6 +85,7 @@ import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_va
 import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.queseperdio_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.recompensa_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
@@ -329,10 +330,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         }
     }
     private boolean validarfotoupdate(){
-        if (listaimagenes_desaparicion.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 3 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
-            return false;
-        }
+        if (listaimagenes_desaparicion.size() == 0){ Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show(); return false; }
         else { return true; }
     }
     private void cargarBusqueda_desaparicion() {
@@ -1110,5 +1108,4 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
-
 }
