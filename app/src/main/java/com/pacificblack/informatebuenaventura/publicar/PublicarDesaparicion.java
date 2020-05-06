@@ -82,7 +82,6 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
 public class PublicarDesaparicion extends AppCompatActivity {
     private int ultimoAnio, ultimoMes, ultimoDiaDelMes;
-    ProgressBar cargandopublicar;
     GridView gvImagenes_desaparicion;
     Uri imagenesdesaparicionUri;
     List<Uri> listaimagenes_desaparicion =  new ArrayList<>();
@@ -116,9 +115,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
             }
         });
         barra_desaparicion = findViewById(R.id.toolbar_publicar_desaparicion);
-        cargandopublicar = findViewById(R.id.CargandoPublicar_desaparicion);
         barra_desaparicion.setTitle("Publicar Desaparicion");
-        cargandopublicar.setVisibility(View.GONE);
         titulo_publicar_desaparicion = findViewById(R.id.publicar_titulo_desaparicion);
         descripcioncorta_publicar_desaparicion= findViewById(R.id.publicar_descripcioncorta_desaparicion);
         recompensa_publicar_desaparicion = findViewById(R.id.publicar_recompensa_desaparicion);
@@ -267,6 +264,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
     }
     public void Subirimagen_desaparicion(){
 
+        publicar_final_desaparicion.setEnabled(false);
         listaBase64_desaparicion.clear();
         nombre.clear();
         cadena.clear();
@@ -284,7 +282,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         if (nombre.size() == 2){ cargarWebService_desaparicion_dos(); CargandoSubida("Ver"); }
         if (nombre.size() == 3){ cargarWebService_desaparicion_tres();CargandoSubida("Ver"); }
         if (nombre.size() == 4){ cargarWebService_desaparicion(); CargandoSubida("Ver"); }
-        if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show(); }
+        if (nombre.size()>4){ publicar_final_desaparicion.setEnabled(true);Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show(); }
     }
     private void cargarWebService_desaparicion_uno() {
 
@@ -299,6 +297,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
 
         String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
             @Override
@@ -343,6 +342,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
+                        publicar_final_desaparicion.setEnabled(true);
                     }
                 }){
             @Override
@@ -378,7 +378,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
         stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
     }
@@ -395,6 +394,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
 
         String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
             @Override
@@ -439,6 +439,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
+                        publicar_final_desaparicion.setEnabled(true);
+
                     }
                 }){
             @Override
@@ -474,7 +476,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
         stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
     }
@@ -491,6 +492,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
 
         String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
             @Override
@@ -535,6 +537,8 @@ public class PublicarDesaparicion extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
+                        publicar_final_desaparicion.setEnabled(true);
+
                     }
                 }){
             @Override
@@ -570,7 +574,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
         stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
     }
@@ -587,6 +590,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         if (opcion5_desaparicion_que.isChecked()){ estado_texto_que = opcion5_desaparicion_que.getText().toString(); }
 
         String url_desaparicion = DireccionServidor+"wsnJSONRegistroDesaparicion.php?";
+        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
 
         stringRequest_desaparicion= new StringRequest(Request.Method.POST, url_desaparicion, new Response.Listener<String>() {
             @Override
@@ -631,6 +635,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
+                        publicar_final_desaparicion.setEnabled(true);
                     }
                 }){
             @Override
@@ -666,7 +671,6 @@ public class PublicarDesaparicion extends AppCompatActivity {
                 return parametros;
             }
         };
-        RequestQueue request_desaparicion = Volley.newRequestQueue(this);
         stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
     }
@@ -692,16 +696,12 @@ public class PublicarDesaparicion extends AppCompatActivity {
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(PublicarDesaparicion.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
                 }
             }
-
         }
     }
     @Override
@@ -722,31 +722,18 @@ public class PublicarDesaparicion extends AppCompatActivity {
         gvImagenes_desaparicion.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDesaparicion.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            cargandopublicar.setVisibility(View.VISIBLE);
-            cargandopublicar.isShown();
-            final int totalProgressTime = 100;
-            final Thread t = new Thread() {
-                @Override
-                public void run() {
-                    int jumpTime = 0;
-
-                    while(jumpTime < totalProgressTime) {
-                        try {
-                            jumpTime += 5;
-                            cargandopublicar.setProgress(jumpTime);
-                            sleep(200);
-                        }
-                        catch (InterruptedException e) {
-                            Log.e("Cargando Barra", e.getMessage());
-                        }
-                    }
-                }
-            };
-            t.start();
-
-        }if(Mostrar.equals("Ocultar")){ cargandopublicar.setVisibility(View.GONE);        }
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
     }
     private DatePickerDialog.OnDateSetListener listenerDeDatePicker = new DatePickerDialog.OnDateSetListener() {
         @Override

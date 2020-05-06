@@ -66,7 +66,8 @@
                 android:layout_height="175dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:text="TextView"
+                android:visibility="gone"/>
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_adopcion2"
@@ -77,7 +78,8 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
 
                 <LinearLayout
                     android:layout_width="wrap_content"

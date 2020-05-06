@@ -1046,31 +1046,18 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         gvImagenes_desaparicion.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            cargandoactualizar.setVisibility(View.VISIBLE);
-            cargandoactualizar.isShown();
-            final int totalProgressTime = 100;
-            final Thread t = new Thread() {
-                @Override
-                public void run() {
-                    int jumpTime = 0;
-
-                    while(jumpTime < totalProgressTime) {
-                        try {
-                            jumpTime += 5;
-                            cargandoactualizar.setProgress(jumpTime);
-                            sleep(200);
-                        }
-                        catch (InterruptedException e) {
-                            Log.e("Cargando Barra", e.getMessage());
-                        }
-                    }
-                }
-            };
-            t.start();
-
-        }if(Mostrar.equals("Ocultar")){ cargandoactualizar.setVisibility(View.GONE);        }
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
     }
     private DatePickerDialog.OnDateSetListener listenerDeDatePicker = new DatePickerDialog.OnDateSetListener() {
         @Override

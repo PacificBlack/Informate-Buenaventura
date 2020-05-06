@@ -565,31 +565,18 @@ public class PublicarAdopcion extends AppCompatActivity {
         gvImagenes_adopcion.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            cargandopublicar.setVisibility(View.VISIBLE);
-            cargandopublicar.isShown();
-            final int totalProgressTime = 100;
-            final Thread t = new Thread() {
-                @Override
-                public void run() {
-                    int jumpTime = 0;
-
-                    while(jumpTime < totalProgressTime) {
-                        try {
-                            jumpTime += 5;
-                            cargandopublicar.setProgress(jumpTime);
-                            sleep(200);
-                        }
-                        catch (InterruptedException e) {
-                            Log.e("Cargando Barra", e.getMessage());
-                        }
-                    }
-                }
-            };
-            t.start();
-
-        }if(Mostrar.equals("Ocultar")){ cargandopublicar.setVisibility(View.GONE);        }
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

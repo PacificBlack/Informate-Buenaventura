@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:backgroundTint="#00ffffff"
+    android:background="#00ffffff">
+
+    <androidx.cardview.widget.CardView
+        android:layout_gravity="center"
+        android:backgroundTint="@color/azulOscuro"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="20dp">
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:background="@color/azulOscuro">
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="160dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/baloo"
+                android:gravity="center"
+                android:text="Subiendp su Publicacíon"
+                android:textColor="@color/whiteTextColor" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
