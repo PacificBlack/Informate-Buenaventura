@@ -138,7 +138,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         });
         cargandoactualizar = findViewById(R.id.CargandoActualizar_desaparicion);
         cargandoactualizar.setVisibility(View.GONE);
-        barra_desaparicion = findViewById(R.id.toolbar_publicar_desaparicion);
+        barra_desaparicion = findViewById(R.id.toolbar_actualizar_desaparicion);
         barra_desaparicion.setTitle("Actualizar Desaparicion");
         titulo_actualizar_desaparicion = findViewById(R.id.actualizar_titulo_desaparicion);
         descripcioncorta_actualizar_desaparicion= findViewById(R.id.actualizar_descripcioncorta_desaparicion);
@@ -1001,8 +1001,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         RequestQueue request_desaparicion = Volley.newRequestQueue(this);
         stringRequest_desaparicion.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_desaparicion.add(stringRequest_desaparicion);
-
-
     }
 
     public String convertirUriEnBase64(Bitmap bmp){
@@ -1078,7 +1076,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         dialogoFecha.show();
     }
     @SuppressLint("NewApi")
-    public static void whatsapp(Activity activity, String phone) {
+    private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);
         try{
             Intent sendIntent =new Intent("android.intent.action.MAIN");

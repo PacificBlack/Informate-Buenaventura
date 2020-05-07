@@ -6,8 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,10 +21,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -47,7 +54,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.video_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
@@ -66,8 +83,8 @@ public class PublicarClasificados extends AppCompatActivity {
     TextInputLayout titulo_publicar_clasificados,descripcioncorta_publicar_clasificados,video_clasificados,descripcion1_publicar_clasificados,descripcion2_publicar_clasificados,buscar_publicar_clasificados;
     Button publicarfinal_clasificados,subirimagenes;
     private InterstitialAd anuncioClasificados;
-    private ProgressDialog clasificados;
-
+    Toolbar barra_clasificados;
+    ImageView whatsapp;
 
 
     @Override
@@ -75,6 +92,15 @@ public class PublicarClasificados extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_clasificados);
 
+        whatsapp = findViewById(R.id.whatsapp_publicar_clasificados);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(PublicarClasificados.this,Whatsapp);
+            }
+        });
+        barra_clasificados = findViewById(R.id.toolbar_publicar_clasificados);
+        barra_clasificados.setTitle("Publicar Clasificados");
         titulo_publicar_clasificados = findViewById(R.id.publicar_titulo_clasificados);
         descripcioncorta_publicar_clasificados = findViewById(R.id.publicar_descripcioncorta_clasificados);
         video_clasificados = findViewById(R.id.publicar_video_clasificados);
@@ -86,7 +112,7 @@ public class PublicarClasificados extends AppCompatActivity {
         publicarfinal_clasificados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarfoto() | !validarvideo()){
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validarfoto() | !validarvideo()){
                     return;
                 }
                 Subirimagen_clasificados();
@@ -118,14 +144,12 @@ public class PublicarClasificados extends AppCompatActivity {
 
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_clasificados.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_publicar_clasificados.setError(""+R.string.error_titulo);
+            titulo_publicar_clasificados.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_publicar_clasificados.setError(""+R.string.supera);
+            titulo_publicar_clasificados.setError(texto_superado);
             return false;
         }
         else {
@@ -134,35 +158,28 @@ public class PublicarClasificados extends AppCompatActivity {
         }
     }
     private boolean validardescripcioncorta(){
-
         String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_clasificados.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_publicar_clasificados.setError(descripcion_vacio);
             return false;
         }
         else if(descripcioncortainput.length()>150){
-
-            descripcioncorta_publicar_clasificados.setError(""+R.string.supera);
+            descripcioncorta_publicar_clasificados.setError(texto_superado);
             return false;
         }
         else {
             descripcioncorta_publicar_clasificados.setError(null);
             return true;
         }
-
     }
     private boolean validarvideo(){
-
         String videoinput = video_clasificados.getEditText().getText().toString().trim();
-
         if (videoinput.isEmpty()){
-            video_clasificados.setError(""+R.string.error_descripcioncorta);
+            video_clasificados.setError(video_vacio);
             return false;
         }
         else if(videoinput.length()>150){
-
-            video_clasificados.setError(""+R.string.supera);
+            video_clasificados.setError(texto_superado);
             return false;
         }
         else {
@@ -173,14 +190,12 @@ public class PublicarClasificados extends AppCompatActivity {
     }
     private boolean validardescripcion1(){
         String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()){
-            descripcion1_publicar_clasificados.setError(""+R.string.error_descripcion1);
+            descripcion1_publicar_clasificados.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcion1input.length()>150){
-
-            descripcion1_publicar_clasificados.setError(""+R.string.supera);
+        else if(descripcion1input.length()>850){
+            descripcion1_publicar_clasificados.setError(texto_superado);
             return false;
         }
         else {
@@ -188,39 +203,12 @@ public class PublicarClasificados extends AppCompatActivity {
             return true;
         }
     }
-    private boolean validardescripcion2(){
-
-        String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
-
-        if (descripcion2input.isEmpty()){
-            descripcion2_publicar_clasificados.setError(""+R.string.error_descripcion2);
-            return false;
-        }
-        else if(descripcion2input.length()>150){
-
-            descripcion2_publicar_clasificados.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            descripcion2_publicar_clasificados.setError(null);
-            return true;
-        }
-    }
     private boolean validarfoto(){
-
         if (listaimagenesclasificados.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenesclasificados.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
-            return true;
-        }
-
-        else {
-            return true;}
-
+        else { return true;}
     }
 
     public void Subirimagen_clasificados(){
@@ -256,7 +244,7 @@ public class PublicarClasificados extends AppCompatActivity {
             CargandoSubida("Ver");
         }
         if (nombre.size()>4){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima+" 4",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -273,31 +261,28 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioClasificados.isLoaded()) {
-                                        anuncioClasificados.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioClasificados.isLoaded()) { anuncioClasificados.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -320,7 +305,6 @@ public class PublicarClasificados extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
                 String videoinput = video_clasificados.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -329,7 +313,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put("video_clasificados",videoinput);
                 parametros.put("vistas_clasificados","0");
                 parametros.put("descripcion1_clasificados",descripcion1input);
-                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("descripcion2_clasificados","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Clasificados");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -357,31 +341,28 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioClasificados.isLoaded()) {
-                                        anuncioClasificados.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioClasificados.isLoaded()) { anuncioClasificados.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -404,7 +385,6 @@ public class PublicarClasificados extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
                 String videoinput = video_clasificados.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -413,7 +393,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put("video_clasificados",videoinput);
                 parametros.put("vistas_clasificados","0");
                 parametros.put("descripcion1_clasificados",descripcion1input);
-                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("descripcion2_clasificados","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Clasificados");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -442,31 +422,28 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioClasificados.isLoaded()) {
-                                        anuncioClasificados.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioClasificados.isLoaded()) { anuncioClasificados.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -489,7 +466,6 @@ public class PublicarClasificados extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
                 String videoinput = video_clasificados.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -498,7 +474,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put("video_clasificados",videoinput);
                 parametros.put("vistas_clasificados","0");
                 parametros.put("descripcion1_clasificados",descripcion1input);
-                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("descripcion2_clasificados","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Clasificados");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -524,31 +500,28 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarClasificados.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioClasificados.isLoaded()) {
-                                        anuncioClasificados.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioClasificados.isLoaded()) { anuncioClasificados.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -572,7 +545,6 @@ public class PublicarClasificados extends AppCompatActivity {
                 String descripcioncortainput = descripcioncorta_publicar_clasificados.getEditText().getText().toString().trim();
                 String videoinput = video_clasificados.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_clasificados.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_clasificados.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -581,7 +553,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 parametros.put("video_clasificados",videoinput);
                 parametros.put("vistas_clasificados","0");
                 parametros.put("descripcion1_clasificados",descripcion1input);
-                parametros.put("descripcion2_clasificados",descripcion2input);
+                parametros.put("descripcion2_clasificados","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Clasificados");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -615,29 +587,23 @@ public class PublicarClasificados extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 4 imagenes"),IMAGE_PICK_CODE);
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(PublicarClasificados.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
                 }
             }
-
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
@@ -649,19 +615,45 @@ public class PublicarClasificados extends AppCompatActivity {
                 }
             }
         }
-
         baseAdapter = new GridViewAdapter(PublicarClasificados.this,listaimagenesclasificados);
         gvImagenes_clasificados.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        clasificados=new ProgressDialog(this);
-        clasificados.setMessage("Subiendo su Empleos");
-        clasificados.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        clasificados.setIndeterminate(true);
-        if(Mostrar.equals("Ver")){
-            clasificados.show();
-        }if(Mostrar.equals("Ocultar")){
-            clasificados.hide();
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+
+        switch (Mostrar){
+            case "Ver":
+                dialog.show();
+                Log.i("Mostrar se ve", Mostrar);
+                break;
+
+            case "Ocultar":
+                dialog.dismiss();
+                Log.i("Mostrar se oculta", Mostrar);
+                break;
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 }

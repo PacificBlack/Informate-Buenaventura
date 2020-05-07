@@ -11,7 +11,20 @@
     android:layout_gravity="center"
     tools:context=".publicar.PublicarDonaciones">
 
+    <Toolbar
+        android:id="@+id/toolbar_publicar_donaciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/azulOscuro"
+        android:titleTextColor="@color/blanco"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.PopupOverlay" />
+
     <ScrollView
+        android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">
@@ -34,7 +47,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Publica una desaparición en nuestra app"
+                    android:text="Publica una Donación en nuestra app"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
@@ -114,9 +127,12 @@
 
                     <Button
                         android:id="@+id/subir_imagenes_donaciones"
-                        android:layout_width="wrap_content"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:text="Subir imagenes" />
+                        android:background="@drawable/estilo_botones"
+                        android:text="Subir imagenes"
+                        android:textColor="@color/blanco" />
 
 
                     <HorizontalScrollView
@@ -154,7 +170,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
                         app:counterEnabled="true"
-                        app:counterMaxLength="740"
+                        app:counterMaxLength="850"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -192,10 +208,13 @@
 
                     <Button
                         android:id="@+id/publicar_final_donaciones"
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/publicar_adopcion" />
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/blanco"
+                        android:layout_gravity="center"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Publicar una Donación" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -242,7 +261,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/whatsapp" />
+                    android:src="@drawable/whatsapp"
+                    android:id="@+id/whatsapp_publicar_donaciones"  />
 
             </LinearLayout>
 

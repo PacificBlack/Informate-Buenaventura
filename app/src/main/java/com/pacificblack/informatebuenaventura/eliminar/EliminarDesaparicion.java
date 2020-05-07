@@ -132,13 +132,10 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
             }
         });
 
-
         requestbuscar_eliminar = Volley.newRequestQueue(getApplicationContext());
         eliminar_buscar_adopcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 if (!validarid()){return;}
                 cargarBusqueda_desaparicion();
                 CargandoSubida("Ver");

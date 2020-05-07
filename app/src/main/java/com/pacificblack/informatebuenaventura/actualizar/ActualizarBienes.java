@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,12 +21,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -57,20 +62,32 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_noimagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.precio_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
 public class ActualizarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     TextInputLayout titulo_actualizar_bienes, descripcioncorta_actualizar_bienes, descripcion1_actualizar_bienes, descripcion2_actualizar_bienes, precio_actualizar_bienes, buscar_actualizar_bienes;
-    Button actualizarimagenes;
-    ImageButton actualizar_editar_bienes,actualizar_buscar_bienes;
+    Button actualizar_editar_bienes,actualizarimagenes;
+    ImageButton actualizar_buscar_bienes;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_bienes,imagen2_actualizar_bienes,imagen3_actualizar_bienes,imagen4_actualizar_bienes;
@@ -85,13 +102,23 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     StringRequest stringRequest_bienes;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    private ProgressDialog bienes;
+    Toolbar barra_bienes;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_bienes);
 
+        whatsapp = findViewById(R.id.whatsapp_actualizar_bienes);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(ActualizarBienes.this,Whatsapp);
+            }
+        });
+        barra_bienes = findViewById(R.id.toolbar_actualizar_bienes);
+        barra_bienes.setTitle("Actualizar Bienes");
         titulo_actualizar_bienes = findViewById(R.id.actualizar_titulo_bienes);
         descripcioncorta_actualizar_bienes = findViewById(R.id.actualizar_descripcioncorta_bienes);
         descripcion1_actualizar_bienes = findViewById(R.id.actualizar_descripcion1_bienes);
@@ -107,46 +134,31 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         gvImagenes_bienes = findViewById(R.id.actualizar_grid_bienes);
         actualizarimagenes = findViewById(R.id.actualizar_imagenes_bienes);
 
-
         actualizar_editar_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!validartitulo()|
-                        !validardescripcioncorta()|
-                        ! validardescripcion1()|
-                        ! validardescripcion2()|
-                        ! validarprecio()|
-                        ! validarid()){return;}
-
+                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarprecio()| ! validarid()){return;}
                 if (!validarfotoupdate()){
-
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
-                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-                            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+                    mensaje.setMessage(aviso_actualizar)
+                            .setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                                 Subirimagen_bienes_update();
-
                         }
-                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+                    }).setPositiveButton(aviso_actualizar_noimagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             cargarActualizarSinImagen_bienes();
                             CargandoSubida("Ver");
-
-
                         }
                     });
 
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
-
-
-                    return; }
-
+                    return;
+                }
             }
         });
 
@@ -154,7 +166,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         actualizar_buscar_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
                 CargandoSubida("Ver");
@@ -171,34 +182,25 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
         });
-
     }
-
     private boolean validarid(){
         String idinput = buscar_actualizar_bienes.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            buscar_actualizar_bienes.setError(""+R.string.error_descripcioncorta);
+            buscar_actualizar_bienes.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            buscar_actualizar_bienes.setError(""+R.string.supera);
+            buscar_actualizar_bienes.setError(texto_superado);
             return false;
         }
         else {
@@ -208,13 +210,11 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     }
     private boolean validartitulo() {
         String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()) {
-            titulo_actualizar_bienes.setError("" + R.string.error_titulo);
+            titulo_actualizar_bienes.setError(titulo_vacio);
             return false;
         } else if (tituloinput.length() > 120) {
-
-            titulo_actualizar_bienes.setError("" + R.string.supera);
+            titulo_actualizar_bienes.setError(texto_superado);
             return false;
         } else {
             titulo_actualizar_bienes.setError(null);
@@ -222,62 +222,38 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         }
     }
     private boolean validardescripcioncorta() {
-
         String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()) {
-            descripcioncorta_actualizar_bienes.setError("" + R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_bienes.setError(descripcion_vacio);
             return false;
         } else if (descripcioncortainput.length() > 150) {
-
-            descripcioncorta_actualizar_bienes.setError("" + R.string.supera);
+            descripcioncorta_actualizar_bienes.setError(texto_superado);
             return false;
         } else {
             descripcioncorta_actualizar_bienes.setError(null);
             return true;
         }
-
     }
     private boolean validardescripcion1() {
         String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()) {
-            descripcion1_actualizar_bienes.setError("" + R.string.error_descripcion1);
+            descripcion1_actualizar_bienes.setError(descripcio1_vacio);
             return false;
-        } else if (descripcion1input.length() > 150) {
-            descripcion1_actualizar_bienes.setError("" + R.string.supera);
+        } else if (descripcion1input.length() > 850) {
+            descripcion1_actualizar_bienes.setError(texto_superado);
             return false;
         } else {
             descripcion1_actualizar_bienes.setError(null);
             return true;
         }
     }
-    private boolean validardescripcion2() {
-
-        String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
-
-        if (descripcion2input.isEmpty()) {
-            descripcion2_actualizar_bienes.setError("" + R.string.error_descripcion2);
-            return false;
-        } else if (descripcion2input.length() > 150) {
-
-            descripcion2_actualizar_bienes.setError("" + R.string.supera);
-            return false;
-        } else {
-            descripcion2_actualizar_bienes.setError(null);
-            return true;
-        }
-    }
     private boolean validarprecio() {
-
         String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
-
         if (precioinput.isEmpty()) {
-            precio_actualizar_bienes.setError("" + R.string.error_descripcion2);
+            precio_actualizar_bienes.setError(precio_vacio);
             return false;
         } else if (precioinput.length() > 20) {
-
-            precio_actualizar_bienes.setError("" + R.string.supera);
+            precio_actualizar_bienes.setError(texto_superado);
             return false;
         } else {
             precio_actualizar_bienes.setError(null);
@@ -285,9 +261,8 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         }
     }
     private boolean validarfotoupdate(){
-
         if (listaimagenes_bienes.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
         else {
@@ -344,7 +319,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         precio_actualizar_bienes.getEditText().setText(String.valueOf(bienes.getPrecio_row_bienes()));
 
 
-
         Picasso.get().load(bienes.getImagen1_bienes())
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
@@ -381,9 +355,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 cadena.add(convertirUriEnBase64(bitmap));
                 bitmap.recycle();
             }catch (IOException e){
-
             }
-
         }
         if (nombre.size() == 1){
             cargarActualizarConImagen_bienes_1();
@@ -399,12 +371,9 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         }
         if (nombre.size() == 4){
             cargarActualizarConImagen_bienes();
-
             CargandoSubida("Ver");
         }
-        if (nombre.size()>4){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
-        }
+        if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show();        }
 
     }
     private void cargarActualizarSinImagen_bienes() {
@@ -421,34 +390,28 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
 
@@ -482,7 +445,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
 
 
@@ -492,7 +454,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Bienes");
@@ -525,33 +487,27 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -580,7 +536,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
 
 
@@ -590,7 +545,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -627,33 +582,27 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -682,7 +631,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
 
 
@@ -692,7 +640,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -729,33 +677,27 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -784,7 +726,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
 
 
@@ -794,7 +735,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -831,33 +772,27 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -886,7 +821,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 String tituloinput = titulo_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_bienes.getEditText().getText().toString().trim();
 
 
@@ -896,7 +830,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -911,13 +845,10 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 return parametros;
             }
         };
-
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
         stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_bienes_actualizar.add(stringRequest_bienes);
-
     }
-
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
@@ -952,8 +883,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
                 imagenesbienesUri = data.getData();
@@ -968,15 +897,42 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         gvImagenes_bienes.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        bienes=new ProgressDialog(this);
-        bienes.setMessage("Subiendo su Empleos");
-        bienes.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        bienes.setIndeterminate(true);
-        if(Mostrar.equals("Ver")){
-            bienes.show();
-        } if(Mostrar.equals("Ocultar")){
-            bienes.hide();
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+
+        switch (Mostrar){
+            case "Ver":
+                dialog.show();
+                Log.i("Mostrar se ve", Mostrar);
+                break;
+
+            case "Ocultar":
+                dialog.dismiss();
+                Log.i("Mostrar se oculta", Mostrar);
+                break;
         }
     }
 
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
+        }
+    }
 }

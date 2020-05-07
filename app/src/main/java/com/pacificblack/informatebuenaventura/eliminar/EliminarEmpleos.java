@@ -4,15 +4,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -39,34 +45,47 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
-
 public class EliminarEmpleos extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     TextInputLayout id_eliminar_empleos;
     TextView titulo_eliminar_empleos, descripcioncorta_eliminar_empleos, necesidad_eliminar_empleos;
-    ImageButton eliminar_empleos,eliminar_buscar_empleos;
+    ImageButton eliminar_buscar_empleos;
+    Button eliminar_empleos;
     RequestQueue requestbuscar;
     StringRequest stringRequest_empleos;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_empleos;
     private InterstitialAd anuncioempleos;
-    private ProgressDialog empleos;
-
+    Toolbar barra_empleos;
+    ImageView whatsapp;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_empleos);
+
+        whatsapp = findViewById(R.id.whatsapp_eliminar_empleos);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(EliminarEmpleos.this,Whatsapp);
+            }
+        });
+        barra_empleos = findViewById(R.id.toolbar_eliminar_empleos);
+        barra_empleos.setTitle("Eliminar Empleos");
 
         titulo_eliminar_empleos = findViewById(R.id.eliminar_titulo_empleos);
         descripcioncorta_eliminar_empleos = findViewById(R.id.eliminar_descripcion_empleos);
@@ -122,14 +141,12 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
 
     private boolean validarid(){
         String idinput = id_eliminar_empleos.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            id_eliminar_empleos.setError(""+R.string.error_descripcioncorta);
+            id_eliminar_empleos.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            id_eliminar_empleos.setError(""+R.string.supera);
+            id_eliminar_empleos.setError(texto_superado);
             return false;
         }
         else {
@@ -139,11 +156,8 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
     }
 
     private void cargarBusqueda_empleos() {
-
         String url_buscar_empleos = DireccionServidor+"wsnJSONBuscarEmpleos.php?id_ofertaempleos="+id_eliminar_empleos.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_empleos,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
@@ -151,7 +165,6 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
     }
 
     @Override
@@ -202,38 +215,32 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarEmpleos.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioempleos.isLoaded()) {
-                                        anuncioempleos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EliminarEmpleos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioempleos.isLoaded()) { anuncioempleos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
                     CargandoSubida("Ocultar");
-
                 }
             }
         },
@@ -243,7 +250,6 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
-
                     }
                 }){
 
@@ -266,16 +272,34 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
 
     }
     private void CargandoSubida(String Mostrar){
-        empleos=new ProgressDialog(this);
-        empleos.setMessage("Subiendo su Empleos");
-        empleos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        empleos.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarEmpleos.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            empleos.show();
-        }if(Mostrar.equals("Ocultar")){
-            empleos.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
         }
     }
 
-
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try {
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sendIntent.putExtra("jid", formattedNumber + "@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

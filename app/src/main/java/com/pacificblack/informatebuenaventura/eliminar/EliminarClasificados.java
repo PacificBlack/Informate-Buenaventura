@@ -4,15 +4,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -39,31 +45,45 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
-
 public class EliminarClasificados extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     StringRequest stringRequestclasificados;
-    ImageButton eliminar_clasificados, eliminar_buscar_clasificados;
+    ImageButton  eliminar_buscar_clasificados;
+    Button eliminar_clasificados;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_clasificados, imagen2_eliminar_clasificados, imagen3_eliminar_clasificados, imagen4_eliminar_clasificados;
     TextView titulo_eliminar_clasificados, descripcioncorta_eliminar_clasificados, video_eliminar_clasificados, descripcion1_eliminar_clasificados, descripcion2_eliminar_clasificados;
     TextInputLayout buscar_eliminar_clasificados;
     private InterstitialAd anuncioClasificados_eliminar;
-    private ProgressDialog clasificados;
+    Toolbar barra_clasificados;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_clasificados);
 
+        whatsapp = findViewById(R.id.whatsapp_eliminar_clasificados);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(EliminarClasificados.this,Whatsapp);
+            }
+        });
+        barra_clasificados = findViewById(R.id.toolbar_eliminar_clasificados);
+        barra_clasificados.setTitle("Eliminar Clasificados");
         titulo_eliminar_clasificados = findViewById(R.id.eliminar_titulo_clasificados);
         descripcioncorta_eliminar_clasificados = findViewById(R.id.eliminar_descripcioncorta_clasificados);
         video_eliminar_clasificados = findViewById(R.id.eliminar_video_clasificados);
@@ -125,14 +145,12 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
     private boolean validarid(){
         String idinput = buscar_eliminar_clasificados.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            buscar_eliminar_clasificados.setError(""+R.string.error_descripcioncorta);
+            buscar_eliminar_clasificados.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            buscar_eliminar_clasificados.setError(""+R.string.supera);
+            buscar_eliminar_clasificados.setError(texto_superado);
             return false;
         }
         else {
@@ -141,24 +159,17 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         }
     }
     private void cargarBusqueda_clasificados() {
-
         String url_buscar_adopcion = DireccionServidor+"wsnJSONBuscarClasificados.php?id_clasificados="+buscar_eliminar_clasificados.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_adopcion,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
-
     }
-
     @Override
     public void onResponse(JSONObject response) {
 
@@ -217,7 +228,6 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         CargandoSubida("Ocultar");
 
     }
-
     private void cargarEliminar_clasificados() {
 
         String url_clasificados = DireccionServidor+"wsnJSONEliminar.php?";
@@ -225,59 +235,46 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         stringRequestclasificados= new StringRequest(Request.Method.POST, url_clasificados, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 String resul = "Eliminada exitosamente";
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
 
-
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarClasificados.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioClasificados_eliminar.isLoaded()) {
-                                        anuncioClasificados_eliminar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Eliminada exitosamente");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EliminarClasificados.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioClasificados_eliminar.isLoaded()) { anuncioClasificados_eliminar.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
                     CargandoSubida("Ocultar");
-
                 }
-
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                         CargandoSubida("Ocultar");
-
-
                     }
                 }){
 
@@ -302,16 +299,34 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
     }
     private void CargandoSubida(String Mostrar){
-        clasificados=new ProgressDialog(this);
-        clasificados.setMessage("Subiendo su Empleos");
-        clasificados.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        clasificados.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarClasificados.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            clasificados.show();
-        }if(Mostrar.equals("Ocultar")){
-            clasificados.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
         }
     }
 
-
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try {
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sendIntent.putExtra("jid", formattedNumber + "@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

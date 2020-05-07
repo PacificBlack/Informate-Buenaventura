@@ -38,7 +38,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/baloo"
                 android:gravity="center"
-                android:text="Subiendp su Publicacíon"
+                android:text="Cargando"
                 android:textColor="@color/whiteTextColor" />
 
         </LinearLayout>

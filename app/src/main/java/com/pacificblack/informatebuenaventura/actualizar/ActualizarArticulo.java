@@ -1,4 +1,5 @@
 package com.pacificblack.informatebuenaventura.actualizar;
+//Todo: Clase completamente lista.
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -7,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,12 +22,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -57,7 +63,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_noimagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.cantidad_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.contacto_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.precio_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.ubicacion_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -77,14 +100,15 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     StringRequest stringRequest_comprayventa;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    private ProgressDialog articulo;
     TextInputLayout titulo_actualizar_comprayventa, descripcioncorta_actualizar_comprayventa, descripcion_actualizar_comprayventa, descripcionextra_actualizar_comprayventa, precio_actualizar_comprayventa, ubicacion_actualizar_comprayventa, cantidad_actualizar_comprayventa, contacto_actualizar_comprayventa, buscar_actualizar_comprayventa;
-    Button subirimagenes;
-    ImageButton actualizar_editar_comprayventa, actualizar_buscar_comprayventa;
+    Button actualizar_editar_comprayventa,subirimagenes;
+    ImageButton  actualizar_buscar_comprayventa;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_comprayventa,imagen2_actualizar_comprayventa, imagen3_actualizar_comprayventa;
     private InterstitialAd anuncioAdopcion_actualizar;
+    Toolbar barra_articulo;
+    ImageView whatsapp;
 
 
     @Override
@@ -92,7 +116,15 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_articulo);
 
-
+        whatsapp = findViewById(R.id.whatsapp_actualizar_articulo);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(ActualizarArticulo.this,Whatsapp);
+            }
+        });
+        barra_articulo = findViewById(R.id.toolbar_actualizar_articulo);
+        barra_articulo.setTitle("Actualizar Articulo");
         titulo_actualizar_comprayventa = findViewById(R.id.actualizar_titulo_comprayventa);
         descripcioncorta_actualizar_comprayventa = findViewById(R.id.actualizar_descripcioncorta_comprayventa);
         descripcion_actualizar_comprayventa = findViewById(R.id.actualizar_descripcion_comprayventa);
@@ -130,28 +162,22 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         actualizar_editar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validardescripcion()| !validardescripcionextra()| !validarprecio()| !validarubicacion()| !validarcantidad()| !validarcontacto()){return;}
-
+                if (!validarid()| !validartitulo()| !validardescripcioncorta()| !validardescripcion()| !validarprecio()| !validarubicacion()| !validarcantidad()| !validarcontacto()){return;}
                 if (!validarfotoupdate()){
-
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
-                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-                            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+                    mensaje.setMessage(aviso_actualizar)
+                            .setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                                 Subirimagen_comprayventa_update();
-
                         }
-                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+                    }).setPositiveButton(aviso_actualizar_noimagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_comprayventa();
                             CargandoSubida("Ver");
-
                         }
                     });
-
                     AlertDialog titulo = mensaje.create();
                     titulo.setTitle("Modificar Publicación");
                     titulo.show();
@@ -160,21 +186,15 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
             }
         });
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         actualizar_buscar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                subirimagenes.setText("Actualizar Imagenes");
-
                 if (!validarid()){return;}
                 cargarBusqueda_comprayventa();
                 CargandoSubida("Ver");
-
             }
         });
-
         anuncioAdopcion_actualizar = new InterstitialAd(this);
         anuncioAdopcion_actualizar.setAdUnitId(AnuncioActualizar);
         anuncioAdopcion_actualizar.loadAd(new AdRequest.Builder().build());
@@ -182,14 +202,12 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     private boolean validarid(){
         String idinput = buscar_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            buscar_actualizar_comprayventa.setError(""+R.string.error_descripcioncorta);
+            buscar_actualizar_comprayventa.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            buscar_actualizar_comprayventa.setError(""+R.string.supera);
+            buscar_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -199,14 +217,12 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     private boolean validartitulo(){
         String tituloinput = titulo_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_actualizar_comprayventa.setError(""+R.string.error_titulo);
+            titulo_actualizar_comprayventa.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_actualizar_comprayventa.setError(""+R.string.supera);
+            titulo_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -216,14 +232,12 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     private boolean validardescripcioncorta(){
         String descripcioncortainput = descripcioncorta_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_actualizar_comprayventa.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_comprayventa.setError(descripcion_vacio);
             return false;
         }
         else if(descripcioncortainput.length()>150){
-
-            descripcioncorta_actualizar_comprayventa.setError(""+R.string.supera);
+            descripcioncorta_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -233,14 +247,12 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     private boolean validardescripcion(){
         String descripcioninput = descripcion_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (descripcioninput.isEmpty()){
-            descripcion_actualizar_comprayventa.setError(""+R.string.error_descripcion1);
+            descripcion_actualizar_comprayventa.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcioninput.length()>740){
-
-            descripcion_actualizar_comprayventa.setError(""+R.string.supera);
+        else if(descripcioninput.length()>850){
+            descripcion_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -248,33 +260,14 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             return true;
         }
     }
-    private boolean validardescripcionextra(){
-        String descripcionextrainput = descripcionextra_actualizar_comprayventa.getEditText().getText().toString().trim();
-
-        if (descripcionextrainput.isEmpty()){
-            descripcionextra_actualizar_comprayventa.setError(""+R.string.error_descripcion2);
-            return false;
-        }
-        else if(descripcionextrainput.length()>740){
-
-            descripcionextra_actualizar_comprayventa.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            descripcionextra_actualizar_comprayventa.setError(null);
-            return true;
-        }
-    }
     private boolean validarprecio(){
         String precioinput = precio_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (precioinput.isEmpty()){
-            precio_actualizar_comprayventa.setError(""+R.string.error_precio);
+            precio_actualizar_comprayventa.setError(precio_vacio);
             return false;
         }
         else if(precioinput.length()>400){
-
-            precio_actualizar_comprayventa.setError(""+R.string.supera);
+            precio_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -283,16 +276,13 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         }
     }
     private boolean validarubicacion(){
-
         String ubicacioninput = ubicacion_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (ubicacioninput.isEmpty()){
-            ubicacion_actualizar_comprayventa.setError(""+R.string.error_ubicacion);
+            ubicacion_actualizar_comprayventa.setError(ubicacion_vacio);
             return false;
         }
         else if(ubicacioninput.length()>150){
-
-            ubicacion_actualizar_comprayventa.setError(""+R.string.supera);
+            ubicacion_actualizar_comprayventa.setError(ubicacion_vacio);
             return false;
         }
         else {
@@ -301,16 +291,13 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         }
     }
     private boolean validarcantidad(){
-
         String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (cantidadinput.isEmpty()){
-            cantidad_actualizar_comprayventa.setError(""+R.string.error_cantidad);
+            cantidad_actualizar_comprayventa.setError(cantidad_vacio);
             return false;
         }
-        else if(cantidadinput.length()>150){
-
-            cantidad_actualizar_comprayventa.setError(""+R.string.supera);
+        else if(cantidadinput.length()>10){
+            cantidad_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -320,14 +307,12 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     }
     private boolean validarcontacto(){
         String contactoinput = contacto_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         if (contactoinput.isEmpty()){
-            contacto_actualizar_comprayventa.setError(""+R.string.error_contacto);
+            contacto_actualizar_comprayventa.setError(contacto_vacio);
             return false;
         }
         else if(contactoinput.length()>150){
-
-            contacto_actualizar_comprayventa.setError(""+R.string.supera);
+            contacto_actualizar_comprayventa.setError(texto_superado);
             return false;
         }
         else {
@@ -336,29 +321,18 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         }
     }
     private boolean validarfotoupdate(){
-
-        if (listaimagenes_comprayventa.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else {
-            return true;
-        }
+        if (listaimagenes_comprayventa.size() == 0){ Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show(); return false; }
+        else { return true; }
     }
-
     private void cargarBusqueda_comprayventa() {
-
         String url_buscar_comprayventa = DireccionServidor+"wsnJSONBuscarComprayVenta.php?id_comprayventa="+buscar_actualizar_comprayventa.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_comprayventa,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         CargandoSubida("Ocultar");
-
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -416,9 +390,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
 
         CargandoSubida("Ocultar");
 
-
     }
-
     private void cargarActualizarSinImagen_comprayventa() {
 
         String url_comprayventa = DireccionServidor+"wsnJSONActualizarSinImagenArticulo.php?";
@@ -432,31 +404,32 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion_actualizar.isLoaded()) {
-                                        anuncioAdopcion_actualizar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion_actualizar.isLoaded()) {
+                                anuncioAdopcion_actualizar.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -481,7 +454,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioninput = descripcion_actualizar_comprayventa.getEditText().getText().toString().trim();
-                String descripcionextrainput = descripcionextra_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String ubicacioninput = ubicacion_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
@@ -493,7 +465,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
                 parametros.put("descripcion1_comprayventa",descripcioninput);
-                parametros.put("descripcion2_comprayventa",descripcionextrainput);
+                parametros.put("descripcion2_comprayventa","Vacio");
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("vistas_comprayventa","0");
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
@@ -524,31 +496,32 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion_actualizar.isLoaded()) {
-                                        anuncioAdopcion_actualizar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion_actualizar.isLoaded()) {
+                                anuncioAdopcion_actualizar.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -573,7 +546,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioninput = descripcion_actualizar_comprayventa.getEditText().getText().toString().trim();
-                String descripcionextrainput = descripcionextra_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String ubicacioninput = ubicacion_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
@@ -585,7 +557,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
                 parametros.put("descripcion1_comprayventa",descripcioninput);
-                parametros.put("descripcion2_comprayventa",descripcionextrainput);
+                parametros.put("descripcion2_comprayventa","Vacio");
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
@@ -618,31 +590,32 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion_actualizar.isLoaded()) {
-                                        anuncioAdopcion_actualizar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion_actualizar.isLoaded()) {
+                                anuncioAdopcion_actualizar.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -667,7 +640,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioninput = descripcion_actualizar_comprayventa.getEditText().getText().toString().trim();
-                String descripcionextrainput = descripcionextra_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String ubicacioninput = ubicacion_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
@@ -679,7 +651,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
                 parametros.put("descripcion1_comprayventa",descripcioninput);
-                parametros.put("descripcion2_comprayventa",descripcionextrainput);
+                parametros.put("descripcion2_comprayventa","Vacio");
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
@@ -712,31 +684,32 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
 
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarArticulo.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion_actualizar.isLoaded()) {
-                                        anuncioAdopcion_actualizar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioAdopcion_actualizar.isLoaded()) {
+                                anuncioAdopcion_actualizar.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -761,7 +734,6 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String descripcioninput = descripcion_actualizar_comprayventa.getEditText().getText().toString().trim();
-                String descripcionextrainput = descripcionextra_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String precioinput = precio_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String ubicacioninput = ubicacion_actualizar_comprayventa.getEditText().getText().toString().trim();
                 String cantidadinput = cantidad_actualizar_comprayventa.getEditText().getText().toString().trim();
@@ -773,7 +745,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 parametros.put("titulo_comprayventa",tituloinput);
                 parametros.put("descripcionrow_comprayventa",descripcioncortainput);
                 parametros.put("descripcion1_comprayventa",descripcioninput);
-                parametros.put("descripcion2_comprayventa",descripcionextrainput);
+                parametros.put("descripcion2_comprayventa","Vacio");
                 parametros.put("precio_comprayventa",precioinput);
                 parametros.put("ubicacion_comprayventa",ubicacioninput);
                 parametros.put("cantidad_comprayventa",cantidadinput);
@@ -823,9 +795,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             cargarActualizarConImagen_comprayventa();
             CargandoSubida("Ver");
         }
-        if (nombre.size()>3){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 3 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
-        }
+        if (nombre.size()>3){ Toast.makeText(getApplicationContext(),imagen_maxima +"3",Toast.LENGTH_LONG).show();        }
 
     }
     public String convertirUriEnBase64(Bitmap bmp){
@@ -846,10 +816,8 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     seleccionarimagen();
-
                 }
                 else{
                     Toast.makeText(ActualizarArticulo.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
@@ -860,10 +828,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
             if (data.getClipData() == null){
                 imagenescomprayventaUri = data.getData();
                 listaimagenes_comprayventa.add(imagenescomprayventaUri);
@@ -873,19 +838,45 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 }
             }
         }
-
         baseAdapter = new GridViewAdapter(ActualizarArticulo.this,listaimagenes_comprayventa);
         gvImagenes_comprayventa_actualizar.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        articulo=new ProgressDialog(this);
-        articulo.setMessage("Subiendo su Empleos");
-        articulo.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        articulo.setIndeterminate(true);
-        if(Mostrar.equals("Ver")){
-            articulo.show();
-        } if(Mostrar.equals("Ocultar")){
-            articulo.hide();
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+
+        switch (Mostrar){
+            case "Ver":
+                dialog.show();
+                Log.i("Mostrar se ve", Mostrar);
+                break;
+
+            case "Ocultar":
+                dialog.dismiss();
+                Log.i("Mostrar se oculta", Mostrar);
+                break;
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 }

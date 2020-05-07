@@ -6,8 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,10 +21,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -47,7 +54,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.precio_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -67,14 +84,24 @@ public class PublicarBienes extends AppCompatActivity  {
     StringRequest stringRequest_bienes;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    private ProgressDialog bienes;
     private InterstitialAd anunciobienes;
+    Toolbar barra_bienes;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_bienes);
 
+        whatsapp = findViewById(R.id.whatsapp_publicar_bienes);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(PublicarBienes.this,Whatsapp);
+            }
+        });
+        barra_bienes = findViewById(R.id.toolbar_publicar_bienes);
+        barra_bienes.setTitle("Publicar Bienes");
         titulo_publicar_bienes = findViewById(R.id.publicar_titulo_bienes);
         descripcioncorta_publicar_bienes = findViewById(R.id.publicar_descripcioncorta_bienes);
         descripcion1_publicar_bienes = findViewById(R.id.publicar_descripcion1_bienes);
@@ -87,7 +114,7 @@ public class PublicarBienes extends AppCompatActivity  {
         publicarfinal_bienes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validardescripcion2() | !validarprecio() | !validarfoto()){
+                if (!validartitulo() | !validardescripcioncorta() | !validardescripcion1() | !validarprecio() | !validarfoto()){
                     return;
                 }
                 Subirimagen_bienes();
@@ -108,7 +135,6 @@ public class PublicarBienes extends AppCompatActivity  {
                     }else {
                         seleccionarimagen();
                     }
-
                 }else{
                     seleccionarimagen();
                 }
@@ -118,13 +144,11 @@ public class PublicarBienes extends AppCompatActivity  {
 
     private boolean validartitulo() {
         String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()) {
-            titulo_publicar_bienes.setError("" + R.string.error_titulo);
+            titulo_publicar_bienes.setError(titulo_vacio);
             return false;
         } else if (tituloinput.length() > 120) {
-
-            titulo_publicar_bienes.setError("" + R.string.supera);
+            titulo_publicar_bienes.setError(texto_superado);
             return false;
         } else {
             titulo_publicar_bienes.setError(null);
@@ -132,90 +156,51 @@ public class PublicarBienes extends AppCompatActivity  {
         }
     }
     private boolean validardescripcioncorta() {
-
         String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()) {
-            descripcioncorta_publicar_bienes.setError("" + R.string.error_descripcioncorta);
+            descripcioncorta_publicar_bienes.setError(descripcion_vacio);
             return false;
         } else if (descripcioncortainput.length() > 150) {
-
-            descripcioncorta_publicar_bienes.setError("" + R.string.supera);
+            descripcioncorta_publicar_bienes.setError(texto_superado);
             return false;
         } else {
             descripcioncorta_publicar_bienes.setError(null);
             return true;
         }
-
     }
     private boolean validardescripcion1() {
         String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()) {
-            descripcion1_publicar_bienes.setError("" + R.string.error_descripcion1);
+            descripcion1_publicar_bienes.setError(descripcio1_vacio);
             return false;
-        } else if (descripcion1input.length() > 150) {
-
-            descripcion1_publicar_bienes.setError("" + R.string.supera);
+        } else if (descripcion1input.length() > 850) {
+            descripcion1_publicar_bienes.setError(texto_superado);
             return false;
         } else {
             descripcion1_publicar_bienes.setError(null);
             return true;
         }
     }
-    private boolean validardescripcion2() {
-
-        String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
-
-        if (descripcion2input.isEmpty()) {
-            descripcion2_publicar_bienes.setError("" + R.string.error_descripcion2);
-            return false;
-        } else if (descripcion2input.length() > 150) {
-
-            descripcion2_publicar_bienes.setError("" + R.string.supera);
-            return false;
-        } else {
-            descripcion2_publicar_bienes.setError(null);
-            return true;
-
-
-        }
-    }
     private boolean validarprecio() {
-
         String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
-
         if (precioinput.isEmpty()) {
-            precio_publicar_bienes.setError("" + R.string.error_descripcion2);
+            precio_publicar_bienes.setError(precio_vacio);
             return false;
         } else if (precioinput.length() > 20) {
-
-            precio_publicar_bienes.setError("" + R.string.supera);
+            precio_publicar_bienes.setError(texto_superado);
             return false;
         } else {
             precio_publicar_bienes.setError(null);
             return true;
-
-
         }
     }
     private boolean validarfoto(){
-
         if (listaimagenes_bienes.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 4 imagenes para la publicacion (Puede subir la misma 4 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
-
-        else if (listaimagenes_bienes.size() > 1){
-            Toast.makeText(getApplicationContext(),"Solo se agregaran 4 imagenes",Toast.LENGTH_LONG).show();
-            return true;
-        }
-
-        else {
-            return true;}
-
+        else { return true;}
     }
-
     public void Subirimagen_bienes(){
 
         listaBase64_bienes.clear();
@@ -248,8 +233,7 @@ public class PublicarBienes extends AppCompatActivity  {
             CargandoSubida("Ver");
         }
         if (nombre.size()>4){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 4 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
-        }
+            Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show();        }
     }
 
     private void cargarWebService_bienes_1() {
@@ -264,27 +248,28 @@ public class PublicarBienes extends AppCompatActivity  {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -307,7 +292,6 @@ public class PublicarBienes extends AppCompatActivity  {
                 String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
@@ -315,7 +299,7 @@ public class PublicarBienes extends AppCompatActivity  {
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -348,27 +332,27 @@ public class PublicarBienes extends AppCompatActivity  {
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -391,7 +375,6 @@ public class PublicarBienes extends AppCompatActivity  {
                 String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
@@ -399,7 +382,7 @@ public class PublicarBienes extends AppCompatActivity  {
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -430,27 +413,27 @@ public class PublicarBienes extends AppCompatActivity  {
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -473,7 +456,6 @@ public class PublicarBienes extends AppCompatActivity  {
                 String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
@@ -481,7 +463,7 @@ public class PublicarBienes extends AppCompatActivity  {
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -512,31 +494,28 @@ public class PublicarBienes extends AppCompatActivity  {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarBienes.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciobienes.isLoaded()) {
-                                        anunciobienes.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Registrado exitosamente");
-                    titulo.show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarBienes.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciobienes.isLoaded()) { anunciobienes.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
                     Log.i("Muestra",response);
-
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
@@ -559,7 +538,6 @@ public class PublicarBienes extends AppCompatActivity  {
                 String tituloinput = titulo_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_bienes.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_bienes.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_publicar_bienes.getEditText().getText().toString().trim();
                 String precioinput = precio_publicar_bienes.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
@@ -567,7 +545,7 @@ public class PublicarBienes extends AppCompatActivity  {
                 parametros.put("titulo_bienes",tituloinput);
                 parametros.put("descripcionrow_bienes",descripcioncortainput);
                 parametros.put("descripcion1_bienes",descripcion1input);
-                parametros.put("descripcion2_bienes",descripcion2input);
+                parametros.put("descripcion2_bienes","Vacio");
                 parametros.put("precio_bienes",precioinput);
                 parametros.put("vistas_bienes","0");
                 parametros.put("subida","pendiente");
@@ -590,7 +568,6 @@ public class PublicarBienes extends AppCompatActivity  {
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
 
@@ -608,7 +585,6 @@ public class PublicarBienes extends AppCompatActivity  {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     seleccionarimagen();
                 }
@@ -618,11 +594,9 @@ public class PublicarBienes extends AppCompatActivity  {
             }
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
@@ -637,16 +611,41 @@ public class PublicarBienes extends AppCompatActivity  {
         baseAdapter = new GridViewAdapter(PublicarBienes.this,listaimagenes_bienes);
         gvImagenes_bienes.setAdapter(baseAdapter);
     }
-
     private void CargandoSubida(String Mostrar){
-        bienes=new ProgressDialog(this);
-        bienes.setMessage("Subiendo su Empleos");
-        bienes.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        bienes.setIndeterminate(true);
-        if(Mostrar.equals("Ver")){
-            bienes.show();
-        }if(Mostrar.equals("Ocultar")){
-            bienes.hide();
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarBienes.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+
+        switch (Mostrar){
+            case "Ver":
+                dialog.show();
+                Log.i("Mostrar se ve", Mostrar);
+                break;
+
+            case "Ocultar":
+                dialog.dismiss();
+                Log.i("Mostrar se oculta", Mostrar);
+                break;
         }
     }
-}
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
+        }
+    }}

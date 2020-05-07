@@ -4,15 +4,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -39,26 +45,30 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
-
-//TODO: Esta full pero hay que verificar el tamaño de las imagenes
 
 public class EliminarArticulo extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     TextView titulo_eliminar_comprayventa, descripcioncorta_eliminar_comprayventa, descripcion_eliminar_comprayventa, descripcionextra_eliminar_comprayventa, precio_eliminar_comprayventa, ubicacion_eliminar_comprayventa, cantidad_eliminar_comprayventa, contacto_eliminar_comprayventa;
     StringRequest stringRequest_comprayventa;
     TextInputLayout buscar_eliminar_comprayventa;
-    ImageButton eliminar_comprayventa, eliminar_buscar_comprayventa;
+    ImageButton eliminar_buscar_comprayventa;
+    Button eliminar_comprayventa;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
-    ImageView imagen1_eliminar_comprayventa,imagen2_eliminar_comprayventa,imagen3_eliminar_comprayventa;
-    private InterstitialAd anuncioAdopcion_eliminar;
-    private ProgressDialog articulo;
-
+    ImageView imagen1_eliminar_comprayventa, imagen2_eliminar_comprayventa, imagen3_eliminar_comprayventa;
+    private InterstitialAd anuncioArticulo_eliminar;
+    Toolbar barra_articulo;
+    ImageView whatsapp;
 
 
     @Override
@@ -66,6 +76,15 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_articulo);
 
+        whatsapp = findViewById(R.id.whatsapp_eliminar_articulo);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(EliminarArticulo.this, Whatsapp);
+            }
+        });
+        barra_articulo = findViewById(R.id.toolbar_eliminar_articulo);
+        barra_articulo.setTitle("Eliminar Desaparicion");
         titulo_eliminar_comprayventa = findViewById(R.id.eliminar_titulo_comprayventa);
         descripcioncorta_eliminar_comprayventa = findViewById(R.id.eliminar_descripcioncorta_comprayventa);
         descripcion_eliminar_comprayventa = findViewById(R.id.eliminar_descripcion_comprayventa);
@@ -84,7 +103,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         eliminar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validarid()){return;}
+                if (!validarid()) {
+                    return;
+                }
 
                 AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarArticulo.this);
                 mensaje.setMessage("¿Esta seguro que desea eliminar la publicación?")
@@ -109,51 +130,47 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
             }
         });
 
-
         requestbuscar = Volley.newRequestQueue(getApplicationContext());
         eliminar_buscar_comprayventa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!validarid()){return;}
+                if (!validarid()) {
+                    return;
+                }
                 cargarBusqueda_comprayventa();
                 CargandoSubida("Ver");
-
             }
         });
 
-        anuncioAdopcion_eliminar = new InterstitialAd(this);
-        anuncioAdopcion_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        anuncioAdopcion_eliminar.loadAd(new AdRequest.Builder().build());
+        anuncioArticulo_eliminar = new InterstitialAd(this);
+        anuncioArticulo_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioArticulo_eliminar.loadAd(new AdRequest.Builder().build());
     }
 
-    private boolean validarid(){
+    private boolean validarid() {
         String idinput = buscar_eliminar_comprayventa.getEditText().getText().toString().trim();
-
-        if (idinput.isEmpty()){
-            buscar_eliminar_comprayventa.setError(""+R.string.error_descripcioncorta);
+        if (idinput.isEmpty()) {
+            buscar_eliminar_comprayventa.setError(id_vacio);
             return false;
-        }
-        else if(idinput.length()>15){
-            buscar_eliminar_comprayventa.setError(""+R.string.supera);
+        } else if (idinput.length() > 15) {
+            buscar_eliminar_comprayventa.setError(texto_superado);
             return false;
-        }
-        else {
+        } else {
             buscar_eliminar_comprayventa.setError(null);
             return true;
         }
     }
 
     private void cargarBusqueda_comprayventa() {
-
-        String url_buscar_comprayventa = DireccionServidor+"wsnJSONBuscarComprayVenta.php?id_comprayventa="+buscar_eliminar_comprayventa.getEditText().getText().toString().trim();
-        jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_comprayventa,null,this,this);
+        String url_buscar_comprayventa = DireccionServidor + "wsnJSONBuscarComprayVenta.php?id_comprayventa=" + buscar_eliminar_comprayventa.getEditText().getText().toString().trim();
+        jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET, url_buscar_comprayventa, null, this, this);
         requestbuscar.add(jsonObjectRequestBuscar);
     }
+
     @Override
     public void onErrorResponse(VolleyError error) {
-        Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
-        Log.i("ERROR",error.toString());
+        Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
+        Log.i("ERROR", error.toString());
         CargandoSubida("Ocultar");
     }
 
@@ -218,9 +235,9 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
 
     private void cargarEliminar_comprayventa() {
 
-        String url_comprayventa = DireccionServidor+"wsnJSONEliminar.php?";
+        String url_comprayventa = DireccionServidor + "wsnJSONEliminar.php?";
 
-        stringRequest_comprayventa= new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
+        stringRequest_comprayventa = new StringRequest(Request.Method.POST, url_comprayventa, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -228,35 +245,34 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
                 Matcher match = regex.matcher(response);
 
-
-                if (match.find()){
-
+                if (match.find()) {
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarArticulo.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioAdopcion_eliminar.isLoaded()) {
-                                        anuncioAdopcion_eliminar.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Eliminada exitosamente");
-                    titulo.show();
-
-                }else {
-                    Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EliminarArticulo.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado, null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioArticulo_eliminar.isLoaded()) {
+                                anuncioArticulo_eliminar.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra", response);
+                } else {
+                    Toast.makeText(getApplicationContext(), NosepudoEliminar, Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
 
                 }
@@ -266,38 +282,55 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         CargandoSubida("Ocultar");
 
                     }
-                }){
+                }) {
 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
                 String idinput = buscar_eliminar_comprayventa.getEditText().getText().toString().trim();
-
-                Map<String,String> parametros = new HashMap<>();
-                parametros.put("id_comprayventa",idinput);
-                parametros.put("publicacion","ComprayVenta");
-
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("id_comprayventa", idinput);
+                parametros.put("publicacion", "ComprayVenta");
                 return parametros;
             }
         };
         RequestQueue request_comprayventa_eliminar = Volley.newRequestQueue(this);
-        stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_comprayventa_eliminar.add(stringRequest_comprayventa);
     }
-    private void CargandoSubida(String Mostrar){
-        articulo=new ProgressDialog(this);
-        articulo.setMessage("Subiendo su Empleos");
-        articulo.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        articulo.setIndeterminate(true);
-        if(Mostrar.equals("Ver")){
-            articulo.show();
-        }if(Mostrar.equals("Ocultar")){
-            articulo.hide();
+
+    private void CargandoSubida(String Mostrar) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarArticulo.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando, null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        if (Mostrar.equals("Ver")) {
+            dialog.show();
+        }
+        if (Mostrar.equals("Ocultar")) {
+            dialog.hide();
         }
     }
 
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try {
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sendIntent.putExtra("jid", formattedNumber + "@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

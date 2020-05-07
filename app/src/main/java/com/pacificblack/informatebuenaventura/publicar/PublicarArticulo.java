@@ -1,4 +1,5 @@
 package com.pacificblack.informatebuenaventura.publicar;
+//Todo: Clase completamente lista.
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -90,7 +91,6 @@ public class PublicarArticulo extends AppCompatActivity {
     private InterstitialAd anuncioArticulo;
     Toolbar barra_articulo;
     ImageView whatsapp;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

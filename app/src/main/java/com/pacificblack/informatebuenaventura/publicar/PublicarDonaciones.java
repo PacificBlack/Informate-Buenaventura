@@ -6,8 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,10 +21,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -47,7 +54,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.meta_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
@@ -67,12 +84,23 @@ public class PublicarDonaciones extends AppCompatActivity{
     private InterstitialAd anuncioDonaciones;
     TextInputLayout titulo_publicar_donaciones, descripcioncorta_publicar_donaciones, descripcion1_publicar_donaciones, meta_publicar_donaciones;
     Button publicar_final_donaciones,subirimagenes;
-    private ProgressDialog donaciones;
+    Toolbar barra_donaciones;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_donaciones);
+
+        whatsapp = findViewById(R.id.whatsapp_publicar_donaciones);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(PublicarDonaciones.this,Whatsapp);
+            }
+        });
+        barra_donaciones = findViewById(R.id.toolbar_publicar_donaciones);
+        barra_donaciones.setTitle("Publicar Donaciones");
 
         titulo_publicar_donaciones = findViewById(R.id.publicar_titulo_donaciones);
         descripcioncorta_publicar_donaciones = findViewById(R.id.publicar_descripcioncorta_donaciones);
@@ -112,14 +140,12 @@ public class PublicarDonaciones extends AppCompatActivity{
 
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_donaciones.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_publicar_donaciones.setError(""+R.string.error_titulo);
+            titulo_publicar_donaciones.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_publicar_donaciones.setError(""+R.string.supera);
+            titulo_publicar_donaciones.setError(texto_superado);
             return false;
         }
         else {
@@ -129,14 +155,12 @@ public class PublicarDonaciones extends AppCompatActivity{
     }
     private boolean  validardescripcioncorta(){
         String descripcioncortainput = descripcioncorta_publicar_donaciones.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_donaciones.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_publicar_donaciones.setError(descripcion_vacio);
             return false;
         }
         else if(descripcioncortainput.length()>150){
-
-            descripcioncorta_publicar_donaciones.setError(""+R.string.supera);
+            descripcioncorta_publicar_donaciones.setError(texto_superado);
             return false;
         }
         else {
@@ -145,16 +169,14 @@ public class PublicarDonaciones extends AppCompatActivity{
         }
     }
     private boolean validardescripcion1(){
-
         String descripcion1input = descripcion1_publicar_donaciones.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()){
-            descripcion1_publicar_donaciones.setError(""+R.string.error_descripcioncorta);
+            descripcion1_publicar_donaciones.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcion1input.length()>740){
+        else if(descripcion1input.length()>850){
 
-            descripcion1_publicar_donaciones.setError(""+R.string.supera);
+            descripcion1_publicar_donaciones.setError(texto_superado);
             return false;
         }
         else {
@@ -164,30 +186,25 @@ public class PublicarDonaciones extends AppCompatActivity{
     }
     private boolean validarmeta(){
         String metainput = meta_publicar_donaciones.getEditText().getText().toString().trim();
-
         if (metainput.isEmpty()){
-            meta_publicar_donaciones.setError(""+R.string.error_descripcioncorta);
+            meta_publicar_donaciones.setError(meta_vacio);
             return false;
         }
         else if(metainput.length()>15){
-
-            meta_publicar_donaciones.setError(""+R.string.supera);
+            meta_publicar_donaciones.setError(texto_superado);
             return false;
         }
         else {
             meta_publicar_donaciones.setError(null);
             return true;
         }
-
     }
     private boolean validarfoto(){
-
         if (listaimagenes_donaciones.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
-        else {
-            return true;}
+        else { return true;}
     }
 
     public void Subirimagen_donaciones(){
@@ -214,7 +231,7 @@ public class PublicarDonaciones extends AppCompatActivity{
             CargandoSubida("Ver");
         }
         if (nombre.size()>2){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 2 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima +" 2",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -231,27 +248,27 @@ public class PublicarDonaciones extends AppCompatActivity{
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDonaciones.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anuncioDonaciones.isLoaded()) {
-                                        anuncioDonaciones.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioDonaciones.isLoaded()) { anuncioDonaciones.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -309,27 +326,27 @@ public class PublicarDonaciones extends AppCompatActivity{
 
                 if (match.find()){
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarDonaciones.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anuncioDonaciones.isLoaded()) {
-                                        anuncioDonaciones.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioDonaciones.isLoaded()) { anuncioDonaciones.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -395,14 +412,10 @@ public class PublicarDonaciones extends AppCompatActivity{
             case PERMISSON_CODE: {
 
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(PublicarDonaciones.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
         }
@@ -410,7 +423,6 @@ public class PublicarDonaciones extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
@@ -425,15 +437,43 @@ public class PublicarDonaciones extends AppCompatActivity{
         baseAdapter = new GridViewAdapter(PublicarDonaciones.this,listaimagenes_donaciones);
         gvImagenes_donaciones.setAdapter(baseAdapter);
     }
+
     private void CargandoSubida(String Mostrar){
-        donaciones=new ProgressDialog(this);
-        donaciones.setMessage("Subiendo su Empleos");
-        donaciones.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        donaciones.setIndeterminate(true);
-        if(Mostrar.equals("Ver")){
-            donaciones.show();
-        } if(Mostrar.equals("Ocultar")){
-            donaciones.hide();
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+
+        switch (Mostrar){
+            case "Ver":
+                dialog.show();
+                Log.i("Mostrar se ve", Mostrar);
+                break;
+
+            case "Ocultar":
+                dialog.dismiss();
+                Log.i("Mostrar se oculta", Mostrar);
+                break;
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 }

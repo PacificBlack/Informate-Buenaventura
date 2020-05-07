@@ -12,6 +12,8 @@ public class Avisos {
     public static String cantidad_vacio = "Debe ingresar una cantidad disponible de su inventario";
     public static String ubicacion_vacio = "Debe ingresar la ubicacíon donde se le puede conseguir";
     public static String precio_vacio = "Ingrese el precio que desea pedir por esto";
+    public static String video_vacio = "Si tiene un video para su publicación agregue un link, de lo contrario escriba ninguno";
+    public static String meta_vacio = "Ingrese cuanto quiere recaudar en esta donación";
 
     public static String aviso_actualizar = "¿Quiere actualizar solo el texto de su publicación o tambien las imagenes?";
     public static String aviso_actualizar_imagen = "Modificar texto e imagenes";
