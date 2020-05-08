@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,12 +21,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -57,7 +62,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_noimagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -76,19 +94,29 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
     TextInputLayout id_actualizar_funebres, titulo_actualizar_funebres, descripcioncorta_actualizar_funebres, descripcion1_actualizar_funebres, descripcion2_actualizar_funebres;
-    Button subirimagenes;
-    ImageButton actualizar_funebres,actualizar_buscar_funebres;
+    Button actualizar_funebres,subirimagenes;
+    ImageButton actualizar_buscar_funebres;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_funebres,imagen2_actualizar_funebres,imagen3_actualizar_funebres;
     private InterstitialAd anunciofunebres;
-    private ProgressDialog funebres;
+    Toolbar barra_funebres;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_funebres);
 
+        whatsapp = findViewById(R.id.whatsapp_actualizar_funebres);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(ActualizarFunebres.this,Whatsapp);
+            }
+        });
+        barra_funebres = findViewById(R.id.toolbar_actualizar_funebres);
+        barra_funebres.setTitle("Actualizar Funebres");
         id_actualizar_funebres = findViewById(R.id.id_actualizar_funebres);
         titulo_actualizar_funebres = findViewById(R.id.actualizar_titulo_funebres);
         descripcioncorta_actualizar_funebres = findViewById(R.id.actualizar_descripcioncorta_funebres);
@@ -103,18 +131,18 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             @Override
             public void onClick(View v) {
 
-                if ( !validarid() | !validartitulo()|!validardescripcioncorta()| ! validardescripcion1()| ! validardescripcion2()){return;}
+                if ( !validarid() | !validartitulo()|!validardescripcioncorta()| ! validardescripcion1()){return;}
 
 
                 if ( !validarfotoupdate() ){
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
-                    mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-                            .setCancelable(false).setNegativeButton("Modificar tambien las imagenes", new DialogInterface.OnClickListener() {
+                    mensaje.setMessage(aviso_actualizar)
+                            .setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                                 Subirimagen_funebres_update();
                         }
-                    }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+                    }).setPositiveButton(aviso_actualizar_noimagen, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_funebres();
@@ -165,13 +193,12 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     }
     private boolean validarid(){
         String idinput = id_actualizar_funebres.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            id_actualizar_funebres.setError(""+R.string.error_descripcioncorta);
+            id_actualizar_funebres.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-            id_actualizar_funebres.setError(""+R.string.supera);
+            id_actualizar_funebres.setError(texto_superado);
             return false;
         }
         else {
@@ -181,14 +208,13 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     }
     private boolean validartitulo(){
         String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_actualizar_funebres.setError(""+R.string.error_titulo);
+            titulo_actualizar_funebres.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
 
-            titulo_actualizar_funebres.setError(""+R.string.supera);
+            titulo_actualizar_funebres.setError(texto_superado);
             return false;
         }
         else {
@@ -198,14 +224,12 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     }
     private boolean  validardescripcioncorta(){
         String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_actualizar_funebres.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_funebres.setError(descripcion_vacio);
             return false;
         }
         else if(descripcioncortainput.length()>150){
-
-            descripcioncorta_actualizar_funebres.setError(""+R.string.supera);
+            descripcioncorta_actualizar_funebres.setError(texto_superado);
             return false;
         }
         else {
@@ -214,16 +238,13 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         }
     }
     private boolean validardescripcion1(){
-
         String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
-
         if (descripcion1input.isEmpty()){
-            descripcion1_actualizar_funebres.setError(""+R.string.error_descripcioncorta);
+            descripcion1_actualizar_funebres.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcion1input.length()>740){
-
-            descripcion1_actualizar_funebres.setError(""+R.string.supera);
+        else if(descripcion1input.length()>800){
+            descripcion1_actualizar_funebres.setError(texto_superado);
             return false;
         }
         else {
@@ -231,28 +252,9 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             return true;
         }
     }
-    private boolean validardescripcion2(){
-        String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
-
-        if (descripcion2input.isEmpty()){
-            descripcion2_actualizar_funebres.setError(""+R.string.error_descripcioncorta);
-            return false;
-        }
-        else if(descripcion2input.length()>740){
-
-            descripcion2_actualizar_funebres.setError(""+R.string.supera);
-            return false;
-        }
-        else {
-            descripcion2_actualizar_funebres.setError(null);
-            return true;
-        }
-
-    }
-
     private boolean validarfotoupdate(){
         if (listaimagenes_funebres.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
         else {
@@ -270,7 +272,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -349,7 +350,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             cargarActualizarConImagen_funebres();
             CargandoSubida("Ver"); }
         if (nombre.size()>3){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 3 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima+" 3",Toast.LENGTH_LONG).show();
         }
     }
     private void cargarActualizarConImagen_funebres_uno() {
@@ -365,33 +366,28 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciofunebres.isLoaded()) {
-                                        anunciofunebres.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciofunebres.isLoaded()) { anunciofunebres.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -417,7 +413,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -426,7 +421,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 parametros.put("descripcionrow_funebres",descripcioncortainput);
                 parametros.put("vistas_funebres","0");
                 parametros.put("descripcion1_funebres",descripcion1input);
-                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("descripcion2_funebres","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Funebres");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -453,33 +448,28 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciofunebres.isLoaded()) {
-                                        anunciofunebres.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciofunebres.isLoaded()) { anunciofunebres.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -505,7 +495,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -514,7 +503,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 parametros.put("descripcionrow_funebres",descripcioncortainput);
                 parametros.put("vistas_funebres","0");
                 parametros.put("descripcion1_funebres",descripcion1input);
-                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("descripcion2_funebres","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Funebres");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -541,33 +530,28 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciofunebres.isLoaded()) {
-                                        anunciofunebres.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciofunebres.isLoaded()) { anunciofunebres.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -593,7 +577,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -602,7 +585,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 parametros.put("descripcionrow_funebres",descripcioncortainput);
                 parametros.put("vistas_funebres","0");
                 parametros.put("descripcion1_funebres",descripcion1input);
-                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("descripcion2_funebres","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Funebres");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -631,31 +614,27 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
 
                 if (match.find()) {
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarFunebres.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciofunebres.isLoaded()) {
-                                        anunciofunebres.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciofunebres.isLoaded()) { anunciofunebres.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -681,7 +660,6 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 String tituloinput = titulo_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_funebres.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_funebres.getEditText().getText().toString().trim();
-                String descripcion2input = descripcion2_actualizar_funebres.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -690,7 +668,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 parametros.put("descripcionrow_funebres",descripcioncortainput);
                 parametros.put("vistas_funebres","0");
                 parametros.put("descripcion1_funebres",descripcion1input);
-                parametros.put("descripcion2_funebres",descripcion2input);
+                parametros.put("descripcion2_funebres","Vacio");
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Funebres");
 
@@ -750,14 +728,35 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         gvImagenes_funebres.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        funebres=new ProgressDialog(this);
-        funebres.setMessage("Subiendo su Empleos");
-        funebres.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        funebres.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            funebres.show();
-        } if(Mostrar.equals("Ocultar")){
-            funebres.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 }

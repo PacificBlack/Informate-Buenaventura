@@ -4,15 +4,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -39,7 +45,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -51,13 +62,14 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
     StringRequest stringRequest_funebres;
     TextInputLayout id_eliminar_funebres;
     TextView titulo_eliminar_funebres, descripcioncorta_eliminar_funebres, descripcion1_eliminar_funebres, descripcion2_eliminar_funebres;
-    ImageButton eliminar_funebres,eliminar_buscar_funebres;
+    ImageButton eliminar_buscar_funebres;
+    Button eliminar_funebres;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_eliminar_funebres,imagen2_eliminar_funebres,imagen3_eliminar_funebres;
     private InterstitialAd anunciofunebres;
-    private ProgressDialog funebres;
-
+    Toolbar barra_funebres;
+    ImageView whatsapp;
 
 
     @Override
@@ -65,6 +77,15 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_funebres);
 
+        whatsapp = findViewById(R.id.whatsapp_eliminar_funebres);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(EliminarFunebres.this,Whatsapp);
+            }
+        });
+        barra_funebres = findViewById(R.id.toolbar_eliminar_funebres);
+        barra_funebres.setTitle("Eliminar Funebres");
         id_eliminar_funebres = findViewById(R.id.id_eliminar_funebres);
         titulo_eliminar_funebres = findViewById(R.id.eliminar_titulo_funebres);
         descripcioncorta_eliminar_funebres = findViewById(R.id.eliminar_descripcioncorta_funebres);
@@ -75,7 +96,6 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         imagen3_eliminar_funebres = findViewById(R.id.imagen3_eliminar_funebres);
         eliminar_funebres = findViewById(R.id.eliminar_final_funebres);
         eliminar_buscar_funebres = findViewById(R.id.eliminar_buscar_funebres);
-
 
         eliminar_funebres.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,14 +145,12 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
 
     private boolean validarid(){
         String idinput = id_eliminar_funebres.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            id_eliminar_funebres.setError(""+R.string.error_descripcioncorta);
+            id_eliminar_funebres.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            id_eliminar_funebres.setError(""+R.string.supera);
+            id_eliminar_funebres.setError(texto_superado);
             return false;
         }
         else {
@@ -140,13 +158,9 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
             return true;
         }
     }
-
     private void cargarBusqueda_funebres() {
-
         String url_buscar_funebres = DireccionServidor+"wsnJSONBuscarFunebres.php?id_funebres="+id_eliminar_funebres.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_funebres,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
@@ -154,7 +168,6 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -204,9 +217,6 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 .into(imagen3_eliminar_funebres);
 
         CargandoSubida("Ocultar");
-
-
-
     }
 
 
@@ -223,32 +233,28 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarFunebres.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anunciofunebres.isLoaded()) {
-                                        anunciofunebres.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EliminarFunebres.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anunciofunebres.isLoaded()) { anunciofunebres.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -287,14 +293,33 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
 
     }
     private void CargandoSubida(String Mostrar){
-        funebres=new ProgressDialog(this);
-        funebres.setMessage("Subiendo su Empleos");
-        funebres.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        funebres.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarFunebres.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            funebres.show();
-        }if(Mostrar.equals("Ocultar")){
-            funebres.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try {
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sendIntent.putExtra("jid", formattedNumber + "@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore", Toast.LENGTH_SHORT).show();
         }
     }
 

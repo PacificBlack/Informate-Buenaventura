@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,12 +21,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -57,7 +62,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_noimagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.lugar_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -76,19 +93,29 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
     TextInputLayout titulo_actualizar_eventos,id_actualizar_eventos,descripcioncorta_actualizar_eventos,lugar_actualizar_eventos;
-    Button subirimagenes;
-    ImageButton actualizar_eventos,actualizar_buscar_eventos;
+    Button actualizar_eventos,subirimagenes;
+    ImageButton actualizar_buscar_eventos;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_eventos;
     private InterstitialAd anuncioeventos;
-    private ProgressDialog eventos;
+    Toolbar barra_eventos;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_eventos);
 
+        whatsapp = findViewById(R.id.whatsapp_actualizar_eventos);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(ActualizarEventos.this,Whatsapp);
+            }
+        });
+        barra_eventos = findViewById(R.id.toolbar_actualizar_eventos);
+        barra_eventos.setTitle("Actualizar Eventos");
         titulo_actualizar_eventos = findViewById(R.id.actualizar_titulo_eventos);
         descripcioncorta_actualizar_eventos = findViewById(R.id.actualizar_descripcion_eventos);
         lugar_actualizar_eventos = findViewById(R.id.actualizar_lugar_eventos);
@@ -105,13 +132,13 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }
                 if (!validarfotoupdate()){
                           AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
-                           mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-                            .setCancelable(false).setNegativeButton("Modificar tambien las imagenes", new DialogInterface.OnClickListener() {
+                           mensaje.setMessage(aviso_actualizar)
+                            .setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                                                               @Override
                                                               public void onClick(DialogInterface dialog, int which) {
                                      Subirimagen_eventos_update();
                           }
-                                                          }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+                                                          }).setPositiveButton(aviso_actualizar_noimagen, new DialogInterface.OnClickListener() {
                @Override
                 public void onClick(DialogInterface dialog, int which) {
                            cargarActualizarSinImagen_eventos();
@@ -176,12 +203,12 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         String idinput = id_actualizar_eventos.getEditText().getText().toString().trim();
 
         if (idinput.isEmpty()){
-            id_actualizar_eventos.setError(""+R.string.error_descripcioncorta);
+            id_actualizar_eventos.setError(titulo_vacio);
             return false;
         }
         else if(idinput.length()>15){
 
-            id_actualizar_eventos.setError(""+R.string.supera);
+            id_actualizar_eventos.setError(texto_superado);
             return false;
         }
         else {
@@ -193,12 +220,12 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         String tituloinput = titulo_actualizar_eventos.getEditText().getText().toString().trim();
 
         if (tituloinput.isEmpty()){
-            titulo_actualizar_eventos.setError(""+R.string.error_titulo);
+            titulo_actualizar_eventos.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
 
-            titulo_actualizar_eventos.setError(""+R.string.supera);
+            titulo_actualizar_eventos.setError(texto_superado);
             return false;
         }
         else {
@@ -208,14 +235,13 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     }
     private boolean  validardescripcion(){
         String descripcioncortainput = descripcioncorta_actualizar_eventos.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_actualizar_eventos.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_eventos.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcioncortainput.length()>740){
+        else if(descripcioncortainput.length()>700){
 
-            descripcioncorta_actualizar_eventos.setError(""+R.string.supera);
+            descripcioncorta_actualizar_eventos.setError(texto_superado);
             return false;
         }
         else {
@@ -227,11 +253,10 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         String lugarinput = lugar_actualizar_eventos.getEditText().toString().trim();
 
         if (lugarinput.isEmpty()) {
-            lugar_actualizar_eventos.setError("" + String.valueOf(R.string.error_descripcioncorta));
+            lugar_actualizar_eventos.setError(lugar_vacio);
             return false;
         } else if (lugarinput.length() > 120) {
-
-            lugar_actualizar_eventos.setError("" + R.string.supera);
+            lugar_actualizar_eventos.setError(texto_superado);
             return false;
         } else {
             lugar_actualizar_eventos.setError(null);
@@ -240,7 +265,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     }
     private boolean validarfotoupdate(){
         if (listaimagenes_eventos.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
         else {
@@ -307,32 +332,28 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioeventos.isLoaded()) {
-                                        anuncioeventos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEventos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioeventos.isLoaded()) { anuncioeventos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -393,31 +414,27 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
 
                 if (match.find()) {
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEventos.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioeventos.isLoaded()) {
-                                        anuncioeventos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEventos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioeventos.isLoaded()) { anuncioeventos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -483,7 +500,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
             CargandoSubida("Ver");
         }
         if (nombre.size()>1){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima+ "1",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -500,7 +517,6 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
-
     }
 
     @Override
@@ -516,12 +532,9 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
             }
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
                 imageneseventosUri = data.getData();
@@ -536,14 +549,35 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         gvImagenes_eventos.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        eventos=new ProgressDialog(this);
-        eventos.setMessage("Subiendo su Empleos");
-        eventos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        eventos.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEventos.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            eventos.show();
-        } if(Mostrar.equals("Ocultar")){
-            eventos.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 

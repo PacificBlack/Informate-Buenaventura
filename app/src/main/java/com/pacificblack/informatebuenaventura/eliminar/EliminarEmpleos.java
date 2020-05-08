@@ -116,7 +116,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 });
 
                 AlertDialog titulo = mensaje.create();
-                titulo.setTitle("Modificar Publicación");
+                titulo.setTitle("Eliminar Publicación");
                 titulo.show();
 
             }

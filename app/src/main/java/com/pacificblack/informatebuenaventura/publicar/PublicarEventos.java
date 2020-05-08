@@ -6,9 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,10 +21,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -49,7 +55,16 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.lugar_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
@@ -69,7 +84,8 @@ public class PublicarEventos extends AppCompatActivity {
     TextInputLayout titulo_publicar_eventos,descripcioncorta_publicar_eventos,lugar_publicar_eventos;
     Button publicarfinal_eventos,subirimagenes;
     private InterstitialAd anuncioeventos;
-    private ProgressDialog eventos;
+    Toolbar barra_eventos;
+    ImageView whatsapp;
 
 
     @Override
@@ -77,6 +93,15 @@ public class PublicarEventos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_eventos);
 
+        whatsapp = findViewById(R.id.whatsapp_publicar_eventos);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(PublicarEventos.this,Whatsapp);
+            }
+        });
+        barra_eventos = findViewById(R.id.toolbar_publicar_eventos);
+        barra_eventos.setTitle("Publicar Eventos");
         titulo_publicar_eventos = findViewById(R.id.publicar_titulo_eventos);
         descripcioncorta_publicar_eventos = findViewById(R.id.publicar_descripcion_eventos);
         lugar_publicar_eventos = findViewById(R.id.publicar_lugar_eventos);
@@ -115,14 +140,12 @@ public class PublicarEventos extends AppCompatActivity {
 
     private boolean validartitulo(){
         String tituloinput = titulo_publicar_eventos.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_publicar_eventos.setError(""+R.string.error_titulo);
+            titulo_publicar_eventos.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_publicar_eventos.setError(""+R.string.supera);
+            titulo_publicar_eventos.setError(texto_superado);
             return false;
         }
         else {
@@ -134,12 +157,11 @@ public class PublicarEventos extends AppCompatActivity {
         String descripcioncortainput = descripcioncorta_publicar_eventos.getEditText().getText().toString().trim();
 
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_eventos.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_publicar_eventos.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcioncortainput.length()>740){
-
-            descripcioncorta_publicar_eventos.setError(""+R.string.supera);
+        else if(descripcioncortainput.length()>700){
+            descripcioncorta_publicar_eventos.setError(texto_superado);
             return false;
         }
         else {
@@ -149,13 +171,12 @@ public class PublicarEventos extends AppCompatActivity {
     }
     private boolean validarlugar(){
         String lugarinput = lugar_publicar_eventos.getEditText().toString().trim();
-
         if (lugarinput.isEmpty()) {
-            lugar_publicar_eventos.setError("" + String.valueOf(R.string.error_descripcioncorta));
+            lugar_publicar_eventos.setError(lugar_vacio);
             return false;
         } else if (lugarinput.length() > 120) {
 
-            lugar_publicar_eventos.setError("" + R.string.supera);
+            lugar_publicar_eventos.setError(texto_superado);
             return false;
         } else {
             lugar_publicar_eventos.setError(null);
@@ -164,11 +185,10 @@ public class PublicarEventos extends AppCompatActivity {
     }
     private boolean validarfoto(){
         if (listaimagenes_eventos.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar como minimo una foto",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
-        else {
-            return true;}
+        else { return true;}
     }
 
     private void cargarWebService_eventos() {
@@ -183,27 +203,27 @@ public class PublicarEventos extends AppCompatActivity {
 
                 if (match.find()) {
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEventos.this);
-
-                    mensaje.setMessage(response).setIcon(R.drawable.heart_on)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anuncioeventos.isLoaded()) {
-                                        anuncioeventos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEventos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioeventos.isLoaded()) { anuncioeventos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     CargandoSubida("Ocultar");
@@ -234,7 +254,7 @@ public class PublicarEventos extends AppCompatActivity {
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Eventos");
                 for (int h = 0; h<nombre.size();h++){
-                    parametros.put(nombre.get(h),cadena.get(h));
+                    parametros.put( nombre.get(h),cadena.get(h));
                 }
                 return parametros;
             }
@@ -264,14 +284,13 @@ public class PublicarEventos extends AppCompatActivity {
             CargandoSubida("Ver");
             }
         if (nombre.size()>1){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima+" 1",Toast.LENGTH_LONG).show();
         }
 
     }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
 
@@ -282,42 +301,31 @@ public class PublicarEventos extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona la imagen"),IMAGE_PICK_CODE);
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(PublicarEventos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE ){
             if (data.getClipData() == null){
                 imageneseventosUri = data.getData();
                 listaimagenes_eventos.add(imageneseventosUri);
-
             }else {
                 for (int i = 0; i< data.getClipData().getItemCount(); i++){
-
                     listaimagenes_eventos.add(data.getClipData().getItemAt(i).getUri());
                 }
             }
@@ -326,14 +334,35 @@ public class PublicarEventos extends AppCompatActivity {
         gvImagenes_eventos.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        eventos=new ProgressDialog(this);
-        eventos.setMessage("Subiendo su Empleos");
-        eventos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        eventos.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEventos.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            eventos.show();
-        }if(Mostrar.equals("Ocultar")){
-            eventos.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
+    }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
         }
     }
 }

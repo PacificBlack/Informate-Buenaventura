@@ -1,145 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="#A331"
-    android:orientation="vertical"
+    android:background="@color/rojo"
     tools:context=".eliminar.EliminarFunebres">
 
-    <ImageView
-        android:id="@+id/imageView5"
+
+    <Toolbar
+        android:id="@+id/toolbar_eliminar_funebres"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher_round" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/id_eliminar_funebres"
-            android:layout_width="314dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@android:drawable/screen_background_light_transparent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="308dp"
-                android:layout_height="wrap_content"
-                android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
-                android:inputType="text|number"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <ImageButton
-            android:id="@+id/eliminar_buscar_funebres"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginTop="4dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_search_black_24dp"
-            tools:ignore="VectorDrawableCompat" />
-
-    </LinearLayout>
-
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/rojo"
+        android:titleTextColor="@color/blanco"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.PopupOverlay" />
 
     <ScrollView
+        android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="12dp">
 
-
-            <TextView
-                   android:id="@+id/eliminar_titulo_funebres"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/inserte_titulo"
-                    android:inputType="textPersonName" />
-
-            <TextView
-                    android:id="@+id/eliminar_descripcioncorta_funebres"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/inserte_corta"/>
-
-            <HorizontalScrollView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_width="168dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="31dp"
+                    android:layout_toStartOf="@+id/imagenprimera"
+                    android:text="Elimina anuncio Funebre de nuestra app"
+                    android:textColor="@color/whiteTextColor"
+                    android:textSize="24sp" />
+
+                <ImageView
+                    android:id="@+id/imagenprimera"
+                    android:layout_width="172dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="0dp"
+                    android:src="@drawable/ic_login_hero" />
+            </RelativeLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/whiteTextColor"
+                app:cardCornerRadius="10dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/imagen1_eliminar_funebres"
-                        android:layout_width="409dp"
-                        android:layout_height="280dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitStart"
-                        tools:src="@tools:sample/backgrounds/scenic[14]" />
-                    <ImageButton
-                        android:id="@+id/imagen2_eliminar_funebres"
-                        android:layout_width="409dp"
-                        android:layout_height="280dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitStart"
-                        tools:src="@tools:sample/backgrounds/scenic[14]" />
-                    <ImageButton
-                        android:id="@+id/imagen3_eliminar_funebres"
-                        android:layout_width="409dp"
-                        android:layout_height="280dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitStart"
-                        tools:src="@tools:sample/backgrounds/scenic[14]" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/id_eliminar_funebres"
+                            android:layout_width="314dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@android:drawable/screen_background_light_transparent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="308dp"
+                                android:layout_height="wrap_content"
+                                android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                                android:inputType="text|number"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <ImageButton
+                            android:id="@+id/eliminar_buscar_funebres"
+                            android:layout_width="wrap_content"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/ic_search_black_24dp"
+                            tools:ignore="VectorDrawableCompat" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/eliminar_titulo_funebres"
+                        android:layout_width="match_parent"
+                        android:layout_height="69dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Aqui va el titulo de su publicación" />
+
+                    <TextView
+                        android:id="@+id/eliminar_descripcioncorta_funebres"
+                        android:layout_width="match_parent"
+                        android:layout_height="71dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Aqui va la descripcion breve de su publicacíon"/>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageButton
+                                android:id="@+id/imagen1_eliminar_funebres"
+                                android:layout_width="409dp"
+                                android:layout_height="280dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitStart"
+                                tools:src="@tools:sample/backgrounds/scenic[14]" />
+                            <ImageButton
+                                android:id="@+id/imagen2_eliminar_funebres"
+                                android:layout_width="409dp"
+                                android:layout_height="280dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitStart"
+                                tools:src="@tools:sample/backgrounds/scenic[14]" />
+                            <ImageButton
+                                android:id="@+id/imagen3_eliminar_funebres"
+                                android:layout_width="409dp"
+                                android:layout_height="280dp"
+                                android:background="@android:color/transparent"
+                                android:scaleType="fitStart"
+                                tools:src="@tools:sample/backgrounds/scenic[14]" />
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/eliminar_descripcion1_funebres"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Aqui va la descripcion de su publicación" />
+
+                    <TextView
+                        android:id="@+id/eliminar_descripcion2_funebres"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:visibility="gone"
+                        android:hint="@string/inserte_descripcion2"/>
+
+
+                    <Button
+                        android:id="@+id/eliminar_final_funebres"
+                        android:layout_width="210dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/blanco"
+                        android:layout_gravity="center"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Eliminar Anuncio Funebre" />
+
+
 
                 </LinearLayout>
-            </HorizontalScrollView>
-
-            <TextView
-                   android:id="@+id/eliminar_descripcion1_funebres"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/inserte_descripcion1" />
-
-            <TextView
-                   android:id="@+id/eliminar_descripcion2_funebres"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/inserte_descripcion2"/>
+            </androidx.cardview.widget.CardView>
 
 
-            <ImageButton
-                android:id="@+id/eliminar_final_funebres"
-                android:layout_width="50dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                app:srcCompat="@android:drawable/ic_menu_edit" />
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:weightSum="12">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="3"
+                    android:background="@color/whiteTextColor" />
+
+                <TextView
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:text="Contactanos"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteTextColor"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="3"
+                    android:background="@color/whiteTextColor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/whatsapp"
+                    android:id="@+id/whatsapp_eliminar_funebres" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-
-</LinearLayout>
+</RelativeLayout>

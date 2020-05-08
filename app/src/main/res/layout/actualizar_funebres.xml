@@ -11,9 +11,20 @@
     android:layout_gravity="center"
     tools:context=".actualizar.ActualizarFunebres">
 
-
+    <Toolbar
+        android:id="@+id/toolbar_actualizar_funebres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimaryDark"
+        android:titleTextColor="@color/blanco"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.PopupOverlay" />
 
     <ScrollView
+        android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">
@@ -184,9 +195,13 @@
 
                     <Button
                         android:id="@+id/subir_actualizar_funebres"
-                        android:layout_width="wrap_content"
+                        android:layout_width="190dp"
                         android:layout_height="wrap_content"
-                        android:text="Subir imagenes" />
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="@color/blanco"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Actualizar imagenes" />
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -195,7 +210,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
                         app:counterEnabled="true"
-                        app:counterMaxLength="740"
+                        app:counterMaxLength="800"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -218,6 +233,7 @@
                         android:layout_marginTop="10dp"
                         app:counterEnabled="true"
                         app:counterMaxLength="740"
+                        android:visibility="gone"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -233,13 +249,15 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
 
-                    <ImageButton
+                    <Button
                         android:id="@+id/actualizar_final_funebres"
-                        android:layout_width="50dp"
+                        android:layout_width="210dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        app:srcCompat="@android:drawable/ic_menu_edit" />
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/blanco"
+                        android:layout_gravity="center"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Actualizar Anuncio Funebre" />
 
 
 
@@ -288,8 +306,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/whatsapp" />
-
+                    android:src="@drawable/whatsapp"
+                    android:id="@+id/whatsapp_actualizar_funebres" />
 
             </LinearLayout>
 
