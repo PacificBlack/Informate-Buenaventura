@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.ClipData;
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,13 +19,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -58,7 +61,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_imagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.aviso_actualizar_noimagen;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcion_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioActualizar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -67,11 +82,9 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobusc
 
 public class ActualizarEmpleos extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener{
 
+    RadioButton opcion1_empleos,opcion2_empleos,opcion3_empleos; String necesidad_texto = "Ninguno";
     TextInputLayout titulo_actualizar_empleos, descripcioncorta_actualizar_empleos, id_actualizar_empleos;
-    AutoCompleteTextView necesidad_actualizar_empleos;
-    Button subirimagenes;
-    String nece[] = new String[]{"Urgente","Rapido","Para hoy mismo"};
-
+    Button actualizar_empleos,subirimagenes;
     GridView gvImagenes_empleos;
     Uri imagenesempleosUri;
     List<Uri> listaimagenes_empleos =  new ArrayList<>();
@@ -82,22 +95,34 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     StringRequest stringRequest_empleos;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-
-    ImageButton actualizar_empleos,actualizar_buscar_empleos;
+    ImageButton actualizar_buscar_empleos;
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;
     ImageView imagen1_actualizar_empleos;
     private InterstitialAd anuncioempleos;
-    private ProgressDialog empleos;
-
+    Toolbar barra_empleos;
+    ImageView whatsapp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_empleos);
 
+        whatsapp = findViewById(R.id.whatsapp_actualizar_empleos);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(ActualizarEmpleos.this,Whatsapp);
+            }
+        });
+        barra_empleos = findViewById(R.id.toolbar_actualizar_empleos);
+        barra_empleos.setTitle("Actualizar Empleos");
+        opcion1_empleos = findViewById(R.id.opcion1_necesidad_empleos_actualizar); opcion1_empleos.setText("Urgente");
+        opcion2_empleos = findViewById(R.id.opcion2_necesidad_empleos_actualizar); opcion2_empleos.setText("Sin Urgencia");
+        opcion3_empleos = findViewById(R.id.opcion3_necesidad_empleos_actualizar); opcion3_empleos.setText("Para hoy mismo");
+
+
         titulo_actualizar_empleos = findViewById(R.id.actualizar_titulo_empleos);
         descripcioncorta_actualizar_empleos = findViewById(R.id.actualizar_descripcion_empleos);
-        necesidad_actualizar_empleos = findViewById(R.id.actualizar_necesidad_empleos);
         subirimagenes = findViewById(R.id.subir_imagenes_actualizar_empleos);
         id_actualizar_empleos = findViewById(R.id.actualizar_id_empleos);
         actualizar_empleos = findViewById(R.id.actualizar_empleos);
@@ -107,18 +132,17 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     actualizar_empleos.setOnClickListener(new View.OnClickListener() {
      @Override
      public void onClick(View v) {
-        if (!validartitulo() | !validardescripcion() | !validarnececidad() | !validarid()) { return;
-            }
+        if (!validartitulo() | !validardescripcion() | !validarnececidad() | !validarid()) { return; }
 
         if (!validarfotoupdate()){
              AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
-            mensaje.setMessage("¿Desea modificar Su publicacion y las imagenes?")
-            .setCancelable(false).setNegativeButton("Modificar tambien las imagen", new DialogInterface.OnClickListener() {
+            mensaje.setMessage(aviso_actualizar)
+            .setCancelable(false).setNegativeButton(aviso_actualizar_imagen, new DialogInterface.OnClickListener() {
                @Override
                 public void onClick(DialogInterface dialog, int which) {
                Subirimagen_empleos_update();
              }
-            }).setPositiveButton("Modificar sin cambiar las imagenes", new DialogInterface.OnClickListener() {
+            }).setPositiveButton(aviso_actualizar_noimagen, new DialogInterface.OnClickListener() {
           @Override
            public void onClick(DialogInterface dialog, int which) {
             cargarActualizarSinImagen_empleos();
@@ -166,14 +190,12 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
     private boolean validarid(){
         String idinput = id_actualizar_empleos.getEditText().getText().toString().trim();
-
         if (idinput.isEmpty()){
-            id_actualizar_empleos.setError(""+R.string.error_descripcioncorta);
+            id_actualizar_empleos.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            id_actualizar_empleos.setError(""+R.string.supera);
+            id_actualizar_empleos.setError(texto_superado);
             return false;
         }
         else {
@@ -183,14 +205,12 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     }
     private boolean validartitulo(){
         String tituloinput = titulo_actualizar_empleos.getEditText().getText().toString().trim();
-
         if (tituloinput.isEmpty()){
-            titulo_actualizar_empleos.setError(""+R.string.error_titulo);
+            titulo_actualizar_empleos.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_actualizar_empleos.setError(""+R.string.supera);
+            titulo_actualizar_empleos.setError(texto_superado);
             return false;
         }
         else {
@@ -200,14 +220,12 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     }
     private boolean  validardescripcion(){
         String descripcioncortainput = descripcioncorta_actualizar_empleos.getEditText().getText().toString().trim();
-
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_actualizar_empleos.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_actualizar_empleos.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcioncortainput.length()>740){
-
-            descripcioncorta_actualizar_empleos.setError(""+R.string.supera);
+        else if(descripcioncortainput.length()>700){
+            descripcioncorta_actualizar_empleos.setError(descripcion_vacio);
             return false;
         }
         else {
@@ -216,30 +234,16 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         }
     }
     private boolean validarnececidad(){
-        String necesidadinput = necesidad_actualizar_empleos.getText().toString().trim();
-
-        if (necesidadinput.isEmpty()) {
-            necesidad_actualizar_empleos.setError("" + R.string.error_descripcioncorta);
-            return false;
-        } else if (necesidadinput.length() > 15) {
-
-            necesidad_actualizar_empleos.setError("" + R.string.supera);
-            return false;
-        } else {
-            necesidad_actualizar_empleos.setError(null);
+        if (opcion1_empleos.isChecked() || opcion2_empleos.isChecked() || opcion3_empleos.isChecked() ){
             return true;
+        }else {
+            Toast.makeText(getApplicationContext(),"Marque que la necesidad con la que precisa un empleado",Toast.LENGTH_LONG).show();
+            return false;
         }
     }
     private boolean validarfotoupdate(){
-
-        if (listaimagenes_empleos.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar 2 imagenes para la publicacion (Puede subir la misma 3 veces si no tiene otra",Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else {
-            return true;
-        }
-
+        if (listaimagenes_empleos.size() == 0){ return true; }
+        else { return true; }
     }
     private void cargarBusqueda_empleos() {
         String url_buscar_empleos = DireccionServidor+"wsnJSONBuscarEmpleos.php?id_ofertaempleos="+id_actualizar_empleos.getEditText().getText().toString().trim();
@@ -251,9 +255,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
     }
-
     @Override
     public void onResponse(JSONObject response) {
         OfertaEmpleos empleos = new OfertaEmpleos();
@@ -279,18 +281,22 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
         titulo_actualizar_empleos.getEditText().setText(empleos.getTitulo_row_ofertasempleos());
         descripcioncorta_actualizar_empleos.getEditText().setText(empleos.getDescripcion_row_ofertasempleos());
-        necesidad_actualizar_empleos.setText(empleos.getNecesidad_row_ofertasempleos());
-        Picasso.get().load(empleos.getImagen1_ofertasempleos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
-                .into(imagen1_actualizar_empleos);
 
+        if (empleos.getNecesidad_row_ofertasempleos().equals("Urgente")){opcion1_empleos.setChecked(true);}
+        if (empleos.getNecesidad_row_ofertasempleos().equals("Sin Urgencia")){opcion2_empleos.setChecked(true);}
+        if (empleos.getNecesidad_row_ofertasempleos().equals("Para hoy mismo")){opcion3_empleos.setChecked(true);}
+
+        Picasso.get().load(empleos.getImagen1_ofertasempleos()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen1_actualizar_empleos);
         CargandoSubida("Ocultar");
 
     }
 
 
     private void cargarActualizarConImagen_empleos() {
+
+        if (opcion1_empleos.isChecked()){ necesidad_texto = opcion1_empleos.getText().toString(); }
+        if (opcion2_empleos.isChecked()){ necesidad_texto = opcion2_empleos.getText().toString(); }
+        if (opcion3_empleos.isChecked()){ necesidad_texto = opcion3_empleos.getText().toString(); }
 
         String url_empleos = DireccionServidor+"wsnJSONActualizarConImagenEmpleos.php?";
 
@@ -303,32 +309,28 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioempleos.isLoaded()) {
-                                        anuncioempleos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEmpleos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioempleos.isLoaded()) { anuncioempleos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -353,7 +355,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 String idinput = id_actualizar_empleos.getEditText().getText().toString().trim();
                 String tituloinput = titulo_actualizar_empleos.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_empleos.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_actualizar_empleos.getText().toString().trim();
+                String necesidadinput = necesidad_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -378,6 +380,9 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
 
     }
     private void cargarActualizarSinImagen_empleos() {
+        if (opcion1_empleos.isChecked()){ necesidad_texto = opcion1_empleos.getText().toString(); }
+        if (opcion2_empleos.isChecked()){ necesidad_texto = opcion2_empleos.getText().toString(); }
+        if (opcion3_empleos.isChecked()){ necesidad_texto = opcion3_empleos.getText().toString(); }
 
         String url_empleos = DireccionServidor+"wsnJSONActualizarSinnImagenEmpleos.php?";
 
@@ -390,33 +395,28 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarEmpleos.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioempleos.isLoaded()) {
-                                        anuncioempleos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEmpleos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioempleos.isLoaded()) { anuncioempleos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -441,7 +441,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 String idinput = id_actualizar_empleos.getEditText().getText().toString().trim();
                 String tituloinput = titulo_actualizar_empleos.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_actualizar_empleos.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_actualizar_empleos.getText().toString().trim();
+                String necesidadinput = necesidad_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -462,7 +462,6 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         request_empleos.add(stringRequest_empleos);
 
     }
-
     public void Subirimagen_empleos_update(){
 
         listaBase64_empleos.clear();
@@ -485,7 +484,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         }
 
         if (nombre.size()>1){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima+" 1",Toast.LENGTH_LONG).show();
         }
     }
     public String convertirUriEnBase64(Bitmap bmp){
@@ -501,34 +500,25 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Selecciona las 3 imagenes"),IMAGE_PICK_CODE);
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case PERMISSON_CODE: {
-
                 if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //Permiso autorizado
                     seleccionarimagen();
-
                 }
                 else{
-                    //Permiso denegado
                     Toast.makeText(ActualizarEmpleos.this,"Debe otorgar permisos de almacenamiento",Toast.LENGTH_LONG);
-
                 }
             }
-
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             if (data.getClipData() == null){
                 imagenesempleosUri = data.getData();
@@ -542,17 +532,36 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         baseAdapter = new GridViewAdapter(ActualizarEmpleos.this,listaimagenes_empleos);
         gvImagenes_empleos.setAdapter(baseAdapter);
     }
-
     private void CargandoSubida(String Mostrar){
-        empleos=new ProgressDialog(this);
-        empleos.setMessage("Subiendo su Empleos");
-        empleos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        empleos.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEmpleos.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            empleos.show();
-        } if(Mostrar.equals("Ocultar")){
-            empleos.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
         }
     }
-
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
+        }
+    }
 }

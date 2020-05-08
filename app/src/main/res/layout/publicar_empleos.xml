@@ -10,7 +10,21 @@
     android:gravity="center"
     android:layout_gravity="center"
     tools:context=".publicar.PublicarEmpleos">
+
+    <Toolbar
+        android:id="@+id/toolbar_publicar_empleos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/azulOscuro"
+        android:titleTextColor="@color/blanco"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.PopupOverlay" />
+
     <ScrollView
+        android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">
@@ -87,7 +101,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
                         app:counterEnabled="true"
-                        app:counterMaxLength="740"
+                        app:counterMaxLength="700"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -102,11 +116,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/publicar_necesidad_empleos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Presione dos veces para seleccionar la necesidad con la que se precisa" />
+
 
                     <GridView
                         android:id="@+id/grid_empleos"
@@ -117,17 +127,63 @@
 
                     <Button
                         android:id="@+id/subir_imagenes_empleos"
-                        android:layout_width="wrap_content"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:text="Subir imagenes" />
+                        android:background="@drawable/estilo_botones"
+                        android:text="Subir imagenes (opcional)"
+                        android:textColor="@color/blanco" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Selecione la necesidad con la que precisa un empleado:" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+
+                        <RadioGroup
+                            android:layout_width="180dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp">
+
+                            <RadioButton
+                                android:id="@+id/opcion1_necesidad_empleos"
+                                android:layout_width="211dp"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion2_necesidad_empleos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+                            <RadioButton
+                                android:id="@+id/opcion3_necesidad_empleos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
 
 
                     <Button
                         android:id="@+id/publicar_final_empleos"
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/publicar_adopcion" />
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/blanco"
+                        android:layout_gravity="center"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Ofrecer Empleo" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -174,7 +230,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/whatsapp" />
+                    android:id="@+id/whatsapp_publicar_empleos" />
 
 
             </LinearLayout>

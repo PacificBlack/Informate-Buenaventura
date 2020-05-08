@@ -6,8 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,12 +21,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -49,22 +57,26 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
 
 public class PublicarEmpleos extends AppCompatActivity {
 
-
+    RadioButton opcion1_empleos,opcion2_empleos,opcion3_empleos; String necesidad_texto = "Ninguno";
     TextInputLayout titulo_publicar_empleos, descripcioncorta_publicar_empleos;
-    AutoCompleteTextView necesidad_publicar_empleos;
-    Button publicarfinal_empleos,subirimagenes;
-    String nece[] = new String[]{"Urgente","Rapido","Para hoy mismo"};
-
+    Button publicarfinal_empleos, subirimagenes;
     GridView gvImagenes_empleos;
     Uri imagenesempleosUri;
-    List<Uri> listaimagenes_empleos =  new ArrayList<>();
+    List<Uri> listaimagenes_empleos = new ArrayList<>();
     List<String> listaBase64_empleos = new ArrayList<>();
     GridViewAdapter baseAdapter;
     List<String> cadena = new ArrayList<>();
@@ -72,36 +84,36 @@ public class PublicarEmpleos extends AppCompatActivity {
     StringRequest stringRequest_empleos;
     private static final int IMAGE_PICK_CODE = 1;
     private static final int PERMISSON_CODE = 11;
-
     private InterstitialAd anuncioempleos;
-
-    private ProgressDialog empleos;
+    Toolbar barra_empleos;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_empleos);
 
-        titulo_publicar_empleos = findViewById(R.id.publicar_titulo_empleos);
-        descripcioncorta_publicar_empleos = findViewById(R.id.publicar_descripcion_empleos);
-        necesidad_publicar_empleos = findViewById(R.id.publicar_necesidad_empleos);
-        ArrayAdapter<String> adapternece = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,nece);
-
-        necesidad_publicar_empleos.setAdapter(adapternece);
-
-        necesidad_publicar_empleos.setOnClickListener(new View.OnClickListener() {
+        whatsapp = findViewById(R.id.whatsapp_publicar_empleos);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                necesidad_publicar_empleos.showDropDown();
+                whatsapp(PublicarEmpleos.this,Whatsapp);
             }
         });
-
+        barra_empleos = findViewById(R.id.toolbar_publicar_empleos);
+        barra_empleos.setTitle("Ofrecer Empleos");
+        titulo_publicar_empleos = findViewById(R.id.publicar_titulo_empleos);
+        descripcioncorta_publicar_empleos = findViewById(R.id.publicar_descripcion_empleos);
         publicarfinal_empleos = findViewById(R.id.publicar_final_empleos);
+        opcion1_empleos = findViewById(R.id.opcion1_necesidad_empleos); opcion1_empleos.setText("Urgente");
+        opcion2_empleos = findViewById(R.id.opcion2_necesidad_empleos); opcion2_empleos.setText("Sin Urgencia");
+        opcion3_empleos = findViewById(R.id.opcion3_necesidad_empleos); opcion3_empleos.setText("Para hoy mismo");
+
+
         publicarfinal_empleos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!validartitulo() | !validardescripcion() | !validarnececidad() | !validarfoto()) {
+                if (!validartitulo() | !validardescripcion() | !validarnececidad() ) {
                     return;
                 }
                 Subirimagen_empleos();
@@ -117,18 +129,12 @@ public class PublicarEmpleos extends AppCompatActivity {
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-
-                        //permiso denegado
                         String[] permisos = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                        //Mostrar emergente del menu
                         requestPermissions(permisos,PERMISSON_CODE);
                     }else {
-                        //permiso ya obtenido
                         seleccionarimagen();
                     }
-
                 }else{
-                    //para android masmelos
                     seleccionarimagen();
                 }
             }
@@ -144,12 +150,11 @@ public class PublicarEmpleos extends AppCompatActivity {
         String tituloinput = titulo_publicar_empleos.getEditText().getText().toString().trim();
 
         if (tituloinput.isEmpty()){
-            titulo_publicar_empleos.setError(""+R.string.error_titulo);
+            titulo_publicar_empleos.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
-
-            titulo_publicar_empleos.setError(""+R.string.supera);
+            titulo_publicar_empleos.setError(texto_superado);
             return false;
         }
         else {
@@ -161,12 +166,11 @@ public class PublicarEmpleos extends AppCompatActivity {
         String descripcioncortainput = descripcioncorta_publicar_empleos.getEditText().getText().toString().trim();
 
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_empleos.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_publicar_empleos.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcioncortainput.length()>740){
-
-            descripcioncorta_publicar_empleos.setError(""+R.string.supera);
+        else if(descripcioncortainput.length()>700){
+            descripcioncorta_publicar_empleos.setError(texto_superado);
             return false;
         }
         else {
@@ -175,30 +179,12 @@ public class PublicarEmpleos extends AppCompatActivity {
         }
     }
     private boolean validarnececidad(){
-        String necesidadinput = necesidad_publicar_empleos.getText().toString().trim();
-
-        if (necesidadinput.isEmpty()) {
-            necesidad_publicar_empleos.setError("" + R.string.error_descripcioncorta);
-            return false;
-        } else if (necesidadinput.length() > 15) {
-
-            necesidad_publicar_empleos.setError("" + R.string.supera);
-            return false;
-        } else {
-            necesidad_publicar_empleos.setError(null);
+        if (opcion1_empleos.isChecked() || opcion2_empleos.isChecked() || opcion3_empleos.isChecked() ){
             return true;
-        }
-    }
-    private boolean validarfoto(){
-
-        if (listaimagenes_empleos.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar como minimo una foto",Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getApplicationContext(),"Marque que la necesidad con la que precisa un empleado",Toast.LENGTH_LONG).show();
             return false;
         }
-
-       else {
-            return true;}
-
     }
     public void Subirimagen_empleos(){
 
@@ -217,19 +203,26 @@ public class PublicarEmpleos extends AppCompatActivity {
             }catch (IOException e){
             }
         }
+        if (nombre.size() == 0){
+            cargarWebService_empleos_sinfoto();
+            CargandoSubida("Ver");
+        }
         if (nombre.size() == 1) {
             cargarWebService_empleos();
             CargandoSubida("Ver");
         }
 
         if (nombre.size()>1){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 1 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima+ "1",Toast.LENGTH_LONG).show();
         }
 
     }
 
-
     private void cargarWebService_empleos() {
+
+        if (opcion1_empleos.isChecked()){ necesidad_texto = opcion1_empleos.getText().toString(); }
+        if (opcion2_empleos.isChecked()){ necesidad_texto = opcion2_empleos.getText().toString(); }
+        if (opcion3_empleos.isChecked()){ necesidad_texto = opcion3_empleos.getText().toString(); }
 
 
         String url_empleos = DireccionServidor+"wsnJSONRegistroEmpleos.php?";
@@ -243,32 +236,28 @@ public class PublicarEmpleos extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarEmpleos.this);
-
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioempleos.isLoaded()) {
-                                        anuncioempleos.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-
-                    Log.i("Funciona : ",response);
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEmpleos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioempleos.isLoaded()) { anuncioempleos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
@@ -293,7 +282,7 @@ public class PublicarEmpleos extends AppCompatActivity {
 
                 String tituloinput = titulo_publicar_empleos.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_empleos.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_publicar_empleos.getText().toString().trim();
+                String necesidadinput = necesidad_texto;
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -317,6 +306,93 @@ public class PublicarEmpleos extends AppCompatActivity {
         request_empleos.add(stringRequest_empleos);
 
     }
+    private void cargarWebService_empleos_sinfoto() {
+
+        if (opcion1_empleos.isChecked()){ necesidad_texto = opcion1_empleos.getText().toString(); }
+        if (opcion2_empleos.isChecked()){ necesidad_texto = opcion2_empleos.getText().toString(); }
+        if (opcion3_empleos.isChecked()){ necesidad_texto = opcion3_empleos.getText().toString(); }
+
+
+        String url_empleos = DireccionServidor+"wsnJSONRegistroEmpleos.php?";
+
+        stringRequest_empleos= new StringRequest(Request.Method.POST, url_empleos, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String resul = "Registrada exitosamente";
+                Pattern regex = Pattern.compile("\\b" + Pattern.quote(resul) + "\\b", Pattern.CASE_INSENSITIVE);
+                Matcher match = regex.matcher(response);
+
+                if (match.find()) {
+                    CargandoSubida("Ocultar");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEmpleos.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioempleos.isLoaded()) { anuncioempleos.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
+                }else {
+                    Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
+
+                    Log.i("Error",response);
+                    CargandoSubida("Ocultar");
+
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
+                        Log.i("ERROR",error.toString());
+                        CargandoSubida("Ocultar");
+
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String tituloinput = titulo_publicar_empleos.getEditText().getText().toString().trim();
+                String descripcioncortainput = descripcioncorta_publicar_empleos.getEditText().getText().toString().trim();
+                String necesidadinput = necesidad_texto;
+
+                Map<String,String> parametros = new HashMap<>();
+
+                parametros.put("titulo_empleos",tituloinput);
+                parametros.put("descripcionrow_empleos",descripcioncortainput);
+                parametros.put("vistas_empleos","0");
+                parametros.put("necesidad_empleos",necesidadinput);
+                parametros.put("subida","pendiente");
+                parametros.put("publicacion","Empleos");
+                parametros.put("imagen_empleos0","Vacio");
+
+
+                return parametros;
+            }
+        };
+
+        RequestQueue request_empleos = Volley.newRequestQueue(this);
+        stringRequest_empleos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request_empleos.add(stringRequest_empleos);
+
+    }
+
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
@@ -352,8 +428,6 @@ public class PublicarEmpleos extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
-
             if (data.getClipData() == null){
                 imagenesempleosUri = data.getData();
                 listaimagenes_empleos.add(imagenesempleosUri);
@@ -368,17 +442,37 @@ public class PublicarEmpleos extends AppCompatActivity {
     }
 
     private void CargandoSubida(String Mostrar){
-        empleos=new ProgressDialog(this);
-        empleos.setMessage("Subiendo su Empleos");
-        empleos.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        empleos.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEmpleos.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            empleos.show();
-        } if(Mostrar.equals("Ocultar")){
-            empleos.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
         }
     }
-
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 
 
