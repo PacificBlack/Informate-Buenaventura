@@ -4,15 +4,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -39,7 +45,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.id_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioEliminar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
@@ -50,14 +61,15 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
 
     TextInputLayout id_eliminar_servicios;
     TextView titulo_eliminar_servicios,descripcioncorta_eliminar_servicios,necesidad_eliminar_servicios;
-    ImageButton eliminar_servicios,eliminar_buscar_servicios;
+    ImageButton eliminar_buscar_servicios;
     RequestQueue requestbuscar;
+    Button eliminar_servicios;
     JsonObjectRequest jsonObjectRequestBuscar;
     StringRequest stringRequest_servicios;
     ImageView imagen1_eliminar_servicios;
     private InterstitialAd anuncioservicios;
-    private ProgressDialog servicios;
-
+    Toolbar barra_servicios;
+    ImageView whatsapp;
 
 
 
@@ -66,6 +78,15 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eliminar_servicios);
 
+        whatsapp = findViewById(R.id.whatsapp_eliminar_servicios);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                whatsapp(EliminarServicios.this,Whatsapp);
+            }
+        });
+        barra_servicios = findViewById(R.id.toolbar_eliminar_servicios);
+        barra_servicios.setTitle("Eliminar Servicios");
         titulo_eliminar_servicios = findViewById(R.id.eliminar_titulo_servicios);
         descripcioncorta_eliminar_servicios = findViewById(R.id.eliminar_descripcion_servicios);
         necesidad_eliminar_servicios = findViewById(R.id.eliminar_necesidad_servicios);
@@ -124,12 +145,11 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
         String idinput = id_eliminar_servicios.getEditText().getText().toString().trim();
 
         if (idinput.isEmpty()){
-            id_eliminar_servicios.setError(""+R.string.error_descripcioncorta);
+            id_eliminar_servicios.setError(id_vacio);
             return false;
         }
         else if(idinput.length()>15){
-
-            id_eliminar_servicios.setError(""+R.string.supera);
+            id_eliminar_servicios.setError(texto_superado);
             return false;
         }
         else {
@@ -139,11 +159,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
     }
 
     private void cargarBusqueda_servicios() {
-
         String url_buscar_servicios = DireccionServidor+"wsnJSONBuscarServicios.php?id_ofertaservicios="+id_eliminar_servicios.getEditText().getText().toString().trim();
-
         jsonObjectRequestBuscar = new JsonObjectRequest(Request.Method.GET,url_buscar_servicios,null,this,this);
-
         requestbuscar.add(jsonObjectRequestBuscar);
     }
     @Override
@@ -151,7 +168,6 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
         CargandoSubida("Ocultar");
-
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -201,26 +217,28 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(EliminarServicios.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    if (anuncioservicios.isLoaded()) {
-                                        anuncioservicios.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-                    Log.i("Funciona : ",response);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EliminarServicios.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado,null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioservicios.isLoaded()) { anuncioservicios.show(); }
+                            else { Log.d("TAG", "The interstitial wasn't loaded yet."); }
+                        }
+                    });
+                    Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -251,14 +269,34 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
     }
 
     private void CargandoSubida(String Mostrar){
-        servicios=new ProgressDialog(this);
-        servicios.setMessage("Subiendo su Empleos");
-        servicios.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        servicios.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarServicios.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            servicios.show();
-        }if(Mostrar.equals("Ocultar")){
-            servicios.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try {
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sendIntent.putExtra("jid", formattedNumber + "@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore", Toast.LENGTH_SHORT).show();
         }
     }
 }

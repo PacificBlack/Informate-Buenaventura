@@ -11,9 +11,21 @@
     android:layout_gravity="center"
     tools:context=".actualizar.ActualizarServicios">
 
+    <Toolbar
+        android:id="@+id/toolbar_actualizar_servicios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimaryDark"
+        android:titleTextColor="@color/blanco"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.PopupOverlay" />
 
 
     <ScrollView
+        android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">
@@ -124,7 +136,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
                         app:counterEnabled="true"
-                        app:counterMaxLength="740"
+                        app:counterMaxLength="700"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -139,13 +151,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/actualizar_necesidad_servicios"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Presione dos veces para seleccionar la necesidad con la que se precisa" />
-
-                    <GridView
+                   <GridView
                         android:id="@+id/grid_actualizar_servicios"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -162,17 +168,62 @@
 
                     <Button
                         android:id="@+id/subir_imagenes_actualizar_servicios"
-                        android:layout_width="wrap_content"
+                        android:layout_width="190dp"
                         android:layout_height="wrap_content"
-                        android:text="Subir imagenes" />
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="@color/blanco"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Actualizar imagenes" />
 
-                    <ImageButton
-                        android:id="@+id/actualizar_final_servicios"
-                        android:layout_width="50dp"
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        app:srcCompat="@android:drawable/ic_menu_edit" />
+                        android:text="Selecione el tiempo que dara el servicio:" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <RadioGroup
+                            android:layout_width="180dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp">
+
+                            <RadioButton
+                                android:id="@+id/opcion1_necesidad_servicios_actualizar"
+                                android:layout_width="211dp"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/opcion2_necesidad_servicios_actualizar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+                            <RadioButton
+                                android:id="@+id/opcion3_necesidad_servicios_actualizar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RadioButton" />
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/actualizar_final_servicios"
+                        android:layout_width="210dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/blanco"
+                        android:layout_gravity="center"
+                        android:background="@drawable/estilo_botones"
+                        android:text="Actualizar Servicio" />
 
 
 
@@ -221,7 +272,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/whatsapp" />
+                    android:src="@drawable/whatsapp"
+                    android:id="@+id/whatsapp_actualizar_servicios" />
 
 
             </LinearLayout>

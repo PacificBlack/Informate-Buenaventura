@@ -6,8 +6,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,12 +21,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -49,18 +57,24 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.internal.Util;
+
 import static com.pacificblack.informatebuenaventura.extras.Contants.MY_DEFAULT_TIMEOUT;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.Whatsapp;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.descripcio1_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_maxima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.AnuncioPublicar;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
 
 public class PublicarServicios extends AppCompatActivity {
 
+    RadioButton opcion1_servicios,opcion2_servicios,opcion3_servicios; String necesidad_texto = "Ninguno";
     TextInputLayout titulo_publicar_servicios,descripcioncorta_publicar_servicios;
-    AutoCompleteTextView necesidad_publicar_servicios;
     Button publicarfinal,subirimagenes;
-
-    String servi[] = new String[]{"Hoy mismo","Cuando quiera","Cada 3 años"};
     private InterstitialAd anuncioservicios;
     GridView gvImagenes_servicios;
     Uri imagenesserviciosUri;
@@ -72,24 +86,32 @@ public class PublicarServicios extends AppCompatActivity {
     StringRequest stringRequest_servicios;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    private ProgressDialog servicios;
+    Toolbar barra_servicios;
+    ImageView whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_servicios);
 
-        titulo_publicar_servicios = findViewById(R.id.publicar_titulo_servicios);
-        descripcioncorta_publicar_servicios = findViewById(R.id.publicar_descripcion_servicios);
-        necesidad_publicar_servicios = findViewById(R.id.publicar_necesidad_servicios);
-        ArrayAdapter<String> adapternece = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,servi);
-        necesidad_publicar_servicios.setAdapter(adapternece);
-        necesidad_publicar_servicios.setOnClickListener(new View.OnClickListener() {
+        whatsapp = findViewById(R.id.whatsapp_publicar_servicios);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                necesidad_publicar_servicios.showDropDown();
+                whatsapp(PublicarServicios.this, Whatsapp);
             }
         });
+        barra_servicios = findViewById(R.id.toolbar_publicar_servicios);
+        barra_servicios.setTitle("Publicar servicios");
+        opcion1_servicios = findViewById(R.id.opcion1_necesidad_servicios_publicar);
+        opcion1_servicios.setText("Solo por hoy");
+        opcion2_servicios = findViewById(R.id.opcion2_necesidad_servicios_publicar);
+        opcion2_servicios.setText("Solo por esta semana");
+        opcion3_servicios = findViewById(R.id.opcion3_necesidad_servicios_publicar);
+        opcion3_servicios.setText("Por tiempo indefinido");
+
+        titulo_publicar_servicios = findViewById(R.id.publicar_titulo_servicios);
+        descripcioncorta_publicar_servicios = findViewById(R.id.publicar_descripcion_servicios);
         publicarfinal = findViewById(R.id.publicar_final_servicios);
         publicarfinal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,12 +148,12 @@ public class PublicarServicios extends AppCompatActivity {
         String tituloinput = titulo_publicar_servicios.getEditText().getText().toString().trim();
 
         if (tituloinput.isEmpty()){
-            titulo_publicar_servicios.setError(""+R.string.error_titulo);
+            titulo_publicar_servicios.setError(titulo_vacio);
             return false;
         }
         else if(tituloinput.length()>120){
 
-            titulo_publicar_servicios.setError(""+R.string.supera);
+            titulo_publicar_servicios.setError(texto_superado);
             return false;
         }
         else {
@@ -143,12 +165,12 @@ public class PublicarServicios extends AppCompatActivity {
         String descripcioncortainput = descripcioncorta_publicar_servicios.getEditText().getText().toString().trim();
 
         if (descripcioncortainput.isEmpty()){
-            descripcioncorta_publicar_servicios.setError(""+R.string.error_descripcioncorta);
+            descripcioncorta_publicar_servicios.setError(descripcio1_vacio);
             return false;
         }
-        else if(descripcioncortainput.length()>740){
+        else if(descripcioncortainput.length()>700){
 
-            descripcioncorta_publicar_servicios.setError(""+R.string.supera);
+            descripcioncorta_publicar_servicios.setError(texto_superado);
             return false;
         }
         else {
@@ -157,23 +179,16 @@ public class PublicarServicios extends AppCompatActivity {
         }
     }
     private boolean validarnececidad(){
-        String necesidadinput = necesidad_publicar_servicios.getText().toString().trim();
-
-        if (necesidadinput.isEmpty()) {
-            necesidad_publicar_servicios.setError("" + R.string.error_descripcioncorta);
-            return false;
-        } else if (necesidadinput.length() > 15) {
-
-            necesidad_publicar_servicios.setError("" + R.string.supera);
-            return false;
-        } else {
-            necesidad_publicar_servicios.setError(null);
+        if (opcion1_servicios.isChecked() || opcion2_servicios.isChecked() || opcion3_servicios.isChecked() ){
             return true;
+        }else {
+            Toast.makeText(getApplicationContext(),"Marque que la necesidad con la que dara el servicio",Toast.LENGTH_LONG).show();
+            return false;
         }
     }
     private boolean validarfoto(){
         if (listaimagenes_servicios.size() == 0){
-            Toast.makeText(getApplicationContext(),"Debe agregar como minimo una foto",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
             return false;
         }
         else {
@@ -181,6 +196,10 @@ public class PublicarServicios extends AppCompatActivity {
     }
 
     private void cargarWebService_servicios() {
+
+        if (opcion1_servicios.isChecked()){ necesidad_texto = opcion1_servicios.getText().toString(); }
+        if (opcion2_servicios.isChecked()){ necesidad_texto = opcion2_servicios.getText().toString(); }
+        if (opcion3_servicios.isChecked()){ necesidad_texto = opcion3_servicios.getText().toString(); }
 
         String url_servicios = DireccionServidor+"wsnJSONRegistroServicios.php?";
         stringRequest_servicios= new StringRequest(Request.Method.POST, url_servicios, new Response.Listener<String>() {
@@ -192,26 +211,30 @@ public class PublicarServicios extends AppCompatActivity {
 
                 if (match.find()) {
                     CargandoSubida("Ocultar");
-                    AlertDialog.Builder mensaje = new AlertDialog.Builder(PublicarServicios.this);
-                    mensaje.setMessage(response)
-                            .setCancelable(false)
-                            .setPositiveButton("Entiendo", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    finish();
-                                    if (anuncioservicios.isLoaded()) {
-                                        anuncioservicios.show();
-                                    } else {
-                                        Log.d("TAG", "The interstitial wasn't loaded yet.");
-                                    }
-                                }
-                            });
-
-                    AlertDialog titulo = mensaje.create();
-                    titulo.setTitle("Recuerda");
-                    titulo.show();
-                    Log.i("Funciona : ",response);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PublicarServicios.this);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_personalizado, null);
+                    builder.setCancelable(false);
+                    builder.setView(view);
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    ImageView dialogimagen = view.findViewById(R.id.imagendialog);
+                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+                    TextView txt = view.findViewById(R.id.texto_dialog);
+                    txt.setText(response);
+                    Button btnEntendido = view.findViewById(R.id.btentiendo);
+                    btnEntendido.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            if (anuncioservicios.isLoaded()) {
+                                anuncioservicios.show();
+                            } else {
+                                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                            }
+                        }
+                    });
+                    Log.i("Muestra", response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
@@ -233,8 +256,7 @@ public class PublicarServicios extends AppCompatActivity {
 
                 String tituloinput = titulo_publicar_servicios.getEditText().getText().toString().trim();
                 String descripcioncortainput = descripcioncorta_publicar_servicios.getEditText().getText().toString().trim();
-                String necesidadinput = necesidad_publicar_servicios.getText().toString().trim();
-
+                String necesidadinput = necesidad_texto;
                 Map<String,String> parametros = new HashMap<>();
 
                 parametros.put("titulo_servicios",tituloinput);
@@ -261,7 +283,6 @@ public class PublicarServicios extends AppCompatActivity {
         nombre.clear();
         cadena.clear();
         for (int i = 0; i < listaimagenes_servicios.size(); i++){
-
             try {
                 InputStream is = getContentResolver().openInputStream(listaimagenes_servicios.get(i));
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -276,13 +297,12 @@ public class PublicarServicios extends AppCompatActivity {
             CargandoSubida("Ver");
         }
         if (nombre.size()>1){
-            Toast.makeText(getApplicationContext(),"Solo se pueden subir 3 imagenes, por favor borre una",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),imagen_maxima +" 1",Toast.LENGTH_LONG).show();
         }
     }
     public String convertirUriEnBase64(Bitmap bmp){
         ByteArrayOutputStream array = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,array);
-
         byte[] imagenByte = array.toByteArray();
         String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
 
@@ -327,14 +347,36 @@ public class PublicarServicios extends AppCompatActivity {
         gvImagenes_servicios.setAdapter(baseAdapter);
     }
     private void CargandoSubida(String Mostrar){
-        servicios=new ProgressDialog(this);
-        servicios.setMessage("Subiendo su Empleos");
-        servicios.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        servicios.setIndeterminate(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarServicios.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.cargando,null);
+        builder.setCancelable(false);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
         if(Mostrar.equals("Ver")){
-            servicios.show();
-        }if(Mostrar.equals("Ocultar")){
-            servicios.hide();
+            dialog.show();
+        }
+        if(Mostrar.equals("Ocultar")){
+            dialog.hide();
         }
     }
+    @SuppressLint("NewApi")
+    private void whatsapp(Activity activity, String phone) {
+        String formattedNumber = Util.format(phone);
+        try{
+            Intent sendIntent =new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
+            sendIntent.setPackage("com.whatsapp");
+            activity.startActivity(sendIntent);
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(activity,"Instale whatsapp en su dispositivo o cambie a la version oficial que esta disponible en PlayStore",Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
