@@ -51,7 +51,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionSer
 public class InicioFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     String API_KEY = "AIzaSyCjplldkmscSZfu1yMY7eJr4xiSjuAbZgo";
-
+    StringRequest stringRequest_imagenes;
     RecyclerView recyclerInicio;
     ArrayList<Inicio> listaInicio;
     List<Imagenes> listaImagenes;
@@ -76,17 +76,22 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
         recyclerInicio = vista.findViewById(R.id.recycler_inicio);
         recyclerInicio.setLayoutManager(new GridLayoutManager(getContext(),2));
 
+        listaImagenes = new ArrayList<>();
+
+
         refresh_inicio = vista.findViewById(R.id.swipe_inicio);
         refresh_inicio.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 cargarWebService_Inicio();
+                cargarWebService_Imagenes();
             }
         });
 
         request = Volley.newRequestQueue(getContext());
 
         cargarWebService_Inicio();
+        cargarWebService_Imagenes();
 
         refresh_inicio.setRefreshing(true);
 
@@ -94,6 +99,63 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
     }
 
 
+
+
+    private void cargarWebService_Imagenes(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        String url_imagenes = DireccionServidor+"wsnJSONllenarImagenes.php";
+
+
+        JsonObjectRequest jsObjectRequest = new JsonObjectRequest(Request.Method.GET, url_imagenes, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Imagenes imagenes = null;
+                JSONArray json_imagenes = null;
+                try {
+                    json_imagenes = response.getJSONArray("imagenes");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listaImagenes.clear();
+                try {
+                    for (int i = 0; i < json_imagenes.length() ; i++) {
+                    imagenes = new Imagenes();
+                    JSONObject jsonObject = null;
+                    jsonObject = json_imagenes.getJSONObject(i);
+
+                    imagenes.setImagenes(jsonObject.getString("publicidad_inicio"));
+
+                    listaImagenes.add(imagenes);
+
+                    }
+
+                    sliderView.setSliderAdapter(new SliderAdaptador(getContext(),listaImagenes));
+
+                    sliderView.setIndicatorAnimation(IndicatorAnimations.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+                    sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                    sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+                    sliderView.setIndicatorSelectedColor(Color.WHITE);
+                    sliderView.setIndicatorUnselectedColor(Color.GRAY);
+                    sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
+                    sliderView.startAutoCycle();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("TAG", "Error Respuesta en JSON: " + error.getMessage());
+
+                    }
+                });
+
+        requestQueue.add(jsObjectRequest);
+    }
 
 
 
@@ -170,25 +232,6 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
                 listaInicio.add(Inicio);
 
             }
-
-            listaImagenes = new ArrayList<>();
-            listaImagenes.add(new Imagenes("https://images.alphacoders.com/105/thumb-350-1050187.jpg"));
-            listaImagenes.add(new Imagenes("https://image.winudf.com/v2/image1/Y29tLmJlc3QubGl2ZS53YWxscGFwZXIuYmFja2dyb3VuZHMuaGQudGhlbWUuZ2lybHkud2FsbHBhcGVycy5pbWFnZXMubHdwLm5lb24uYW5pbWFscy5saXZlLndhbGxwYXBlcl9zY3JlZW5fMTFfMTU0NzIxOTY2Nl8wMjg/screen-11.jpg?fakeurl=1&type=.jpg"));
-            listaImagenes.add(new Imagenes("https://www.tuexpertomovil.com/wp-content/uploads/2019/03/fondos-de-pantalla-fortnite-movil-celular-hd.jpg"));
-            listaImagenes.add(new Imagenes("https://img-l3.xvideos-cdn.com/videos/thumbslll/37/10/a5/3710a5ca0eb9b7d5b835e6ccbe265595/3710a5ca0eb9b7d5b835e6ccbe265595.16.jpg"));
-            listaImagenes.add(new Imagenes("https://di1.ypncdn.com/201207/05/7811529/original/8/the-most-beautiful-erotic-babe-malena-8(m=eKw7Kgaaaa).jpg"));
-
-
-            sliderView.setSliderAdapter(new SliderAdaptador(getContext(),listaImagenes));
-
-            sliderView.setIndicatorAnimation(IndicatorAnimations.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-            sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-            sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-            sliderView.setIndicatorSelectedColor(Color.WHITE);
-            sliderView.setIndicatorUnselectedColor(Color.GRAY);
-            sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
-            sliderView.startAutoCycle();
-
 
             adaptadorInicio = new AdaptadorInicio(listaInicio);
             recyclerInicio.setAdapter(adaptadorInicio);
