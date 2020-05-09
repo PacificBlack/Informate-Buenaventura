@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -70,6 +71,8 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     private InterstitialAd anunciobienes_eliminar;
     Toolbar barra_bienes;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarBienes.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +117,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_bienes();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
 
                     }
                 });
@@ -131,7 +134,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -166,7 +169,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
     @Override
@@ -225,7 +228,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_bienes);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -243,7 +246,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarBienes.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -268,7 +271,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -277,7 +280,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
 
@@ -298,20 +301,6 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         RequestQueue request_bienes_actualizar = Volley.newRequestQueue(this);
         stringRequest_bienes.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_bienes_actualizar.add(stringRequest_bienes);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarBienes.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
 
     @SuppressLint("NewApi")

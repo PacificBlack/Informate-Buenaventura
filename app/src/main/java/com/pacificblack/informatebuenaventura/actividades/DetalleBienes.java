@@ -38,12 +38,10 @@ public class DetalleBienes extends AppCompatActivity {
     int id_actualizar;
     private AdView baner1,baner2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_bienes);
-
 
         titulo_bienes = findViewById(R.id.titulo_detalle_bienes);
         descripcion1_bienes = findViewById(R.id.descricion1_detalle_bienes);
@@ -72,7 +70,6 @@ public class DetalleBienes extends AppCompatActivity {
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
                     .into(imagen1_bienes);
-
 
             Picasso.get().load(bienes.getImagen2_bienes())
                     .placeholder(R.drawable.imagennodisponible)
@@ -134,19 +131,11 @@ public class DetalleBienes extends AppCompatActivity {
                 }
             });
 
-
-
-
-
-
             String url_bienes = DireccionServidor+"wsnJSONActualizarVista.php?";
-
             stringRequest_bienes_actualizar= new StringRequest(Request.Method.POST, url_bienes, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-
                     Log.i("Si actualizo",response);
-
                 }
             },
                     new Response.ErrorListener() {
@@ -155,12 +144,10 @@ public class DetalleBienes extends AppCompatActivity {
                             Log.i("No actualizo",error.toString());
                         }
                     }){
-
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 
                     String idinput = String.valueOf(id_actualizar);
-
                     Map<String,String> parametros = new HashMap<>();
                     parametros.put("id_bienes",idinput);
                     parametros.put("publicacion","Bienes");
@@ -170,27 +157,14 @@ public class DetalleBienes extends AppCompatActivity {
                     return parametros;
                 }
             };
-
             RequestQueue request_bienes_eliminar = Volley.newRequestQueue(this);
             request_bienes_eliminar.add(stringRequest_bienes_actualizar);
-
         }
-
-
         baner1 = findViewById(R.id.baner_bienes1);
         baner2 = findViewById(R.id.baner_bienes2);
-
-
         AdRequest adRequest = new AdRequest.Builder().build();
-
         baner1.loadAd(adRequest);
         baner2.loadAd(adRequest);
-
-
-
-
     }
 
-
-    }
-
+}

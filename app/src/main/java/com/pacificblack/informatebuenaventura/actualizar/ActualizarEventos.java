@@ -46,6 +46,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -101,6 +102,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     private InterstitialAd anuncioeventos;
     Toolbar barra_eventos;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarEventos.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +145,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                @Override
                 public void onClick(DialogInterface dialog, int which) {
                            cargarActualizarSinImagen_eventos();
-                   CargandoSubida("Ver");
+                   cargandoDialog.Mostrar();
 
                }
                                                           });
@@ -162,7 +165,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
 
                 if (!validarid()){return;}
                 cargarBusqueda_eventos();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -281,7 +284,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
     @Override
@@ -315,7 +318,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_eventos);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -332,7 +335,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEventos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -357,7 +360,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -367,7 +370,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -413,7 +416,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEventos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -438,7 +441,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -448,7 +451,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -497,7 +500,7 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         }
         if (nombre.size() == 1) {
             cargarActualizarConImagen_eventos();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>1){
             Toast.makeText(getApplicationContext(),imagen_maxima+ "1",Toast.LENGTH_LONG).show();
@@ -547,20 +550,6 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         }
         baseAdapter = new GridViewAdapter(ActualizarEventos.this,listaimagenes_eventos);
         gvImagenes_eventos.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEventos.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

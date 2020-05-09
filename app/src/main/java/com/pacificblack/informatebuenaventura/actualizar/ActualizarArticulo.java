@@ -47,6 +47,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -89,7 +90,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobusc
 
 
 public class ActualizarArticulo extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener  {
-
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarArticulo.this);
     GridView gvImagenes_comprayventa_actualizar;
     Uri imagenescomprayventaUri;
     List<Uri> listaimagenes_comprayventa =  new ArrayList<>();
@@ -175,7 +176,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_comprayventa();
-                            CargandoSubida("Ver");
+                            cargandoDialog.Mostrar();
                         }
                     });
                     AlertDialog titulo = mensaje.create();
@@ -192,7 +193,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_comprayventa();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
             }
         });
         anuncioAdopcion_actualizar = new InterstitialAd(this);
@@ -332,7 +333,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -388,7 +389,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_comprayventa);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
     private void cargarActualizarSinImagen_comprayventa() {
@@ -404,7 +405,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -432,7 +433,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
 
                 }
@@ -442,7 +443,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -496,7 +497,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -524,7 +525,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -534,7 +535,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -590,7 +591,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -618,7 +619,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -628,7 +629,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -684,7 +685,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -712,7 +713,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -722,7 +723,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -785,15 +786,15 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         }
         if (nombre.size() == 1){
             cargarActualizarConImagen_comprayventa_uno();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 2){
             cargarActualizarConImagen_comprayventa_dos();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 3){
             cargarActualizarConImagen_comprayventa();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>3){ Toast.makeText(getApplicationContext(),imagen_maxima +"3",Toast.LENGTH_LONG).show();        }
 
@@ -841,26 +842,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         baseAdapter = new GridViewAdapter(ActualizarArticulo.this,listaimagenes_comprayventa);
         gvImagenes_comprayventa_actualizar.setAdapter(baseAdapter);
     }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarArticulo.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
 
-        switch (Mostrar){
-            case "Ver":
-                dialog.show();
-                Log.i("Mostrar se ve", Mostrar);
-                break;
-
-            case "Ocultar":
-                dialog.dismiss();
-                Log.i("Mostrar se oculta", Mostrar);
-                break;
-        }
-    }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

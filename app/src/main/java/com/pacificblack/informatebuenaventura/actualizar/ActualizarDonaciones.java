@@ -46,6 +46,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -107,6 +108,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
     ImageView imagen1_actualizar_donaciones,imagen2_actualizar_donaciones;
     Toolbar barra_donaciones;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarDonaciones.this);
 
 
     @Override
@@ -157,7 +159,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_donaciones();
-                            CargandoSubida("Ver");
+                            cargandoDialog.Mostrar();
                         }
                     });
 
@@ -176,7 +178,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_donaciones();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -297,7 +299,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
     @Override
@@ -339,7 +341,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 .error(R.drawable.imagennodisponible)
                 .into(imagen2_actualizar_donaciones);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
     public void Subirimagen_donaciones_update(){
@@ -359,11 +361,11 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         }
         if (nombre.size() == 1){
             cargarActualizarConImagen_donaciones_uno();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 2){
             cargarActualizarConImagen_donaciones();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>2){
             Toast.makeText(getApplicationContext(),imagen_maxima+" 2",Toast.LENGTH_LONG).show();
@@ -382,7 +384,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDonaciones.this);
 
@@ -410,7 +412,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -421,7 +423,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -468,7 +470,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDonaciones.this);
 
@@ -496,7 +498,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -506,7 +508,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -556,7 +558,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
                 if (match.find()){
 
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder mensaje = new AlertDialog.Builder(ActualizarDonaciones.this);
 
@@ -584,7 +586,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -594,7 +596,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -678,20 +680,6 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         }
         baseAdapter = new GridViewAdapter(ActualizarDonaciones.this,listaimagenes_donaciones);
         gvImagenes_donaciones.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDonaciones.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

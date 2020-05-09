@@ -43,6 +43,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,6 +87,8 @@ public class PublicarDonaciones extends AppCompatActivity{
     Button publicar_final_donaciones,subirimagenes;
     Toolbar barra_donaciones;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarDonaciones.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,11 +227,11 @@ public class PublicarDonaciones extends AppCompatActivity{
         }
         if (nombre.size() == 1){
             cargarWebService_donaciones_uno();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 2){
             cargarWebService_donaciones();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>2){
             Toast.makeText(getApplicationContext(),imagen_maxima +" 2",Toast.LENGTH_LONG).show();
@@ -247,7 +250,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -272,7 +275,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -281,7 +284,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
             @Override
@@ -325,7 +328,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -350,7 +353,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -359,7 +362,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
             @Override
@@ -438,26 +441,6 @@ public class PublicarDonaciones extends AppCompatActivity{
         gvImagenes_donaciones.setAdapter(baseAdapter);
     }
 
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-
-        switch (Mostrar){
-            case "Ver":
-                dialog.show();
-                Log.i("Mostrar se ve", Mostrar);
-                break;
-
-            case "Ocultar":
-                dialog.dismiss();
-                Log.i("Mostrar se oculta", Mostrar);
-                break;
-        }
-    }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

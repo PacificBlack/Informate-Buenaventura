@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.eventos.Eventos;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -70,6 +71,8 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
     private InterstitialAd anuncioeventos;
     Toolbar barra_eventos;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarEventos.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +111,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_eventos();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
 
                     }
                 });
@@ -127,7 +130,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
 
                 if (!validarid()){return;}
                 cargarBusqueda_eventos();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -162,7 +165,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -195,7 +198,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_eventos);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -213,7 +216,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarEventos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -238,7 +241,7 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -269,21 +272,6 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
         request_eventos.add(stringRequest_eventos);
 
     }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarEventos.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
-    }
-
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

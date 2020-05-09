@@ -45,8 +45,6 @@ public class DetalleClasificados extends YouTubeBaseActivity implements YouTubeP
     String API_KEY = "AIzaSyCjplldkmscSZfu1yMY7eJr4xiSjuAbZgo";
     String video;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.clasificados.Clasificados;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -69,6 +70,8 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
     private InterstitialAd anuncioClasificados_eliminar;
     Toolbar barra_clasificados;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarClasificados.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_clasificados();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
 
                     }
                 });
@@ -132,7 +135,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
 
                 if (!validarid()){return;}
                 cargarBusqueda_clasificados();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -168,7 +171,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -225,7 +228,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_clasificados);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
     private void cargarEliminar_clasificados() {
@@ -240,7 +243,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarClasificados.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -265,7 +268,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -274,7 +277,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
 
@@ -297,20 +300,6 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         stringRequestclasificados.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_clasificados_actualizar.add(stringRequestclasificados);
 
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarClasificados.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
 
     @SuppressLint("NewApi")

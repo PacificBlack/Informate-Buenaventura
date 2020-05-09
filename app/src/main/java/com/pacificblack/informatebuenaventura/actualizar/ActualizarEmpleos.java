@@ -45,6 +45,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaEmpleos;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -102,6 +103,9 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     private InterstitialAd anuncioempleos;
     Toolbar barra_empleos;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarEmpleos.this);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +150,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
           @Override
            public void onClick(DialogInterface dialog, int which) {
             cargarActualizarSinImagen_empleos();
-              CargandoSubida("Ver");
+              cargandoDialog.Mostrar();
           }
               });
              AlertDialog titulo = mensaje.create();
@@ -163,7 +167,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_empleos();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -254,7 +258,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -287,7 +291,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         if (empleos.getNecesidad_row_ofertasempleos().equals("Para hoy mismo")){opcion3_empleos.setChecked(true);}
 
         Picasso.get().load(empleos.getImagen1_ofertasempleos()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen1_actualizar_empleos);
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -309,7 +313,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEmpleos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -334,7 +338,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -344,7 +348,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -395,7 +399,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEmpleos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -420,7 +424,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -430,7 +434,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -480,7 +484,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         }
         if (nombre.size() == 1) {
             cargarActualizarConImagen_empleos();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
 
         if (nombre.size()>1){
@@ -531,20 +535,6 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         }
         baseAdapter = new GridViewAdapter(ActualizarEmpleos.this,listaimagenes_empleos);
         gvImagenes_empleos.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarEmpleos.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

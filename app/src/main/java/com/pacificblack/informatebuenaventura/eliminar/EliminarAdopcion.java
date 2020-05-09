@@ -36,6 +36,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.adopcion.Adopcion;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -74,6 +75,8 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     Toolbar barra_desaparicion;
     ImageView whatsapp;
     ProgressBar cargandopublicar;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarAdopcion.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +122,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_adopcion();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
                     }
                 });
 
@@ -136,7 +139,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
 
                 if (!validarid()){return;}
                 cargarBusqueda_adopcion();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -172,7 +175,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -228,7 +231,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 .placeholder(R.drawable.imagennodisponible)
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_eliminar_adopcion);
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
 
@@ -242,7 +245,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarAdopcion.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -266,14 +269,14 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
 
@@ -293,20 +296,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         stringRequest_adopcion_eliminar.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_adopcion_eliminar.add(stringRequest_adopcion_eliminar);
 
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarAdopcion.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

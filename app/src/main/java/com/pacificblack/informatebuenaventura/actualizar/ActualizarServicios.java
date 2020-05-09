@@ -48,6 +48,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaServicios;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -106,11 +107,15 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     String necesidad_texto = "Ninguno";
     Toolbar barra_servicios;
     ImageView whatsapp;
+    CargandoDialog  cargandoDialog = new CargandoDialog(ActualizarServicios.this);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actualizar_servicios);
+
 
         whatsapp = findViewById(R.id.whatsapp_actualizar_servicios);
         whatsapp.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +162,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                     cargarActualizarSinImagen_servicios();
-                                                                    CargandoSubida("Ver");
+                                                                    cargandoDialog.Mostrar();
 
                                                                 }
                                                             });
@@ -179,7 +184,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     return;
                 }
                 cargarBusqueda_servicios();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -278,7 +283,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR", error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
     @Override
@@ -315,7 +320,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_actualizar_servicios);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
 
@@ -335,7 +340,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarServicios.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado, null);
@@ -363,7 +368,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 } else {
                     Toast.makeText(getApplicationContext(), NosepudoActualizar, Toast.LENGTH_LONG).show();
                     Log.i("Error", response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -373,7 +378,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR", error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }) {
@@ -425,7 +430,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarServicios.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado, null);
@@ -453,7 +458,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                 } else {
                     Toast.makeText(getApplicationContext(), NosepudoActualizar, Toast.LENGTH_LONG).show();
                     Log.i("Error", response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -463,7 +468,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
                         Log.i("ERROR", error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }) {
@@ -512,7 +517,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         }
         if (nombre.size() == 1) {
             cargarActualizarConImagen_servicios();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() > 1) {
             Toast.makeText(getApplicationContext(), imagen_maxima +" 1", Toast.LENGTH_LONG).show();
@@ -567,20 +572,6 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         gvImagenes_servicios.setAdapter(baseAdapter);
     }
 
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarServicios.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
-    }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

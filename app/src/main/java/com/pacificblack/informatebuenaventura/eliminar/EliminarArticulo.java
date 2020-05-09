@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.comprayventa.ComprayVenta;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -69,6 +70,8 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
     private InterstitialAd anuncioArticulo_eliminar;
     Toolbar barra_articulo;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarArticulo.this);
+
 
 
     @Override
@@ -118,7 +121,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_comprayventa();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
 
                     }
                 });
@@ -138,7 +141,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     return;
                 }
                 cargarBusqueda_comprayventa();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
             }
         });
 
@@ -171,7 +174,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR", error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
     @Override
@@ -228,7 +231,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_eliminar_comprayventa);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
 
     }
@@ -246,7 +249,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado, null);
@@ -273,7 +276,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     Log.i("Muestra", response);
                 } else {
                     Toast.makeText(getApplicationContext(), NosepudoEliminar, Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -283,7 +286,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), Nohayinternet, Toast.LENGTH_LONG).show();
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }) {
@@ -300,21 +303,6 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         RequestQueue request_comprayventa_eliminar = Volley.newRequestQueue(this);
         stringRequest_comprayventa.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_comprayventa_eliminar.add(stringRequest_comprayventa);
-    }
-
-    private void CargandoSubida(String Mostrar) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarArticulo.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando, null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if (Mostrar.equals("Ver")) {
-            dialog.show();
-        }
-        if (Mostrar.equals("Ocultar")) {
-            dialog.hide();
-        }
     }
 
     @SuppressLint("NewApi")

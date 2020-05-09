@@ -43,6 +43,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -85,6 +86,8 @@ public class PublicarFunebres extends AppCompatActivity {
     private InterstitialAd anunciofunebres;
     Toolbar barra_funebres;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarFunebres.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,11 +214,11 @@ public class PublicarFunebres extends AppCompatActivity {
             }
         }
         if (nombre.size() == 1){cargarWebService_funebres_uno();
-            CargandoSubida("Ver"); }
+            cargandoDialog.Mostrar(); }
         if (nombre.size()== 2){cargarWebService_funebres_dos();
-            CargandoSubida("Ver");        }
+            cargandoDialog.Mostrar();        }
         if (nombre.size() == 3 ){cargarWebService_funebres();
-            CargandoSubida("Ver");        }
+            cargandoDialog.Mostrar();        }
         if (nombre.size()>3){
             Toast.makeText(getApplicationContext(),imagen_maxima+" 3",Toast.LENGTH_LONG).show();
         }
@@ -234,7 +237,7 @@ public class PublicarFunebres extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -260,7 +263,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -272,7 +275,7 @@ public class PublicarFunebres extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -317,7 +320,7 @@ public class PublicarFunebres extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -343,7 +346,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -355,8 +358,8 @@ public class PublicarFunebres extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
-                    CargandoSubida("Ocultar");
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
+                    cargandoDialog.Ocultar();
                     }
                 }){
         @Override
@@ -400,7 +403,7 @@ public class PublicarFunebres extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -426,7 +429,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -438,7 +441,7 @@ public class PublicarFunebres extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -513,20 +516,6 @@ public class PublicarFunebres extends AppCompatActivity {
         }
         baseAdapter = new GridViewAdapter(PublicarFunebres.this,listaimagenes_funebres);
         gvImagenes_funebres.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarFunebres.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

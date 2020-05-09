@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.ofertas.OfertaEmpleos;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -70,6 +71,8 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
     private InterstitialAd anuncioempleos;
     Toolbar barra_empleos;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarEmpleos.this);
+
 
 
     @Override
@@ -110,7 +113,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_empleos();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
 
                     }
                 });
@@ -129,7 +132,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
 
                 if (!validarid()){return;}
                 cargarBusqueda_empleos();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -164,7 +167,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
 
     @Override
@@ -198,7 +201,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 .error(R.drawable.imagennodisponible)
                 .into(imagen1_eliminar_empleos);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -215,7 +218,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarEmpleos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -240,7 +243,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -249,7 +252,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
 
@@ -270,20 +273,6 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
         stringRequest_empleos.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_empleos.add(stringRequest_empleos);
 
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarEmpleos.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
 
     @SuppressLint("NewApi")

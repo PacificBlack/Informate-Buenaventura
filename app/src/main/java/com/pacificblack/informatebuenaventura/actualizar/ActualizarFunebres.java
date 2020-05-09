@@ -46,6 +46,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.funebres.Funebres;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -102,6 +103,8 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     private InterstitialAd anunciofunebres;
     Toolbar barra_funebres;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarFunebres.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +149,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_funebres();
-                            CargandoSubida("Ver");
+                            cargandoDialog.Mostrar();
                         }
                     });
                     AlertDialog titulo2 = mensaje.create();
@@ -163,7 +166,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_funebres();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
             }
         });
 
@@ -271,7 +274,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -320,7 +323,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_funebres);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
 
     }
@@ -342,13 +345,13 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         }
         if (nombre.size() == 1){
             cargarActualizarConImagen_funebres_uno();
-            CargandoSubida("Ver"); }
+            cargandoDialog.Mostrar(); }
         if (nombre.size()== 2){
             cargarActualizarConImagen_funebres_dos();
-            CargandoSubida("Ver");}
+            cargandoDialog.Mostrar();}
         if (nombre.size() == 3 ){
             cargarActualizarConImagen_funebres();
-            CargandoSubida("Ver"); }
+            cargandoDialog.Mostrar(); }
         if (nombre.size()>3){
             Toast.makeText(getApplicationContext(),imagen_maxima+" 3",Toast.LENGTH_LONG).show();
         }
@@ -366,7 +369,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -391,7 +394,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -401,7 +404,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -448,7 +451,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -473,7 +476,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -483,7 +486,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -530,7 +533,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -555,7 +558,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -565,7 +568,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -613,7 +616,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -638,7 +641,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -648,7 +651,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -727,20 +730,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         baseAdapter = new GridViewAdapter(ActualizarFunebres.this,listaimagenes_funebres);
         gvImagenes_funebres.setAdapter(baseAdapter);
     }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarFunebres.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
-    }
+
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

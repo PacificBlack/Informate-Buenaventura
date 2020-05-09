@@ -56,6 +56,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.desaparecidos.Desaparecidos;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.pacificblack.informatebuenaventura.publicar.PublicarDesaparicion;
 import com.squareup.picasso.Picasso;
 
@@ -122,6 +123,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     private static final int PERMISSON_CODE = 1001;
     Toolbar barra_desaparicion;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarDesaparicion.this);
 
 
     @Override
@@ -184,7 +186,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_desaparicion();
-                            CargandoSubida("Ver");
+                            cargandoDialog.Mostrar();
                         }
                     });
                     AlertDialog titulo = mensaje.create();
@@ -200,7 +202,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_desaparicion();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
             }
         });
         anunciodesaparicion = new InterstitialAd(this);
@@ -341,7 +343,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     @Override
     public void onResponse(JSONObject response) {
@@ -409,7 +411,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 .error(R.drawable.imagennodisponible)
                 .into(imagen3_actualizar_desaparicion);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
     }
     public void Subirimagen_desaparicion_update(){
         listaBase64_desaparicion.clear();
@@ -425,10 +427,10 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             }catch (IOException e){
             }
         }
-        if (nombre.size() == 1){ cargarActualizarConImagen_desaparicion_uno(); CargandoSubida("Ver"); }
-        if (nombre.size() == 2){ cargarActualizarConImagen_desaparicion_dos(); CargandoSubida("Ver"); }
-        if (nombre.size() == 3){ cargarActualizarConImagen_desaparicion_tres(); CargandoSubida("Ver"); }
-        if (nombre.size() == 4){ cargarActualizarConImagen_desaparicion(); CargandoSubida("Ver"); }
+        if (nombre.size() == 1){ cargarActualizarConImagen_desaparicion_uno(); cargandoDialog.Mostrar(); }
+        if (nombre.size() == 2){ cargarActualizarConImagen_desaparicion_dos(); cargandoDialog.Mostrar(); }
+        if (nombre.size() == 3){ cargarActualizarConImagen_desaparicion_tres(); cargandoDialog.Mostrar(); }
+        if (nombre.size() == 4){ cargarActualizarConImagen_desaparicion(); cargandoDialog.Mostrar(); }
         if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show(); }
     }
     private void cargarActualizarConImagen_desaparicion_uno(){
@@ -455,7 +457,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -484,7 +486,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -493,7 +495,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
 
@@ -561,7 +563,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -596,7 +598,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -607,7 +609,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -679,7 +681,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -714,7 +716,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -725,7 +727,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -796,7 +798,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -831,7 +833,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -842,7 +844,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -914,7 +916,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -949,7 +951,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -960,7 +962,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -1042,20 +1044,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         }
         baseAdapter = new GridViewAdapter(ActualizarDesaparicion.this,listaimagenes_desaparicion);
         gvImagenes_desaparicion.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarDesaparicion.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     private DatePickerDialog.OnDateSetListener listenerDeDatePicker = new DatePickerDialog.OnDateSetListener() {
         @Override

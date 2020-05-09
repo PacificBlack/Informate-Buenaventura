@@ -46,6 +46,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.bienes.Bienes;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -84,6 +85,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActu
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nosepudobuscar;
 
 public class ActualizarBienes extends AppCompatActivity implements Response.Listener<JSONObject>,Response.ErrorListener {
+    CargandoDialog cargandoDialog = new CargandoDialog(ActualizarBienes.this);
 
     TextInputLayout titulo_actualizar_bienes, descripcioncorta_actualizar_bienes, descripcion1_actualizar_bienes, descripcion2_actualizar_bienes, precio_actualizar_bienes, buscar_actualizar_bienes;
     Button actualizar_editar_bienes,actualizarimagenes;
@@ -150,7 +152,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             cargarActualizarSinImagen_bienes();
-                            CargandoSubida("Ver");
+                            cargandoDialog.Mostrar();
                         }
                     });
 
@@ -168,7 +170,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
             public void onClick(View v) {
                 if (!validarid()){return;}
                 cargarBusqueda_bienes();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -279,7 +281,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), Nosepudobuscar, Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
     @Override
@@ -339,7 +341,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 .error(R.drawable.imagennodisponible)
                 .into(imagen4_actualizar_bienes);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
     public void Subirimagen_bienes_update(){
@@ -359,19 +361,19 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         }
         if (nombre.size() == 1){
             cargarActualizarConImagen_bienes_1();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 2){
             cargarActualizarConImagen_bienes_2();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 3){
             cargarActualizarConImagen_bienes_3();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 4){
             cargarActualizarConImagen_bienes();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show();        }
 
@@ -390,7 +392,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -416,7 +418,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
 
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
 
 
@@ -431,7 +433,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
 
 
@@ -486,7 +488,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -511,7 +513,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -523,7 +525,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -581,7 +583,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -606,7 +608,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -618,7 +620,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -676,7 +678,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -701,7 +703,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -713,7 +715,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -771,7 +773,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -796,7 +798,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoActualizar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -808,7 +810,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -895,26 +897,6 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         }
         baseAdapter = new GridViewAdapter(ActualizarBienes.this,listaimagenes_bienes);
         gvImagenes_bienes.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarBienes.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-
-        switch (Mostrar){
-            case "Ver":
-                dialog.show();
-                Log.i("Mostrar se ve", Mostrar);
-                break;
-
-            case "Ocultar":
-                dialog.dismiss();
-                Log.i("Mostrar se oculta", Mostrar);
-                break;
-        }
     }
 
     @SuppressLint("NewApi")

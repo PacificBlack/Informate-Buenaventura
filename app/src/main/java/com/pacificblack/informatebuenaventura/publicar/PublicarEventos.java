@@ -43,6 +43,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -86,6 +87,8 @@ public class PublicarEventos extends AppCompatActivity {
     private InterstitialAd anuncioeventos;
     Toolbar barra_eventos;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarEventos.this);
+
 
 
     @Override
@@ -202,7 +205,7 @@ public class PublicarEventos extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEventos.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -226,14 +229,14 @@ public class PublicarEventos extends AppCompatActivity {
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
                     }
@@ -281,7 +284,7 @@ public class PublicarEventos extends AppCompatActivity {
         }
         if (nombre.size() == 1) {
             cargarWebService_eventos();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
             }
         if (nombre.size()>1){
             Toast.makeText(getApplicationContext(),imagen_maxima+" 1",Toast.LENGTH_LONG).show();
@@ -332,20 +335,6 @@ public class PublicarEventos extends AppCompatActivity {
         }
         baseAdapter = new GridViewAdapter(PublicarEventos.this,listaimagenes_eventos);
         gvImagenes_eventos.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarEventos.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

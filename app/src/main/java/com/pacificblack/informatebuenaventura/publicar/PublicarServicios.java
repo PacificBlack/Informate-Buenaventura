@@ -46,6 +46,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -88,6 +89,8 @@ public class PublicarServicios extends AppCompatActivity {
     private static final int PERMISSON_CODE = 1001;
     Toolbar barra_servicios;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarServicios.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +213,7 @@ public class PublicarServicios extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()) {
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarServicios.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado, null);
@@ -238,7 +241,7 @@ public class PublicarServicios extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -248,7 +251,7 @@ public class PublicarServicios extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(),"pero no voy a limpiar",Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
             @Override
@@ -294,7 +297,7 @@ public class PublicarServicios extends AppCompatActivity {
         }
         if (nombre.size() == 1) {
             cargarWebService_servicios();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>1){
             Toast.makeText(getApplicationContext(),imagen_maxima +" 1",Toast.LENGTH_LONG).show();
@@ -345,20 +348,6 @@ public class PublicarServicios extends AppCompatActivity {
         }
         baseAdapter = new GridViewAdapter(PublicarServicios.this,listaimagenes_servicios);
         gvImagenes_servicios.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarServicios.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

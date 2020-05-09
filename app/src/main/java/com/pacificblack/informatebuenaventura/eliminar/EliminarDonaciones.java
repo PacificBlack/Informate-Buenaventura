@@ -34,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -69,6 +70,8 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
     ImageView imagen1_eliminar_donaciones,imagen2_eliminar_donaciones;
     Toolbar barra_donaciones;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(EliminarDonaciones.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cargarEliminar_donaciones();
-                        CargandoSubida("Ver");
+                        cargandoDialog.Mostrar();
 
                     }
                 });
@@ -128,7 +131,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
 
                 if (!validarid()){return;}
                 cargarBusqueda_donaciones();
-                CargandoSubida("Ver");
+                cargandoDialog.Mostrar();
 
             }
         });
@@ -167,7 +170,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(),Nosepudobuscar,Toast.LENGTH_LONG).show();
         Log.i("ERROR",error.toString());
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
     }
 
@@ -211,7 +214,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                 .error(R.drawable.imagennodisponible)
                 .into(imagen2_eliminar_donaciones);
 
-        CargandoSubida("Ocultar");
+        cargandoDialog.Ocultar();
 
 
     }
@@ -228,7 +231,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(EliminarDonaciones.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -253,7 +256,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoEliminar,Toast.LENGTH_LONG).show();
                     Log.i("Error",response);
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
             }
@@ -263,7 +266,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
 
                     }
                 }){
@@ -285,20 +288,6 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
         stringRequest_donaciones.setRetryPolicy(new DefaultRetryPolicy(MY_DEFAULT_TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request_funebres_actualizar.add(stringRequest_donaciones);
 
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EliminarDonaciones.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
 
     @SuppressLint("NewApi")

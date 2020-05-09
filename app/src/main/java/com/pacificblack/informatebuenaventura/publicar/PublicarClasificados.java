@@ -43,6 +43,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -85,6 +86,8 @@ public class PublicarClasificados extends AppCompatActivity {
     private InterstitialAd anuncioClasificados;
     Toolbar barra_clasificados;
     ImageView whatsapp;
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarClasificados.this);
+
 
 
     @Override
@@ -229,19 +232,19 @@ public class PublicarClasificados extends AppCompatActivity {
 
         if (nombre.size() == 1){
             cargarWebService_clasificados_uno();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 2){
             cargarWebService_clasificados_dos();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 3){
             cargarWebService_clasificados_tres();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 4){
             cargarWebService_clasificados();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>4){
             Toast.makeText(getApplicationContext(),imagen_maxima+" 4",Toast.LENGTH_LONG).show();
@@ -261,7 +264,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -286,7 +289,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -295,7 +298,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
                 @Override
@@ -341,7 +344,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -366,7 +369,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -375,7 +378,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
                 @Override
@@ -422,7 +425,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -447,7 +450,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -456,7 +459,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                         }
                 }){
                 @Override
@@ -500,7 +503,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -525,7 +528,7 @@ public class PublicarClasificados extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
@@ -535,7 +538,7 @@ public class PublicarClasificados extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("ERROR",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
                 @Override
@@ -617,26 +620,6 @@ public class PublicarClasificados extends AppCompatActivity {
         }
         baseAdapter = new GridViewAdapter(PublicarClasificados.this,listaimagenesclasificados);
         gvImagenes_clasificados.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarClasificados.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-
-        switch (Mostrar){
-            case "Ver":
-                dialog.show();
-                Log.i("Mostrar se ve", Mostrar);
-                break;
-
-            case "Ocultar":
-                dialog.dismiss();
-                Log.i("Mostrar se oculta", Mostrar);
-                break;
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {

@@ -44,6 +44,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -91,6 +92,9 @@ public class PublicarArticulo extends AppCompatActivity {
     private InterstitialAd anuncioArticulo;
     Toolbar barra_articulo;
     ImageView whatsapp;
+
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarArticulo.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,13 +275,13 @@ public class PublicarArticulo extends AppCompatActivity {
             }
         }
         if (nombre.size() == 1){cargarWebService_comprayventa_uno();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 2){cargarWebService_comprayventa_dos();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size() == 3){cargarWebService_comprayventa();
-            CargandoSubida("Ver");
+            cargandoDialog.Mostrar();
         }
         if (nombre.size()>3){
             Toast.makeText(getApplicationContext(),imagen_maxima +"3",Toast.LENGTH_LONG).show();        }
@@ -295,7 +299,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -320,7 +324,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
 
             }
@@ -330,7 +334,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("Error",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
                 @Override
@@ -384,7 +388,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -409,7 +413,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
 
             }
@@ -419,7 +423,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("Error",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
                 @Override
@@ -471,7 +475,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarArticulo.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -496,7 +500,7 @@ public class PublicarArticulo extends AppCompatActivity {
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
                     Log.i("SA",response.toString());
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
 
             }
@@ -506,7 +510,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                         Log.i("Error",error.toString());
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                     }
                 }){
                 @Override
@@ -590,20 +594,7 @@ public class PublicarArticulo extends AppCompatActivity {
         baseAdapter = new GridViewAdapter(PublicarArticulo.this,listaimagenes_comprayventa);
         gvImagenes_comprayventa.setAdapter(baseAdapter);
     }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarArticulo.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
-    }
+
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
         String formattedNumber = Util.format(phone);

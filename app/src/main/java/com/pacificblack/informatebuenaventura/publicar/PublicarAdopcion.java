@@ -43,6 +43,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pacificblack.informatebuenaventura.AdaptadoresGrid.GridViewAdapter;
 import com.pacificblack.informatebuenaventura.R;
+import com.pacificblack.informatebuenaventura.extras.CargandoDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -88,6 +89,8 @@ public class PublicarAdopcion extends AppCompatActivity {
     Toolbar barra_adopcion;
     ImageView whatsapp;
     ProgressBar cargandopublicar;
+    CargandoDialog cargandoDialog = new CargandoDialog(PublicarAdopcion.this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,10 +204,10 @@ public class PublicarAdopcion extends AppCompatActivity {
             }
         }
 
-        if (nombre.size() == 1){ cargarWebService_adopcion_uno(); CargandoSubida("Ver"); }
-        if (nombre.size() == 2){ cargarWebService_adopcion_dos(); CargandoSubida("Ver"); }
-        if (nombre.size() == 3){ cargarWebService_adopcion_tres(); CargandoSubida("Ver"); }
-        if (nombre.size() == 4){ cargarWebService_adopcion(); CargandoSubida("Ver"); }
+        if (nombre.size() == 1){ cargarWebService_adopcion_uno(); cargandoDialog.Mostrar(); }
+        if (nombre.size() == 2){ cargarWebService_adopcion_dos(); cargandoDialog.Mostrar(); }
+        if (nombre.size() == 3){ cargarWebService_adopcion_tres(); cargandoDialog.Mostrar(); }
+        if (nombre.size() == 4){ cargarWebService_adopcion(); cargandoDialog.Mostrar(); }
         if (nombre.size()>4){ Toast.makeText(getApplicationContext(),imagen_maxima +"4",Toast.LENGTH_LONG).show(); }
     }
     private void cargarWebService_adopcion_uno() {
@@ -220,7 +223,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -244,7 +247,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
 
                 }
 
@@ -253,7 +256,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                     }
@@ -302,7 +305,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -326,14 +329,14 @@ public class PublicarAdopcion extends AppCompatActivity {
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
 
                     }
@@ -381,7 +384,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -405,14 +408,14 @@ public class PublicarAdopcion extends AppCompatActivity {
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
@@ -457,7 +460,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 Matcher match = regex.matcher(response);
 
                 if (match.find()){
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                     AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
                     LayoutInflater inflater = getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_personalizado,null);
@@ -481,7 +484,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                     Log.i("Muestra",response);
                 }else {
                     Toast.makeText(getApplicationContext(),NosepudoPublicar,Toast.LENGTH_LONG).show();
-                    CargandoSubida("Ocultar");
+                    cargandoDialog.Ocultar();
                 }
 
             }
@@ -489,7 +492,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        CargandoSubida("Ocultar");
+                        cargandoDialog.Ocultar();
                         Toast.makeText(getApplicationContext(),Nohayinternet,Toast.LENGTH_LONG).show();
                     }
                 }){
@@ -563,20 +566,6 @@ public class PublicarAdopcion extends AppCompatActivity {
         }
         baseAdapter = new GridViewAdapter(PublicarAdopcion.this, listaimagenes_adopcion);
         gvImagenes_adopcion.setAdapter(baseAdapter);
-    }
-    private void CargandoSubida(String Mostrar){
-        AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.cargando,null);
-        builder.setCancelable(false);
-        builder.setView(view);
-        final AlertDialog dialog = builder.create();
-        if(Mostrar.equals("Ver")){
-            dialog.show();
-        }
-        if(Mostrar.equals("Ocultar")){
-            dialog.hide();
-        }
     }
     @SuppressLint("NewApi")
     private void whatsapp(Activity activity, String phone) {
