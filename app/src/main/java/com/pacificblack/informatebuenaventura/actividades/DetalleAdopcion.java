@@ -58,6 +58,7 @@ public class DetalleAdopcion extends AppCompatActivity {
             descripcion1_adopcion.setText(adopcion.getDescripcion1_adopcion());
             descripcion2_adopcion.setText(adopcion.getDescripcion2_adopcion());
 
+
             Picasso.get().load(adopcion.getImagen1_adopcion())
                     .placeholder(R.drawable.imagennodisponible)
                     .error(R.drawable.imagennodisponible)
