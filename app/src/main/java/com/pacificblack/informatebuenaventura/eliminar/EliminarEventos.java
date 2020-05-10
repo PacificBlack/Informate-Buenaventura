@@ -194,8 +194,8 @@ public class EliminarEventos extends AppCompatActivity implements Response.Liste
         descripcioncorta_eliminar_eventos.setText(eventos.getDescripcion_row_eventos());
         lugar_eliminar_eventos.setText(eventos.getLugar_row_eventos());
         Picasso.get().load(eventos.getImagen1_eventos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_eventos);
 
         cargandoDialog.Ocultar();

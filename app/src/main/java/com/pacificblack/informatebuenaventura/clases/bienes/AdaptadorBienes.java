@@ -63,13 +63,13 @@ public class AdaptadorBienes extends RecyclerView.Adapter<AdaptadorBienes.Bienes
         if (listaBienes.get(position).getImagen1_bienes() != null){
 
             Picasso.get().load(listaBienes.get(position).getImagen1_bienes())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenbienes);
 
 
         }else{
-            holder.imagenbienes.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenbienes.setImageResource(R.drawable.ib);
 
         }
 

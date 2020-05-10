@@ -6,6 +6,7 @@
     tools:context=".fragments.compartir.CompartirFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@drawable/fondo_principal"
         android:id="@+id/recycler_compartir"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

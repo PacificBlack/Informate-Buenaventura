@@ -37,8 +37,8 @@ public class SliderAdaptador extends SliderViewAdapter<SliderAdaptadorVH> {
         if (mSliderItems.get(position).getImagenes() != null){
 
             Picasso.get().load(mSliderItems.get(position).getImagenes())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(viewHolder.rowimagen);
 
             final String imagen1_link = mSliderItems.get(position).getImagenes();
@@ -55,7 +55,7 @@ public class SliderAdaptador extends SliderViewAdapter<SliderAdaptadorVH> {
 
 
         }else{
-            viewHolder.rowimagen.setImageResource(R.drawable.imagennodisponible);
+            viewHolder.rowimagen.setImageResource(R.drawable.ib);
 
         }
     }

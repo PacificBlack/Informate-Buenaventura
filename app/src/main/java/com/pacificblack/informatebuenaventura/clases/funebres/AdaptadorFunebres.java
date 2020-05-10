@@ -62,13 +62,13 @@ public class AdaptadorFunebres extends RecyclerView.Adapter<AdaptadorFunebres.Fu
         if (listaFunebres.get(position).getImagen1_funebres() != null){
 
             Picasso.get().load(listaFunebres.get(position).getImagen1_funebres())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenfunebres);
 
 
         }else{
-            holder.imagenfunebres.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenfunebres.setImageResource(R.drawable.ib);
 
         }
 

@@ -67,11 +67,11 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
         if (listaNoticias.get(position).getImagen1_noticias() != null){
 
             Picasso.get().load(listaNoticias.get(position).getImagen1_noticias())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagennoticias);
         }else{
-            holder.imagennoticias.setImageResource(R.drawable.imagennodisponible);
+            holder.imagennoticias.setImageResource(R.drawable.ib);
 
         }
 

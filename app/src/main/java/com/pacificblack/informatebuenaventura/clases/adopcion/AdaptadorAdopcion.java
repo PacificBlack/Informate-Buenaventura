@@ -50,13 +50,13 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
         if (listaAdopcion.get(position).getImagen1_adopcion() != null){
 
             Picasso.get().load(listaAdopcion.get(position).getImagen1_adopcion())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenadopcion);
 
 
         }else{
-            holder.imagenadopcion.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenadopcion.setImageResource(R.drawable.ib);
 
         }
 

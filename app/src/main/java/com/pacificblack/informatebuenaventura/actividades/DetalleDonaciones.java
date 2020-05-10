@@ -65,13 +65,13 @@ public class DetalleDonaciones extends AppCompatActivity {
 
 
             Picasso.get().load(dona.getImagen1_donaciones())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1donaciones);
 
             Picasso.get().load(dona.getImagen2_donaciones())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2donaciones);
 
             metadonaciones.setText(String.valueOf(dona.getMeta_row_donaciones()));

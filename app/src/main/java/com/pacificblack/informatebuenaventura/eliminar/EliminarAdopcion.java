@@ -213,23 +213,23 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         eliminar_imagenes_adopcion.setVisibility(View.VISIBLE);
 
         Picasso.get().load(adopcion.getImagen1_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_adopcion);
 
         Picasso.get().load(adopcion.getImagen2_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_eliminar_adopcion);
 
         Picasso.get().load(adopcion.getImagen3_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_eliminar_adopcion);
 
         Picasso.get().load(adopcion.getImagen4_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen4_eliminar_adopcion);
         cargandoDialog.Ocultar();
     }

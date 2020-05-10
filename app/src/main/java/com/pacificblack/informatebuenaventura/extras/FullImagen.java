@@ -30,8 +30,8 @@ public class FullImagen extends AppCompatActivity {
         if (recibido != null){
             String valor = getIntent().getExtras().getString("imagen");
             Picasso.get().load(valor)
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagengrande);
 
             mAtacher = new PhotoViewAttacher(imagengrande);

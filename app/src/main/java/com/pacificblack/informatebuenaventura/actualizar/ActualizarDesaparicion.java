@@ -397,18 +397,18 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         if (desaparecidos.getEstado_desaparecidos().equals("Encontrado")){opcion5_desaparicion.setChecked(true);}
 
         Picasso.get().load(desaparecidos.getImagen1_desaparecidos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_desaparicion);
 
         Picasso.get().load(desaparecidos.getImagen2_desaparecidos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_actualizar_desaparicion);
 
         Picasso.get().load(desaparecidos.getImagen3̣̣_desaparecidos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_actualizar_desaparicion);
 
         cargandoDialog.Ocultar();

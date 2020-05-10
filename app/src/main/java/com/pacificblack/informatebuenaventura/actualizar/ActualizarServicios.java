@@ -316,8 +316,8 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         if (servicios.getNecesidad_row_ofertaservicios().equals("Por tiempo indefinido")){opcion3_servicios.setChecked(true);}
 
         Picasso.get().load(servicios.getImagen1_ofertaservicios())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_servicios);
 
         cargandoDialog.Ocultar();

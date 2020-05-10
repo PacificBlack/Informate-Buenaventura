@@ -57,8 +57,8 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
         if (listaEmpleos.get(position).getImagen1_ofertasempleos() != null){
 
             Picasso.get().load(listaEmpleos.get(position).getImagen1_ofertasempleos())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenempleos);
 
             final String imagen1_link = listaEmpleos.get(position).getImagen1_ofertasempleos();
@@ -75,7 +75,7 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
 
 
         }else{
-            holder.imagenempleos.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenempleos.setImageResource(R.drawable.ib);
 
         }
 

@@ -205,18 +205,18 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         descripcion2_eliminar_funebres.setText(funebres.getDescripcion2_funebres());
 
         Picasso.get().load(funebres.getImagen1_funebres())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_funebres);
 
         Picasso.get().load(funebres.getImagen2_funebres())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_eliminar_funebres);
 
         Picasso.get().load(funebres.getImagen3_funebres())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_eliminar_funebres);
 
         cargandoDialog.Ocultar();

@@ -76,24 +76,24 @@ public class DetalleClasificados extends YouTubeBaseActivity implements YouTubeP
 
 
             Picasso.get().load(clasificados.getImagen1_clasificados())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_clasificados);
 
 
             Picasso.get().load(clasificados.getImagen2_clasificados())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_clasificados);
 
             Picasso.get().load(clasificados.getImagen3_clasificados())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_clasificados);
 
             Picasso.get().load(clasificados.getImagen4_clasificados())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen4_clasificados);
 
 

@@ -5,14 +5,13 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/azulClaro"
     tools:context=".fragments.inicio.InicioFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:background="@drawable/fondo_principal"
         android:id="@+id/swipe_inicio"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/blanco">
+        android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -63,9 +62,11 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/amaranth_bold"
                 android:text="Personajes destacados de la semana"
+                android:textColor="@color/blanco"
                 android:textSize="15sp" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:background="@color/azulOscuro"
                 android:id="@+id/recycler_inicio"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

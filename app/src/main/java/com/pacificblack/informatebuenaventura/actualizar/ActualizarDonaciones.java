@@ -332,13 +332,13 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         meta_actualizar_donaciones.getEditText().setText(String.valueOf(donacion.getMeta_row_donaciones()));
 
         Picasso.get().load(donacion.getImagen1_donaciones())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_donaciones);
 
         Picasso.get().load(donacion.getImagen2_donaciones())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_actualizar_donaciones);
 
         cargandoDialog.Ocultar();

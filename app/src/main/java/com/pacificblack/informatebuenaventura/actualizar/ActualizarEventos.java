@@ -314,8 +314,8 @@ public class ActualizarEventos extends AppCompatActivity implements Response.Lis
         descripcioncorta_actualizar_eventos.getEditText().setText(eventos.getDescripcion_row_eventos());
         lugar_actualizar_eventos.getEditText().setText(eventos.getLugar_row_eventos());
         Picasso.get().load(eventos.getImagen1_eventos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_eventos);
 
         cargandoDialog.Ocultar();

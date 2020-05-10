@@ -205,13 +205,13 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
         meta_eliminar_donaciones.setText(String.valueOf(donacion.getMeta_row_donaciones()));
 
         Picasso.get().load(donacion.getImagen1_donaciones())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_donaciones);
 
         Picasso.get().load(donacion.getImagen2_donaciones())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_eliminar_donaciones);
 
         cargandoDialog.Ocultar();

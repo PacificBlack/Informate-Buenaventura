@@ -63,8 +63,8 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
         if (listaEventos.get(position).getImagen1_eventos() != null){
 
             Picasso.get().load(listaEventos.get(position).getImagen1_eventos())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imageneventos);
 
             final String imagen1_link = listaEventos.get(position).getImagen1_eventos();
@@ -82,7 +82,7 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
 
 
         }else{
-            holder.imageneventos.setImageResource(R.drawable.imagennodisponible);
+            holder.imageneventos.setImageResource(R.drawable.ib);
 
         }
 

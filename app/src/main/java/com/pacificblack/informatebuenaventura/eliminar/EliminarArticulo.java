@@ -217,18 +217,18 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         contacto_eliminar_comprayventa.setText(comprayVenta.getContacto_comprayventa());
 
         Picasso.get().load(comprayVenta.getImagen1_comprayventa())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_comprayventa);
 
         Picasso.get().load(comprayVenta.getImagen2_comprayventa())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_eliminar_comprayventa);
 
         Picasso.get().load(comprayVenta.getImagen3̣̣_comprayventa())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_eliminar_comprayventa);
 
         cargandoDialog.Ocultar();

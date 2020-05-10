@@ -58,13 +58,13 @@ public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorCompray
         if (listaComprayVenta.get(position).getImagen1_comprayventa() != null){
 
             Picasso.get().load(listaComprayVenta.get(position).getImagen1_comprayventa())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagencomprayventa);
 
 
         }else{
-            holder.imagencomprayventa.setImageResource(R.drawable.imagennodisponible);
+            holder.imagencomprayventa.setImageResource(R.drawable.ib);
 
         }
 

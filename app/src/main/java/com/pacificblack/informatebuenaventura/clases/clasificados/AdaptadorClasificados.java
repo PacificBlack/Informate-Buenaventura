@@ -60,13 +60,13 @@ public class AdaptadorClasificados extends RecyclerView.Adapter<AdaptadorClasifi
         if (listaClasificados.get(position).getImagen1_clasificados() != null){
 
             Picasso.get().load(listaClasificados.get(position).getImagen1_clasificados())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenclasificados);
 
 
         }else{
-            holder.imagenclasificados.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenclasificados.setImageResource(R.drawable.ib);
 
         }
         holder.tituloclasificados.setText(listaClasificados.get(position).getTitulo_row_clasificados());

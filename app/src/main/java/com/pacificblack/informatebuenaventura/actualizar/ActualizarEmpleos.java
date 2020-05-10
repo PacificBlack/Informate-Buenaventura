@@ -290,7 +290,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         if (empleos.getNecesidad_row_ofertasempleos().equals("Sin Urgencia")){opcion2_empleos.setChecked(true);}
         if (empleos.getNecesidad_row_ofertasempleos().equals("Para hoy mismo")){opcion3_empleos.setChecked(true);}
 
-        Picasso.get().load(empleos.getImagen1_ofertasempleos()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen1_actualizar_empleos);
+        Picasso.get().load(empleos.getImagen1_ofertasempleos()).placeholder(R.drawable.ib).error(R.drawable.ib).into(imagen1_actualizar_empleos);
         cargandoDialog.Ocultar();
 
     }

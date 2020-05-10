@@ -100,8 +100,8 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
             descripcion.setText(encuesta.getDescripcion1_encuestas());
 
             Picasso.get().load(encuesta.getImagen1_encuestas())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagenencuesta);
 
             final String imagen1_link = encuesta.getImagen1_encuestas();

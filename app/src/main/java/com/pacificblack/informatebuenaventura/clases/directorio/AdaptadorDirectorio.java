@@ -55,8 +55,8 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
         if (listaDirectorio.get(position).getImagen1_directorio() != null){
 
             Picasso.get().load(listaDirectorio.get(position).getImagen1_directorio())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagendirectorio);
 
             final String imagen1_link = listaDirectorio.get(position).getImagen1_directorio();
@@ -74,7 +74,7 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
 
 
         }else{
-            holder.imagendirectorio.setImageResource(R.drawable.imagennodisponible);
+            holder.imagendirectorio.setImageResource(R.drawable.ib);
 
         }    }
 

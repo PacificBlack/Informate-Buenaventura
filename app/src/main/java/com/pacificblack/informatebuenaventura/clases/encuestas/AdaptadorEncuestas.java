@@ -61,13 +61,13 @@ public class AdaptadorEncuestas extends RecyclerView.Adapter<AdaptadorEncuestas.
         if (listaEncuestas.get(position).getImagen1_encuestas() != null){
 
             Picasso.get().load(listaEncuestas.get(position).getImagen1_encuestas())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenencuestas);
 
 
         }else{
-            holder.imagenencuestas.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenencuestas.setImageResource(R.drawable.ib);
 
         }
     }

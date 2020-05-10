@@ -60,23 +60,23 @@ public class DetalleAdopcion extends AppCompatActivity {
 
 
             Picasso.get().load(adopcion.getImagen1_adopcion())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_adopcion);
 
             Picasso.get().load(adopcion.getImagen2_adopcion())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_adopcion);
 
             Picasso.get().load(adopcion.getImagen3_adopcion())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_adopcion);
 
             Picasso.get().load(adopcion.getImagen4_adopcion())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen4_adopcion);
 
             final String imagen1_link = adopcion.getImagen1_adopcion();

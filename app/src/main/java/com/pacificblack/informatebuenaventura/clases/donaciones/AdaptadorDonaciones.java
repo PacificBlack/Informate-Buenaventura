@@ -67,13 +67,13 @@ public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonacione
         if (listaDonaciones.get(position).getImagen1_donaciones() != null){
 
             Picasso.get().load(listaDonaciones.get(position).getImagen1_donaciones())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagendonaciones);
 
 
         }else{
-            holder.imagendonaciones.setImageResource(R.drawable.imagennodisponible);
+            holder.imagendonaciones.setImageResource(R.drawable.ib);
 
         }
 

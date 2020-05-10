@@ -197,8 +197,8 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
         descripcioncorta_eliminar_servicios.setText(servicios.getDescripcion_row_ofertaservicios());
         necesidad_eliminar_servicios.setText(servicios.getNecesidad_row_ofertaservicios());
         Picasso.get().load(servicios.getImagen1_ofertaservicios())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_servicios);
 
         cargandoDialog.Ocultar();

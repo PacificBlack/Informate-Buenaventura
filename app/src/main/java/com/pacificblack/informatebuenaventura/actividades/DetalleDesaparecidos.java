@@ -66,16 +66,16 @@ public class DetalleDesaparecidos extends AppCompatActivity {
             recompensa_desaparecidos.setText(desaparecidos.getRecompensa_row_desaparecidos());
             estado_desaparecidos.setText(desaparecidos.getEstado_desaparecidos());
             Picasso.get().load(desaparecidos.getImagen1_desaparecidos())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_desaparecidos);
             Picasso.get().load(desaparecidos.getImagen2_desaparecidos())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_desaparecidos);
             Picasso.get().load(desaparecidos.getImagen3̣̣_desaparecidos())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_desaparecidos);
             final String imagen1_link = desaparecidos.getImagen1_desaparecidos();
             imagen1_desaparecidos.setOnClickListener(new View.OnClickListener() {

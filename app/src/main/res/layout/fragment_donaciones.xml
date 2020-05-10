@@ -12,6 +12,7 @@
         android:background="@color/blanco">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@drawable/fondo_principal"
         android:id="@+id/recycler_donaciones"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -209,23 +209,23 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         descripcion2_eliminar_clasificados.setText(clasificados.getDescripcion2_clasificados());
 
         Picasso.get().load(clasificados.getImagen1_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_clasificados);
 
         Picasso.get().load(clasificados.getImagen2_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_eliminar_clasificados);
 
         Picasso.get().load(clasificados.getImagen3_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_eliminar_clasificados);
 
         Picasso.get().load(clasificados.getImagen4_clasificados())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen4_eliminar_clasificados);
 
         cargandoDialog.Ocultar();

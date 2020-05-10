@@ -67,19 +67,19 @@ public class DetalleDifuntos extends AppCompatActivity {
             descripcion2_funebres.setText(funebres.getDescripcion2_funebres());
 
             Picasso.get().load(funebres.getImagen1_funebres())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_funebres);
 
             Picasso.get().load(funebres.getImagen2_funebres())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_funebres);
 
 
             Picasso.get().load(funebres.getImagen3_funebres())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_funebres);
 
 

@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.especiales.EspecialesFragment">
+    tools:context=".fragments.especiales.EspecialesFragment"
+    android:background="@drawable/fondo_principal">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Aun no tenemos nada para esta seccion" />
+        android:text="Aun no tenemos nada para esta seccion"
+        android:textColor="@color/blanco"/>
 
 </FrameLayout>

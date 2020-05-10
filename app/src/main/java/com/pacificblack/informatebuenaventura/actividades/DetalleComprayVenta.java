@@ -74,18 +74,18 @@ public class DetalleComprayVenta extends AppCompatActivity {
             cantidad_comprayventa.setText(String.valueOf(comprayventa.getCantidad_comprayventa()));
 
             Picasso.get().load(comprayventa.getImagen1_comprayventa())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_comprayventa);
 
             Picasso.get().load(comprayventa.getImagen2_comprayventa())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_comprayventa);
 
             Picasso.get().load(comprayventa.getImagen3̣̣_comprayventa())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_comprayventa);
 
 

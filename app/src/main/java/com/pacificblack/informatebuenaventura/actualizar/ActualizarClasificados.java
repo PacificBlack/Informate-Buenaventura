@@ -326,10 +326,10 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
         descripcion1_actualizar_clasificados.getEditText().setText(clasificados.getDescripcion1_clasificados());
         descripcion2_actualizar_clasificados.getEditText().setText(clasificados.getDescripcion2_clasificados());
 
-        Picasso.get().load(clasificados.getImagen1_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen1_actualizar_clasificados);
-        Picasso.get().load(clasificados.getImagen2_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen2_actualizar_clasificados);
-        Picasso.get().load(clasificados.getImagen3_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen3_actualizar_clasificados);
-        Picasso.get().load(clasificados.getImagen4_clasificados()).placeholder(R.drawable.imagennodisponible).error(R.drawable.imagennodisponible).into(imagen4_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen1_clasificados()).placeholder(R.drawable.ib).error(R.drawable.ib).into(imagen1_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen2_clasificados()).placeholder(R.drawable.ib).error(R.drawable.ib).into(imagen2_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen3_clasificados()).placeholder(R.drawable.ib).error(R.drawable.ib).into(imagen3_actualizar_clasificados);
+        Picasso.get().load(clasificados.getImagen4_clasificados()).placeholder(R.drawable.ib).error(R.drawable.ib).into(imagen4_actualizar_clasificados);
 
         cargandoDialog.Ocultar();
 

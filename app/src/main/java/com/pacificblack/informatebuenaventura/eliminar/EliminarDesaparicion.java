@@ -221,18 +221,18 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
 
 
         Picasso.get().load(desaparecidos.getImagen1_desaparecidos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_desaparicion);
 
         Picasso.get().load(desaparecidos.getImagen2_desaparecidos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_eliminar_desaparicion);
 
         Picasso.get().load(desaparecidos.getImagen3̣̣_desaparecidos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_eliminar_desaparicion);
 
         cargandoDialog.Ocultar();

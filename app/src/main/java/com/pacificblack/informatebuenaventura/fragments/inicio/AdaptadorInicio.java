@@ -45,8 +45,8 @@ public class AdaptadorInicio extends RecyclerView.Adapter<AdaptadorInicio.Inicio
         if (listaInicio.get(position).getImagen_inicio() != null){
 
             Picasso.get().load(listaInicio.get(position).getImagen_inicio())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagen_inicio);
 
             final String imagen1_link = listaInicio.get(position).getImagen_inicio();
@@ -63,7 +63,7 @@ public class AdaptadorInicio extends RecyclerView.Adapter<AdaptadorInicio.Inicio
 
 
         }else{
-            holder.imagen_inicio.setImageResource(R.drawable.imagennodisponible);
+            holder.imagen_inicio.setImageResource(R.drawable.ib);
 
         }
     }

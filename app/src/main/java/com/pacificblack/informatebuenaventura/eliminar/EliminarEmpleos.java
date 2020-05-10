@@ -197,8 +197,8 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
         descripcioncorta_eliminar_empleos.setText(empleos.getDescripcion_row_ofertasempleos());
         necesidad_eliminar_empleos.setText(empleos.getNecesidad_row_ofertasempleos());
         Picasso.get().load(empleos.getImagen1_ofertasempleos())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_eliminar_empleos);
 
         cargandoDialog.Ocultar();

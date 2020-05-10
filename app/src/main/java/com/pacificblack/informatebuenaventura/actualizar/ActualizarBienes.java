@@ -322,23 +322,23 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
 
 
         Picasso.get().load(bienes.getImagen1_bienes())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_bienes);
 
         Picasso.get().load(bienes.getImagen2_bienes())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_actualizar_bienes);
 
         Picasso.get().load(bienes.getImagen3_bienes())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_actualizar_bienes);
 
         Picasso.get().load(bienes.getImagen4_bienes())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen4_actualizar_bienes);
 
         cargandoDialog.Ocultar();

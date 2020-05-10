@@ -93,23 +93,23 @@ public class DetalleNoticias extends YouTubeBaseActivity implements YouTubePlaye
             descripcion3_noticias.setText(noticias.getDescripcion3_noticias());
 
             Picasso.get().load(noticias.getImagen1_noticias())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_noticias);
 
             Picasso.get().load(noticias.getImagen2_noticias())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_noticias);
 
             Picasso.get().load(noticias.getImagen3_noticias())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_noticias);
 
             Picasso.get().load(noticias.getImagen4_noticias())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen4_noticias);
 
 

@@ -67,13 +67,13 @@ public class AdaptadorDesaparecidos extends RecyclerView.Adapter<AdaptadorDesapa
         if (listaDesaparecidos.get(position).getImagen1_desaparecidos() != null){
 
             Picasso.get().load(listaDesaparecidos.get(position).getImagen1_desaparecidos())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagendesaparecidos);
 
 
         }else{
-            holder.imagendesaparecidos.setImageResource(R.drawable.imagennodisponible);
+            holder.imagendesaparecidos.setImageResource(R.drawable.ib);
 
         }
 

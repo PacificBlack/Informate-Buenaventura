@@ -57,8 +57,8 @@ public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.
         if (listaServicios.get(position).getImagen1_ofertaservicios() != null){
 
             Picasso.get().load(listaServicios.get(position).getImagen1_ofertaservicios())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenservicios);
 
             final String imagen1_link = listaServicios.get(position).getImagen1_ofertaservicios();
@@ -75,7 +75,7 @@ public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.
 
 
         }else{
-            holder.imagenservicios.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenservicios.setImageResource(R.drawable.ib);
 
         }
     }

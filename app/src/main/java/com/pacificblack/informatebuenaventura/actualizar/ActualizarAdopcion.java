@@ -318,23 +318,23 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         imagenes_adopcion_actualizar.setVisibility(View.VISIBLE);
 
         Picasso.get().load(adopcion.getImagen1_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_adopcion);
 
         Picasso.get().load(adopcion.getImagen2_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_actualizar_adopcion);
 
         Picasso.get().load(adopcion.getImagen3_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_actualizar_adopcion);
 
         Picasso.get().load(adopcion.getImagen4_adopcion())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen4_actualizar_adopcion);
 
         cargandoDialog.Ocultar();

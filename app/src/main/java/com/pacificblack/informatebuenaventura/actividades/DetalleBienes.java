@@ -67,23 +67,23 @@ public class DetalleBienes extends AppCompatActivity {
             precio_bienes.setText(String.valueOf(bienes.getPrecio_row_bienes()));
 
             Picasso.get().load(bienes.getImagen1_bienes())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen1_bienes);
 
             Picasso.get().load(bienes.getImagen2_bienes())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen2_bienes);
 
             Picasso.get().load(bienes.getImagen3_bienes())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen3_bienes);
 
             Picasso.get().load(bienes.getImagen4_bienes())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(imagen4_bienes);
 
             final String imagen1_link = bienes.getImagen1_bienes();

@@ -54,8 +54,8 @@ public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHor
         if (listaUltimaHora.get(position).getImagen_row_ultimahora() != null){
 
             Picasso.get().load(listaUltimaHora.get(position).getImagen_row_ultimahora())
-                    .placeholder(R.drawable.imagennodisponible)
-                    .error(R.drawable.imagennodisponible)
+                    .placeholder(R.drawable.ib)
+                    .error(R.drawable.ib)
                     .into(holder.imagenultima);
 
             final String imagen1_link = listaUltimaHora.get(position).getImagen_row_ultimahora();
@@ -72,7 +72,7 @@ public class AdaptadorUltimaHora extends RecyclerView.Adapter<AdaptadorUltimaHor
 
 
         }else{
-            holder.imagenultima.setImageResource(R.drawable.imagennodisponible);
+            holder.imagenultima.setImageResource(R.drawable.ib);
 
         }
 

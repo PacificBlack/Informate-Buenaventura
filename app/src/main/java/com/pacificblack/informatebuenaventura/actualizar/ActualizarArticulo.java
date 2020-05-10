@@ -375,18 +375,18 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         contacto_actualizar_comprayventa.getEditText().setText(comprayVenta.getContacto_comprayventa());
 
         Picasso.get().load(comprayVenta.getImagen1_comprayventa())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen1_actualizar_comprayventa);
 
         Picasso.get().load(comprayVenta.getImagen2_comprayventa())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen2_actualizar_comprayventa);
 
         Picasso.get().load(comprayVenta.getImagen3̣̣_comprayventa())
-                .placeholder(R.drawable.imagennodisponible)
-                .error(R.drawable.imagennodisponible)
+                .placeholder(R.drawable.ib)
+                .error(R.drawable.ib)
                 .into(imagen3_actualizar_comprayventa);
 
         cargandoDialog.Ocultar();
