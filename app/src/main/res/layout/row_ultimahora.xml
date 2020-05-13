@@ -11,9 +11,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="15dp"
-        android:backgroundTint="@color/rojo">
+        android:layout_margin="15dp"
+        app:cardCornerRadius="8dp"
+        android:elevation="@dimen/cardview_default_elevation">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="375dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -38,37 +38,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:layout_marginBottom="10dp">
 
-                <TextView
-                    android:id="@+id/titulo_row_ultimahora"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/bree_serif"
-                    android:text="@string/titulo"
-                    android:textColor="@color/blanco"
-                    android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/titulo_row_ultimahora"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/cabin_semibold"
+                        android:text="@string/titulo"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/descripcion_row_ultimahora"
-                    android:layout_width="match_parent"
-                    android:layout_height="138dp"
-                    android:fontFamily="@font/noto_sans"
-                    android:text="@string/descripcion"
-                    android:textColor="@color/blanco"
-                    />
+                    <TextView
+                        android:id="@+id/descripcion_row_ultimahora"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:text="@string/descripcion"
+                        android:textColor="#555" />
 
-                <TextView
-                    android:id="@+id/fecha_row_ultimahora"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/dancing_script"
-                    android:text="@string/fecha"
-                    android:textSize="10sp"
-                    tools:ignore="SmallSp"
-                    android:textColor="@color/blanco"
-                    />
+                    <TextView
+                        android:id="@+id/fecha_row_ultimahora"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:text="@string/fecha"
+                        android:textColor="#555"
+                        android:textSize="9sp"
+                        android:layout_marginTop="10dp" />
                 </LinearLayout>
 
                 <TextView
@@ -76,14 +75,13 @@
                     android:layout_width="333dp"
                     android:layout_height="22dp"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/blanco"
                     android:baselineAligned="false"
                     android:drawableStart="@drawable/ic_ojo_24dp"
                     android:drawableLeft="@drawable/ic_ojo_24dp"
                     android:fontFamily="@font/amaranth_bold"
                     android:text="@string/cero"
+                    android:textColor="@color/blanco"
                     android:visibility="gone" />
-
 
 
             </LinearLayout>

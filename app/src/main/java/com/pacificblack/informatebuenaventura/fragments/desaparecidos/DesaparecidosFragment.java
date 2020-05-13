@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -41,10 +43,8 @@ import java.util.ArrayList;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class DesaparecidosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
+
+public class DesaparecidosFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     ArrayList<Desaparecidos> listaDesaparecidos;
     RecyclerView recyclerDesaparecidos;
@@ -52,19 +52,28 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_desaparecidos;
     AdaptadorDesaparecidos adaptadorDesaparecidos;
-
+    LinearLayout internet;
+    Button reintentar;
 
 
     public DesaparecidosFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View vista =  inflater.inflate(R.layout.fragment_desaparecidos, container, false);
+        View vista = inflater.inflate(R.layout.fragment_desaparecidos, container, false);
 
+        internet = vista.findViewById(R.id.internet_fragment_desaparecidos);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_desaparecidos);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Desaparecidos();
+                refresh_desaparecidos.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
         listaDesaparecidos = new ArrayList<>();
@@ -89,93 +98,91 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
     }
 
     private void cargarWebService_Desaparecidos() {
-
-        String url_Desaparecidos = DireccionServidor+"wsnJSONllenarDesaparecidos.php";
-
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Desaparecidos,null,this,this);
+        internet.setVisibility(View.GONE);
+        String url_Desaparecidos = DireccionServidor + "wsnJSONllenarDesaparecidos.php";
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_Desaparecidos, null, this, this);
         request.add(jsonObjectRequest);
         refresh_desaparecidos.setRefreshing(false);
-
-
+        recyclerDesaparecidos.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-        Log.i("ERROR",error.toString());
-
+        internet.setVisibility(View.VISIBLE);
+        recyclerDesaparecidos.setVisibility(View.GONE);
+        Log.i("ERROR", error.toString());
+        refresh_desaparecidos.setRefreshing(false);
     }
 
     @Override
     public void onResponse(JSONObject response) {
-
+        recyclerDesaparecidos.setVisibility(View.VISIBLE);
         Desaparecidos desaparecidos = null;
         JSONArray json_desaparecidos = response.optJSONArray("desaparecidos");
 
         listaDesaparecidos.clear();
 
-       try {
-           for (int i = 0; i < json_desaparecidos.length() ; i++) {
+        try {
+            for (int i = 0; i < json_desaparecidos.length(); i++) {
 
-               desaparecidos = new Desaparecidos();
-               JSONObject jsonObject = null;
-               jsonObject = json_desaparecidos.getJSONObject(i);
+                desaparecidos = new Desaparecidos();
+                JSONObject jsonObject = null;
+                jsonObject = json_desaparecidos.getJSONObject(i);
 
-               desaparecidos.setId_desaparecidos(jsonObject.getInt("id_desaparecidos"));
-               desaparecidos.setQue_desaparecidos(jsonObject.getString("que_desaparecidos"));
-               desaparecidos.setTitulo_row_desaparecidos(jsonObject.getString("titulo_desaparecidos"));
-               desaparecidos.setDescripcion_row_desaparecidos(jsonObject.getString("descripcionrow_desaparecidos"));
-               desaparecidos.setFechapublicacion_row_desaparecidos(jsonObject.getString("fechapublicacion_desaparecidos"));
-               desaparecidos.setRecompensa_row_desaparecidos(jsonObject.getString("recompensa_desaparecidos"));
-               desaparecidos.setVista_row_desaparecidos(jsonObject.getInt("vistas_desaparecidos"));
-               desaparecidos.setImagen1_desaparecidos(jsonObject.getString("imagen1_desaparecidos"));
-               desaparecidos.setImagen2_desaparecidos(jsonObject.getString("imagen2_desaparecidos"));
-               desaparecidos.setImagen3̣̣_desaparecidos(jsonObject.getString("imagen3_desaparecidos"));
-               desaparecidos.setDescripcion1_desaparecidos(jsonObject.getString("descripcion1_desaparecidos"));
-               desaparecidos.setDescripcion2_desaparecidos(jsonObject.getString("descripcion2_desaparecidos"));
-               desaparecidos.setFechadesaparecido_desaparecidos(jsonObject.getString("fechadesaparecido_desaparecidos"));
-               desaparecidos.setEstado_desaparecidos(jsonObject.getString("estado_desaparecidos"));
-               desaparecidos.setUltimolugar_desaparecidos(jsonObject.getString("ultimolugar_desaparecidos"));
+                desaparecidos.setId_desaparecidos(jsonObject.getInt("id_desaparecidos"));
+                desaparecidos.setQue_desaparecidos(jsonObject.getString("que_desaparecidos"));
+                desaparecidos.setTitulo_row_desaparecidos(jsonObject.getString("titulo_desaparecidos"));
+                desaparecidos.setDescripcion_row_desaparecidos(jsonObject.getString("descripcionrow_desaparecidos"));
+                desaparecidos.setFechapublicacion_row_desaparecidos(jsonObject.getString("fechapublicacion_desaparecidos"));
+                desaparecidos.setRecompensa_row_desaparecidos(jsonObject.getString("recompensa_desaparecidos"));
+                desaparecidos.setVista_row_desaparecidos(jsonObject.getInt("vistas_desaparecidos"));
+                desaparecidos.setImagen1_desaparecidos(jsonObject.getString("imagen1_desaparecidos"));
+                desaparecidos.setImagen2_desaparecidos(jsonObject.getString("imagen2_desaparecidos"));
+                desaparecidos.setImagen3̣̣_desaparecidos(jsonObject.getString("imagen3_desaparecidos"));
+                desaparecidos.setDescripcion1_desaparecidos(jsonObject.getString("descripcion1_desaparecidos"));
+                desaparecidos.setDescripcion2_desaparecidos(jsonObject.getString("descripcion2_desaparecidos"));
+                desaparecidos.setFechadesaparecido_desaparecidos(jsonObject.getString("fechadesaparecido_desaparecidos"));
+                desaparecidos.setEstado_desaparecidos(jsonObject.getString("estado_desaparecidos"));
+                desaparecidos.setUltimolugar_desaparecidos(jsonObject.getString("ultimolugar_desaparecidos"));
 
-               listaDesaparecidos.add(desaparecidos);
+                listaDesaparecidos.add(desaparecidos);
 
-           }
+            }
 
-           adaptadorDesaparecidos = new AdaptadorDesaparecidos(listaDesaparecidos);
+            adaptadorDesaparecidos = new AdaptadorDesaparecidos(listaDesaparecidos);
 
-           recyclerDesaparecidos.setAdapter(adaptadorDesaparecidos);
-           adaptadorDesaparecidos.notifyDataSetChanged();
+            recyclerDesaparecidos.setAdapter(adaptadorDesaparecidos);
+            adaptadorDesaparecidos.notifyDataSetChanged();
 
-           adaptadorDesaparecidos.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Desaparecidos desaparecidos = listaDesaparecidos.get(recyclerDesaparecidos.getChildAdapterPosition(v));
+            adaptadorDesaparecidos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Desaparecidos desaparecidos = listaDesaparecidos.get(recyclerDesaparecidos.getChildAdapterPosition(v));
 
-                   Intent intentDesaparecidos = new Intent(getContext(), DetalleDesaparecidos.class);
-                   Bundle envioDesaparecidos = new Bundle();
-                   envioDesaparecidos.putSerializable("objeto5",desaparecidos);
-                   intentDesaparecidos.putExtras(envioDesaparecidos);
+                    Intent intentDesaparecidos = new Intent(getContext(), DetalleDesaparecidos.class);
+                    Bundle envioDesaparecidos = new Bundle();
+                    envioDesaparecidos.putSerializable("objeto5", desaparecidos);
+                    intentDesaparecidos.putExtras(envioDesaparecidos);
 
-                   startActivity(intentDesaparecidos);
+                    startActivity(intentDesaparecidos);
 
-               }
-           });
+                }
+            });
 
-       } catch (JSONException e) {
+        } catch (JSONException e) {
 
-           Toast.makeText(getContext(),"No se puede obtener",Toast.LENGTH_LONG).show();
-           Log.i("ERROR",response.toString());
-           e.printStackTrace();
-       }
+            Toast.makeText(getContext(), "No se puede obtener", Toast.LENGTH_LONG).show();
+            Log.i("ERROR", response.toString());
+            e.printStackTrace();
+        }
         refresh_desaparecidos.setRefreshing(false);
 
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.buscadora,menu);
+        inflater.inflate(R.menu.buscadora, menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Ingrese el desaparecido que desea buscar");

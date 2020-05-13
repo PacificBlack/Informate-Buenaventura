@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -42,22 +44,19 @@ import java.util.ArrayList;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ClasificadosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerClasificados;
     ArrayList<Clasificados> listaClasificados;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-
     private SwipeRefreshLayout refresh_clasificados;
-
     AdaptadorClasificados adaptadorC;
+    LinearLayout internet;
+    Button reintentar;
+
 
     public ClasificadosFragment() {
-        // Required empty public constructor
     }
 
 
@@ -66,6 +65,15 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
                              Bundle savedInstanceState) {
 
         View vista= inflater.inflate(R.layout.fragment_clasificados, container, false);
+        internet = vista.findViewById(R.id.internet_fragment_clasificados);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_clasificados);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Clasificados();
+                refresh_clasificados.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
         listaClasificados = new ArrayList<>();
@@ -89,30 +97,26 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
     }
 
     private void cargarWebService_Clasificados() {
-
+        internet.setVisibility(View.GONE);
         String url_Clasificados = DireccionServidor+"wsnJSONllenarClasificados.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Clasificados,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_clasificados.setRefreshing(false);
-
-
+        recyclerClasificados.setVisibility(View.VISIBLE);
     }
-
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerClasificados.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_clasificados.setRefreshing(false);
-
-
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerClasificados.setVisibility(View.VISIBLE);
+
         Clasificados clasificados = null;
         JSONArray json_clasificados = response.optJSONArray("clasificados");
 
@@ -171,8 +175,6 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
             e.printStackTrace();
         }
         refresh_clasificados.setRefreshing(false);
-
-
     }
 
     @Override

@@ -66,6 +66,7 @@ import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.meta_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.video_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoPublicar;
@@ -83,7 +84,7 @@ public class PublicarDonaciones extends AppCompatActivity{
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
     private InterstitialAd anuncioDonaciones;
-    TextInputLayout titulo_publicar_donaciones, descripcioncorta_publicar_donaciones, descripcion1_publicar_donaciones, meta_publicar_donaciones;
+    TextInputLayout titulo_publicar_donaciones,video_donaciones, descripcioncorta_publicar_donaciones, descripcion1_publicar_donaciones, meta_publicar_donaciones;
     Button publicar_final_donaciones,subirimagenes;
     Toolbar barra_donaciones;
     ImageView whatsapp;
@@ -109,6 +110,7 @@ public class PublicarDonaciones extends AppCompatActivity{
         descripcioncorta_publicar_donaciones = findViewById(R.id.publicar_descripcioncorta_donaciones);
         descripcion1_publicar_donaciones = findViewById(R.id.publicar_descripcion1_donaciones);
         meta_publicar_donaciones = findViewById(R.id.publicar_meta_donaciones);
+        video_donaciones = findViewById(R.id.publicar_video_donaciones);
 
         anuncioDonaciones = new InterstitialAd(this);
         anuncioDonaciones.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -135,7 +137,7 @@ public class PublicarDonaciones extends AppCompatActivity{
         publicar_final_donaciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarmeta()| ! validarfoto()){return;}
+                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarmeta()| ! validarfoto() | !validarvideo()){return;}
                 Subirimagen_donaciones();
             }
         });
@@ -199,6 +201,21 @@ public class PublicarDonaciones extends AppCompatActivity{
         }
         else {
             meta_publicar_donaciones.setError(null);
+            return true;
+        }
+    }
+    private boolean validarvideo(){
+        String videoinput = video_donaciones.getEditText().getText().toString().trim();
+        if (videoinput.isEmpty()){
+            video_donaciones.setError(video_vacio);
+            return false;
+        }
+        else if(videoinput.length()>150){
+            video_donaciones.setError(texto_superado);
+            return false;
+        }
+        else {
+            video_donaciones.setError(null);
             return true;
         }
     }
@@ -294,6 +311,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 String descripcioncortainput = descripcioncorta_publicar_donaciones.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_donaciones.getEditText().getText().toString().trim();
                 String metainput = meta_publicar_donaciones.getEditText().getText().toString().trim();
+                String videoinput = video_donaciones.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -302,6 +320,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 parametros.put("vistas_donaciones","0");
                 parametros.put("descripcion1_donaciones",descripcion1input);
                 parametros.put("meta_donaciones",metainput);
+                parametros.put("video_donaciones",videoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
                 parametros.put(nombre.get(0),cadena.get(0));
@@ -372,6 +391,8 @@ public class PublicarDonaciones extends AppCompatActivity{
                 String descripcioncortainput = descripcioncorta_publicar_donaciones.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_publicar_donaciones.getEditText().getText().toString().trim();
                 String metainput = meta_publicar_donaciones.getEditText().getText().toString().trim();
+                String videoinput = video_donaciones.getEditText().getText().toString().trim();
+
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -380,6 +401,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                 parametros.put("vistas_donaciones","0");
                 parametros.put("descripcion1_donaciones",descripcion1input);
                 parametros.put("meta_donaciones",metainput);
+                parametros.put("video_donaciones",videoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
                 parametros.put(nombre.get(0),cadena.get(0));

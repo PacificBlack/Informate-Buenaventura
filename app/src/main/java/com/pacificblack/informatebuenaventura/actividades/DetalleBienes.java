@@ -36,7 +36,7 @@ public class DetalleBienes extends AppCompatActivity {
 
     StringRequest stringRequest_bienes_actualizar;
     int id_actualizar;
-    private AdView baner1,baner2;
+    private AdView baner1,baner2,baner3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,9 +162,11 @@ public class DetalleBienes extends AppCompatActivity {
         }
         baner1 = findViewById(R.id.baner_bienes1);
         baner2 = findViewById(R.id.baner_bienes2);
+        baner3 = findViewById(R.id.baner_bienes3);
         AdRequest adRequest = new AdRequest.Builder().build();
         baner1.loadAd(adRequest);
         baner2.loadAd(adRequest);
+        baner3.loadAd(adRequest);
     }
 
 }

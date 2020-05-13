@@ -57,8 +57,8 @@ public class AdaptadorDesaparecidos extends RecyclerView.Adapter<AdaptadorDesapa
         holder.titulodesaparecidos.setText(listaDesaparecidos.get(position).getTitulo_row_desaparecidos());
         holder.descripcioncortadesaparecidos.setText(listaDesaparecidos.get(position).getDescripcion_row_desaparecidos());
         holder.fechapublicaciondesaparecidos.setText(listaDesaparecidos.get(position).getFechapublicacion_row_desaparecidos());
-        holder.vistadesaparecidos.setText(String.valueOf(listaDesaparecidos.get(position).getVista_row_desaparecidos()));
-        holder.recompensadesaparecidos.setText(listaDesaparecidos.get(position).getRecompensa_row_desaparecidos());
+        holder.vistadesaparecidos.setText(String.valueOf(listaDesaparecidos.get(position).getVista_row_desaparecidos()+" Visitas"));
+        holder.recompensadesaparecidos.setText("Recompensa: "+listaDesaparecidos.get(position).getRecompensa_row_desaparecidos());
 
 
         //TODO: Aqui verifico si trae la imagen o no

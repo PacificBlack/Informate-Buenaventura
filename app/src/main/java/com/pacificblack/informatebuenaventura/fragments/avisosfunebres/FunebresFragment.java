@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -52,6 +54,8 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_funebres;
     AdaptadorFunebres adaptadorFunebres;
+    LinearLayout internet;
+    Button reintentar;
 
     public FunebresFragment() {
         // Required empty public constructor
@@ -63,6 +67,16 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_funebres, container, false);
+        internet = vista.findViewById(R.id.internet_fragment_funebres);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_funebres);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Funebres();
+                refresh_funebres.setRefreshing(true);
+            }
+        });
+
         setHasOptionsMenu(true);
         listaFunebres = new ArrayList<>();
         recyclerFunebres = vista.findViewById(R.id.recycler_funebres);
@@ -86,29 +100,27 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
     }
 
     private void cargarWebService_Funebres() {
-
+        internet.setVisibility(View.GONE);
         String url_Funebres = DireccionServidor+"wsnJSONllenarFunebres.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Funebres,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_funebres.setRefreshing(false);
-
+        recyclerFunebres.setVisibility(View.VISIBLE);
     }
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerFunebres.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_funebres.setRefreshing(false);
-
-
     }
 
     @Override
     public void onResponse(JSONObject response) {
-        Funebres funebres = null;
 
+        recyclerFunebres.setVisibility(View.VISIBLE);
+
+        Funebres funebres = null;
         JSONArray json_funebres = response.optJSONArray("funebres");
 
         listaFunebres.clear();
@@ -136,7 +148,6 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
             }
 
-
             adaptadorFunebres = new AdaptadorFunebres(listaFunebres);
             recyclerFunebres.setAdapter(adaptadorFunebres);
             adaptadorFunebres.notifyDataSetChanged();
@@ -156,16 +167,11 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
                 }
             });
-
-
         } catch (JSONException e) {
-
             Toast.makeText(getContext(),"No se puede obtener",Toast.LENGTH_LONG).show();
-
             Log.i("ERROR",response.toString());
             e.printStackTrace();
         }
-
         refresh_funebres.setRefreshing(false);
     }
 

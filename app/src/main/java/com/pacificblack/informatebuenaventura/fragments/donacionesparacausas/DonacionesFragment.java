@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -48,15 +50,15 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
     RecyclerView recyclerDonacion;
     ArrayList<Donaciones> listaDonaciones;
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_donaciones;
     AdaptadorDonaciones adapatadorDonaciones;
+    LinearLayout internet;
+    Button reintentar;
 
 
     public DonacionesFragment() {
-        // Required empty public constructor
     }
 
 
@@ -65,6 +67,15 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_donaciones, container, false);
+        internet = vista.findViewById(R.id.internet_fragment_donaciones);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_donaciones);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Donaciones();
+                refresh_donaciones.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
         listaDonaciones = new ArrayList<>();
@@ -90,21 +101,19 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
     }
 
     private void cargarWebService_Donaciones() {
-
+        internet.setVisibility(View.GONE);
         String url_Donaciones = DireccionServidor+"wsnJSONllenarDonaciones.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Donaciones,null,this,this);
         request.add(jsonObjectRequest);
         refresh_donaciones.setRefreshing(false);
-
-
+        recyclerDonacion.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerDonacion.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_donaciones.setRefreshing(false);
 
@@ -112,6 +121,7 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerDonacion.setVisibility(View.VISIBLE);
 
         Donaciones donacion = null;
         JSONArray json_donaciones = response.optJSONArray("donaciones");
@@ -134,7 +144,7 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
                 donacion.setVistas_donaciones(jsonObject.optInt("vistas_donaciones"));
                 donacion.setMeta_row_donaciones(jsonObject.optInt("meta_donaciones"));
                 donacion.setDescripcion1_donaciones(jsonObject.optString("descripcion1_donaciones"));
-
+                donacion.setVideo_donaciones(jsonObject.optString("video_donaciones"));
                 listaDonaciones.add(donacion);
 
             }
@@ -159,7 +169,6 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
             });
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,7 +181,7 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
         inflater.inflate(R.menu.buscadora,menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Ingrese el donaciones que desea buscar");
+        searchView.setQueryHint("Ingrese la donación que desea buscar");
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 

@@ -54,11 +54,8 @@ public class AdaptadorBienes extends RecyclerView.Adapter<AdaptadorBienes.Bienes
         holder.titulobienes.setText(listaBienes.get(position).getTitulo_row_bienes());
         holder.descripcionesbienes.setText(listaBienes.get(position).getDescripcion_row_bienes());
         holder.fechapublicacionbienes.setText(listaBienes.get(position).getFechapublicacion_row_bienes());
-        holder.vistabienes.setText(String.valueOf(listaBienes.get(position).getVistas_bienes()));
-        holder.preciobienes.setText(String.valueOf(listaBienes.get(position).getPrecio_row_bienes()));
-
-        //TODO: Aqui verifico si trae la imagen o no
-
+        holder.vistabienes.setText(String.valueOf(listaBienes.get(position).getVistas_bienes())+" Visitas");
+        holder.preciobienes.setText("Precio: "+String.valueOf(listaBienes.get(position).getPrecio_row_bienes()));
 
         if (listaBienes.get(position).getImagen1_bienes() != null){
 

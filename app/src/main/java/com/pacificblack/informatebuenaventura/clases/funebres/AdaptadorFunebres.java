@@ -56,7 +56,7 @@ public class AdaptadorFunebres extends RecyclerView.Adapter<AdaptadorFunebres.Fu
         holder.titulofunebres.setText(listaFunebres.get(position).getTitulo_row_funebres());
         holder.descripcionfunebres.setText(listaFunebres.get(position).getDescripcion_row_funebres());
         holder.fechafunebres.setText(listaFunebres.get(position).getFechapublicacion_row_funebres());
-        holder.vistafunebres.setText(String.valueOf(listaFunebres.get(position).getVistas_funebres()));
+        holder.vistafunebres.setText(String.valueOf(listaFunebres.get(position).getVistas_funebres())+" Visitas");
 
 
         if (listaFunebres.get(position).getImagen1_funebres() != null){

@@ -1,6 +1,5 @@
 package com.pacificblack.informatebuenaventura.fragments.comprayventa;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -41,9 +42,7 @@ import java.util.ArrayList;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class ComprayVentaFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     RecyclerView recyclerComprayventa;
@@ -52,20 +51,30 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_comprayventa;
     AdaptadorComprayVenta adaptadorComprayVenta;
-
+    LinearLayout internet;
+    Button reintentar;
 
 
     public ComprayVentaFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         View vista = inflater.inflate(R.layout.fragment_compray_venta, container, false);
+
+
+        internet = vista.findViewById(R.id.internet_fragment_comprayventa);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_comprayventa);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_ComprayVenta();
+                refresh_comprayventa.setRefreshing(true);
+            }
+        });
+
         setHasOptionsMenu(true);
 
 
@@ -89,28 +98,26 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
     }
 
     private void cargarWebService_ComprayVenta() {
-
+        internet.setVisibility(View.GONE);
         String url_ComprayVenta = DireccionServidor+"wsnJSONllenarComprayVenta.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_ComprayVenta,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_comprayventa.setRefreshing(false);
-
+        recyclerComprayventa.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerComprayventa.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_comprayventa.setRefreshing(false);
-
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerComprayventa.setVisibility(View.VISIBLE);
 
         ComprayVenta comprayVenta = null;
         JSONArray json_comprayventa = response.optJSONArray("comprayventa");
@@ -152,23 +159,17 @@ public class ComprayVentaFragment extends Fragment implements Response.Listener<
                 public void onClick(View v) {
 
                     ComprayVenta comprayVenta = listaComprayVenta.get(recyclerComprayventa.getChildAdapterPosition(v));
-
                     Intent intentComprayVenta = new Intent(getContext(), DetalleComprayVenta.class);
                     Bundle bundleComprayVenta = new Bundle();
                     bundleComprayVenta.putSerializable("objeto4",comprayVenta);
-
                     intentComprayVenta.putExtras(bundleComprayVenta);
                     startActivity(intentComprayVenta);
-
                 }
             });
 
-
         } catch (Exception e) {
             Toast.makeText(getContext(),"No se puede obtener",Toast.LENGTH_LONG).show();
-
             Log.i("ERROR",response.toString());
-
             e.printStackTrace();
         }
         refresh_comprayventa.setRefreshing(false);

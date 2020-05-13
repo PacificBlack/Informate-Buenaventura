@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity   {
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_inicio, R.id.nav_desaparecidos, R.id.nav_clasificados,
                 R.id.nav_noticias,R.id.nav_comprayventa, R.id.nav_eventos,
-                R.id.nav_especiales ,R.id.nav_compartir, R.id.nav_quienes,
+                R.id.nav_especiales , R.id.nav_quienes,
                 R.id.nav_directorio,R.id.nav_ofertaservicios,R.id.nav_bienes,
                 R.id.nav_ofertaempleos,R.id.nav_encuestas,R.id.nav_donaciones,
                 R.id.nav_funebres,R.id.nav_ultimahora,R.id.nav_adopcion)
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity   {
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setItemIconTintList(null);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +119,6 @@ public class MainActivity extends AppCompatActivity   {
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);drawer.openDrawer(Gravity.LEFT);
             }
         });
-
         FabSpeedDial fabSpeedDial = findViewById(R.id.fabs);
         fabSpeedDial.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
@@ -348,13 +348,6 @@ public class MainActivity extends AppCompatActivity   {
         Intent intent = new Intent(MainActivity.this, ActualizarServicios.class);
         startActivity(intent);
     }
-
-
-    public void MostrarWhatsapp(View view){
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
-        startActivity(launchIntent);
-    }
-
 }
 
 

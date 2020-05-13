@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/rojo"
+    android:background="@drawable/fondodesaparecidossinimagen"
     tools:context=".eliminar.EliminarDesaparicion">
 
     <Toolbar
@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/rojo"
+        android:background="#2C3079"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -55,18 +55,20 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina una desaparición de nuestra app"
+                    android:text="Elimina una desaparición"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:fontFamily="@font/righteous"
+                    />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    app:srcCompat="@drawable/desaparecidossf" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -105,11 +107,13 @@
                         <ImageButton
                             android:id="@+id/eliminar_buscar_desaparicion"
                             android:layout_width="wrap_content"
-                            android:layout_height="60dp"
+                            android:layout_height="41dp"
+                            android:layout_gravity="center"
                             android:layout_marginTop="4dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_search_black_24dp"
-                            tools:ignore="VectorDrawableCompat" />
+                            android:background="@android:color/transparent"
+                            android:scaleType="centerInside"
+                            tools:src="@drawable/ic_buscar" />
 
                     </LinearLayout>
 
@@ -118,6 +122,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="69dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:text="Aqui va el titulo de su publicación"/>
 
                     <TextView
@@ -125,6 +131,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="71dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:text="Aqui va la descripcion breve de su publicacíon" />
 
                     <TextView
@@ -132,6 +140,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="31dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:text="Aqui va la recompensa de su publicación" />
 
 
@@ -140,6 +150,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="31dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:text="Aqui va el dia de su desaparición" />
 
                     <TextView
@@ -147,12 +159,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="31dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:text="Aqui va el estado de su publicación" />
                     <TextView
                         android:id="@+id/eliminar_ultimolugar_desaparicion"
                         android:layout_width="match_parent"
                         android:layout_height="31dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:text="Aqui va el ultimo lugar de su publicación" />
 
                     <HorizontalScrollView
@@ -213,6 +229,8 @@
                         android:id="@+id/eliminar_quese_desaparicion"
                         android:layout_width="match_parent"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
                         android:layout_height="31dp"
                         android:text="Aqui va el tipo de cosa que se le desaparecio"/>
 

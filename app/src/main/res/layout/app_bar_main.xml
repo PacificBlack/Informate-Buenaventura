@@ -30,8 +30,7 @@
         android:layout_gravity="bottom|end"
         app:fabGravity="bottom_end"
         app:fabMenu="@menu/flotante"
-        app:miniFabBackgroundTint="@android:color/white"
         app:miniFabDrawableTint="?attr/colorPrimaryDark"
-        app:miniFabTitleTextColor="?attr/colorPrimaryDark" />
+        app:miniFabTitleTextColor="@color/azulOscuro" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

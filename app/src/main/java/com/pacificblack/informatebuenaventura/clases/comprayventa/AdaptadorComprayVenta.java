@@ -51,10 +51,6 @@ public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorCompray
     @Override
     public void onBindViewHolder(@NonNull AdaptadorComprayVenta.ComprayVentaHolder holder, int position) {
 
-
-        //TODO: Aqui verifico si trae la imagen o no
-
-
         if (listaComprayVenta.get(position).getImagen1_comprayventa() != null){
 
             Picasso.get().load(listaComprayVenta.get(position).getImagen1_comprayventa())
@@ -68,15 +64,11 @@ public class AdaptadorComprayVenta extends RecyclerView.Adapter<AdaptadorCompray
 
         }
 
-
-
-        //TODO: Aqui verifico si trae la imagen o no
-
         holder.titulocomprayventa.setText(listaComprayVenta.get(position).getTitulo_row_comprayventa());
         holder.descripcioncortacomprayventa.setText(listaComprayVenta.get(position).getDescripcion_row_comprayventa());
         holder.fechapublicacioncomprayventa.setText(listaComprayVenta.get(position).getFechapublicacion_row_comprayventa());
-        holder.preciocomprayventa.setText(listaComprayVenta.get(position).getPrecio_row_comprayventa());
-        holder.vistacomprayventa.setText(String.valueOf(listaComprayVenta.get(position).getVista_comprayventa()));
+        holder.preciocomprayventa.setText("Precio: "+listaComprayVenta.get(position).getPrecio_row_comprayventa());
+        holder.vistacomprayventa.setText(String.valueOf(listaComprayVenta.get(position).getVista_comprayventa())+" Visitas");
 
 
     }

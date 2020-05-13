@@ -54,8 +54,8 @@ public class AdaptadorEventos extends RecyclerView.Adapter<AdaptadorEventos.Even
         holder.tituloeventos.setText(listaEventos.get(position).getTitulo_row_eventos());
         holder.descripcioneventos.setText(listaEventos.get(position).getDescripcion_row_eventos());
         holder.fechapublicacioneventos.setText(listaEventos.get(position).getFechapublicacion_row_eventos());
-        holder.lugareventos.setText(listaEventos.get(position).getLugar_row_eventos());
-        holder.vistaeventos.setText(String.valueOf(listaEventos.get(position).getVistas_eventos()));
+        holder.lugareventos.setText("Lugar: "+listaEventos.get(position).getLugar_row_eventos());
+        holder.vistaeventos.setText(String.valueOf(listaEventos.get(position).getVistas_eventos())+" Visitas");
 
        //TODO: Aqui verifico si trae la imagen o no
 

@@ -51,8 +51,8 @@ public class AdaptadorServicios extends RecyclerView.Adapter<AdaptadorServicios.
         holder.tituloservicios.setText(listaServicios.get(position).getTitulo_row_ofertaservicios());
         holder.descripcionservicios.setText(listaServicios.get(position).getDescripcion_row_ofertaservicios());
         holder.fechaservicios.setText(listaServicios.get(position).getFechapublicacion_row_ofertaservicios());
-        holder.notaservicios.setText(listaServicios.get(position).getNecesidad_row_ofertaservicios());
-        holder.vistaservicios.setText(String.valueOf(listaServicios.get(position).getVistas_ofertaservicios()));
+        holder.notaservicios.setText("Tiempo: "+listaServicios.get(position).getNecesidad_row_ofertaservicios());
+        holder.vistaservicios.setText(String.valueOf(listaServicios.get(position).getVistas_ofertaservicios())+" Visitas");
 
         if (listaServicios.get(position).getImagen1_ofertaservicios() != null){
 

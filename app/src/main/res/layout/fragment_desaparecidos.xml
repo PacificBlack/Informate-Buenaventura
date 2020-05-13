@@ -18,5 +18,36 @@
         android:layout_height="match_parent" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <LinearLayout
+        android:id="@+id/internet_fragment_desaparecidos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="@color/azulOscuro">
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="232dp"
+            android:layout_height="178dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nointernet"
+            tools:srcCompat="@drawable/nointernet" />
+
+        <Button
+            android:id="@+id/reintentar_fragment_desaparecidos"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/azulOscuro"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/login_bk_color"
+            android:background="@drawable/estilo_botones"
+            android:text="Reintentar"/>
+    </LinearLayout>
+
+
+</FrameLayout>

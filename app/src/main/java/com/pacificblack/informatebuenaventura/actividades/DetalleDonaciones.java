@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,6 +20,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.pacificblack.informatebuenaventura.R;
 import com.pacificblack.informatebuenaventura.clases.donaciones.Donaciones;
 import com.pacificblack.informatebuenaventura.extras.FullImagen;
@@ -29,14 +34,16 @@ import java.util.Map;
 
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
-public class DetalleDonaciones extends AppCompatActivity {
+public class DetalleDonaciones  extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener,YouTubePlayer.PlaybackEventListener {
 
     TextView titulodonaciones,descripcion1donaciones,metadonaciones;
     ImageView imagen1donaciones,imagen2donaciones;
     StringRequest stringRequest_donaciones_actualizar;
     int id_actualizar;
     private AdView baner1,baner2;
-
+    YouTubePlayerView video_donaciones;
+    String API_KEY = "AIzaSyCjplldkmscSZfu1yMY7eJr4xiSjuAbZgo";
+    String video;
 
 
 
@@ -50,6 +57,9 @@ public class DetalleDonaciones extends AppCompatActivity {
         imagen1donaciones = findViewById(R.id.imagen1_detalle_donaciones);
         imagen2donaciones = findViewById(R.id.imagen2_detalle_donaciones);
         metadonaciones = findViewById(R.id.meta_detalle_donaciones);
+
+        video_donaciones = findViewById(R.id.video_donaciones);
+        video_donaciones.initialize(API_KEY,this);
 
 
         Bundle objetoDonaciones = getIntent().getExtras();
@@ -100,6 +110,9 @@ public class DetalleDonaciones extends AppCompatActivity {
                 }
             });
 
+            video = dona.getVideo_donaciones();
+
+
             String url_donaciones = DireccionServidor+"wsnJSONActualizarVista.php?";
 
             stringRequest_donaciones_actualizar= new StringRequest(Request.Method.POST, url_donaciones, new Response.Listener<String>() {
@@ -146,6 +159,59 @@ public class DetalleDonaciones extends AppCompatActivity {
 
         baner1.loadAd(adRequest);
         baner2.loadAd(adRequest);
+
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        if (!b){
+            youTubePlayer.cueVideo(video);
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+        if (youTubeInitializationResult.isUserRecoverableError()){
+            youTubeInitializationResult.getErrorDialog(DetalleDonaciones.this,1).show();
+        }else {
+            String m ="Error al iniciar el video"+youTubeInitializationResult.toString();
+
+            Toast.makeText(getApplicationContext(),m,Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode ==1){
+            getYoutubePlayerProvider().initialize(API_KEY,this);
+        }
+    }
+    protected YouTubePlayer.Provider getYoutubePlayerProvider(){
+        return video_donaciones;
+    }
+
+    @Override
+    public void onPlaying() {
+
+    }
+
+    @Override
+    public void onPaused() {
+
+    }
+
+    @Override
+    public void onStopped() {
+
+    }
+
+    @Override
+    public void onBuffering(boolean b) {
+
+    }
+
+    @Override
+    public void onSeekTo(int i) {
 
     }
 }

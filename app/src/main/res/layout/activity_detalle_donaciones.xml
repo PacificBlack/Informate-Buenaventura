@@ -76,7 +76,10 @@
                 android:fontFamily="@font/signika"
                 android:text="TextView" />
 
-
+            <com.google.android.youtube.player.YouTubePlayerView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:id="@+id/video_donaciones"/>
         </LinearLayout>
     </ScrollView>
 

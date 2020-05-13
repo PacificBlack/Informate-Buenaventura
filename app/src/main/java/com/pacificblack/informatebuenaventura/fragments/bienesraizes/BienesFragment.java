@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -50,6 +52,8 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
     RecyclerView recyclerBienes;
     ArrayList<Bienes> listaBienes;
     RequestQueue request;
+    LinearLayout internet;
+    Button reintentar;
     JsonObjectRequest jsonObjectRequest;
 
     private SwipeRefreshLayout refresh_bienes;
@@ -68,6 +72,15 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_bienes, container, false);
+        internet = vista.findViewById(R.id.internet_fragment_bienes);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_bienes);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Bienes();
+                refresh_bienes.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
         listaBienes = new ArrayList<>();
@@ -88,31 +101,28 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
         return vista;
     }
-//TODO: Aqui va todo lo de obtener de la base de datos
 
     private void cargarWebService_Bienes() {
-
+        internet.setVisibility(View.GONE);
         String url_bienes = DireccionServidor+"wsnJSONllenarBienes.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_bienes,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_bienes.setRefreshing(false);
+        recyclerBienes.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),"No funciona pa",Toast.LENGTH_LONG).show();
-
+        internet.setVisibility(View.VISIBLE);
+        recyclerBienes.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_bienes.setRefreshing(false);
-
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerBienes.setVisibility(View.VISIBLE);
 
         Bienes bienes = null;
 

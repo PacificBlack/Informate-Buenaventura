@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -38,22 +40,19 @@ import java.util.ArrayList;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class DirectoriosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
     RecyclerView recyclerDirectorios;
     ArrayList<Directorio> listaDirectorios;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-
     private SwipeRefreshLayout refresh_directorios;
     AdaptadorDirectorio adaptadorDirectorio;
+    LinearLayout internet;
+    Button reintentar;
 
 
     public DirectoriosFragment() {
-        // Required empty public constructor
     }
 
 
@@ -62,6 +61,15 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
                              Bundle savedInstanceState) {
 
         View vista =inflater.inflate(R.layout.fragment_directorios, container, false);
+        internet = vista.findViewById(R.id.internet_fragment_directorios);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_directorios);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Directorios();
+                refresh_directorios.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
             listaDirectorios = new ArrayList<>();
@@ -86,21 +94,19 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
     }
 
     private void cargarWebService_Directorios() {
-
+        internet.setVisibility(View.GONE);
         String url_Directorios = DireccionServidor+"wsnJSONllenarDirectorios.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Directorios,null,this,this);
         request.add(jsonObjectRequest);
         refresh_directorios.setRefreshing(false);
-
-
+        recyclerDirectorios.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerDirectorios.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_directorios.setRefreshing(false);
 
@@ -108,7 +114,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
     @Override
     public void onResponse(JSONObject response) {
-
+        recyclerDirectorios.setVisibility(View.VISIBLE);
         Directorio directorio = null;
         JSONArray json_directorio = response.optJSONArray("directorio");
 
@@ -150,7 +156,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
         inflater.inflate(R.menu.buscadora,menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Ingrese el evento que desea buscar");
+        searchView.setQueryHint("Ingrese el contacto que desea buscar");
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 

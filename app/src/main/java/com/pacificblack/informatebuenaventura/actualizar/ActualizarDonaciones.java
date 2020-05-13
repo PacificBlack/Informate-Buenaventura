@@ -78,6 +78,7 @@ import static com.pacificblack.informatebuenaventura.texto.Avisos.imagen_minima;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.meta_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.texto_superado;
 import static com.pacificblack.informatebuenaventura.texto.Avisos.titulo_vacio;
+import static com.pacificblack.informatebuenaventura.texto.Avisos.video_vacio;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.NosepudoActualizar;
@@ -98,7 +99,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
 
     private InterstitialAd anuncioActualizarDonaciones;
 
-    TextInputLayout titulo_actualizar_donaciones, descripcioncorta_actualizar_donaciones, descripcion1_actualizar_donaciones, meta_actualizar_donaciones, buscar_actualizar_donaciones;
+    TextInputLayout titulo_actualizar_donaciones,video_donaciones, descripcioncorta_actualizar_donaciones, descripcion1_actualizar_donaciones, meta_actualizar_donaciones, buscar_actualizar_donaciones;
     Button subirimagenes;
     ImageButton actualizar_donaciones,actualizar_buscar_donaciones;
 
@@ -130,6 +131,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         descripcioncorta_actualizar_donaciones = findViewById(R.id.actualizar_descripcioncorta_donaciones);
         descripcion1_actualizar_donaciones = findViewById(R.id.actualizar_descripcion1_donaciones);
         meta_actualizar_donaciones = findViewById(R.id.actualizar_meta_donaciones);
+        video_donaciones = findViewById(R.id.actualizar_video_donaciones);
         imagenes_donaciones = findViewById(R.id.imagenes_actualizar_donaciones);
         imagen1_actualizar_donaciones = findViewById(R.id.imagen1_actualizar_donaciones);
         imagen2_actualizar_donaciones = findViewById(R.id.imagen2_actualizar_donaciones);
@@ -143,7 +145,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
             @Override
             public void onClick(View v) {
 
-                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarmeta()| ! validarid()){return;}
+                if (!validartitulo()| !validardescripcioncorta()| ! validardescripcion1()| ! validarmeta()| ! validarid() | !validarvideo()){return;}
 
                 if (!validarfotoupdate()){
 
@@ -280,6 +282,22 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         }
 
     }
+    private boolean validarvideo(){
+        String videoinput = video_donaciones.getEditText().getText().toString().trim();
+        if (videoinput.isEmpty()){
+            video_donaciones.setError(video_vacio);
+            return false;
+        }
+        else if(videoinput.length()>150){
+            video_donaciones.setError(texto_superado);
+            return false;
+        }
+        else {
+            video_donaciones.setError(null);
+            return true;
+        }
+
+    }
     private boolean validarfotoupdate(){
         if (listaimagenes_donaciones.size() == 0){
             Toast.makeText(getApplicationContext(),imagen_minima,Toast.LENGTH_LONG).show();
@@ -321,6 +339,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
             donacion.setVistas_donaciones(jsonObject.optInt("vistas_donaciones"));
             donacion.setMeta_row_donaciones(jsonObject.optInt("meta_donaciones"));
             donacion.setDescripcion1_donaciones(jsonObject.optString("descripcion1_donaciones"));
+            donacion.setVideo_donaciones(jsonObject.optString("video_donaciones"));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -330,6 +349,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         descripcioncorta_actualizar_donaciones.getEditText().setText(donacion.getDescripcion_row_donaciones());
         descripcion1_actualizar_donaciones.getEditText().setText(donacion.getDescripcion1_donaciones());
         meta_actualizar_donaciones.getEditText().setText(String.valueOf(donacion.getMeta_row_donaciones()));
+        video_donaciones.getEditText().setText(String.valueOf(donacion.getVideo_donaciones()));
 
         Picasso.get().load(donacion.getImagen1_donaciones())
                 .placeholder(R.drawable.ib)
@@ -436,6 +456,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 String descripcioncortainput = descripcioncorta_actualizar_donaciones.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_donaciones.getEditText().getText().toString().trim();
                 String metainput = meta_actualizar_donaciones.getEditText().getText().toString().trim();
+                String videoinput = video_donaciones.getEditText().getText().toString().trim();
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -444,6 +465,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 parametros.put("descripcionrow_donaciones",descripcioncortainput);
                 parametros.put("descripcion1_donaciones",descripcion1input);
                 parametros.put("meta_donaciones",metainput);
+                parametros.put("video_donaciones",videoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
 
@@ -521,6 +543,8 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 String descripcioncortainput = descripcioncorta_actualizar_donaciones.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_donaciones.getEditText().getText().toString().trim();
                 String metainput = meta_actualizar_donaciones.getEditText().getText().toString().trim();
+                String videoinput = video_donaciones.getEditText().getText().toString().trim();
+
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -532,6 +556,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 parametros.put(nombre.get(0),cadena.get(0));
                 parametros.put("imagen_donaciones1","vacio");
                 parametros.put("meta_donaciones",metainput);
+                parametros.put("video_donaciones",videoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
 
@@ -609,6 +634,8 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 String descripcioncortainput = descripcioncorta_actualizar_donaciones.getEditText().getText().toString().trim();
                 String descripcion1input = descripcion1_actualizar_donaciones.getEditText().getText().toString().trim();
                 String metainput = meta_actualizar_donaciones.getEditText().getText().toString().trim();
+                String videoinput = video_donaciones.getEditText().getText().toString().trim();
+
 
                 Map<String,String> parametros = new HashMap<>();
 
@@ -620,6 +647,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
                 parametros.put(nombre.get(0),cadena.get(0));
                 parametros.put(nombre.get(1),cadena.get(1));
                 parametros.put("meta_donaciones",metainput);
+                parametros.put("video_donaciones",videoinput);
                 parametros.put("subida","pendiente");
                 parametros.put("publicacion","Donaciones");
 

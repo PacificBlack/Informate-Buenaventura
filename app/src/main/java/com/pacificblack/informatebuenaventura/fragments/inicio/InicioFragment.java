@@ -4,6 +4,7 @@ package com.pacificblack.informatebuenaventura.fragments.inicio;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -60,6 +63,10 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
     private SwipeRefreshLayout refresh_inicio;
     AdaptadorInicio adaptadorInicio;
     SliderView sliderView;
+    LinearLayout internet;
+    CardView cardinicio;
+    Button reintentar;
+    FrameLayout yutuinicio;
 
     public InicioFragment() {
         // Required empty public constructor
@@ -70,6 +77,20 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_inicio, container, false);
+        yutuinicio = vista.findViewById(R.id.youtube_layout);
+        cardinicio = vista.findViewById(R.id.cardinicio);
+        internet = vista.findViewById(R.id.internet_fragment_inicio);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_inicio);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Inicio();
+                cargarWebService_Imagenes();
+                refresh_inicio.setRefreshing(true);
+            }
+        });
+
+
         sliderView = vista.findViewById(R.id.imageSlider);
 
         listaInicio = new ArrayList<>();
@@ -102,6 +123,8 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
 
     private void cargarWebService_Imagenes(){
+        internet.setVisibility(View.GONE);
+
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url_imagenes = DireccionServidor+"wsnJSONllenarImagenes.php";
 
@@ -160,32 +183,37 @@ public class InicioFragment extends Fragment implements Response.Listener<JSONOb
 
 
     private void cargarWebService_Inicio() {
-
+        internet.setVisibility(View.GONE);
         String url_Inicio = DireccionServidor+"wsnJSONllenarInicio.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Inicio,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_inicio.setRefreshing(false);
-
+        recyclerInicio.setVisibility(View.VISIBLE);
+        sliderView.setVisibility(View.VISIBLE);
+        cardinicio.setVisibility(View.VISIBLE);
+        yutuinicio.setVisibility(View.VISIBLE);
     }
 
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),"No funciona pa",Toast.LENGTH_LONG).show();
-
+        internet.setVisibility(View.VISIBLE);
+        recyclerInicio.setVisibility(View.GONE);
+        sliderView.setVisibility(View.GONE);
+        cardinicio.setVisibility(View.GONE);
+        yutuinicio.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
-
         refresh_inicio.setRefreshing(false);
 
     }
 
     @Override
     public void onResponse(JSONObject response) {
-
+        recyclerInicio.setVisibility(View.VISIBLE);
+        sliderView.setVisibility(View.VISIBLE);
+        cardinicio.setVisibility(View.VISIBLE);
+        yutuinicio.setVisibility(View.VISIBLE);
         Inicio Inicio = null;
 
         JSONArray json_Inicio = response.optJSONArray("inicio");

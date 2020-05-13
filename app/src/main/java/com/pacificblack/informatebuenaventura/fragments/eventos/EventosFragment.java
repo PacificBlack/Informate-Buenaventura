@@ -1,16 +1,8 @@
 package com.pacificblack.informatebuenaventura.fragments.eventos;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -44,10 +38,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 
-public class EventosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
+public class EventosFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     RecyclerView recyclerEventos;
     List<Eventos> listaEventos;
@@ -55,6 +48,8 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_eventos;
     AdaptadorEventos adaptadorEventos;
+    LinearLayout internet;
+    Button reintentar;
 
 
     public EventosFragment() {
@@ -66,6 +61,15 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_eventos, container, false);
 
+        internet = vista.findViewById(R.id.internet_fragment_eventos);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_eventos);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Eventos();
+                refresh_eventos.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
         listaEventos = new ArrayList<>();
@@ -89,32 +93,27 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         return vista;
     }
 
-
     private void cargarWebService_Eventos() {
-
-        String url_eventos = DireccionServidor+"wsnJSONllenarEventos.php";
-
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_eventos,null,this,this);
+        internet.setVisibility(View.GONE);
+        String url_eventos = DireccionServidor + "wsnJSONllenarEventos.php";
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_eventos, null, this, this);
         request.add(jsonObjectRequest);
-
         refresh_eventos.setRefreshing(false);
-
+        recyclerEventos.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),"No funciona pa",Toast.LENGTH_LONG).show();
-
-        Log.i("ERROR",error.toString());
-
+        internet.setVisibility(View.VISIBLE);
+        recyclerEventos.setVisibility(View.GONE);
+        Log.i("ERROR", error.toString());
         refresh_eventos.setRefreshing(false);
-
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerEventos.setVisibility(View.VISIBLE);
 
         Eventos eventos = null;
 
@@ -123,31 +122,32 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
         try {
 
-        for (int i=0; i<json_eventos.length(); i++ ){
+            for (int i = 0; i < json_eventos.length(); i++) {
 
-            eventos = new Eventos();
-            JSONObject jsonObject = null;
-            jsonObject = json_eventos.getJSONObject(i);
+                eventos = new Eventos();
+                JSONObject jsonObject = null;
+                jsonObject = json_eventos.getJSONObject(i);
 
-            eventos.setTitulo_row_eventos(jsonObject.optString("titulo_eventos"));
-            eventos.setDescripcion_row_eventos(jsonObject.optString("descripcionrow_eventos"));
-            eventos.setFechapublicacion_row_eventos(jsonObject.optString("fechapublicacion_eventos"));
-            eventos.setLugar_row_eventos(jsonObject.optString("lugar_eventos"));
-            eventos.setImagen1_eventos(jsonObject.optString("imagen1_eventos"));
-            eventos.setVistas_eventos(jsonObject.optInt("vistas_eventos "));
+                eventos.setTitulo_row_eventos(jsonObject.optString("titulo_eventos"));
+                eventos.setDescripcion_row_eventos(jsonObject.optString("descripcionrow_eventos"));
+                eventos.setFechapublicacion_row_eventos(jsonObject.optString("fechapublicacion_eventos"));
+                eventos.setLugar_row_eventos(jsonObject.optString("lugar_eventos"));
+                eventos.setImagen1_eventos(jsonObject.optString("imagen1_eventos"));
+                eventos.setVistas_eventos(jsonObject.optInt("vistas_eventos "));
 
-            listaEventos.add(eventos);
+                listaEventos.add(eventos);
 
-        }
+
+            }
             adaptadorEventos = new AdaptadorEventos(listaEventos);
             recyclerEventos.setAdapter(adaptadorEventos);
             adaptadorEventos.notifyDataSetChanged();
 
-            }catch (JSONException e) {
+        } catch (JSONException e) {
 
-            Toast.makeText(getContext(),"No se puede obtener",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "No se puede obtener", Toast.LENGTH_LONG).show();
 
-            Log.i("ERROR",response.toString());
+            Log.i("ERROR", response.toString());
             e.printStackTrace();
         }
         refresh_eventos.setRefreshing(false);
@@ -155,10 +155,9 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.buscadora,menu);
+        inflater.inflate(R.menu.buscadora, menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Ingrese el evento que desea buscar");
@@ -173,15 +172,13 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
             @Override
             public boolean onQueryTextChange(String newText) {
-               adaptadorEventos.getFilter().filter(newText);
+                adaptadorEventos.getFilter().filter(newText);
                 return false;
             }
         });
 
 
     }
-
-
 
 
 }

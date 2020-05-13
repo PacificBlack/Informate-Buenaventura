@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -39,9 +41,6 @@ import java.util.ArrayList;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class OfertaEmpleosFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener {
 
     RecyclerView recyclerEmpleos;
@@ -51,10 +50,11 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_ofertaempleos;
     AdaptadorEmpleos adaptadorEmpleos;
+    LinearLayout internet;
+    Button reintentar;
 
 
     public OfertaEmpleosFragment() {
-        // Required empty public constructor
     }
 
 
@@ -62,7 +62,18 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_oferta_empleos, container, false);
+
+        internet = vista.findViewById(R.id.internet_fragment_empleos);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_empleos);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Empleos();
+                refresh_ofertaempleos.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
+
         listaEmpleos = new ArrayList<>();
         recyclerEmpleos = vista.findViewById(R.id.recycler_ofertaempleos);
         recyclerEmpleos.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -84,21 +95,19 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
     }
 
     private void cargarWebService_Empleos() {
-
+        internet.setVisibility(View.GONE);
         String url_Empleos = DireccionServidor+"wsnJSONllenarEmpleos.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Empleos,null,this,this);
         request.add(jsonObjectRequest);
         refresh_ofertaempleos.setRefreshing(false);
-
-
+        recyclerEmpleos.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerEmpleos.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_ofertaempleos.setRefreshing(false);
 
@@ -106,6 +115,7 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerEmpleos.setVisibility(View.VISIBLE);
 
         OfertaEmpleos empleos  = null;
         JSONArray json_empleos = response.optJSONArray("empleos");
@@ -150,7 +160,7 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
         inflater.inflate(R.menu.buscadora,menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Ingrese el evento que desea buscar");
+        searchView.setQueryHint("Ingrese el empleo que desea buscar");
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 

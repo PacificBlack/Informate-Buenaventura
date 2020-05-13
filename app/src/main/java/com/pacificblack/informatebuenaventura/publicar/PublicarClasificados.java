@@ -81,7 +81,7 @@ public class PublicarClasificados extends AppCompatActivity {
     StringRequest stringRequestclasificados;
     private static final int IMAGE_PICK_CODE = 100;
     private static final int PERMISSON_CODE = 1001;
-    TextInputLayout titulo_publicar_clasificados,descripcioncorta_publicar_clasificados,video_clasificados,descripcion1_publicar_clasificados,descripcion2_publicar_clasificados,buscar_publicar_clasificados;
+    TextInputLayout titulo_publicar_clasificados,descripcioncorta_publicar_clasificados,video_clasificados,descripcion1_publicar_clasificados,descripcion2_publicar_clasificados;
     Button publicarfinal_clasificados,subirimagenes;
     private InterstitialAd anuncioClasificados;
     Toolbar barra_clasificados;

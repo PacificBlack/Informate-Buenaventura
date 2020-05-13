@@ -72,7 +72,7 @@ public class AdaptadorClasificados extends RecyclerView.Adapter<AdaptadorClasifi
         holder.tituloclasificados.setText(listaClasificados.get(position).getTitulo_row_clasificados());
         holder.descripcioncortaclasificados.setText(listaClasificados.get(position).getDescripcion_row_clasificados());
         holder.fechapublicacionclasificados.setText(listaClasificados.get(position).getFechapublicacion_row_clasificados());
-        holder.vistaclasificados.setText(String.valueOf(listaClasificados.get(position).getVistas_bienes()));
+        holder.vistaclasificados.setText(String.valueOf(listaClasificados.get(position).getVistas_bienes())+" Visitas");
 
     }
 

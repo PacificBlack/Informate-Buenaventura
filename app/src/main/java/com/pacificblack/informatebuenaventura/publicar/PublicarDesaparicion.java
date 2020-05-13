@@ -114,11 +114,11 @@ public class PublicarDesaparicion extends AppCompatActivity {
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                whatsapp(PublicarDesaparicion.this,Whatsapp);
+                whatsapp(PublicarDesaparicion.this,"+573168593633");
             }
         });
         barra_desaparicion = findViewById(R.id.toolbar_publicar_desaparicion);
-        barra_desaparicion.setTitle("Publicar Desaparicion");
+        barra_desaparicion.setTitle("Publicar Desaparición");
         titulo_publicar_desaparicion = findViewById(R.id.publicar_titulo_desaparicion);
         descripcioncorta_publicar_desaparicion= findViewById(R.id.publicar_descripcioncorta_desaparicion);
         recompensa_publicar_desaparicion = findViewById(R.id.publicar_recompensa_desaparicion);
@@ -750,7 +750,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
             sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT,"");
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"Hola");
             sendIntent.putExtra("jid", formattedNumber +"@s.whatsapp.net");
             sendIntent.setPackage("com.whatsapp");
             activity.startActivity(sendIntent);

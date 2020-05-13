@@ -57,7 +57,7 @@ public class AdaptadorEncuestas extends RecyclerView.Adapter<AdaptadorEncuestas.
         holder.tituloencuestas.setText(listaEncuestas.get(position).getTitulo_row_encuestas());
         holder.descripcioncortaencuestas.setText(listaEncuestas.get(position).getDescripcion_row_encuestas());
         holder.fechapublicacionencuestas.setText(listaEncuestas.get(position).getFechapublicacion_row_encuestas());
-        holder.vistaencuestas.setText(String.valueOf(listaEncuestas.get(position).getVistas_encuestas()));
+        holder.vistaencuestas.setText(String.valueOf(listaEncuestas.get(position).getVistas_encuestas())+" Visitas");
         if (listaEncuestas.get(position).getImagen1_encuestas() != null){
 
             Picasso.get().load(listaEncuestas.get(position).getImagen1_encuestas())

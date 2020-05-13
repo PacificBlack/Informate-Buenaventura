@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/fondodesaparecidossinimagen"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center"
@@ -18,21 +18,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryDark"
+        android:background="#2C3079"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
 
-    <ProgressBar
-        android:id="@+id/CargandoActualizar_desaparicion"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:max="100"
-        android:progressTint="#F44336"
-        tools:visibility="visible" />
 
     <ScrollView
         android:paddingTop="@android:dimen/app_icon_size"
@@ -52,24 +42,26 @@
 
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
-                    android:layout_width="168dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="199dp"
+                    android:layout_height="65dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="31dp"
+                    android:layout_marginEnd="-2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Publica una desaparición en nuestra app"
+                    android:text="Actualiza una desaparición"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:fontFamily="@font/righteous"
+                    />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    app:srcCompat="@drawable/desaparecidossf" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -110,11 +102,13 @@
                         <ImageButton
                             android:id="@+id/actualizar_buscar_desaparicion"
                             android:layout_width="wrap_content"
-                            android:layout_height="60dp"
+                            android:layout_height="41dp"
+                            android:layout_gravity="center"
                             android:layout_marginTop="4dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_search_black_24dp"
-                            tools:ignore="VectorDrawableCompat" />
+                            android:background="@android:color/transparent"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_buscar" />
 
                     </LinearLayout>
 

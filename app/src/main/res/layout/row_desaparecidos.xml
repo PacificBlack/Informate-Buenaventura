@@ -10,13 +10,15 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="15dp">
+        android:layout_margin="15dp"
+        app:cardCornerRadius="8dp"
+        android:elevation="@dimen/cardview_default_elevation">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/imagen_row_desaparecidos"
@@ -30,50 +32,58 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:id="@+id/titulo_row_desaparecidos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/bree_serif"
+                    android:fontFamily="@font/cabin_semibold"
                     android:text="@string/titulo"
                     android:textColor="#000"
-                    android:textSize="18sp" />
+                    android:textSize="15sp"
+                    />
 
                 <TextView
                     android:id="@+id/descripcion_row_desaparecidos"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:fontFamily="@font/noto_sans"
-                    android:text="@string/descripcion"
-                    android:textColor="#555" />
+                    android:textSize="12sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="El historial de traducción pronto estará disponible solo cuando inicies sesión y se gestionará de forma centralizada desde Mi actividad. El historial."
+                    android:textColor="#555"
+                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/fecha_row_desaparecidos"
                     tools:ignore="SmallSp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/dancing_script"
+                    android:fontFamily="@font/ubuntu_medium"
                     android:text="@string/fecha"
-                    android:textSize="10sp" />
+                    android:textSize="9sp"
+                    android:textColor="#555"
+                    android:layout_marginTop="8dp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
 
                 <TextView
                     android:id="@+id/recompensa_row_desaparecidos"
-                    android:layout_width="91dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/keyline_1_minus_8dp"
                     android:layout_weight="2"
-                    android:fontFamily="@font/baloo"
-                    android:text="@string/recompensa" />
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="@string/recompensa"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/vista_row_desaparecidos"
@@ -83,10 +93,9 @@
                     android:layout_marginLeft="120dp"
                     android:layout_weight="2"
                     android:baselineAligned="false"
-                    android:drawableStart="@drawable/ic_ojo_24dp"
-                    android:drawableLeft="@drawable/ic_ojo_24dp"
-                    android:fontFamily="@font/amaranth_bold"
-                    android:text="@string/cero" />
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="@string/cero"
+                    android:textSize="10sp" />
 
 
             </LinearLayout>

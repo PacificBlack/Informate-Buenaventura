@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".extras.FullImagen">
+    tools:context=".extras.FullImagen"
+    android:background="#0E0B16">
 
     <ImageView
         android:id="@+id/imagengrande"

@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,8 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
     ArrayList<Adopcion> listaAdopcion;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
+    LinearLayout internet;
+    Button reintentar;
 
     private SwipeRefreshLayout refresh_adopcion;
 
@@ -66,6 +70,15 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
          View vista = inflater.inflate(R.layout.fragment_adopcion, container, false);
 
+        internet = vista.findViewById(R.id.internet_fragment_adopcion);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_adopcion);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Adopcion();
+                refresh_adopcion.setRefreshing(true);
+            }
+        });
          setHasOptionsMenu(true);
 
         listaAdopcion = new ArrayList<>();
@@ -93,29 +106,27 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
     //TODO: Aqui va todo lo de obtener de la base de datos
 
     private void cargarWebService_Adopcion() {
-
+        internet.setVisibility(View.GONE);
         String url_adopcion = DireccionServidor+"wsnJSONllenarAdopcion.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_adopcion,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_adopcion.setRefreshing(false);
+        recyclerAdopcion.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerAdopcion.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_adopcion.setRefreshing(false);
-
-
     }
 
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerAdopcion.setVisibility(View.VISIBLE);
 
         Adopcion adopcion = null;
 

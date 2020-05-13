@@ -10,13 +10,13 @@ public class Donaciones implements Serializable {
     private String titulo_row_donaciones,descripcion_row_donaciones,fechapublicacion_row_donaciones;
     private String imagen1_donaciones,imagen2_donaciones;
     private int vistas_donaciones,meta_row_donaciones;
-    private String descripcion1_donaciones;
+    private String descripcion1_donaciones,video_donaciones;
 
     public Donaciones() {
     }
 
 
-    public Donaciones(int id_donaciones, String titulo_row_donaciones, String descripcion_row_donaciones, String fechapublicacion_row_donaciones, String imagen1_donaciones, String imagen2_donaciones, int vistas_donaciones, int meta_row_donaciones, String descripcion1_donaciones) {
+    public Donaciones(int id_donaciones, String titulo_row_donaciones, String descripcion_row_donaciones, String fechapublicacion_row_donaciones, String imagen1_donaciones, String imagen2_donaciones, int vistas_donaciones, int meta_row_donaciones, String descripcion1_donaciones, String video_donaciones) {
         this.id_donaciones = id_donaciones;
         this.titulo_row_donaciones = titulo_row_donaciones;
         this.descripcion_row_donaciones = descripcion_row_donaciones;
@@ -26,6 +26,15 @@ public class Donaciones implements Serializable {
         this.vistas_donaciones = vistas_donaciones;
         this.meta_row_donaciones = meta_row_donaciones;
         this.descripcion1_donaciones = descripcion1_donaciones;
+        this.video_donaciones = video_donaciones;
+    }
+
+    public String getVideo_donaciones() {
+        return video_donaciones;
+    }
+
+    public void setVideo_donaciones(String video_donaciones) {
+        this.video_donaciones = video_donaciones;
     }
 
     public int getId_donaciones() {

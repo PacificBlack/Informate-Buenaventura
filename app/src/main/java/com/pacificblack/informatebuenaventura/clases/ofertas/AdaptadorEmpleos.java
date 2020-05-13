@@ -51,8 +51,8 @@ public class AdaptadorEmpleos extends RecyclerView.Adapter<AdaptadorEmpleos.Empl
         holder.tituloempleos.setText(listaEmpleos.get(position).getTitulo_row_ofertasempleos());
         holder.descripcionempleos.setText(listaEmpleos.get(position).getDescripcion_row_ofertasempleos());
         holder.fechaempleos.setText(listaEmpleos.get(position).getFechapublicacion_row_ofertasempleos());
-        holder.necesidadempleos.setText(listaEmpleos.get(position).getNecesidad_row_ofertasempleos());
-        holder.vistaempleos.setText(String.valueOf(listaEmpleos.get(position).getVistas_ofertasempleos()));
+        holder.necesidadempleos.setText("Se precisa: "+listaEmpleos.get(position).getNecesidad_row_ofertasempleos());
+        holder.vistaempleos.setText(String.valueOf(listaEmpleos.get(position).getVistas_ofertasempleos())+" Visitas");
 
         if (listaEmpleos.get(position).getImagen1_ofertasempleos() != null){
 

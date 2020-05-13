@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -50,20 +52,29 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_ofertaservicios;
     AdaptadorServicios adaptadorServicios;
-
+    LinearLayout internet;
+    Button reintentar;
 
 
     public OfertaServiciosFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-
-                                 Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_ofertaservicios, container, false);
+
+        internet = vista.findViewById(R.id.internet_fragment_servicios);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_servicios);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Servicios();
+                refresh_ofertaservicios.setRefreshing(true);
+            }
+        });
+
         setHasOptionsMenu(true);
         listaServicios = new ArrayList<>();
         recyclerServicios = vista.findViewById(R.id.recycler_ofertaservicios);
@@ -87,21 +98,19 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
 
     private void cargarWebService_Servicios() {
-
+        internet.setVisibility(View.GONE);
         String url_Servicios = DireccionServidor+"wsnJSONllenarServicios.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Servicios,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_ofertaservicios.setRefreshing(false);
-
+        recyclerServicios.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerServicios.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_ofertaservicios.setRefreshing(false);
 
@@ -109,6 +118,7 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerServicios.setVisibility(View.VISIBLE);
 
         OfertaServicios servicios  = null;
         JSONArray json_servicios = response.optJSONArray("servicios");

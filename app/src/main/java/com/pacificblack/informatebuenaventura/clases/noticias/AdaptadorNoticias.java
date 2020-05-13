@@ -62,7 +62,7 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.No
         holder.titulonoticias.setText(listaNoticias.get(position).getTitulo_row_noticias());
         holder.descripcionnoticias.setText(listaNoticias.get(position).getDescripcion_row_noticias());
         holder.fechanoticias.setText(listaNoticias.get(position).getFechapublicacion_row_noticias());
-        holder.vistanoticias.setText(String.valueOf(listaNoticias.get(position).getVistas_noticias()));
+        holder.vistanoticias.setText(String.valueOf(listaNoticias.get(position).getVistas_noticias())+" Visitas");
 
         if (listaNoticias.get(position).getImagen1_noticias() != null){
 

@@ -48,7 +48,7 @@ public class AdaptadorDirectorio extends RecyclerView.Adapter<AdaptadorDirectori
 
         holder.titulodirectorio.setText(listaDirectorio.get(position).getTitulo_row_directorio());
         holder.descripcioncortadirectorio.setText(listaDirectorio.get(position).getDescripcion_row_directorio());
-        holder.contactosdirectorio.setText(listaDirectorio.get(position).getContactos_row_directorio());
+        holder.contactosdirectorio.setText("Contactos: "+listaDirectorio.get(position).getContactos_row_directorio());
         holder.fechapublicaciondirectorio.setText(listaDirectorio.get(position).getFechapublicacion_row_directorio());
         holder.vistadirectorio.setText(String.valueOf(listaDirectorio.get(position).getVistas_row_directorio()));
 

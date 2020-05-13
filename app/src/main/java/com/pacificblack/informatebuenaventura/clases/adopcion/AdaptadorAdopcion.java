@@ -68,7 +68,7 @@ public class AdaptadorAdopcion extends RecyclerView.Adapter<AdaptadorAdopcion.Ad
         holder.tituloadopcion.setText(listaAdopcion.get(position).getTitulo_row_adopcion());
         holder.descripcioncortaadopcion.setText(listaAdopcion.get(position).getDescripcion_row_adopcion());
         holder.fechapublicacionadopcion.setText(listaAdopcion.get(position).getFechapublicacion_row_desaparecidos());
-        holder.vistaadopcion.setText(String.valueOf(listaAdopcion.get(position).getVistas_adopcion()));
+        holder.vistaadopcion.setText(String.valueOf(listaAdopcion.get(position).getVistas_adopcion())+" Visitas");
 
     }
 

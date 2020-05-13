@@ -138,8 +138,6 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
                 whatsapp(ActualizarDesaparicion.this,Whatsapp);
             }
         });
-        cargandoactualizar = findViewById(R.id.CargandoActualizar_desaparicion);
-        cargandoactualizar.setVisibility(View.GONE);
         barra_desaparicion = findViewById(R.id.toolbar_actualizar_desaparicion);
         barra_desaparicion.setTitle("Actualizar Desaparicion");
         titulo_actualizar_desaparicion = findViewById(R.id.actualizar_titulo_desaparicion);

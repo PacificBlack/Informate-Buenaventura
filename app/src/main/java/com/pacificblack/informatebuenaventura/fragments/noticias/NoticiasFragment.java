@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -47,16 +49,14 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
 
     RecyclerView recyclerNoticias;
     ArrayList<Noticias> listaNoticias;
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-
     private SwipeRefreshLayout refresh_noticias;
     AdaptadorNoticias adaptadorNoticias;
-
+    LinearLayout internet;
+    Button reintentar;
 
     public NoticiasFragment() {
-        // Required empty public constructor
     }
 
 
@@ -64,8 +64,17 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View vista = inflater.inflate(R.layout.fragment_noticias, container, false);
+
+        internet = vista.findViewById(R.id.internet_fragment_noticias);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_noticias);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Noticias();
+                refresh_noticias.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
         listaNoticias =  new ArrayList<>();
         recyclerNoticias = vista.findViewById(R.id.recycler_noticias);
@@ -86,21 +95,19 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
     }
 
     private void cargarWebService_Noticias() {
-
+        internet.setVisibility(View.GONE);
         String url_Noticias = DireccionServidor+"wsnJSONllenarNoticias.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Noticias,null,this,this);
         request.add(jsonObjectRequest);
-
         refresh_noticias.setRefreshing(false);
-
+        recyclerNoticias.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerNoticias.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_noticias.setRefreshing(false);
 
@@ -109,6 +116,7 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerNoticias.setVisibility(View.VISIBLE);
 
         Noticias noticias = null;
         JSONArray json_noticias = response.optJSONArray("noticias");
@@ -176,7 +184,7 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         inflater.inflate(R.menu.buscadora,menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint("Ingrese el evento que desea buscar");
+        searchView.setQueryHint("Ingrese la noticia que desea buscar");
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 

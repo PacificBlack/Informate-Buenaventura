@@ -1,6 +1,4 @@
 package com.pacificblack.informatebuenaventura.fragments.noticias;
-
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -38,24 +38,19 @@ import java.util.ArrayList;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.DireccionServidor;
 import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinternet;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class UltimaHoraFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener{
 
 
     RecyclerView recyclerUltima;
     ArrayList<UltimaHora> listaUltimaHora;
-
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-
     private SwipeRefreshLayout refresh_ultimahora;
     AdaptadorUltimaHora adaptadorUltimaHora;
-
+    LinearLayout internet;
+    Button reintentar;
 
     public UltimaHoraFragment() {
-        // Required empty public constructor
     }
 
 
@@ -64,6 +59,16 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
                              Bundle savedInstanceState) {
 
             View vista = inflater.inflate(R.layout.fragment_ultima_hora, container, false);
+
+        internet = vista.findViewById(R.id.internet_fragment_ultima);
+        reintentar = vista.findViewById(R.id.reintentar_fragment_ultima);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_UltimaHora();
+                refresh_ultimahora.setRefreshing(true);
+            }
+        });
             setHasOptionsMenu(true);
             listaUltimaHora = new ArrayList<>();
             recyclerUltima = vista.findViewById(R.id.recycler_ultimahora);
@@ -87,28 +92,27 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
     }
 
     private void cargarWebService_UltimaHora() {
-
+        internet.setVisibility(View.GONE);
         String url_UltimaHora = DireccionServidor+"wsnJSONllenarUltimaHora.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_UltimaHora,null,this,this);
         request.add(jsonObjectRequest);
         refresh_ultimahora.setRefreshing(false);
-
-
+        recyclerUltima.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
+        internet.setVisibility(View.VISIBLE);
+        recyclerUltima.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
         refresh_ultimahora.setRefreshing(false);
-
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerUltima.setVisibility(View.VISIBLE);
+
         UltimaHora ultimaHora = null;
         JSONArray json_ultimahora = response.optJSONArray("ultimahora");
 

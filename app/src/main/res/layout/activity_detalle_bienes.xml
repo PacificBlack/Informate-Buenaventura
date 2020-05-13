@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulOscuro"
     tools:context=".actividades.DetalleBienes">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,11 +23,12 @@
                 android:id="@+id/titulo_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/amaranth_bold"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/cabin_semibold"
                 android:gravity="center_horizontal"
                 android:text="TextView"
-                android:textSize="20dp" />
+                android:textColor="@color/blanco"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/imagen1_detalle_bienes"
@@ -33,18 +36,22 @@
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitCenter"
+                android:background="#0E0B16"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
             <TextView
                 android:id="@+id/descricion1_detalle_bienes"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"/>
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_bienes1"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
@@ -56,6 +63,7 @@
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitCenter"
+                android:background="#0E0B16"
                 tools:src="@tools:sample/backgrounds/scenic[15]" />
 
             <TextView
@@ -68,15 +76,18 @@
                 android:text="TextView" />
 
             <com.google.android.gms.ads.AdView
-                android:id="@+id/baner_bienes2"
+                android:id="@+id/baner_bienes3"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
                 ads:adUnitId="@string/banner_bienes"></com.google.android.gms.ads.AdView>
 
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -87,26 +98,45 @@
                         android:id="@+id/imagen3_detalle_bienes"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
-                        android:scaleType="fitStart"
+                        android:background="#0E0B16"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
                         android:id="@+id/imagen4_detalle_bienes"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
-                        android:scaleType="fitStart"
+                        android:background="#0E0B16"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic" />
                 </LinearLayout>
             </HorizontalScrollView>
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/palanquin_medium"
+                android:textColor="@color/blanco"
+                android:text="Precio:"
+                android:textStyle="bold"/>
+            <TextView
                 android:id="@+id/precio_detalle_bienes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff"
-                android:fontFamily="@font/signika"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textColor="@color/blanco"
                 android:text="TextView"
-                android:textStyle="bold" />
+                android:textSize="13sp"/>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/baner_bienes2"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_bienes"></com.google.android.gms.ads.AdView>
 
         </LinearLayout>
     </ScrollView>

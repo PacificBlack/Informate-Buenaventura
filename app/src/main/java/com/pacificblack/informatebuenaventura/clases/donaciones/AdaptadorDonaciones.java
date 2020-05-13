@@ -58,8 +58,8 @@ public class AdaptadorDonaciones extends RecyclerView.Adapter<AdaptadorDonacione
         holder.titulodonaciones.setText(listaDonaciones.get(position).getTitulo_row_donaciones());
         holder.descripcioncortadonaciones.setText(listaDonaciones.get(position).getDescripcion_row_donaciones());
         holder.fechapublicaciondonaciones.setText(listaDonaciones.get(position).getFechapublicacion_row_donaciones());
-        holder.metadonaciones.setText(String.valueOf(listaDonaciones.get(position).getMeta_row_donaciones()));
-        holder.vistadonaciones.setText(String.valueOf(listaDonaciones.get(position).getVistas_donaciones()));
+        holder.metadonaciones.setText(String.valueOf("Meta: "+listaDonaciones.get(position).getMeta_row_donaciones()));
+        holder.vistadonaciones.setText(String.valueOf(listaDonaciones.get(position).getVistas_donaciones())+" Visitas");
 
         //TODO: Aqui verifico si trae la imagen o no
 
