@@ -44,6 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="TextView"
                 android:fontFamily="@font/ubuntu_medium"
                 android:textSize="13sp"
@@ -91,6 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:textSize="14sp"
                 android:fontFamily="@font/palanquin_medium"
                 android:textColor="@color/blanco"
@@ -102,6 +105,8 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/ubuntu_medium"
                 android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="TextView"
                 android:textSize="13sp" />
 
@@ -109,6 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:fontFamily="@font/palanquin_medium"
                 android:text="Fecha en la que desaparecío:"
                 android:textColor="@color/blanco"
@@ -122,6 +128,8 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/ubuntu_medium"
                 android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="TextView"
                 android:textSize="13sp"
                 />
@@ -131,6 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:fontFamily="@font/palanquin_medium"
                 android:text="Recompensa que se dará si se encuentra:"
                 android:textColor="@color/blanco"
@@ -144,6 +153,8 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/ubuntu_medium"
                 android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="TextView"
                 android:textSize="13sp" />
 
@@ -152,6 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:fontFamily="@font/palanquin_medium"
                 android:text="Se encuentra:"
                 android:textColor="@color/blanco"
@@ -165,6 +177,8 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/ubuntu_medium"
                 android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="TextView"
                 android:textSize="13sp"
                 />

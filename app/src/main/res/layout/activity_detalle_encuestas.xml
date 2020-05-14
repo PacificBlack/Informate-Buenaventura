@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulOscuro"
     tools:context=".actividades.DetalleEncuestas">
-
 
 
     <ScrollView
@@ -22,27 +22,45 @@
                 android:id="@+id/titulo_detalle_encuesta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/amaranth_bold"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/cabin_semibold"
                 android:gravity="center_horizontal"
                 android:text="TextView"
-                android:textSize="20dp" />
+                android:textColor="@color/blanco"
+                android:textSize="16sp"/>
 
             <ImageView
                 android:id="@+id/imagen1_detalle_encuesta"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
+                android:background="#0E0B16"
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
             <TextView
                 android:id="@+id/descricion1_detalle_encuesta"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/palanquin_medium"
+                android:text="Marque su respuesta:"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,27 +73,35 @@
 
                     <RadioButton
                         android:id="@+id/opcion1"
-                        android:layout_width="211dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="RadioButton" />
+                        android:text="RadioButton"
+                        android:textColor="@color/blanco"
+                        />
 
                     <RadioButton
                         android:id="@+id/opcion2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="RadioButton" />
+                        android:text="RadioButton"
+                        android:textColor="@color/blanco"
+                        />
 
                     <RadioButton
                         android:id="@+id/opcion3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="RadioButton" />
+                        android:text="RadioButton"
+                        android:textColor="@color/blanco"
+                        />
 
                     <RadioButton
                         android:id="@+id/opcion4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="RadioButton" />
+                        android:text="RadioButton"
+                        android:textColor="@color/blanco"
+                        />
                 </RadioGroup>
 
                 <LinearLayout
@@ -87,37 +113,42 @@
                         android:id="@+id/votos1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/signika"
                         android:text="TextView"
-                        android:layout_marginTop="5dp"
-                        android:textSize="18sp" />
+                        android:layout_marginTop="13dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="14sp"
+                        android:textColor="#FFFFFF"/>
 
                     <TextView
                         android:id="@+id/votos2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:layout_marginTop="5dp"
-                        android:textSize="18sp"                        android:fontFamily="@font/signika"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
+                        android:textColor="#FFFFFF"
                         />
 
                     <TextView
                         android:id="@+id/votos3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/signika"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
+                        android:textColor="#FFFFFF"
                         android:text="TextView" />
 
                     <TextView
                         android:id="@+id/votos4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/signika"
+                        android:layout_marginTop="14dp"
                         android:text="TextView"
-                        android:textSize="18sp" />
+                        android:fontFamily="@font/ubuntu_medium"
+                        android:textSize="13sp"
+                        android:textColor="#FFFFFF"/>
 
                 </LinearLayout>
 
@@ -125,9 +156,13 @@
 
             <Button
                 android:id="@+id/votar_encuesta"
-                android:layout_width="match_parent"
+                android:layout_width="147dp"
+                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
-                android:text="Votar" />
+                android:layout_gravity="center"
+                android:background="@drawable/estilo_botones"
+                android:text="Votar"
+                android:textColor="@color/blanco" />
 
 
         </LinearLayout>

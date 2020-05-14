@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulOscuro"
     tools:context=".actividades.DetalleComprayVenta">
 
     <ScrollView
@@ -21,40 +22,47 @@
                 android:id="@+id/titulo_detalle_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/amaranth_bold"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/cabin_semibold"
                 android:gravity="center_horizontal"
                 android:text="TextView"
-                android:textSize="20dp" />
+                android:textColor="@color/blanco"
+                android:textSize="16sp"  />
 
             <ImageView
                 android:id="@+id/imagen1_detalle_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
+                android:background="#0E0B16"
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
             <TextView
                 android:id="@+id/descricion1_detalle_comprayventa"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"/>
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_comprayventa1"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
                 ads:adUnitId="@string/banner_comprayventa"></com.google.android.gms.ads.AdView>
 
 
-
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -64,51 +72,110 @@
                     <ImageButton
                         android:id="@+id/imagen2_detalle_comprayventa"
                         android:layout_width="409dp"
+                        android:background="#0E0B16"
                         android:layout_height="280dp"
-                        android:scaleType="fitStart"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
                         android:id="@+id/imagen3_detalle_comprayventa"
                         android:layout_width="409dp"
+                        android:background="#0E0B16"
                         android:layout_height="280dp"
-                        android:scaleType="fitStart"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic" />
                 </LinearLayout>
             </HorizontalScrollView>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/palanquin_medium"
+                android:textColor="@color/blanco"
+                android:text="Ubicación:"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/ubicacion_detalle_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/palanquin_medium"
+                android:text="Cantidades disponibles:"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
 
             <TextView
                 android:id="@+id/cantidad_detalle_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/palanquin_medium"
+                android:text="Medios de contacto:"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/contacto_detalle_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/palanquin_medium"
+                android:text="Precio:"
+                android:textColor="@color/blanco"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                />
 
             <TextView
                 android:id="@+id/precio_detalle_comprayventa"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:fontFamily="@font/ubuntu_medium"
+                android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="13sp"/>
 
             <TextView
                 android:id="@+id/descripcion2_detalle_comprayventa"
@@ -122,6 +189,7 @@
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_comprayventa2"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"

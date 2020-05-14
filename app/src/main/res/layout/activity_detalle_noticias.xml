@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulOscuro"
     tools:context=".actividades.DetalleNoticias">
 
 
@@ -22,11 +23,12 @@
                 android:id="@+id/titulo_detalle_noticias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/amaranth_bold"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/cabin_semibold"
                 android:gravity="center_horizontal"
                 android:text="TextView"
-                android:textSize="20dp" />
+                android:textColor="@color/blanco"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/imagen1_detalle_noticias"
@@ -34,22 +36,28 @@
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
                 android:scaleType="fitCenter"
+                android:background="#0E0B16"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
 
             <TextView
                 android:id="@+id/descricion1_detalle_noticias"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF" />
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_noticias1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
+                android:layout_marginTop="20dp"
                 ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
 
 
@@ -58,18 +66,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
+                android:background="#0E0B16"
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/backgrounds/scenic[15]" />
 
             <TextView
                 android:id="@+id/descripcion2_detalle_noticias"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"/>
 
             <com.google.android.gms.ads.AdView
+                android:layout_marginTop="15dp"
                 android:id="@+id/baner_noticias2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,20 +98,23 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp">
 
                     <ImageButton
                         android:id="@+id/imagen3_detalle_noticias"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
-                        android:scaleType="fitStart"
+                        android:background="#0E0B16"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
                         android:id="@+id/imagen4_detalle_noticias"
                         android:layout_width="409dp"
                         android:layout_height="280dp"
-                        android:scaleType="fitStart"
+                        android:background="#0E0B16"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -106,19 +123,24 @@
             <TextView
                 android:id="@+id/descripcion3_detalle_noticias"
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:autoLink="all"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF" />
 
 
             <com.google.android.youtube.player.YouTubePlayerView
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:id="@+id/video_noticias"/>
 
             <com.google.android.gms.ads.AdView
+                android:layout_marginTop="20dp"
                 android:id="@+id/baner_noticias3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

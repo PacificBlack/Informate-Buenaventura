@@ -44,6 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="TextView"
                 android:fontFamily="@font/ubuntu_medium"
                 android:textSize="13sp"
@@ -118,6 +120,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="14sp"
                 android:fontFamily="@font/palanquin_medium"
+                android:layout_marginLeft="5dp"
                 android:textColor="@color/blanco"
                 android:text="Precio:"
                 android:textStyle="bold"/>
@@ -126,6 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/ubuntu_medium"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/blanco"
                 android:text="TextView"
                 android:textSize="13sp"/>

@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulOscuro"
     tools:context=".actividades.DetalleDonaciones">
-
 
 
     <ScrollView
@@ -23,23 +23,26 @@
                 android:id="@+id/titulo_detalle_donaciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/amaranth_bold"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/cabin_semibold"
                 android:gravity="center_horizontal"
                 android:text="TextView"
-                android:textSize="20dp" />
+                android:textColor="@color/blanco"
+                android:textSize="16sp"/>
 
             <ImageView
                 android:id="@+id/imagen1_detalle_donaciones"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
+                android:background="#0E0B16"
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_donacion1"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
@@ -48,13 +51,18 @@
             <TextView
                 android:id="@+id/descricion1_detalle_donaciones"
                 android:layout_width="match_parent"
-                android:layout_height="296dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/ubuntu_medium"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF" />
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/baner_donacion2"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
@@ -64,21 +72,37 @@
                 android:id="@+id/imagen2_detalle_donaciones"
                 android:layout_width="409dp"
                 android:layout_height="280dp"
-                android:scaleType="fitStart"
+                android:scaleType="fitCenter"
+                android:background="#0E0B16"
+                android:layout_marginTop="10dp"
                 tools:src="@tools:sample/backgrounds/scenic[14]" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"
+                android:fontFamily="@font/palanquin_medium"
+                android:textColor="@color/blanco"
+                android:text="Meta que se desea alcanzar:"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/meta_detalle_donaciones"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/signika"
-                android:text="TextView" />
+                android:fontFamily="@font/ubuntu_medium"
+                android:textColor="@color/blanco"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="TextView"
+                android:textSize="13sp"  />
 
             <com.google.android.youtube.player.YouTubePlayerView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:id="@+id/video_donaciones"/>
         </LinearLayout>
     </ScrollView>
