@@ -57,7 +57,7 @@
                     tools:ignore="SmallSp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/ubuntu_medium"
+                    android:fontFamily="@font/ubuntu"
                     android:text="@string/fecha"
                     android:textSize="9sp"
                     android:textColor="#555"

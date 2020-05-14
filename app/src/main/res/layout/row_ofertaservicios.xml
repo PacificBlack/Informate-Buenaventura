@@ -48,7 +48,7 @@
                     android:id="@+id/descripcion_row_ofertaservicios"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/ubuntu_medium"
+                    android:fontFamily="@font/ubuntu"
                     android:textSize="12sp"
                     android:text="@string/descripcion"
                     android:textColor="#555"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/keyline_1_minus_8dp"
                     android:layout_weight="2"
-                    android:fontFamily="@font/ubuntu_medium"
+                    android:fontFamily="@font/ubuntu"
                     android:text="@string/recompensa"
                     android:textSize="10sp"  />
 

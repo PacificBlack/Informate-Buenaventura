@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:elegantTextHeight="true"
-                android:fontFamily="@font/signika"
+                android:fontFamily="@font/ubuntu"
                 android:textColor="@color/blanco"
                 android:textAlignment="gravity"
                 tools:text="Aqui va loren y su gente" />

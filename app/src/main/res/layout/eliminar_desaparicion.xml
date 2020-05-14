@@ -21,16 +21,6 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
 
-    <ProgressBar
-        android:id="@+id/CargandoEliminar_desaparicion"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:max="100"
-        android:progressTint="#F44336"/>
-
     <ScrollView
         android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
@@ -55,11 +45,11 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina una desaparición"
+                    android:text="Elimina una Desaparición"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/cabin_semibold"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp"
-                    android:fontFamily="@font/righteous"
-                    />
+                    android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
@@ -99,6 +89,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="308dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/ubuntu"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
 
@@ -120,55 +111,55 @@
                     <TextView
                         android:id="@+id/eliminar_titulo_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="69dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
                         android:text="Aqui va el titulo de su publicación"/>
 
                     <TextView
                         android:id="@+id/eliminar_descripcioncorta_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="71dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
                         android:text="Aqui va la descripcion breve de su publicacíon" />
 
                     <TextView
                         android:id="@+id/eliminar_recompensa_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
                         android:text="Aqui va la recompensa de su publicación" />
 
 
                     <TextView
                         android:id="@+id/eliminar_fechade_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
                         android:text="Aqui va el dia de su desaparición" />
 
                     <TextView
                         android:id="@+id/eliminar_estadodes_desapariciom"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
                         android:text="Aqui va el estado de su publicación" />
                     <TextView
                         android:id="@+id/eliminar_ultimolugar_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
                         android:text="Aqui va el ultimo lugar de su publicación" />
 
                     <HorizontalScrollView
@@ -186,7 +177,7 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                             <ImageButton
@@ -194,14 +185,14 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                             <ImageButton
                                 android:id="@+id/imagen3_eliminar_desaparicion"
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                         </LinearLayout>
                     </HorizontalScrollView>
@@ -209,7 +200,9 @@
                     <TextView
                         android:id="@+id/eliminar_descripcion_desaparicion"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la descripcion de su publicación" />
 
@@ -228,10 +221,10 @@
                     <TextView
                         android:id="@+id/eliminar_quese_desaparicion"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/ubuntu_medium"
-                        android:textSize="13sp"
-                        android:layout_height="31dp"
                         android:text="Aqui va el tipo de cosa que se le desaparecio"/>
 
                     <Button

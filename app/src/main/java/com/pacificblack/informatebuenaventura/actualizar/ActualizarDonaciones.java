@@ -125,7 +125,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
             }
         });
         barra_donaciones = findViewById(R.id.toolbar_actualizar_donaciones);
-        barra_donaciones.setTitle("Actualizar Clasificados");
+        barra_donaciones.setTitle("Actualizar Donaciones");
 
         titulo_actualizar_donaciones = findViewById(R.id.actualizar_titulo_donaciones);
         descripcioncorta_actualizar_donaciones = findViewById(R.id.actualizar_descripcioncorta_donaciones);

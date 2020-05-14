@@ -47,7 +47,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="TextView"
-                android:fontFamily="@font/ubuntu_medium"
+                android:fontFamily="@font/ubuntu"
                 android:textSize="13sp"
                 android:textColor="#FFFFFF"/>
 
@@ -128,7 +128,7 @@
                 android:id="@+id/precio_detalle_bienes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/ubuntu_medium"
+                android:fontFamily="@font/ubuntu"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/blanco"

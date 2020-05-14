@@ -45,7 +45,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina anuncio Funebre de nuestra app"
+                    android:text="Elimina una Aviso Funebre"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/cabin_semibold"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
@@ -86,6 +88,7 @@
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="308dp"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_height="wrap_content"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
@@ -107,14 +110,18 @@
                     <TextView
                         android:id="@+id/eliminar_titulo_funebres"
                         android:layout_width="match_parent"
-                        android:layout_height="69dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va el titulo de su publicación" />
 
                     <TextView
                         android:id="@+id/eliminar_descripcioncorta_funebres"
                         android:layout_width="match_parent"
-                        android:layout_height="71dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la descripcion breve de su publicacíon"/>
 
@@ -133,21 +140,21 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
                             <ImageButton
                                 android:id="@+id/imagen2_eliminar_funebres"
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
                             <ImageButton
                                 android:id="@+id/imagen3_eliminar_funebres"
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                         </LinearLayout>
@@ -156,7 +163,9 @@
                     <TextView
                         android:id="@+id/eliminar_descripcion1_funebres"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la descripcion de su publicación" />
 

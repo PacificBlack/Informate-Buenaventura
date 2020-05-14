@@ -87,7 +87,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
             }
         });
         barra_articulo = findViewById(R.id.toolbar_eliminar_articulo);
-        barra_articulo.setTitle("Eliminar Desaparicion");
+        barra_articulo.setTitle("Eliminar Articulo");
         titulo_eliminar_comprayventa = findViewById(R.id.eliminar_titulo_comprayventa);
         descripcioncorta_eliminar_comprayventa = findViewById(R.id.eliminar_descripcioncorta_comprayventa);
         descripcion_eliminar_comprayventa = findViewById(R.id.eliminar_descripcion_comprayventa);

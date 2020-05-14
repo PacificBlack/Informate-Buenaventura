@@ -88,7 +88,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
             }
         });
         barra_funebres = findViewById(R.id.toolbar_eliminar_funebres);
-        barra_funebres.setTitle("Eliminar Funebres");
+        barra_funebres.setTitle("Eliminar Aviso Funebre");
         id_eliminar_funebres = findViewById(R.id.id_eliminar_funebres);
         titulo_eliminar_funebres = findViewById(R.id.eliminar_titulo_funebres);
         descripcioncorta_eliminar_funebres = findViewById(R.id.eliminar_descripcioncorta_funebres);

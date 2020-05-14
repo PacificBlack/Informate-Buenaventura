@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:textSize="12sp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/ubuntu_medium"
+                    android:fontFamily="@font/ubuntu"
                     android:text="El historial de traducción pronto estará disponible solo cuando inicies sesión y se gestionará de forma centralizada desde Mi actividad. El historial."
                     android:textColor="#555"
                     android:layout_marginBottom="8dp" />

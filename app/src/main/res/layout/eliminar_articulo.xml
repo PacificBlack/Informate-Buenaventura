@@ -46,7 +46,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina una desaparición de nuestra app"
+                    android:text="Elimina un Articulo"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/cabin_semibold"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
@@ -88,6 +90,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="308dp"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/ubuntu"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
 
@@ -107,42 +110,54 @@
                     <TextView
                         android:id="@+id/eliminar_titulo_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="69dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va el titulo de su publicación" />
 
                     <TextView
                         android:id="@+id/eliminar_descripcioncorta_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="71dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:text="Aqui va la descripcion breve de su publicacíon" />
+                        android:text="Aqui va la descripción breve de su publicacíon" />
 
                     <TextView
                         android:id="@+id/eliminar_precio_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va el precio de su publicación" />
 
                     <TextView
                         android:id="@+id/eliminar_contacto_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="91dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va el contacto de su publicacíon" />
 
                     <TextView
                         android:id="@+id/eliminar_ubicacion_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la ubicación de su publicación"/>
 
                     <TextView
                         android:id="@+id/eliminar_cantidad_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="31dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la cantidad de su publicación" />
 
@@ -186,7 +201,9 @@
                     <TextView
                         android:id="@+id/eliminar_descripcion_comprayventa"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la descripcion de su publicación" />
 

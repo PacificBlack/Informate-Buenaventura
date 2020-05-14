@@ -105,7 +105,7 @@ public class PublicarServicios extends AppCompatActivity {
             }
         });
         barra_servicios = findViewById(R.id.toolbar_publicar_servicios);
-        barra_servicios.setTitle("Publicar servicios");
+        barra_servicios.setTitle("Publicar Servicios");
         opcion1_servicios = findViewById(R.id.opcion1_necesidad_servicios_publicar);
         opcion1_servicios.setText("Solo por hoy");
         opcion2_servicios = findViewById(R.id.opcion2_necesidad_servicios_publicar);

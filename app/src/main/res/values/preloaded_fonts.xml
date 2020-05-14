@@ -15,6 +15,7 @@
         <item>@font/roboto</item>
         <item>@font/roboto_bold</item>
         <item>@font/signika</item>
+        <item>@font/ubuntu</item>
         <item>@font/ubuntu_medium</item>
     </array>
 </resources>

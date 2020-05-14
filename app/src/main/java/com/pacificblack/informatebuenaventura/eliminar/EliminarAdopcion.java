@@ -74,7 +74,6 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
     private InterstitialAd anuncioAdopcion_eliminar;
     Toolbar barra_desaparicion;
     ImageView whatsapp;
-    ProgressBar cargandopublicar;
     CargandoDialog cargandoDialog = new CargandoDialog(EliminarAdopcion.this);
 
 
@@ -91,9 +90,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
             }
         });
         barra_desaparicion = findViewById(R.id.toolbar_eliminar_adopcion);
-        cargandopublicar = findViewById(R.id.CargandoEliminar_adopcion);
         barra_desaparicion.setTitle("Eliminar Adopción");
-        cargandopublicar.setVisibility(View.GONE);
         titulo_eliminar_adopcion = findViewById(R.id.eliminar_titulo_adopcion);
         descripcioncorta_eliminar_adopcion = findViewById(R.id.eliminar_descripcioncorta_adopcion);
         descripcion1_eliminar_adopcion = findViewById(R.id.eliminar_descripcion1_adopcion);

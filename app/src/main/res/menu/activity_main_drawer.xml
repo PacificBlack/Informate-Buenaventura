@@ -49,7 +49,7 @@
     </menu>
 
     </item>
-    <item android:title="@string/submenu_ofertas"  >
+    <item android:title="Negocios"  >
     <menu>
         <item
             android:id="@+id/nav_ofertaservicios"

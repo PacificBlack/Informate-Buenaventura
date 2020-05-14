@@ -87,7 +87,7 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
             }
         });
         barra_servicios = findViewById(R.id.toolbar_eliminar_servicios);
-        barra_servicios.setTitle("Eliminar Servicios");
+        barra_servicios.setTitle("Eliminar Servicio");
         titulo_eliminar_servicios = findViewById(R.id.eliminar_titulo_servicios);
         descripcioncorta_eliminar_servicios = findViewById(R.id.eliminar_descripcion_servicios);
         necesidad_eliminar_servicios = findViewById(R.id.eliminar_necesidad_servicios);

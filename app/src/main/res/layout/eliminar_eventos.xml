@@ -45,9 +45,11 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina un Donación de nuestra app"
+                    android:text="Elimina un Evento"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/cabin_semibold"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"  />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
@@ -86,6 +88,7 @@
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="290dp"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_height="wrap_content"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
@@ -107,32 +110,38 @@
                     <TextView
                         android:id="@+id/eliminar_titulo_eventos"
                         android:layout_width="match_parent"
-                        android:layout_height="69dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va el titulo de su publicación"/>
 
                     <TextView
                         android:id="@+id/eliminar_descripcion_eventos"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:text="Aqui va la descripcion de su publicación"  />
+                        android:text="Aqui va la descripción de su publicación"  />
 
                     <TextView
                         android:id="@+id/eliminar_lugar_eventos"
                         android:layout_width="match_parent"
-                        android:layout_height="91dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
-                        android:text="Aqui va el lugar de su publicacíon" />
+                        android:text="Aqui va el lugar de su publicación" />
+
 
                     <ImageButton
                         android:id="@+id/imagen1_eliminar_eventos"
-                        android:layout_width="409dp"
+                        android:layout_width="357dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
-                        android:scaleType="fitStart"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
-
 
                     <Button
                         android:id="@+id/eliminar_eventos"

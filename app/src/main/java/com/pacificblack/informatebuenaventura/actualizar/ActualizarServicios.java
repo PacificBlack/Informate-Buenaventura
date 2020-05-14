@@ -125,7 +125,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
             }
         });
         barra_servicios = findViewById(R.id.toolbar_actualizar_servicios);
-        barra_servicios.setTitle("Actualizar servicios");
+        barra_servicios.setTitle("Actualizar Servicios");
         opcion1_servicios = findViewById(R.id.opcion1_necesidad_servicios_actualizar);
         opcion1_servicios.setText("Solo por hoy");
         opcion2_servicios = findViewById(R.id.opcion2_necesidad_servicios_actualizar);

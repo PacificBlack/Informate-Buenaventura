@@ -102,7 +102,7 @@ public class PublicarFunebres extends AppCompatActivity {
             }
         });
         barra_funebres = findViewById(R.id.toolbar_publicar_funebres);
-        barra_funebres.setTitle("Anuncio Funebre");
+        barra_funebres.setTitle("Publicar Aviso Funebre");
         titulo_publicar_funebres = findViewById(R.id.publicar_titulo_funebres);
         descripcioncorta_publicar_funebres = findViewById(R.id.publicar_descripcioncorta_funebres);
         descripcion1_publicar_funebres = findViewById(R.id.publicar_descripcion1_funebres);

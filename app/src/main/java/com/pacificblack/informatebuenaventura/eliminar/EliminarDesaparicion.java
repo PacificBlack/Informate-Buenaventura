@@ -72,7 +72,6 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
     private InterstitialAd anunciodesaparicion_eliminar;
     Toolbar barra_desaparicion;
     ImageView whatsapp;
-    ProgressBar cargandopublicar;
     CargandoDialog cargandoDialog = new CargandoDialog(EliminarDesaparicion.this);
 
 
@@ -89,9 +88,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
             }
         });
         barra_desaparicion = findViewById(R.id.toolbar_eliminar_desaparicion);
-        cargandopublicar = findViewById(R.id.CargandoEliminar_desaparicion);
-        barra_desaparicion.setTitle("Eliminar Desaparicion");
-        cargandopublicar.setVisibility(View.GONE);
+        barra_desaparicion.setTitle("Eliminar Desaparición");
         titulo_eliminar_desaparicion = findViewById(R.id.eliminar_titulo_desaparicion);
         descripcioncorta_eliminar_desaparicion= findViewById(R.id.eliminar_descripcioncorta_desaparicion);
         recompensa_eliminar_desaparicion = findViewById(R.id.eliminar_recompensa_desaparicion);

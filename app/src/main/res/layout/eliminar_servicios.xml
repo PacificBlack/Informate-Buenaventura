@@ -45,7 +45,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina un Donación de nuestra app"
+                    android:fontFamily="@font/cabin_semibold"
+                    android:text="Elimina un Donación"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
@@ -86,6 +87,7 @@
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="308dp"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_height="wrap_content"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
@@ -108,21 +110,27 @@
                     <TextView
                         android:id="@+id/eliminar_titulo_servicios"
                         android:layout_width="match_parent"
-                        android:layout_height="69dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va el titulo de su publicación"  />
 
                     <TextView
                         android:id="@+id/eliminar_descripcion_servicios"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la descripcion de su publicación"/>
 
                     <TextView
                         android:id="@+id/eliminar_necesidad_servicios"
                         android:layout_width="match_parent"
-                        android:layout_height="91dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ubuntu"
+                        android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Aqui va la necesidad de su publicacíon"/>
 
@@ -132,7 +140,7 @@
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:background="@android:color/transparent"
-                        android:scaleType="fitStart"
+                        android:scaleType="fitCenter"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <Button

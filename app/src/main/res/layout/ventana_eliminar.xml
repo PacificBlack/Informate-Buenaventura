@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
-    android:layout_height="351dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/azulOscuro"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/txtclose_eliminar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="end"
-        android:gravity="center"
-        android:text="X"
-        android:textColor="@color/blanco"
-        android:textStyle="bold" />
+    android:backgroundTint="@color/azulOscuro"
+    app:cardCornerRadius="20dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,128 +15,260 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtclose_eliminar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:text="X"
+                android:textColor="@color/blanco"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="109dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    app:srcCompat="@mipmap/ic_launcher_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/cabin_semibold"
+                    android:text="@string/app_name"
+                    android:textColor="@color/blanco"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5sp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/button11"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/amaranth_bold"
-                    android:onClick="EliminarDesaparicion"
-                    android:text="Eliminar Desaparicion" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/amaranth_bold"
+                        android:text="informatebuenaventura@gmail.com"
+                        android:textColor="@color/blanco"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/amaranth_bold"
+                        android:text="Correo electronico"
+                        android:textColor="@color/blanco"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/amaranth_bold"
+                        android:text="3168593633"
+                        android:textColor="@color/blanco"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/amaranth_bold"
+                        android:text="Whatsapp"
+                        android:textColor="@color/blanco"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/estilo_botones_eliminar"
+                android:fontFamily="@font/roboto_bold"
+                android:onClick="EliminarDesaparicion"
+                android:text="Desaparición"
+                android:textColor="@color/blanco" />
 
                 <Button
                     android:id="@+id/button12"
-                    android:layout_width="match_parent"
+                    android:layout_width="101dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/amaranth_bold"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/estilo_botones_eliminar"
+                    android:fontFamily="@font/roboto_bold"
                     android:onClick="EliminarAdopcion"
-                    android:text="Eliminar Adopcion" />
+                    android:text="Adopción"
+                    android:textColor="@color/blanco"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                     <Button
                         android:id="@+id/button9"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/amaranth_bold"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
                         android:onClick="EliminarArticulo"
-                        android:text="Eliminar Articulo" />
+                        android:text="Articulo" />
 
                     <Button
                         android:id="@+id/button8"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/amaranth_bold"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
                         android:onClick="EliminarEventos"
-                        android:text="Eliminar Eventos" />
+                        android:text="Eventos"
+                        android:textColor="@color/blanco"  />
 
                     <Button
                         android:id="@+id/button7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/amaranth_bold"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
                         android:onClick="EliminarServicios"
-                        android:text="Eliminar Servicios" />
+                        android:text="Servicios" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/button71"
-                        android:layout_width="112dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/amaranth_bold"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
                         android:onClick="EliminarFunebres"
-                        android:text="Eliminar Funebres" />
+                        android:text="Funebres" />
 
                     <Button
                         android:id="@+id/button81"
-                        android:layout_width="126dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/amaranth_bold"
-                        android:onClick="EliminarDonaciones"
-                        android:text="Eliminar Donaciones" />
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
+                        android:text="Encuestas"/>
 
                     <Button
                         android:id="@+id/button61"
-                        android:layout_width="133dp"
+                        android:layout_width="107dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/amaranth_bold"
-                        android:text="Eliminar Encuestas" />
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:onClick="ActualizarDonaciones"
+                        android:text="Donaciones"
+                        android:textColor="@color/blanco" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/button4"
-                        android:layout_width="112dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/amaranth_bold"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
                         android:onClick="EliminarEmpleos"
-                        android:text="Eliminar Empleos" />
+                        android:text="Empleos" />
 
                     <Button
                         android:id="@+id/button5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/amaranth_bold"
-                        android:text="Eliminar Bienes"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
+                        android:text="Bienes"
                         android:onClick="EliminarBienes"/>
 
                     <Button
                         android:id="@+id/button6"
-                        android:layout_width="133dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/estilo_botones_eliminar"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/blanco"
                         android:onClick="EliminarClasificados"
-                        android:fontFamily="@font/amaranth_bold"
-                        android:text="Eliminar Clasificados" />
+                        android:text="Clasificados" />
 
                 </LinearLayout>
 
@@ -156,4 +279,4 @@
     </ScrollView>
 
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>
