@@ -137,7 +137,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
         });
 
         anuncioEliminarDonaciones = new InterstitialAd(this);
-        anuncioEliminarDonaciones.setAdUnitId(AnuncioEliminar);
+        anuncioEliminarDonaciones.setAdUnitId("ca-app-pub-7236340326570289/6581046293");
         anuncioEliminarDonaciones.loadAd(new AdRequest.Builder().build());
     }
 

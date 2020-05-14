@@ -146,7 +146,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         });
 
         anuncioArticulo_eliminar = new InterstitialAd(this);
-        anuncioArticulo_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioArticulo_eliminar.setAdUnitId("ca-app-pub-7236340326570289/2218295306");
         anuncioArticulo_eliminar.loadAd(new AdRequest.Builder().build());
     }
 

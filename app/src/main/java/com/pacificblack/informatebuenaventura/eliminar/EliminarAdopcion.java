@@ -145,7 +145,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         });
 
         anuncioAdopcion_eliminar = new InterstitialAd(this);
-        anuncioAdopcion_eliminar.setAdUnitId(AnuncioEliminar);
+        anuncioAdopcion_eliminar.setAdUnitId("ca-app-pub-7236340326570289/3184726766");
         anuncioAdopcion_eliminar.loadAd(new AdRequest.Builder().build());
 
     }

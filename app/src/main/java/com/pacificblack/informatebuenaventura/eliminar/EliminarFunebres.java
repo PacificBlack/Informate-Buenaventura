@@ -141,7 +141,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         });
 
         anunciofunebres = new InterstitialAd(this);
-        anunciofunebres.setAdUnitId(AnuncioEliminar);
+        anunciofunebres.setAdUnitId("ca-app-pub-7236340326570289/5264095198");
         anunciofunebres.loadAd(new AdRequest.Builder().build());
 
     }

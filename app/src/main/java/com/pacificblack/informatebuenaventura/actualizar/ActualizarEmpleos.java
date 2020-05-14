@@ -172,7 +172,7 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
             }
         });
         anuncioempleos = new InterstitialAd(this);
-        anuncioempleos.setAdUnitId(AnuncioActualizar);
+        anuncioempleos.setAdUnitId("ca-app-pub-7236340326570289/3212646928");
         anuncioempleos.loadAd(new AdRequest.Builder().build());
         gvImagenes_empleos = findViewById(R.id.actualizar_grid_empleos);
         subirimagenes.setOnClickListener(new View.OnClickListener() {

@@ -138,7 +138,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
         });
 
         anuncioempleos = new InterstitialAd(this);
-        anuncioempleos.setAdUnitId(AnuncioEliminar);
+        anuncioempleos.setAdUnitId("ca-app-pub-7236340326570289/2026723612");
         anuncioempleos.loadAd(new AdRequest.Builder().build());
     }
 

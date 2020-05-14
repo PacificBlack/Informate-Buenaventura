@@ -140,7 +140,7 @@ public class EliminarBienes extends AppCompatActivity implements Response.Listen
         });
 
         anunciobienes_eliminar = new InterstitialAd(this);
-        anunciobienes_eliminar.setAdUnitId(AnuncioEliminar);
+        anunciobienes_eliminar.setAdUnitId("ca-app-pub-7236340326570289/7459207217");
         anunciobienes_eliminar.loadAd(new AdRequest.Builder().build());
     }
 

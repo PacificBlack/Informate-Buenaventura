@@ -171,7 +171,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         });
 
         anunciofunebres = new InterstitialAd(this);
-        anunciofunebres.setAdUnitId(AnuncioActualizar);
+        anunciofunebres.setAdUnitId("ca-app-pub-7236340326570289/5072523509");
         anunciofunebres.loadAd(new AdRequest.Builder().build());
 
         gvImagenes_funebres = findViewById(R.id.grid_actualizar_funebres);

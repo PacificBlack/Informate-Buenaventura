@@ -141,7 +141,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         });
 
         anuncioClasificados_eliminar = new InterstitialAd(this);
-        anuncioClasificados_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioClasificados_eliminar.setAdUnitId("ca-app-pub-7236340326570289/5427746720");
         anuncioClasificados_eliminar.loadAd(new AdRequest.Builder().build());
 
     }

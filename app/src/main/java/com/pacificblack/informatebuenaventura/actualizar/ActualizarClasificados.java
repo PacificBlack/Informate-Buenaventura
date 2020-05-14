@@ -191,7 +191,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
         });
 
         anuncioClasificados_actualizar = new InterstitialAd(this);
-        anuncioClasificados_actualizar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioClasificados_actualizar.setAdUnitId("ca-app-pub-7236340326570289/8305385026");
         anuncioClasificados_actualizar.loadAd(new AdRequest.Builder().build());
     }
 

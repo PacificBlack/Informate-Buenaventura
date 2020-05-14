@@ -197,7 +197,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
             }
         });
         anuncioAdopcion_actualizar = new InterstitialAd(this);
-        anuncioAdopcion_actualizar.setAdUnitId(AnuncioActualizar);
+        anuncioAdopcion_actualizar.setAdUnitId("ca-app-pub-7236340326570289/8277271343");
         anuncioAdopcion_actualizar.loadAd(new AdRequest.Builder().build());
 
     }

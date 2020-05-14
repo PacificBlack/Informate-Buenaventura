@@ -186,7 +186,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         });
 
         anuncioActualizarDonaciones = new InterstitialAd(this);
-        anuncioActualizarDonaciones.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioActualizarDonaciones.setAdUnitId("ca-app-pub-7236340326570289/8464973602");
         anuncioActualizarDonaciones.loadAd(new AdRequest.Builder().build());
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override

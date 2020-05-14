@@ -179,7 +179,7 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
         });
 
         anuncioAdopcion_actualizar = new InterstitialAd(this);
-        anuncioAdopcion_actualizar.setAdUnitId(AnuncioActualizar);
+        anuncioAdopcion_actualizar.setAdUnitId("ca-app-pub-7236340326570289/7343463626");
         anuncioAdopcion_actualizar.loadAd(new AdRequest.Builder().build());
 
         actualizar_gvImagenes_adopcion = findViewById(R.id.actualizar_grid_adopcion);

@@ -204,7 +204,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
             }
         });
         anunciodesaparicion = new InterstitialAd(this);
-        anunciodesaparicion.setAdUnitId(AnuncioActualizar);
+        anunciodesaparicion.setAdUnitId("ca-app-pub-7236340326570289/8161914792");
         anunciodesaparicion.loadAd(new AdRequest.Builder().build());
         subirimagenes.setOnClickListener(new View.OnClickListener() {
             @Override

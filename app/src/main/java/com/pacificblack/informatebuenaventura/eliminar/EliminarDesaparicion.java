@@ -147,7 +147,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         });
 
         anunciodesaparicion_eliminar = new InterstitialAd(this);
-        anunciodesaparicion_eliminar.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anunciodesaparicion_eliminar.setAdUnitId("ca-app-pub-7236340326570289/3791424949");
         anunciodesaparicion_eliminar.loadAd(new AdRequest.Builder().build());
     }
     private boolean validarid(){

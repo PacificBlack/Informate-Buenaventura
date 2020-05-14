@@ -176,7 +176,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         });
 
         anunciobienes = new InterstitialAd(this);
-        anunciobienes.setAdUnitId(AnuncioActualizar);
+        anunciobienes.setAdUnitId("ca-app-pub-7236340326570289/8353486481");
         anunciobienes.loadAd(new AdRequest.Builder().build());
 
         actualizarimagenes.setOnClickListener(new View.OnClickListener() {

@@ -78,14 +78,14 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/eliminar_id_eventos"
-                            android:layout_width="314dp"
+                            android:layout_width="290dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
                             android:background="@android:drawable/screen_background_light_transparent">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:layout_width="308dp"
+                                android:layout_width="290dp"
                                 android:layout_height="wrap_content"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
@@ -95,11 +95,12 @@
                         <ImageButton
                             android:id="@+id/eliminar_buscar_eventos"
                             android:layout_width="wrap_content"
-                            android:layout_height="60dp"
+                            android:layout_height="41dp"
+                            android:layout_gravity="center"
                             android:layout_marginTop="4dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_search_black_24dp"
-                            tools:ignore="VectorDrawableCompat" />
+                            android:layout_weight="2"
+                            android:background="@android:color/transparent"
+                            android:src="@android:drawable/ic_menu_search" />
 
                     </LinearLayout>
 

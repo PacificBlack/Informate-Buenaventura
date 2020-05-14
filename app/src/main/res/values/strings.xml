@@ -103,7 +103,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
-
     <!-- Los Anuncios aqui van los id's -->
 
     <string name="banner_noticias">ca-app-pub-3940256099942544/6300978111</string>
@@ -114,8 +113,6 @@
     <string name="banner_desaparecidos">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_difuntos">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_donacion">ca-app-pub-3940256099942544/6300978111</string>
-
-
 
 
     <string name="texto_850">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
