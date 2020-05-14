@@ -6,7 +6,7 @@ public class Servidor {
     public static String DireccionServidor = "http://192.168.0.17/InformateDB/";
     //public static String DireccionServidor = "http://192.168.1.3/InformateDB/";
 
-    public static String Nohayinternet = "Revise su conexión a internet para hacer una publicación.";
+    public static String Nohayinternet = "Verifique su conexión a internet.";
 
     public static String NosepudoActualizar = "Lastimosamente no se pudo actualizar la publicación revise su conexión a internet e intentelo de nuevo";
     public static String NosepudoEliminar = "Lastimosamente no se pudo eliminar la publicación revise su conexión a internet e intentelo de nuevo";

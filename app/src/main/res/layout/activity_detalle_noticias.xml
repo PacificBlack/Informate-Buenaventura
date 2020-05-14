@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
                 android:layout_marginTop="20dp"
-                ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/8237457484"></com.google.android.gms.ads.AdView>
 
 
             <ImageView
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/8237457484"></com.google.android.gms.ads.AdView>
 
 
             <HorizontalScrollView
@@ -145,10 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_noticias"></com.google.android.gms.ads.AdView>
-
-
-
+                ads:adUnitId="ca-app-pub-7236340326570289/8237457484"></com.google.android.gms.ads.AdView>
         </LinearLayout>
     </ScrollView>
 

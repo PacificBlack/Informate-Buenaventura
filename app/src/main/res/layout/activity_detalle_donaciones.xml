@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_donacion"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/1001610079"></com.google.android.gms.ads.AdView>
 
             <TextView
                 android:id="@+id/descricion1_detalle_donaciones"
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_donacion"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/1001610079"></com.google.android.gms.ads.AdView>
 
             <ImageButton
                 android:id="@+id/imagen2_detalle_donaciones"

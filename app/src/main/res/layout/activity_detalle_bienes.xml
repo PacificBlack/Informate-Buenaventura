@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_bienes"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/7539453480"></com.google.android.gms.ads.AdView>
 
             <ImageView
                 android:id="@+id/imagen2_detalle_bienes"
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_bienes"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/7539453480"></com.google.android.gms.ads.AdView>
 
 
             <HorizontalScrollView
@@ -141,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_bienes"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/7539453480"></com.google.android.gms.ads.AdView>
 
         </LinearLayout>
     </ScrollView>

@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_clasificados"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/5080262362"></com.google.android.gms.ads.AdView>
 
 
             <ImageView
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_clasificados"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/5080262362"></com.google.android.gms.ads.AdView>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"

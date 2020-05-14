@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_desaparecidos"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/7770004882"></com.google.android.gms.ads.AdView>
 
 
             <HorizontalScrollView
@@ -199,7 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/banner_desaparecidos"></com.google.android.gms.ads.AdView>
+                ads:adUnitId="ca-app-pub-7236340326570289/7770004882"></com.google.android.gms.ads.AdView>
 
         </LinearLayout>
     </ScrollView>

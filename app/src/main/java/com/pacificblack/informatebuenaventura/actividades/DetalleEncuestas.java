@@ -57,7 +57,7 @@ public class DetalleEncuestas extends AppCompatActivity implements RewardedVideo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_encuestas);
 
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this, "ca-app-pub-7236340326570289/7068324972");
         AnuncioVotar = MobileAds.getRewardedVideoAdInstance(this);
         AnuncioVotar.setRewardedVideoAdListener((RewardedVideoAdListener) this);
 
