@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -120,11 +121,11 @@ public class ActualizarEmpleos extends AppCompatActivity implements Response.Lis
         });
         barra_empleos = findViewById(R.id.toolbar_actualizar_empleos);
         barra_empleos.setTitle("Actualizar Empleos");
+        barra_empleos.setTitleTextColor(Color.WHITE);
+
         opcion1_empleos = findViewById(R.id.opcion1_necesidad_empleos_actualizar); opcion1_empleos.setText("Urgente");
         opcion2_empleos = findViewById(R.id.opcion2_necesidad_empleos_actualizar); opcion2_empleos.setText("Sin Urgencia");
         opcion3_empleos = findViewById(R.id.opcion3_necesidad_empleos_actualizar); opcion3_empleos.setText("Para hoy mismo");
-
-
         titulo_actualizar_empleos = findViewById(R.id.actualizar_titulo_empleos);
         descripcioncorta_actualizar_empleos = findViewById(R.id.actualizar_descripcion_empleos);
         subirimagenes = findViewById(R.id.subir_imagenes_actualizar_empleos);

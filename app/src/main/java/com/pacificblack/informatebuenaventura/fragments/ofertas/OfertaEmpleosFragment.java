@@ -50,8 +50,8 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_ofertaempleos;
     AdaptadorEmpleos adaptadorEmpleos;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet,vacio;
+    Button reintentar, verificar;
 
 
     public OfertaEmpleosFragment() {
@@ -64,6 +64,17 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
         View vista = inflater.inflate(R.layout.fragment_oferta_empleos, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_empleos);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_empleos);
+        verificar = vista.findViewById(R.id.verificar_fragment_empleos);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Empleos();
+                refresh_ofertaempleos.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_empleos);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +107,7 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
     private void cargarWebService_Empleos() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Empleos = DireccionServidor+"wsnJSONllenarEmpleos.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Empleos,null,this,this);
         request.add(jsonObjectRequest);
@@ -106,11 +118,14 @@ public class OfertaEmpleosFragment extends Fragment implements Response.Listener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerEmpleos.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_ofertaempleos.setRefreshing(false);
-
+        if (listaEmpleos.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerEmpleos.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_ofertaempleos.setRefreshing(false);
+        }
     }
 
     @Override

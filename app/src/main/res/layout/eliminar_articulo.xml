@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/rojo"
+    android:background="#F25C05"
     tools:context=".eliminar.EliminarArticulo">
 
 
@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/rojo"
+        android:background="#F25C05"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -46,20 +46,19 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
+                    android:fontFamily="@font/righteous"
                     android:text="Elimina un Articulo"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/cabin_semibold"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    android:src="@drawable/comprayventa" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -177,7 +176,7 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                             <ImageView
@@ -185,14 +184,14 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                             <ImageView
                                 android:id="@+id/imagen3_eliminar_comprayventa"
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                         </LinearLayout>
 
@@ -225,7 +224,7 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_comprayventa"
                         android:text="Eliminar Articulo" />
 
                 </LinearLayout>

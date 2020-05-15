@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulOscuro"
+    android:background="#D80909"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center"
@@ -18,20 +18,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/azulOscuro"
         android:titleTextColor="@color/blanco"
+        android:background="#D80909"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
 
-    <ProgressBar
-        android:id="@+id/CargandoPublicar_adopcion"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:max="100"
-        android:progressTint="#F44336"/>
 
     <ScrollView
         android:paddingTop="@android:dimen/app_icon_size"
@@ -51,24 +42,25 @@
 
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
-                    android:layout_width="168dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="195dp"
+                    android:layout_height="63dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="31dp"
+                    android:layout_marginEnd="2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Publica una adopcion en nuestra app"
+                    android:fontFamily="@font/righteous"
+                    android:text="Publica tu Adopción"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"  />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    android:src="@drawable/adopcionicono" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -97,6 +89,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/ubuntu"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
 
@@ -119,6 +112,7 @@
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:gravity="start|top"
+                            android:fontFamily="@font/ubuntu"
                             android:hint="@string/inserte_corta"
                             android:inputType="textPersonName" />
 
@@ -140,7 +134,8 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_adopcion"
+                        android:fontFamily="@font/roboto_bold"
                         android:text="Subir imagenes"
                         android:textColor="@color/blanco" />
 
@@ -152,6 +147,7 @@
                         android:layout_marginTop="10dp"
                         app:counterEnabled="true"
                         app:counterMaxLength="850"
+                        android:fontFamily="@font/ubuntu"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -195,8 +191,9 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
-                        android:text="Publicar Adopcion"  />
+                        android:fontFamily="@font/roboto_bold"
+                        android:background="@drawable/estilo_botones_adopcion"
+                        android:text="Publicar Adopción"  />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

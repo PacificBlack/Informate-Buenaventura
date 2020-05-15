@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -126,7 +127,7 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
         });
         barra_donaciones = findViewById(R.id.toolbar_actualizar_donaciones);
         barra_donaciones.setTitle("Actualizar Donaciones");
-
+        barra_donaciones.setTitleTextColor(Color.WHITE);
         titulo_actualizar_donaciones = findViewById(R.id.actualizar_titulo_donaciones);
         descripcioncorta_actualizar_donaciones = findViewById(R.id.actualizar_descripcioncorta_donaciones);
         descripcion1_actualizar_donaciones = findViewById(R.id.actualizar_descripcion1_donaciones);

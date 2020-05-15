@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -126,6 +127,7 @@ public class ActualizarServicios extends AppCompatActivity implements Response.L
         });
         barra_servicios = findViewById(R.id.toolbar_actualizar_servicios);
         barra_servicios.setTitle("Actualizar Servicios");
+        barra_servicios.setTitleTextColor(Color.WHITE);
         opcion1_servicios = findViewById(R.id.opcion1_necesidad_servicios_actualizar);
         opcion1_servicios.setText("Solo por hoy");
         opcion2_servicios = findViewById(R.id.opcion2_necesidad_servicios_actualizar);

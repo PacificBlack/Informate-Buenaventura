@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         app:cardCornerRadius="8dp"
-        android:elevation="@dimen/cardview_default_elevation">
+        android:elevation="@dimen/cardview_default_elevation"
+        android:backgroundTint="#0E0B19">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +49,7 @@
                         android:layout_marginBottom="8dp"
                         android:fontFamily="@font/cabin_semibold"
                         android:text="@string/titulo"
-                        android:textColor="#000"
+                        android:textColor="@color/blanco"
                         android:textSize="15sp" />
 
                     <TextView
@@ -57,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/ubuntu"
                         android:text="@string/descripcion"
-                        android:textColor="#555" />
+                        android:textColor="@color/blanco" />
 
                     <TextView
                         android:id="@+id/fecha_row_ultimahora"
@@ -65,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/ubuntu_medium"
                         android:text="@string/fecha"
-                        android:textColor="#555"
+                        android:textColor="@color/blanco"
                         android:textSize="9sp"
                         android:layout_marginTop="10dp" />
                 </LinearLayout>

@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -105,6 +106,7 @@ public class PublicarBienes extends AppCompatActivity  {
         });
         barra_bienes = findViewById(R.id.toolbar_publicar_bienes);
         barra_bienes.setTitle("Publicar Bienes");
+        barra_bienes.setTitleTextColor(Color.WHITE);
         titulo_publicar_bienes = findViewById(R.id.publicar_titulo_bienes);
         descripcioncorta_publicar_bienes = findViewById(R.id.publicar_descripcioncorta_bienes);
         descripcion1_publicar_bienes = findViewById(R.id.publicar_descripcion1_bienes);

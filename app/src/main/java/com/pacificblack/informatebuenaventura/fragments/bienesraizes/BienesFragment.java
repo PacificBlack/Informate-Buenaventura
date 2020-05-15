@@ -52,8 +52,8 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
     RecyclerView recyclerBienes;
     ArrayList<Bienes> listaBienes;
     RequestQueue request;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
     JsonObjectRequest jsonObjectRequest;
 
     private SwipeRefreshLayout refresh_bienes;
@@ -63,7 +63,6 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
 
     public BienesFragment() {
-        // Required empty public constructor
     }
 
 
@@ -73,6 +72,17 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
         View vista = inflater.inflate(R.layout.fragment_bienes, container, false);
         internet = vista.findViewById(R.id.internet_fragment_bienes);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_bienes);
+        verificar = vista.findViewById(R.id.verificar_fragment_bienes);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Bienes();
+                refresh_bienes.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_bienes);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +114,7 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
     private void cargarWebService_Bienes() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_bienes = DireccionServidor+"wsnJSONllenarBienes.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_bienes,null,this,this);
         request.add(jsonObjectRequest);
@@ -114,10 +125,13 @@ public class BienesFragment extends Fragment implements Response.Listener<JSONOb
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
+        if (listaBienes.isEmpty()){
+            vacio.setVisibility(View.VISIBLE);
+        }
+        else {internet.setVisibility(View.VISIBLE);
         recyclerBienes.setVisibility(View.GONE);
         Log.i("ERROR",error.toString());
-        refresh_bienes.setRefreshing(false);
+        refresh_bienes.setRefreshing(false);}
     }
 
     @Override

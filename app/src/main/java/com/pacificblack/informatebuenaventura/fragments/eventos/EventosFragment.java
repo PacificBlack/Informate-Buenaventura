@@ -48,8 +48,8 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_eventos;
     AdaptadorEventos adaptadorEventos;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
 
     public EventosFragment() {
@@ -62,6 +62,17 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
         View vista = inflater.inflate(R.layout.fragment_eventos, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_eventos);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_eventos);
+        verificar = vista.findViewById(R.id.verificar_fragment_eventos);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Eventos();
+                refresh_eventos.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_eventos);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +106,7 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
     private void cargarWebService_Eventos() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_eventos = DireccionServidor + "wsnJSONllenarEventos.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_eventos, null, this, this);
         request.add(jsonObjectRequest);
@@ -105,10 +117,14 @@ public class EventosFragment extends Fragment implements Response.Listener<JSONO
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerEventos.setVisibility(View.GONE);
-        Log.i("ERROR", error.toString());
-        refresh_eventos.setRefreshing(false);
+        if (listaEventos.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerEventos.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_eventos.setRefreshing(false);
+        }
     }
 
     @Override

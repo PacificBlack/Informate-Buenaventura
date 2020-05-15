@@ -140,6 +140,7 @@ public class ActualizarDesaparicion extends AppCompatActivity implements Respons
         });
         barra_desaparicion = findViewById(R.id.toolbar_actualizar_desaparicion);
         barra_desaparicion.setTitle("Actualizar Desaparición");
+        barra_desaparicion.setTitleTextColor(Color.WHITE);
         titulo_actualizar_desaparicion = findViewById(R.id.actualizar_titulo_desaparicion);
         descripcioncorta_actualizar_desaparicion= findViewById(R.id.actualizar_descripcioncorta_desaparicion);
         recompensa_actualizar_desaparicion = findViewById(R.id.actualizar_recompensa_desaparicion);

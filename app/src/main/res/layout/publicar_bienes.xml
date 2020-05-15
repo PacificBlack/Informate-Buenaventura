@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulOscuro"
+    android:background="#763C10"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center"
@@ -18,7 +18,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/azulOscuro"
+        android:background="#763C10"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -47,18 +47,19 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Vender bienes raizes en nuestra app"
+                    android:fontFamily="@font/righteous"
+                    android:text="Vende un Bien Raíz"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    android:src="@drawable/bienesiconos"/>
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -88,6 +89,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/ubuntu"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
 
@@ -109,6 +111,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:ems="10"
+                            android:fontFamily="@font/ubuntu"
                             android:gravity="start|top"
                             android:hint="@string/inserte_corta"
                             android:inputType="textPersonName" />
@@ -130,7 +133,7 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_bienes"
                         android:text="Subir imagenes"
                         android:textColor="@color/blanco" />
 
@@ -149,6 +152,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:ems="10"
+                            android:fontFamily="@font/ubuntu"
                             android:gravity="start|top"
                             android:hint="@string/inserte_descripcion1"
                             android:inputType="textMultiLine|textNoSuggestions" />
@@ -167,6 +171,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
+                                android:fontFamily="@font/ubuntu"
                                 android:hint="Ingrese el precio del bien"
                                 android:inputType="text|number" />
 
@@ -186,7 +191,8 @@
                         app:counterEnabled="true"
                         android:visibility="gone"
                         app:counterMaxLength="740"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        >
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -208,8 +214,8 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
-                        android:text="Vender Bienes" />
+                        android:background="@drawable/estilo_botones_bienes"
+                        android:text="Vender" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

@@ -54,8 +54,8 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_donaciones;
     AdaptadorDonaciones adapatadorDonaciones;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
 
     public DonacionesFragment() {
@@ -68,6 +68,17 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
         View vista = inflater.inflate(R.layout.fragment_donaciones, container, false);
         internet = vista.findViewById(R.id.internet_fragment_donaciones);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_donaciones);
+        verificar = vista.findViewById(R.id.verificar_fragment_donaciones);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Donaciones();
+                refresh_donaciones.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_donaciones);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +113,7 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
     private void cargarWebService_Donaciones() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Donaciones = DireccionServidor+"wsnJSONllenarDonaciones.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Donaciones,null,this,this);
         request.add(jsonObjectRequest);
@@ -112,11 +124,14 @@ public class DonacionesFragment extends Fragment implements Response.Listener<JS
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerDonacion.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_donaciones.setRefreshing(false);
-
+        if (listaDonaciones.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerDonacion.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_donaciones.setRefreshing(false);
+        }
     }
 
     @Override

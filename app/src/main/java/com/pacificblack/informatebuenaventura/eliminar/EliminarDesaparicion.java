@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,6 +90,7 @@ public class EliminarDesaparicion extends AppCompatActivity implements Response.
         });
         barra_desaparicion = findViewById(R.id.toolbar_eliminar_desaparicion);
         barra_desaparicion.setTitle("Eliminar Desaparición");
+        barra_desaparicion.setTitleTextColor(Color.WHITE);
         titulo_eliminar_desaparicion = findViewById(R.id.eliminar_titulo_desaparicion);
         descripcioncorta_eliminar_desaparicion= findViewById(R.id.eliminar_descripcioncorta_desaparicion);
         recompensa_eliminar_desaparicion = findViewById(R.id.eliminar_recompensa_desaparicion);

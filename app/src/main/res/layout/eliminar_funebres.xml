@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/rojo"
+    android:background="@color/darkTextColor"
     tools:context=".eliminar.EliminarFunebres">
 
 
@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/rojo"
+        android:background="@color/darkTextColor"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -39,26 +39,25 @@
 
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
-                    android:layout_width="168dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="199dp"
+                    android:layout_height="65dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="31dp"
+                    android:layout_marginEnd="-2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Elimina una Aviso Funebre"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/cabin_semibold"
+                    android:text="Elimina un Aviso Funebre"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:fontFamily="@font/righteous" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    app:srcCompat="@drawable/funebresicono"/>
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -187,8 +186,8 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
-                        android:text="Eliminar Anuncio Funebre" />
+                        android:background="@drawable/estilo_botones_funebre"
+                        android:text="Eliminar Aviso Funebre" />
 
 
 

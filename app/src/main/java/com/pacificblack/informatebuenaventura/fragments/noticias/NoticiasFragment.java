@@ -53,8 +53,8 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_noticias;
     AdaptadorNoticias adaptadorNoticias;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
     public NoticiasFragment() {
     }
@@ -67,6 +67,17 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
         View vista = inflater.inflate(R.layout.fragment_noticias, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_noticias);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_noticias);
+        verificar = vista.findViewById(R.id.verificar_fragment_noticias);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Noticias();
+                refresh_noticias.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_noticias);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +107,7 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
 
     private void cargarWebService_Noticias() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Noticias = DireccionServidor+"wsnJSONllenarNoticias.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Noticias,null,this,this);
         request.add(jsonObjectRequest);
@@ -106,11 +118,14 @@ public class NoticiasFragment extends Fragment implements Response.Listener<JSON
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerNoticias.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_noticias.setRefreshing(false);
-
+        if (listaNoticias.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerNoticias.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_noticias.setRefreshing(false);
+        }
     }
 
 

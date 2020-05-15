@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -120,6 +121,7 @@ public class ActualizarClasificados extends AppCompatActivity implements Respons
         });
         barra_clasificados = findViewById(R.id.toolbar_actualizar_clasificados);
         barra_clasificados.setTitle("Actualizar Clasificados");
+        barra_clasificados.setTitleTextColor(Color.WHITE);
         titulo_actualizar_clasificados = findViewById(R.id.actualizar_titulo_clasificados);
         descripcioncorta_actualizar_clasificados = findViewById(R.id.actualizar_descripcioncorta_clasificados);
         video_clasificados = findViewById(R.id.actualizar_video_clasificados);

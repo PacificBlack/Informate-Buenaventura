@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -109,8 +110,6 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
     ImageView whatsapp;
     CargandoDialog cargandoDialog = new CargandoDialog(ActualizarAdopcion.this);
 
-    ProgressBar cargandopublicar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +123,8 @@ public class ActualizarAdopcion extends AppCompatActivity implements Response.Li
             }
         });
         barra_adopcion = findViewById(R.id.toolbar_actualizar_adopcion);
-        cargandopublicar = findViewById(R.id.CargandoActualizar_adopcion);
-        barra_adopcion.setTitle("Publicar Adopción");
-        cargandopublicar.setVisibility(View.GONE);
+        barra_adopcion.setTitle("Actualizar Adopción");
+        barra_adopcion.setTitleTextColor(Color.WHITE);
         titulo_actualizar_adopcion = findViewById(R.id.actualizar_titulo_adopcion);
         descripcioncorta_actualizar_adopcion = findViewById(R.id.actualizar_descripcioncorta_adopcion);
         descripcion1_actualizar_adopcion = findViewById(R.id.actualizar_descripcion1_adopcion);

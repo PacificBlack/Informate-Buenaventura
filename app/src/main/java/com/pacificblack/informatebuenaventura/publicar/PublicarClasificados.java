@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -104,6 +105,7 @@ public class PublicarClasificados extends AppCompatActivity {
         });
         barra_clasificados = findViewById(R.id.toolbar_publicar_clasificados);
         barra_clasificados.setTitle("Publicar Clasificados");
+        barra_clasificados.setTitleTextColor(Color.WHITE);
         titulo_publicar_clasificados = findViewById(R.id.publicar_titulo_clasificados);
         descripcioncorta_publicar_clasificados = findViewById(R.id.publicar_descripcioncorta_clasificados);
         video_clasificados = findViewById(R.id.publicar_video_clasificados);

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/fondodesaparecidossinimagen"
+    android:background="#2C3079"
     android:focusableInTouchMode="true"
     android:gravity="center"
     tools:context=".publicar.PublicarDesaparicion">
@@ -46,7 +46,7 @@
                     android:layout_marginEnd="2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
                     android:fontFamily="@font/righteous"
-                    android:text="Publica una desaparición"
+                    android:text="Publica una Desaparición"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
@@ -86,6 +86,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
@@ -104,6 +105,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:gravity="start|top"
@@ -124,6 +126,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:gravity="start|top"
@@ -144,6 +147,7 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:drawableRight="@android:drawable/ic_menu_my_calendar"
+                        android:fontFamily="@font/ubuntu"
                         android:focusable="false"
                         android:hint=""
                         android:inputType="date"
@@ -168,24 +172,28 @@
 
                             <RadioButton
                                 android:id="@+id/opcion1_estado_desaparicion"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="211dp"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
                             <RadioButton
                                 android:id="@+id/opcion2_estado_desaparicion"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
                             <RadioButton
                                 android:id="@+id/opcion3_estado_desaparicion"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
                             <RadioButton
                                 android:id="@+id/opcion4_estado_desaparicion"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
@@ -207,6 +215,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/ubuntu"
                             android:ems="10"
                             android:gravity="start|top"
                             android:hint="Ingrese el ultimo lugar donde fue visto"
@@ -228,7 +237,7 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_desaparicion"
                         android:fontFamily="@font/amaranth_bold"
                         android:text="Subir imagenes"
                         android:textColor="@color/blanco" />
@@ -247,6 +256,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/ubuntu"
                             android:ems="10"
                             android:gravity="start|top"
                             android:hint="@string/inserte_descripcion1"
@@ -297,18 +307,21 @@
 
                             <RadioButton
                                 android:id="@+id/opcion1_estado_desaparicion_que"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
                             <RadioButton
                                 android:id="@+id/opcion2_estado_desaparicion_que"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
                             <RadioButton
                                 android:id="@+id/opcion3_estado_desaparicion_que"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
@@ -316,12 +329,14 @@
                             <RadioButton
                                 android:id="@+id/opcion4_estado_desaparicion_que"
                                 android:layout_width="match_parent"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
                             <RadioButton
                                 android:id="@+id/opcion5_estado_desaparicion_que"
                                 android:layout_width="match_parent"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_height="wrap_content"
                                 android:text="RadioButton" />
 
@@ -336,7 +351,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="20dp"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_desaparicion"
                         android:fontFamily="@font/amaranth_bold"
                         android:text="Publicar Desaparicion"
                         android:textColor="@color/blanco" />

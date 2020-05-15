@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,6 +88,7 @@ public class EliminarDonaciones extends AppCompatActivity implements Response.Li
         });
         barra_donaciones = findViewById(R.id.toolbar_eliminar_donaciones);
         barra_donaciones.setTitle("Eliminar Donaciones");
+        barra_donaciones.setTitleTextColor(Color.WHITE);
         titulo_eliminar_donaciones = findViewById(R.id.eliminar_titulo_donaciones);
         descripcioncorta_eliminar_donaciones = findViewById(R.id.eliminar_descripcioncorta_donaciones);
         descripcion1_eliminar_donaciones = findViewById(R.id.eliminar_descripcion1_donaciones);

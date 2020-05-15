@@ -119,6 +119,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
         });
         barra_desaparicion = findViewById(R.id.toolbar_publicar_desaparicion);
         barra_desaparicion.setTitle("Publicar Desaparición");
+        barra_desaparicion.setTitleTextColor(Color.WHITE);
         titulo_publicar_desaparicion = findViewById(R.id.publicar_titulo_desaparicion);
         descripcioncorta_publicar_desaparicion= findViewById(R.id.publicar_descripcioncorta_desaparicion);
         recompensa_publicar_desaparicion = findViewById(R.id.publicar_recompensa_desaparicion);

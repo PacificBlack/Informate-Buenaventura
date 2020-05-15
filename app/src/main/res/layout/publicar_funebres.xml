@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulOscuro"
+    android:background="@color/darkTextColor"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center"
@@ -18,7 +18,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/azulOscuro"
+        android:background="@color/darkTextColor"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -42,24 +42,25 @@
 
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
-                    android:layout_width="168dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="199dp"
+                    android:layout_height="65dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="31dp"
+                    android:layout_marginEnd="-2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Publica una desaparición en nuestra app"
+                    android:text="Publica un Aviso Funebre"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:fontFamily="@font/righteous" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    app:srcCompat="@drawable/funebresicono" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -88,6 +89,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
@@ -110,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:ems="10"
+                            android:fontFamily="@font/ubuntu"
                             android:gravity="start|top"
                             android:hint="@string/inserte_corta"
                             android:inputType="textPersonName" />
@@ -131,7 +134,7 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="144dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_funebre"
                         android:text="Subir imagenes"
                         android:textColor="@color/blanco" />
 
@@ -150,6 +153,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:ems="10"
+                            android:fontFamily="@font/ubuntu"
                             android:gravity="start|top"
                             android:hint="@string/inserte_descripcion1"
                             android:inputType="textMultiLine|textNoSuggestions" />
@@ -188,8 +192,8 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
-                        android:text="Publicar Anuncio Funebre"/>
+                        android:background="@drawable/estilo_botones_funebre"
+                        android:text="Publicar Aviso"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

@@ -52,8 +52,8 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_clasificados;
     AdaptadorClasificados adaptadorC;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
 
     public ClasificadosFragment() {
@@ -66,6 +66,17 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
         View vista= inflater.inflate(R.layout.fragment_clasificados, container, false);
         internet = vista.findViewById(R.id.internet_fragment_clasificados);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_clasificados);
+        verificar = vista.findViewById(R.id.verificar_fragment_clasificados);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Clasificados();
+                refresh_clasificados.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_clasificados);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +109,7 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
     private void cargarWebService_Clasificados() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Clasificados = DireccionServidor+"wsnJSONllenarClasificados.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Clasificados,null,this,this);
         request.add(jsonObjectRequest);
@@ -107,10 +119,14 @@ public class ClasificadosFragment extends Fragment implements Response.Listener<
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerClasificados.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_clasificados.setRefreshing(false);
+        if (listaClasificados.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerClasificados.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_clasificados.setRefreshing(false);
+        }
     }
 
     @Override

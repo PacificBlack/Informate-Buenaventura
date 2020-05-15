@@ -52,8 +52,8 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_desaparecidos;
     AdaptadorDesaparecidos adaptadorDesaparecidos;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
 
     public DesaparecidosFragment() {
@@ -66,6 +66,17 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
         View vista = inflater.inflate(R.layout.fragment_desaparecidos, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_desaparecidos);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_desaparecidos);
+        verificar = vista.findViewById(R.id.verificar_fragment_desaparecidos);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Desaparecidos();
+                refresh_desaparecidos.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_desaparecidos);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +110,7 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
 
     private void cargarWebService_Desaparecidos() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Desaparecidos = DireccionServidor + "wsnJSONllenarDesaparecidos.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_Desaparecidos, null, this, this);
         request.add(jsonObjectRequest);
@@ -109,10 +121,14 @@ public class DesaparecidosFragment extends Fragment implements Response.Listener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerDesaparecidos.setVisibility(View.GONE);
-        Log.i("ERROR", error.toString());
-        refresh_desaparecidos.setRefreshing(false);
+        if (listaDesaparecidos.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerDesaparecidos.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_desaparecidos.setRefreshing(false);
+        }
     }
 
     @Override

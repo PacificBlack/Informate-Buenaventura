@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -120,6 +121,7 @@ public class ActualizarFunebres extends AppCompatActivity implements Response.Li
         });
         barra_funebres = findViewById(R.id.toolbar_actualizar_funebres);
         barra_funebres.setTitle("Actualizar Funebres");
+        barra_funebres.setTitleTextColor(Color.WHITE);
         id_actualizar_funebres = findViewById(R.id.id_actualizar_funebres);
         titulo_actualizar_funebres = findViewById(R.id.actualizar_titulo_funebres);
         descripcioncorta_actualizar_funebres = findViewById(R.id.actualizar_descripcioncorta_funebres);

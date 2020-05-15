@@ -52,8 +52,8 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_ofertaservicios;
     AdaptadorServicios adaptadorServicios;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
 
     public OfertaServiciosFragment() {
@@ -66,6 +66,17 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
         View vista = inflater.inflate(R.layout.fragment_ofertaservicios, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_servicios);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_servicios);
+        verificar = vista.findViewById(R.id.verificar_fragment_servicios);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Servicios();
+                refresh_ofertaservicios.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_servicios);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +110,7 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
     private void cargarWebService_Servicios() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Servicios = DireccionServidor+"wsnJSONllenarServicios.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Servicios,null,this,this);
         request.add(jsonObjectRequest);
@@ -109,11 +121,15 @@ public class OfertaServiciosFragment extends Fragment implements Response.Listen
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerServicios.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_ofertaservicios.setRefreshing(false);
 
+        if (listaServicios.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerServicios.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_ofertaservicios.setRefreshing(false);
+        }
     }
 
     @Override

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulOscuro"
+    android:background="@color/darkTextColor"
     tools:context=".actividades.DetalleDifuntos">
 
     <ScrollView
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
                 android:layout_marginTop="10dp"
-                android:background="#0E0B16"
+                android:background="@color/darkTextColor"
                 android:scaleType="fitCenter"
                 tools:src="@tools:sample/backgrounds/scenic[2]" />
 
@@ -74,7 +74,7 @@
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:scaleType="fitCenter"
-                        android:background="#0E0B16"
+                        android:background="@color/darkTextColor"
                         tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                     <ImageButton
@@ -82,7 +82,7 @@
                         android:layout_width="409dp"
                         android:layout_height="280dp"
                         android:scaleType="fitCenter"
-                        android:background="#0E0B16"
+                        android:background="@color/darkTextColor"
                         tools:src="@tools:sample/backgrounds/scenic" />
                 </LinearLayout>
             </HorizontalScrollView>

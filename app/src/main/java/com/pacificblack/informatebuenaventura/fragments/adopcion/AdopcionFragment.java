@@ -54,15 +54,14 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
     ArrayList<Adopcion> listaAdopcion;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet,vacio;
+    Button reintentar,verificar;
 
     private SwipeRefreshLayout refresh_adopcion;
 
     AdaptadorAdopcion adaptador;
 
     public AdopcionFragment() {
-        // Required empty public constructor
     }
 
 
@@ -71,6 +70,17 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
          View vista = inflater.inflate(R.layout.fragment_adopcion, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_adopcion);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_adopcion);
+        verificar = vista.findViewById(R.id.verificar_fragment_adopcion);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Adopcion();
+                refresh_adopcion.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_adopcion);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +117,7 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
     private void cargarWebService_Adopcion() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_adopcion = DireccionServidor+"wsnJSONllenarAdopcion.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_adopcion,null,this,this);
         request.add(jsonObjectRequest);
@@ -117,10 +128,15 @@ public class AdopcionFragment extends Fragment  implements Response.Listener<JSO
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerAdopcion.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_adopcion.setRefreshing(false);
+
+        if (listaAdopcion.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerAdopcion.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_adopcion.setRefreshing(false);
+        }
     }
 
 

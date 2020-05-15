@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,6 +92,7 @@ public class EliminarAdopcion extends AppCompatActivity implements Response.List
         });
         barra_desaparicion = findViewById(R.id.toolbar_eliminar_adopcion);
         barra_desaparicion.setTitle("Eliminar Adopción");
+        barra_desaparicion.setTitleTextColor(Color.WHITE);
         titulo_eliminar_adopcion = findViewById(R.id.eliminar_titulo_adopcion);
         descripcioncorta_eliminar_adopcion = findViewById(R.id.eliminar_descripcioncorta_adopcion);
         descripcion1_eliminar_adopcion = findViewById(R.id.eliminar_descripcion1_adopcion);

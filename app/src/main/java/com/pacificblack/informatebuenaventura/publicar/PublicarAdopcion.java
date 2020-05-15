@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,7 +89,6 @@ public class PublicarAdopcion extends AppCompatActivity {
     private InterstitialAd anuncioAdopcion;
     Toolbar barra_adopcion;
     ImageView whatsapp;
-    ProgressBar cargandopublicar;
     CargandoDialog cargandoDialog = new CargandoDialog(PublicarAdopcion.this);
 
 
@@ -105,9 +105,8 @@ public class PublicarAdopcion extends AppCompatActivity {
             }
         });
         barra_adopcion = findViewById(R.id.toolbar_publicar_adopcion);
-        cargandopublicar = findViewById(R.id.CargandoPublicar_adopcion);
         barra_adopcion.setTitle("Publicar Adopción");
-        cargandopublicar.setVisibility(View.GONE);
+        barra_adopcion.setTitleTextColor(Color.WHITE);
         titulo_publicar_adopcion = findViewById(R.id.publicar_titulo_adopcion);
         descripcioncorta_publicar_adopcion = findViewById(R.id.publicar_descripcioncorta_adopcion);
         descripcion1_publicar_adopcion = findViewById(R.id.publicar_descripcion1_adopcion);

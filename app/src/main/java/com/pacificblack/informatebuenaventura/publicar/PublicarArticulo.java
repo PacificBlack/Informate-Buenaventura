@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -110,6 +111,7 @@ public class PublicarArticulo extends AppCompatActivity {
         });
         barra_articulo = findViewById(R.id.toolbar_publicar_articulo);
         barra_articulo.setTitle("Publicar Articulo");
+        barra_articulo.setTitleTextColor(Color.WHITE);
         titulo_publicar_comprayventa = findViewById(R.id.publicar_titulo_comprayventa);
         descripcioncorta_publicar_comprayventa = findViewById(R.id.publicar_descripcioncorta_comprayventa);
         descripcion_publicar_comprayventa = findViewById(R.id.publicar_descripcion_comprayventa);

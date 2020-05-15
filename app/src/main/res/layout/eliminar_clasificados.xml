@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/rojo"
+    android:background="#559F22"
     tools:context=".eliminar.EliminarClasificados">
 
     <Toolbar
@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/rojo"
+        android:background="#559F22"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -46,20 +46,19 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
+                    android:fontFamily="@font/righteous"
                     android:text="Elimina un Clasificado"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/cabin_semibold"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    android:src="@drawable/clasificadosicono" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -206,7 +205,7 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_clasificados"
                         android:text="Eliminar Clasificado" />
 
 

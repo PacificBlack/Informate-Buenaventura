@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -105,7 +106,7 @@ public class PublicarDonaciones extends AppCompatActivity{
         });
         barra_donaciones = findViewById(R.id.toolbar_publicar_donaciones);
         barra_donaciones.setTitle("Publicar Donaciones");
-
+        barra_donaciones.setTitleTextColor(Color.WHITE);
         titulo_publicar_donaciones = findViewById(R.id.publicar_titulo_donaciones);
         descripcioncorta_publicar_donaciones = findViewById(R.id.publicar_descripcioncorta_donaciones);
         descripcion1_publicar_donaciones = findViewById(R.id.publicar_descripcion1_donaciones);

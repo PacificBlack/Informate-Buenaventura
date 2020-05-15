@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -103,6 +104,7 @@ public class PublicarFunebres extends AppCompatActivity {
         });
         barra_funebres = findViewById(R.id.toolbar_publicar_funebres);
         barra_funebres.setTitle("Publicar Aviso Funebre");
+        barra_funebres.setTitleTextColor(Color.WHITE);
         titulo_publicar_funebres = findViewById(R.id.publicar_titulo_funebres);
         descripcioncorta_publicar_funebres = findViewById(R.id.publicar_descripcioncorta_funebres);
         descripcion1_publicar_funebres = findViewById(R.id.publicar_descripcion1_funebres);

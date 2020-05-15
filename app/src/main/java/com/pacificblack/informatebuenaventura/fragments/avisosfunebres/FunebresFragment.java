@@ -46,7 +46,7 @@ import static com.pacificblack.informatebuenaventura.texto.Servidor.Nohayinterne
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FunebresFragment extends Fragment implements Response.Listener<JSONObject>,Response.ErrorListener   {
+public class FunebresFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     RecyclerView recyclerFunebres;
     ArrayList<Funebres> listaFunebres;
@@ -54,8 +54,8 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_funebres;
     AdaptadorFunebres adaptadorFunebres;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
     public FunebresFragment() {
         // Required empty public constructor
@@ -68,6 +68,17 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
         View vista = inflater.inflate(R.layout.fragment_funebres, container, false);
         internet = vista.findViewById(R.id.internet_fragment_funebres);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_funebres);
+        verificar = vista.findViewById(R.id.verificar_fragment_funebres);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Funebres();
+                refresh_funebres.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_funebres);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,18 +112,24 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
     private void cargarWebService_Funebres() {
         internet.setVisibility(View.GONE);
-        String url_Funebres = DireccionServidor+"wsnJSONllenarFunebres.php";
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Funebres,null,this,this);
+        vacio.setVisibility(View.GONE);
+        String url_Funebres = DireccionServidor + "wsnJSONllenarFunebres.php";
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url_Funebres, null, this, this);
         request.add(jsonObjectRequest);
         refresh_funebres.setRefreshing(false);
         recyclerFunebres.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerFunebres.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_funebres.setRefreshing(false);
+        if (listaFunebres.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerFunebres.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_funebres.setRefreshing(false);
+        }
     }
 
     @Override
@@ -127,7 +144,7 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
         try {
 
-            for (int i=0; i<json_funebres.length(); i++){
+            for (int i = 0; i < json_funebres.length(); i++) {
 
                 funebres = new Funebres();
                 JSONObject jsonObject = null;
@@ -168,8 +185,8 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
                 }
             });
         } catch (JSONException e) {
-            Toast.makeText(getContext(),"No se puede obtener",Toast.LENGTH_LONG).show();
-            Log.i("ERROR",response.toString());
+            Toast.makeText(getContext(), "No se puede obtener", Toast.LENGTH_LONG).show();
+            Log.i("ERROR", response.toString());
             e.printStackTrace();
         }
         refresh_funebres.setRefreshing(false);
@@ -177,7 +194,7 @@ public class FunebresFragment extends Fragment implements Response.Listener<JSON
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.buscadora,menu);
+        inflater.inflate(R.menu.buscadora, menu);
         MenuItem searchItem = menu.findItem(R.id.buscar);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Ingrese el entierro que desea buscar");

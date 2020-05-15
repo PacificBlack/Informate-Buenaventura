@@ -15,14 +15,15 @@
         <menu>
             <item
                 android:id="@+id/nav_ultimahora"
-                android:title="@string/menu_ultimahora" />
+                android:title="@string/menu_ultimahora"
+                android:icon="@drawable/ultimahoraicono"/>
             <item
                 android:id="@+id/nav_noticias"
-                android:icon="@drawable/ic_menu_manage"
+                android:icon="@drawable/noticiasicono"
                 android:title="@string/menu_noticias" />
             <item
                 android:id="@+id/nav_desaparecidos"
-                android:icon="@drawable/ic_desaparecidos_con_fondo"
+                android:icon="@drawable/desaparecidosicono"
                 android:title="@string/menu_desaparecidos" />
             <item
                 android:id="@+id/nav_eventos"
@@ -34,14 +35,16 @@
     <menu>
         <item
             android:id="@+id/nav_adopcion"
-            android:title="@string/menu_adopcion" />
+            android:title="@string/menu_adopcion"
+            android:icon="@drawable/adopcionicono"/>
         <item
             android:id="@+id/nav_clasificados"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/clasificadosicono"
             android:title="@string/menu_clasificados" />
         <item
             android:id="@+id/nav_funebres"
-            android:title="@string/menu_funebres" />
+            android:title="@string/menu_funebres"
+            android:icon="@drawable/funebresicono"/>
         <item
             android:id="@+id/nav_directorio"
             android:icon="@drawable/ic_menu_send"
@@ -53,17 +56,20 @@
     <menu>
         <item
             android:id="@+id/nav_ofertaservicios"
-            android:title="@string/menu_ofertaservicios" />
+            android:title="@string/menu_ofertaservicios"
+            android:icon="@drawable/serviciosicono"/>
         <item
             android:id="@+id/nav_ofertaempleos"
-            android:title="@string/menu_ofertaempleos" />
+            android:title="@string/menu_ofertaempleos"
+            android:icon="@drawable/empleoicono"/>
         <item
             android:id="@+id/nav_comprayventa"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/comprayventa"
             android:title="@string/menu_comprayventa" />
         <item
             android:id="@+id/nav_bienes"
-            android:title="@string/menu_bienes" />
+            android:title="@string/menu_bienes"
+            android:icon="@drawable/bienesiconos"/>
     </menu>
 </item>
     <item android:title="@string/submenu_extras">

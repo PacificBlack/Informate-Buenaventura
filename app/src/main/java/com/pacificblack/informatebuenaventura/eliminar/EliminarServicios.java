@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,6 +89,7 @@ public class EliminarServicios extends AppCompatActivity implements Response.Lis
         });
         barra_servicios = findViewById(R.id.toolbar_eliminar_servicios);
         barra_servicios.setTitle("Eliminar Servicio");
+        barra_servicios.setTitleTextColor(Color.WHITE);
         titulo_eliminar_servicios = findViewById(R.id.eliminar_titulo_servicios);
         descripcioncorta_eliminar_servicios = findViewById(R.id.eliminar_descripcion_servicios);
         necesidad_eliminar_servicios = findViewById(R.id.eliminar_necesidad_servicios);

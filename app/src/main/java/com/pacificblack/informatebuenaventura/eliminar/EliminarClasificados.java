@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,6 +88,7 @@ public class EliminarClasificados extends AppCompatActivity implements Response.
         });
         barra_clasificados = findViewById(R.id.toolbar_eliminar_clasificados);
         barra_clasificados.setTitle("Eliminar Clasificados");
+        barra_clasificados.setTitleTextColor(Color.WHITE);
         titulo_eliminar_clasificados = findViewById(R.id.eliminar_titulo_clasificados);
         descripcioncorta_eliminar_clasificados = findViewById(R.id.eliminar_descripcioncorta_clasificados);
         video_eliminar_clasificados = findViewById(R.id.eliminar_video_clasificados);

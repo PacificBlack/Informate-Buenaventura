@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="#763C10"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center"
@@ -18,7 +18,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryDark"
+        android:background="#763C10"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -48,18 +48,19 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="31dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Actualiza un bien raiz en nuestra app"
+                    android:fontFamily="@font/righteous"
+                    android:text="Actualiza tu Venta de Bien Raíz"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    android:src="@drawable/bienesiconos" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -73,7 +74,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:orientation="vertical"><LinearLayout
+                    android:orientation="vertical">
+
+                    <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="66dp"
                     android:orientation="horizontal">
@@ -90,6 +93,7 @@
                             android:layout_width="308dp"
                             android:layout_height="wrap_content"
                             android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
+                            android:fontFamily="@font/ubuntu"
                             android:inputType="text|number"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -119,6 +123,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
@@ -141,6 +146,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:ems="10"
+                            android:fontFamily="@font/ubuntu"
                             android:gravity="start|top"
                             android:hint="@string/inserte_corta"
                             android:inputType="textPersonName" />
@@ -164,7 +170,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="10dp"
                         android:textColor="@color/blanco"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_bienes"
                         android:text="Actualizar Imagenes" />
 
                     <HorizontalScrollView
@@ -182,7 +188,7 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                             <ImageButton
@@ -190,21 +196,21 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                             <ImageButton
                                 android:id="@+id/imagen3_actualizar_bienes"
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                             <ImageButton
                                 android:id="@+id/imagen4_actualizar_bienes"
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                         </LinearLayout>
                     </HorizontalScrollView>
@@ -224,6 +230,7 @@
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:gravity="start|top"
+                            android:fontFamily="@font/ubuntu"
                             android:hint="@string/inserte_descripcion1"
                             android:inputType="textMultiLine|textNoSuggestions" />
 
@@ -240,6 +247,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
+                                android:fontFamily="@font/ubuntu"
                                 android:hint="Ingrese el precio del bien"
                                 android:inputType="text|number" />
 
@@ -266,6 +274,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:ems="10"
+                            android:fontFamily="@font/ubuntu"
                             android:gravity="start|top"
                             android:hint="@string/inserte_descripcion2"
                             android:inputType="textMultiLine" />
@@ -277,7 +286,7 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_bienes"
                         android:text="Actualizar Bien Raíz" />
 
                 </LinearLayout>

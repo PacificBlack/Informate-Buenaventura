@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -121,6 +122,7 @@ public class ActualizarBienes extends AppCompatActivity implements Response.List
         });
         barra_bienes = findViewById(R.id.toolbar_actualizar_bienes);
         barra_bienes.setTitle("Actualizar Bienes");
+        barra_bienes.setTitleTextColor(Color.WHITE);
         titulo_actualizar_bienes = findViewById(R.id.actualizar_titulo_bienes);
         descripcioncorta_actualizar_bienes = findViewById(R.id.actualizar_descripcioncorta_bienes);
         descripcion1_actualizar_bienes = findViewById(R.id.actualizar_descripcion1_bienes);

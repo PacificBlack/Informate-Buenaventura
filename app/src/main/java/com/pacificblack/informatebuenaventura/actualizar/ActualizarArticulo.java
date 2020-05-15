@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -126,6 +127,7 @@ public class ActualizarArticulo extends AppCompatActivity implements Response.Li
         });
         barra_articulo = findViewById(R.id.toolbar_actualizar_articulo);
         barra_articulo.setTitle("Actualizar Articulo");
+        barra_articulo.setTitleTextColor(Color.WHITE);
         titulo_actualizar_comprayventa = findViewById(R.id.actualizar_titulo_comprayventa);
         descripcioncorta_actualizar_comprayventa = findViewById(R.id.actualizar_descripcioncorta_comprayventa);
         descripcion_actualizar_comprayventa = findViewById(R.id.actualizar_descripcion_comprayventa);

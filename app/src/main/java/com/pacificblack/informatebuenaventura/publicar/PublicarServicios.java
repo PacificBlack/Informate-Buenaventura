@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -106,6 +107,7 @@ public class PublicarServicios extends AppCompatActivity {
         });
         barra_servicios = findViewById(R.id.toolbar_publicar_servicios);
         barra_servicios.setTitle("Publicar Servicios");
+        barra_servicios.setTitleTextColor(Color.WHITE);
         opcion1_servicios = findViewById(R.id.opcion1_necesidad_servicios_publicar);
         opcion1_servicios.setText("Solo por hoy");
         opcion2_servicios = findViewById(R.id.opcion2_necesidad_servicios_publicar);

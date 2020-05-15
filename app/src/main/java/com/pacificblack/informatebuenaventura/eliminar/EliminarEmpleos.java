@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,7 +90,7 @@ public class EliminarEmpleos extends AppCompatActivity implements Response.Liste
         });
         barra_empleos = findViewById(R.id.toolbar_eliminar_empleos);
         barra_empleos.setTitle("Eliminar Empleos");
-
+        barra_empleos.setTitleTextColor(Color.WHITE);
         titulo_eliminar_empleos = findViewById(R.id.eliminar_titulo_empleos);
         descripcioncorta_eliminar_empleos = findViewById(R.id.eliminar_descripcion_empleos);
         necesidad_eliminar_empleos = findViewById(R.id.eliminar_necesidad_empleos);

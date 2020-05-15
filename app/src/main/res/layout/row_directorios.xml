@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         app:cardCornerRadius="8dp"
-        android:elevation="@dimen/cardview_default_elevation">
+        android:elevation="@dimen/cardview_default_elevation"
+        android:backgroundTint="#0E0B19">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +45,7 @@
                     android:layout_marginBottom="8dp"
                     android:fontFamily="@font/cabin_semibold"
                     android:text="@string/titulo"
-                    android:textColor="#000"
+                    android:textColor="@color/blanco"
                     android:textSize="15sp"/>
 
                 <TextView
@@ -54,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ubuntu"
                     android:text="El historial de traducción pronto estará disponible solo cuando inicies sesión y se gestionará de forma centralizada desde Mi actividad. El historial."
-                    android:textColor="#555"
+                    android:textColor="@color/blanco"
                     android:layout_marginTop="8dp" />
 
                 <TextView
@@ -64,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ubuntu"
                     android:text="El historial de traducción pronto estará disponible solo cuando inicies sesión y se gestionará de forma centralizada desde Mi actividad. El historial."
-                    android:textColor="#555"
+                    android:textColor="@color/blanco"
                     android:layout_marginTop="8dp"/>
 
 
@@ -87,7 +88,7 @@
                     android:text="@string/fecha"
                     android:layout_marginLeft="10dp"
                     android:textSize="9sp"
-                    android:textColor="#555"
+                    android:textColor="@color/blanco"
                     android:layout_marginTop="8dp" />
 
                 <TextView

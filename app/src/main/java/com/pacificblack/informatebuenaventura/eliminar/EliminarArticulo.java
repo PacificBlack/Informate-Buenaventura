@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,6 +89,7 @@ public class EliminarArticulo extends AppCompatActivity implements Response.List
         });
         barra_articulo = findViewById(R.id.toolbar_eliminar_articulo);
         barra_articulo.setTitle("Eliminar Articulo");
+        barra_articulo.setTitleTextColor(Color.WHITE);
         titulo_eliminar_comprayventa = findViewById(R.id.eliminar_titulo_comprayventa);
         descripcioncorta_eliminar_comprayventa = findViewById(R.id.eliminar_descripcioncorta_comprayventa);
         descripcion_eliminar_comprayventa = findViewById(R.id.eliminar_descripcion_comprayventa);

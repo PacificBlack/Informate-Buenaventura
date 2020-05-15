@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,6 +90,7 @@ public class EliminarFunebres extends AppCompatActivity implements Response.List
         });
         barra_funebres = findViewById(R.id.toolbar_eliminar_funebres);
         barra_funebres.setTitle("Eliminar Aviso Funebre");
+        barra_funebres.setTitleTextColor(Color.WHITE);
         id_eliminar_funebres = findViewById(R.id.id_eliminar_funebres);
         titulo_eliminar_funebres = findViewById(R.id.eliminar_titulo_funebres);
         descripcioncorta_eliminar_funebres = findViewById(R.id.eliminar_descripcioncorta_funebres);

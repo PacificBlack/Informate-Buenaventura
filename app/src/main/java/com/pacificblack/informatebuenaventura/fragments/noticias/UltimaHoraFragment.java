@@ -47,8 +47,8 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_ultimahora;
     AdaptadorUltimaHora adaptadorUltimaHora;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
     public UltimaHoraFragment() {
     }
@@ -61,6 +61,17 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
             View vista = inflater.inflate(R.layout.fragment_ultima_hora, container, false);
 
         internet = vista.findViewById(R.id.internet_fragment_ultima);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_ultimahora);
+        verificar = vista.findViewById(R.id.verificar_fragment_ultimahora);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_UltimaHora();
+                refresh_ultimahora.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_ultima);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +104,7 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
 
     private void cargarWebService_UltimaHora() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_UltimaHora = DireccionServidor+"wsnJSONllenarUltimaHora.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_UltimaHora,null,this,this);
         request.add(jsonObjectRequest);
@@ -103,10 +115,14 @@ public class UltimaHoraFragment extends Fragment implements Response.Listener<JS
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerUltima.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_ultimahora.setRefreshing(false);
+        if (listaUltimaHora.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerUltima.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_ultimahora.setRefreshing(false);
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -105,6 +106,7 @@ public class PublicarEmpleos extends AppCompatActivity {
         });
         barra_empleos = findViewById(R.id.toolbar_publicar_empleos);
         barra_empleos.setTitle("Ofrecer Empleos");
+        barra_empleos.setTitleTextColor(Color.WHITE);
         titulo_publicar_empleos = findViewById(R.id.publicar_titulo_empleos);
         descripcioncorta_publicar_empleos = findViewById(R.id.publicar_descripcion_empleos);
         publicarfinal_empleos = findViewById(R.id.publicar_final_empleos);

@@ -234,7 +234,7 @@
                         android:layout_marginTop="20dp"
                         android:textColor="@color/blanco"
                         android:layout_gravity="center"
-                        android:background="@drawable/estilo_botones"
+                        android:background="@drawable/estilo_botones_desaparicion"
                         android:text="Eliminar Desaparición" />
 
 

@@ -48,8 +48,8 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_directorios;
     AdaptadorDirectorio adaptadorDirectorio;
-    LinearLayout internet;
-    Button reintentar;
+    LinearLayout internet,vacio;
+    Button reintentar,verificar;
 
 
     public DirectoriosFragment() {
@@ -62,6 +62,17 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
         View vista =inflater.inflate(R.layout.fragment_directorios, container, false);
         internet = vista.findViewById(R.id.internet_fragment_directorios);
+
+        vacio = vista.findViewById(R.id.vacio_fragment_directorios);
+        verificar = vista.findViewById(R.id.verificar_fragment_directorios);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Directorios();
+                refresh_directorios.setRefreshing(true);
+            }
+        });
+
         reintentar = vista.findViewById(R.id.reintentar_fragment_directorios);
         reintentar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +106,7 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
     private void cargarWebService_Directorios() {
         internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Directorios = DireccionServidor+"wsnJSONllenarDirectorios.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Directorios,null,this,this);
         request.add(jsonObjectRequest);
@@ -105,11 +117,14 @@ public class DirectoriosFragment extends Fragment implements Response.Listener<J
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        internet.setVisibility(View.VISIBLE);
-        recyclerDirectorios.setVisibility(View.GONE);
-        Log.i("ERROR",error.toString());
-        refresh_directorios.setRefreshing(false);
-
+        if (listaDirectorios.isEmpty()){
+            vacio.setVisibility(View.VISIBLE);
+        } else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerDirectorios.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_directorios.setRefreshing(false);
+                }
     }
 
     @Override
