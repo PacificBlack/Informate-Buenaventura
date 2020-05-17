@@ -19,4 +19,79 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/internet_fragment_encuestas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="@color/azulOscuro">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="232dp"
+            android:layout_height="178dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nointernet"
+            tools:srcCompat="@drawable/nointernet" />
+
+        <Button
+            android:id="@+id/reintentar_fragment_encuestas"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/azulOscuro"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/login_bk_color"
+            android:background="@drawable/estilo_botones"
+            android:text="Reintentar"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vacio_fragment_encuestas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="@color/azulOscuro">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="232dp"
+            android:layout_height="178dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/encuestaicono"
+            tools:srcCompat="@drawable/encuestaicono" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/baloo"
+            android:gravity="center"
+            android:text="No hay publicaciones aun, \n ve y crea una y seras el primero"
+            android:textAlignment="center"
+            android:textColor="@color/blanco"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/verificar_fragment_encuestas"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/estilo_botones"
+            android:backgroundTint="@color/login_bk_color"
+            android:fontFamily="@font/averia_sans_libre_bold"
+            android:text="Verificar si hay nuevas publicaciones"
+            android:textColor="@color/azulOscuro" />
+    </LinearLayout>
+
+
 </FrameLayout>

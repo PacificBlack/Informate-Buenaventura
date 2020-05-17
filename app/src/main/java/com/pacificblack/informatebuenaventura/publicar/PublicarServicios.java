@@ -145,7 +145,7 @@ public class PublicarServicios extends AppCompatActivity {
         });
 
         anuncioservicios = new InterstitialAd(this);
-        anuncioservicios.setAdUnitId(AnuncioPublicar);
+        anuncioservicios.setAdUnitId("ca-app-pub-7236340326570289/6354735455");
         anuncioservicios.loadAd(new AdRequest.Builder().build());
     }
 
@@ -224,7 +224,7 @@ public class PublicarServicios extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

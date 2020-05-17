@@ -24,6 +24,7 @@
         android:theme="@style/AppTheme.PopupOverlay" />
 
 
+
     <ScrollView
         android:paddingTop="@android:dimen/app_icon_size"
         android:layout_width="match_parent"
@@ -39,6 +40,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/info_publicar_adopcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/estilo_botones_adopcion"
+                    android:src="@drawable/infor"
+                    tools:src="@drawable/infor" />
 
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
@@ -97,28 +109,26 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/publicar_descripcioncorta_adopcion"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="150"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/publicar_descripcioncorta_adopcion"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:ems="10"
-                            android:gravity="start|top"
-                            android:fontFamily="@font/ubuntu"
-                            android:hint="@string/inserte_corta"
-                            android:inputType="textPersonName" />
+                            app:counterEnabled="true"
+                            app:counterMaxLength="150"
+                            app:errorEnabled="true">
 
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:ems="10"
+                                android:fontFamily="@font/ubuntu"
+                                android:gravity="start|top"
+                                android:hint="@string/inserte_corta"
+                                android:inputType="textPersonName" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
-
+                        </com.google.android.material.textfield.TextInputLayout>
 
                     <GridView
                         android:id="@+id/grid_adopcion"

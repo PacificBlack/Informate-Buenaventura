@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="#8C0303"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center"
@@ -18,7 +18,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryDark"
+        android:background="#8C0303"
         android:titleTextColor="@color/blanco"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.PopupOverlay" />
@@ -42,24 +42,26 @@
 
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
-                    android:layout_width="168dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="199dp"
+                    android:layout_height="65dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="31dp"
+                    android:layout_marginEnd="-2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Publica una desaparición en nuestra app"
+                    android:text="Actualiza tu donación"
                     android:textColor="@color/whiteTextColor"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:fontFamily="@font/righteous"
+                    />
 
                 <ImageView
                     android:id="@+id/imagenprimera"
-                    android:layout_width="172dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="190dp"
+                    android:layout_height="231dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    app:srcCompat="@drawable/donacionesicono" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView
@@ -89,6 +91,7 @@
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="308dp"
+                                android:fontFamily="@font/ubuntu"
                                 android:layout_height="wrap_content"
                                 android:hint="Ingrese el id de la publicación que desea modificar o eliminar"
                                 android:inputType="text|number"/>
@@ -121,6 +124,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:hint="@string/inserte_titulo"
                             android:inputType="textPersonName" />
@@ -142,6 +146,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/ubuntu"
                             android:ems="10"
                             android:gravity="start|top"
                             android:hint="@string/inserte_corta"
@@ -163,7 +168,9 @@
                         android:id="@+id/subir_imagenes_actualizar_donaciones"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Subir imagenes" />
+                        android:textColor="@color/blanco"
+                        android:background="@drawable/estilo_botones_donaciones"
+                        android:text="Actualizar imagenes" />
 
 
                     <HorizontalScrollView
@@ -181,7 +188,7 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic[14]" />
 
                             <ImageButton
@@ -189,7 +196,7 @@
                                 android:layout_width="409dp"
                                 android:layout_height="280dp"
                                 android:background="@android:color/transparent"
-                                android:scaleType="fitStart"
+                                android:scaleType="fitCenter"
                                 tools:src="@tools:sample/backgrounds/scenic" />
                         </LinearLayout>
                     </HorizontalScrollView>
@@ -207,6 +214,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/ubuntu"
                             android:ems="10"
                             android:gravity="start|top"
                             android:hint="@string/inserte_descripcion1"
@@ -227,6 +235,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:gravity="start|top"
@@ -247,6 +256,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/ubuntu"
                             android:layout_marginTop="10dp"
                             android:ems="10"
                             android:gravity="start|top"
@@ -254,21 +264,17 @@
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <ImageButton
+                        <Button
                             android:id="@+id/actualizar_donaciones"
-                            android:layout_width="50dp"
+                            android:layout_width="210dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@android:color/transparent"
-                            app:srcCompat="@android:drawable/ic_menu_edit" />
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/blanco"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:background="@drawable/estilo_botones_donaciones"
+                            android:text="Actualizar Donación" />
 
-                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

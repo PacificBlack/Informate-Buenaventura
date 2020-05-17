@@ -142,7 +142,7 @@ public class PublicarClasificados extends AppCompatActivity {
         });
 
         anuncioClasificados = new InterstitialAd(this);
-        anuncioClasificados.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioClasificados.setAdUnitId("ca-app-pub-7236340326570289/6949631828");
         anuncioClasificados.loadAd(new AdRequest.Builder().build());
 
     }
@@ -275,7 +275,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -355,7 +355,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -436,7 +436,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -514,7 +514,7 @@ public class PublicarClasificados extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

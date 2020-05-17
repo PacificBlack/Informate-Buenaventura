@@ -136,7 +136,7 @@ public class PublicarEventos extends AppCompatActivity {
         });
 
         anuncioeventos = new InterstitialAd(this);
-        anuncioeventos.setAdUnitId(AnuncioPublicar);
+        anuncioeventos.setAdUnitId("ca-app-pub-7236340326570289/7963330599");
         anuncioeventos.loadAd(new AdRequest.Builder().build());
 
     }
@@ -214,7 +214,6 @@ public class PublicarEventos extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

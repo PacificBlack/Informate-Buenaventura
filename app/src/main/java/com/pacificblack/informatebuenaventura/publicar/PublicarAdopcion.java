@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -90,6 +91,7 @@ public class PublicarAdopcion extends AppCompatActivity {
     Toolbar barra_adopcion;
     ImageView whatsapp;
     CargandoDialog cargandoDialog = new CargandoDialog(PublicarAdopcion.this);
+    ImageButton info;
 
 
     @Override
@@ -97,6 +99,42 @@ public class PublicarAdopcion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_adopcion);
 
+        info = findViewById(R.id.info_publicar_adopcion);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PublicarAdopcion.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_instrucciones,null);
+                builder.setCancelable(true);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                TextView txt = view.findViewById(R.id.instrucciones_texto);
+                txt.setText("Titulo:\n" +
+                        "\n" +
+                        "En ese apartado debes poner un titulo corto, breve y claro para tu publicación.\n" +
+                        "\n" +
+                        "Descripción breve:\n" +
+                        "\n" +
+                        "En ese apartado debes poner el resumen breve de tu publicación, esta es muy importante ya que sera la primera descripción que el publico observará.\n" +
+                        "\n" +
+                        "Subir imágenes:\n" +
+                        "\n" +
+                        "Debes subir como mínimo 1 imagen para que tu publicación sea aprobada.\n" +
+                        "\n" +
+                        "Descripción detallada:\n" +
+                        "\n" +
+                        "En ese apartado debes explicar tu publicación de manera detallada para que el lector comprenda lo que estas dando en adopción.");
+                Button btnEntendido = view.findViewById(R.id.btentiendo);
+                btnEntendido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
         whatsapp = findViewById(R.id.whatsapp_publicar_adopcion);
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +150,7 @@ public class PublicarAdopcion extends AppCompatActivity {
         descripcion1_publicar_adopcion = findViewById(R.id.publicar_descripcion1_adopcion);
         descripcion2_publicar_adopcion = findViewById(R.id.publicar_descripcion2_adopcion);
         anuncioAdopcion = new InterstitialAd(this);
-        anuncioAdopcion.setAdUnitId(AnuncioPublicar);
+        anuncioAdopcion.setAdUnitId("ca-app-pub-7236340326570289/4115584926");
         anuncioAdopcion.loadAd(new AdRequest.Builder().build());
         gvImagenes_adopcion = findViewById(R.id.grid_adopcion);
         subirimagenes = findViewById(R.id.subir_imagenes_adopcion);
@@ -231,7 +269,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -313,7 +351,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -392,7 +430,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -468,7 +506,7 @@ public class PublicarAdopcion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

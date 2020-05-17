@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -52,6 +54,8 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
     JsonObjectRequest jsonObjectRequest;
     private SwipeRefreshLayout refresh_encuestas;
     AdaptadorEncuestas adaptadorEncuestas;
+    LinearLayout internet, vacio;
+    Button reintentar, verificar;
 
 
     public EncuestasFragment() {
@@ -64,7 +68,26 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_encuestas, container, false);
+        internet = vista.findViewById(R.id.internet_fragment_encuestas);
 
+        vacio = vista.findViewById(R.id.vacio_fragment_encuestas);
+        verificar = vista.findViewById(R.id.verificar_fragment_encuestas);
+        verificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Encuestas();
+                refresh_encuestas.setRefreshing(true);
+            }
+        });
+
+        reintentar = vista.findViewById(R.id.reintentar_fragment_encuestas);
+        reintentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarWebService_Encuestas();
+                refresh_encuestas.setRefreshing(true);
+            }
+        });
         setHasOptionsMenu(true);
 
         listaEncuestas = new ArrayList<>();
@@ -91,9 +114,9 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
 
 
     private void cargarWebService_Encuestas() {
-
+        internet.setVisibility(View.GONE);
+        vacio.setVisibility(View.GONE);
         String url_Encuestas = DireccionServidor+"wsnJSONllenarEncuestas.php";
-
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,url_Encuestas,null,this,this);
         request.add(jsonObjectRequest);
         refresh_encuestas.setRefreshing(false);
@@ -102,15 +125,21 @@ public class EncuestasFragment extends Fragment implements Response.Listener<JSO
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Toast.makeText(getContext(),Nohayinternet,Toast.LENGTH_LONG).show();
-        Log.i("ERROR",error.toString());
-        refresh_encuestas.setRefreshing(false);
-
+        if (listaEncuestas.isEmpty()) {
+            vacio.setVisibility(View.VISIBLE);
+        }else {
+            internet.setVisibility(View.VISIBLE);
+            recyclerEncuestas.setVisibility(View.GONE);
+            Log.i("ERROR", error.toString());
+            refresh_encuestas.setRefreshing(false);
+        }
 
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        recyclerEncuestas.setVisibility(View.VISIBLE);
+
         Encuestas encuestas = null;
         JSONArray json_encuestas = response.optJSONArray("encuestas");
 

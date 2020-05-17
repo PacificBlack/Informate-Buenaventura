@@ -168,7 +168,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
             }
         });
         anuncioActualizardesaparicion = new InterstitialAd(this);
-        anuncioActualizardesaparicion.setAdUnitId(AnuncioActualizar);
+        anuncioActualizardesaparicion.setAdUnitId("ca-app-pub-7236340326570289/7480114861");
         anuncioActualizardesaparicion.loadAd(new AdRequest.Builder().build());
     }
     private boolean validartitulo(){
@@ -320,7 +320,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -417,7 +417,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -515,7 +515,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -613,7 +613,7 @@ public class PublicarDesaparicion extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

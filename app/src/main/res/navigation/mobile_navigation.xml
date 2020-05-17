@@ -44,7 +44,7 @@
     <fragment
         android:id="@+id/nav_quienes"
         android:name="com.pacificblack.informatebuenaventura.fragments.quienes.QuienesFragment"
-        android:label="@string/menu_quienes"
+        android:label="Terminos y Condiciones"
         tools:layout="@layout/fragment_quienes" />
     <fragment
         android:id="@+id/nav_directorio"
@@ -91,9 +91,5 @@
         android:name="com.pacificblack.informatebuenaventura.fragments.adopcion.AdopcionFragment"
         android:label="@string/menu_adopcion"
         tools:layout="@layout/fragment_adopcion" />
-    <fragment
-        android:id="@+id/nav_buscar"
-        android:name="com.pacificblack.informatebuenaventura.fragments.buscar.BuscarFragment"
-        android:label="Buscar"
-        tools:layout="@layout/fragment_buscar" />
+
 </navigation>

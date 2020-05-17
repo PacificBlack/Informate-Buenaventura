@@ -7,7 +7,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_inicio"
-            android:icon="@drawable/ic_ib_principal_3d"
+            android:icon="@drawable/ic_ib_vector"
             android:title="@string/menu_inicio" />
     </group>
 
@@ -16,18 +16,18 @@
             <item
                 android:id="@+id/nav_ultimahora"
                 android:title="@string/menu_ultimahora"
-                android:icon="@drawable/ultimahoraicono"/>
+                android:icon="@drawable/ic_ultima_hora_vector"/>
             <item
                 android:id="@+id/nav_noticias"
-                android:icon="@drawable/noticiasicono"
+                android:icon="@drawable/ic_noticias_vector"
                 android:title="@string/menu_noticias" />
             <item
                 android:id="@+id/nav_desaparecidos"
-                android:icon="@drawable/desaparecidosicono"
+                android:icon="@drawable/ic_desaparecidos_vector"
                 android:title="@string/menu_desaparecidos" />
             <item
                 android:id="@+id/nav_eventos"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_eventos_vector"
                 android:title="@string/menu_eventos" />
         </menu>
     </item>
@@ -35,19 +35,19 @@
     <menu>
         <item
             android:id="@+id/nav_adopcion"
-            android:title="@string/menu_adopcion"
-            android:icon="@drawable/adopcionicono"/>
+            android:icon="@drawable/ic_adopcion_vector"
+            android:title="@string/menu_adopcion"/>
         <item
             android:id="@+id/nav_clasificados"
-            android:icon="@drawable/clasificadosicono"
+            android:icon="@drawable/ic_clasificados_vector"
             android:title="@string/menu_clasificados" />
         <item
             android:id="@+id/nav_funebres"
-            android:title="@string/menu_funebres"
-            android:icon="@drawable/funebresicono"/>
+            android:icon="@drawable/ic_funebres_vector"
+            android:title="@string/menu_funebres"/>
         <item
             android:id="@+id/nav_directorio"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_directorio_vector"
             android:title="@string/menu_directorios" />
     </menu>
 
@@ -56,47 +56,44 @@
     <menu>
         <item
             android:id="@+id/nav_ofertaservicios"
-            android:title="@string/menu_ofertaservicios"
-            android:icon="@drawable/serviciosicono"/>
+            android:icon="@drawable/ic_servicios_vector"
+            android:title="@string/menu_ofertaservicios"/>
         <item
             android:id="@+id/nav_ofertaempleos"
-            android:title="@string/menu_ofertaempleos"
-            android:icon="@drawable/empleoicono"/>
+            android:icon="@drawable/ic_empleo_vector"
+            android:title="@string/menu_ofertaempleos"/>
         <item
             android:id="@+id/nav_comprayventa"
-            android:icon="@drawable/comprayventa"
+            android:icon="@drawable/ic_comprayventa_vector"
             android:title="@string/menu_comprayventa" />
         <item
             android:id="@+id/nav_bienes"
-            android:title="@string/menu_bienes"
-            android:icon="@drawable/bienesiconos"/>
+            android:icon="@drawable/ic_bienes_vector"
+            android:title="@string/menu_bienes"/>
     </menu>
 </item>
     <item android:title="@string/submenu_extras">
-
         <menu>
-
-
             <item
                 android:id="@+id/nav_encuestas"
+                android:icon="@drawable/ic_encuesta_vector"
                 android:title="@string/menu_encuestas" />
             <item
                 android:id="@+id/nav_donaciones"
+                android:icon="@drawable/ic_donaciones_vector"
                 android:title="@string/menu_donaciones" />
             <item
                 android:id="@+id/nav_especiales"
-                android:icon="@drawable/ic_menu_manage"
+                android:icon="@drawable/ic_especiales_vector"
                 android:title="@string/menu_especiales" />
         </menu>
-
     </item>
     <item android:title="@string/menu_sobre">
         <menu>
             <item
                 android:id="@+id/nav_quienes"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_terminos_vector"
                 android:title="@string/menu_compartir" />
         </menu>
     </item>
-
 </menu>

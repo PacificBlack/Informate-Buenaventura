@@ -48,7 +48,6 @@
             android:background="@drawable/estilo_botones"
             android:text="Reintentar"/>
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/vacio_fragment_donaciones"
         android:layout_width="match_parent"
@@ -65,8 +64,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/ib"
-            tools:srcCompat="@drawable/ib" />
+            android:src="@drawable/donacionesicono"
+            tools:srcCompat="@drawable/donacionesicono" />
 
         <TextView
             android:layout_width="wrap_content"

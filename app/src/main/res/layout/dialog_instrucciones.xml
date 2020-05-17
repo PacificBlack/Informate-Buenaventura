@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="@color/azulOscuro"
+    android:background="@color/azulOscuro"
+    android:layout_gravity="center"
+    app:cardCornerRadius="17dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imagendialog"
+            android:layout_width="126dp"
+            android:layout_height="92dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ib"
+            tools:srcCompat="@drawable/ib" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_margin="22dp"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/instrucciones_texto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+
+                    android:fontFamily="@font/ubuntu_medium"
+                    android:text="Text"
+                    android:textColor="@color/blanco"
+                    android:textSize="14sp" />
+
+                <Button
+                android:id="@+id/btentiendo"
+                android:layout_width="119dp"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/cabin_semibold"
+                android:background="@drawable/estilo_botones_instrucciones"
+                android:text="Comprendo"
+                android:textColor="@color/darkTextColor" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+
+
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

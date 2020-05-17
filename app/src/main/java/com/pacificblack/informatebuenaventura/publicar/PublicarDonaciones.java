@@ -114,7 +114,7 @@ public class PublicarDonaciones extends AppCompatActivity{
         video_donaciones = findViewById(R.id.publicar_video_donaciones);
 
         anuncioDonaciones = new InterstitialAd(this);
-        anuncioDonaciones.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        anuncioDonaciones.setAdUnitId("ca-app-pub-7236340326570289/7084814454");
         anuncioDonaciones.loadAd(new AdRequest.Builder().build());
 
         gvImagenes_donaciones = findViewById(R.id.grid_donaciones);
@@ -277,7 +277,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -357,7 +357,7 @@ public class PublicarDonaciones extends AppCompatActivity{
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +94,7 @@ public class PublicarArticulo extends AppCompatActivity {
     private InterstitialAd anuncioArticulo;
     Toolbar barra_articulo;
     ImageView whatsapp;
+    ImageButton info;
 
     CargandoDialog cargandoDialog = new CargandoDialog(PublicarArticulo.this);
 
@@ -101,6 +103,55 @@ public class PublicarArticulo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_articulo);
+
+        info = findViewById(R.id.info_publicar_articulo);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PublicarArticulo.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_instrucciones,null);
+                builder.setCancelable(true);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                TextView txt = view.findViewById(R.id.instrucciones_texto);
+                txt.setText("Titulo:\n" +
+                        "\n" +
+                        "En ese apartado debes poner un titulo corto, breve y claro para tu publicación.\n" +
+                        "\n" +
+                        "Descripción breve:\n" +
+                        "\n" +
+                        "En ese apartado debes poner el resumen breve de tu publicación, esta es muy importante ya que sera la primera descripción que el publico observará.\n" +
+                        "\n" +
+                        "Precio:\n" +
+                        "\n" +
+                        "En ese apartado debes poner el precio de lo que deseas vender, en ese caso tambien puedes escribir que deseas por el articulo que venderas.\n" +
+                        "\n" +
+                        "Medio de Contacto:\n" +
+                        "\n" +
+                        "En ese apartado debes poner tu información de contacto, asi la persona interesada en tu articulo se puede contactar facilmente contigo.\n" +
+                        "\n" +
+                        "Ubicación:\n" +
+                        "\n" +
+                        "En ese apartado debes poner la ubicación desde donde estas vendiendo el articulo.\n" +
+                        "\n" +
+                        "Subir imágenes:\n" +
+                        "\n" +
+                        "Debes subir como mínimo 1 imagen para que tu publicación sea aprobada.\n" +
+                        "\n" +
+                        "Descripción detallada:\n" +
+                        "\n" +
+                        "En ese apartado debes explicar tu publicación de manera detallada para que el lector comprenda la razón por la cual estas vendiendo el articulo.");
+                Button btnEntendido = view.findViewById(R.id.btentiendo);
+                btnEntendido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
 
         whatsapp = findViewById(R.id.whatsapp_publicar_articulo);
         whatsapp.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +197,7 @@ public class PublicarArticulo extends AppCompatActivity {
             }
         });
         anuncioArticulo = new InterstitialAd(this);
-        anuncioArticulo.setAdUnitId(AnuncioPublicar);
+        anuncioArticulo.setAdUnitId("ca-app-pub-7236340326570289/5528738940");
         anuncioArticulo.loadAd(new AdRequest.Builder().build());
     }
     private boolean validartitulo(){
@@ -310,7 +361,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -399,7 +450,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -486,7 +537,7 @@ public class PublicarArticulo extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);

@@ -101,8 +101,8 @@ public class ActualizarDonaciones extends AppCompatActivity implements Response.
     private InterstitialAd anuncioActualizarDonaciones;
 
     TextInputLayout titulo_actualizar_donaciones,video_donaciones, descripcioncorta_actualizar_donaciones, descripcion1_actualizar_donaciones, meta_actualizar_donaciones, buscar_actualizar_donaciones;
-    Button subirimagenes;
-    ImageButton actualizar_donaciones,actualizar_buscar_donaciones;
+    Button actualizar_donaciones,subirimagenes;
+    ImageButton actualizar_buscar_donaciones;
 
     RequestQueue requestbuscar;
     JsonObjectRequest jsonObjectRequestBuscar;

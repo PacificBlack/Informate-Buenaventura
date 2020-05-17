@@ -142,7 +142,7 @@ public class PublicarFunebres extends AppCompatActivity {
             }
         });
         anunciofunebres = new InterstitialAd(this);
-        anunciofunebres.setAdUnitId(AnuncioPublicar);
+        anunciofunebres.setAdUnitId("ca-app-pub-7236340326570289/4726437947");
         anunciofunebres.loadAd(new AdRequest.Builder().build());
     }
 
@@ -248,7 +248,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -331,7 +331,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
@@ -414,7 +414,7 @@ public class PublicarFunebres extends AppCompatActivity {
                     final AlertDialog dialog = builder.create();
                     dialog.show();
                     ImageView dialogimagen = view.findViewById(R.id.imagendialog);
-                    dialogimagen.setImageDrawable(getResources().getDrawable(R.drawable.heart_on));
+
                     TextView txt = view.findViewById(R.id.texto_dialog);
                     txt.setText(response);
                     Button btnEntendido = view.findViewById(R.id.btentiendo);
