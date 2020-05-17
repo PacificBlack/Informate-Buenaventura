@@ -66,8 +66,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/adopcionicono"
-            tools:srcCompat="@drawable/adopcionicono" />
+            android:src="@drawable/ic_adopcion_vector"
+            tools:srcCompat="@drawable/ic_adopcion_vector" />
 
         <TextView
             android:layout_width="wrap_content"

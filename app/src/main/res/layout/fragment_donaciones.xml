@@ -64,8 +64,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/donacionesicono"
-            tools:srcCompat="@drawable/donacionesicono" />
+            android:src="@drawable/ic_donaciones_vector"
+            tools:srcCompat="@drawable/ic_donaciones_vector" />
 
         <TextView
             android:layout_width="wrap_content"

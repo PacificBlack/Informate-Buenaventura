@@ -39,6 +39,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ImageButton
+                    android:id="@+id/info_publicar_eventos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/estilo_botones_eventos"
+                    android:src="@drawable/infor"
+                    tools:src="@drawable/infor" />
+
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_width="199dp"
@@ -47,7 +58,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="-2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Actualiza tu Evento"
+                    android:text="Publica un Evento"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp"
                     android:fontFamily="@font/righteous"
@@ -60,7 +71,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    app:srcCompat="@drawable/eventosicono" />
+                    app:srcCompat="@drawable/ic_eventos_vector" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView

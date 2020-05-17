@@ -64,8 +64,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/noticiasicono"
-            tools:srcCompat="@drawable/noticiasicono" />
+            android:src="@drawable/ic_noticias_vector"
+            tools:srcCompat="@drawable/ic_noticias_vector" />
 
         <TextView
             android:layout_width="wrap_content"

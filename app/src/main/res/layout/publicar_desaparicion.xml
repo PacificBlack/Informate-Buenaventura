@@ -37,6 +37,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ImageButton
+                    android:id="@+id/info_publicar_desaparicion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/estilo_botones_desaparicion"
+                    android:src="@drawable/infor"
+                    tools:src="@drawable/infor" />
+
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_width="195dp"
@@ -57,7 +68,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    app:srcCompat="@drawable/desaparecidossf" />
+                    app:srcCompat="@drawable/ic_desaparecidos_vector" />
 
             </RelativeLayout>
 

@@ -65,8 +65,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/desaparecidosicono"
-            tools:srcCompat="@drawable/desaparecidosicono" />
+            android:src="@drawable/ic_desaparecidos_vector"
+            tools:srcCompat="@drawable/ic_desaparecidos_vector" />
 
         <TextView
             android:layout_width="wrap_content"

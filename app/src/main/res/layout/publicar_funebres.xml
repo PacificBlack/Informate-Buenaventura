@@ -40,6 +40,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
+                <ImageButton
+                    android:id="@+id/info_publicar_funebres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/estilo_botones_funebre"
+                    android:src="@drawable/infor"
+                    tools:src="@drawable/infor" />
+
                 <TextView
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_width="199dp"
@@ -48,7 +60,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="-2dp"
                     android:layout_toStartOf="@+id/imagenprimera"
-                    android:text="Publica un Aviso Funebre"
+                    android:text="Publica un Aviso Fúnebre"
                     android:textColor="@color/whiteTextColor"
                     android:textSize="24sp"
                     android:fontFamily="@font/righteous" />
@@ -60,7 +72,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    app:srcCompat="@drawable/funebresicono" />
+                    app:srcCompat="@drawable/ic_funebres_vector" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView

@@ -57,7 +57,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    app:srcCompat="@drawable/serviciosicono"/>
+                    app:srcCompat="@drawable/ic_servicios_vector"/>
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView

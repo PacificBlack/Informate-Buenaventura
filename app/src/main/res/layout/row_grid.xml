@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/imagencita" />
+                app:srcCompat="@drawable/ic_ib_vector" />
 
             <TextView
                 android:id="@+id/texto_inicio"

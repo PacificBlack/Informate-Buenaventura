@@ -67,8 +67,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/bienesiconos"
-            tools:srcCompat="@drawable/bienesiconos" />
+            android:src="@drawable/ic_bienes_vector"
+            tools:srcCompat="@drawable/ic_bienes_vector" />
 
         <TextView
             android:layout_width="wrap_content"

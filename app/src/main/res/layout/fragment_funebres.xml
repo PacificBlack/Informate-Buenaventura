@@ -66,8 +66,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/funebresicono"
-            tools:srcCompat="@drawable/funebresicono" />
+            android:src="@drawable/ic_funebres_vector"
+            tools:srcCompat="@drawable/ic_funebres_vector" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -91,12 +92,47 @@ public class PublicarServicios extends AppCompatActivity {
     Toolbar barra_servicios;
     ImageView whatsapp;
     CargandoDialog cargandoDialog = new CargandoDialog(PublicarServicios.this);
+    ImageButton info;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_servicios);
+
+
+        info = findViewById(R.id.info_publicar_servicios);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PublicarServicios.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_instrucciones,null);
+                builder.setCancelable(true);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                TextView txt = view.findViewById(R.id.instrucciones_texto);
+                txt.setText("Titulo:\n" +
+                        "\n" +
+                        "En ese apartado debes poner un titulo corto, breve y claro para tu publicación.\n" +
+                        "\n" +
+                        "Descripción detallada:\n" +
+                        "\n" +
+                        "En ese apartado debes explicar tu publicación de manera detallada para que el lector tenga más información de el servicio que ofreces.\n" +
+                        "\n" +
+                        "Subir imágenes:\n" +
+                        "\n" +
+                        "Debes subir una foto para que tu publicación sea aprobada.");
+                Button btnEntendido = view.findViewById(R.id.btentiendo);
+                btnEntendido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
 
         whatsapp = findViewById(R.id.whatsapp_publicar_servicios);
         whatsapp.setOnClickListener(new View.OnClickListener() {

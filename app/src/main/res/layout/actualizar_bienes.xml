@@ -60,7 +60,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
-                    android:src="@drawable/bienesiconos" />
+                    android:src="@drawable/ic_bienes_vector" />
             </RelativeLayout>
 
             <androidx.cardview.widget.CardView

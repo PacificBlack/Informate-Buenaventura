@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,12 +91,61 @@ public class PublicarDonaciones extends AppCompatActivity{
     Toolbar barra_donaciones;
     ImageView whatsapp;
     CargandoDialog cargandoDialog = new CargandoDialog(PublicarDonaciones.this);
+    ImageButton info;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_donaciones);
+
+
+        info = findViewById(R.id.info_publicar_donaciones);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDonaciones.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_instrucciones,null);
+                builder.setCancelable(true);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                TextView txt = view.findViewById(R.id.instrucciones_texto);
+                txt.setText("Titulo:\n" +
+                        "\n" +
+                        "En ese apartado debes poner un titulo corto, breve y claro para tu publicación.\n" +
+                        "\n" +
+                        "Descripción breve:\n" +
+                        "\n" +
+                        "En ese apartado debes poner el resumen breve de tu publicación, esta es muy importante ya que sera la primera descripción que el publico observará.\n" +
+                        "\n" +
+                        "Subir imágenes:\n" +
+                        "\n" +
+                        "Debes subir como mínimo 1 imagen para que tu publicación sea aprobada.\n" +
+                        "\n" +
+                        "Descripción detallada:\n" +
+                        "\n" +
+                        "En ese apartado debes explicar tu publicación de manera detallada para que el lector tenga más información de tu petición.\n" +
+                        "\n" +
+                        "Meta:\n" +
+                        "\n" +
+                        "En ese apartado debes poner la meta que deseas alcanzar en tu donación.\n" +
+                        "\n" +
+                        "Url de su video:\n" +
+                        "\n" +
+                        "En ese apartado debe poner el video de su petición de donación, sino tiene un video su publicación sera rechazada.");
+                Button btnEntendido = view.findViewById(R.id.btentiendo);
+                btnEntendido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+
 
         whatsapp = findViewById(R.id.whatsapp_publicar_donaciones);
         whatsapp.setOnClickListener(new View.OnClickListener() {

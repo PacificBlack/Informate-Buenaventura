@@ -83,6 +83,15 @@
 
             </androidx.cardview.widget.CardView>
 
+
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
             <FrameLayout
                 android:id="@+id/youtube_layout"
                 android:layout_width="match_parent"
@@ -90,12 +99,16 @@
                 android:layout_marginBottom="10dp"
                 android:visibility="visible" />
 
-            <androidx.recyclerview.widget.RecyclerView
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
                 android:background="@color/azulOscuro"
                 android:id="@+id/recycler_inicio"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp" >
+
 
             </androidx.recyclerview.widget.RecyclerView>
 

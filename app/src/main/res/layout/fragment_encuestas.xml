@@ -66,8 +66,8 @@
             android:layout_height="178dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/encuestaicono"
-            tools:srcCompat="@drawable/encuestaicono" />
+            android:src="@drawable/ic_encuesta_vector"
+            tools:srcCompat="@drawable/ic_encuesta_vector" />
 
         <TextView
             android:layout_width="wrap_content"

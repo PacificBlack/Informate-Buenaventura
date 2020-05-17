@@ -103,12 +103,58 @@ public class PublicarDesaparicion extends AppCompatActivity {
     Toolbar barra_desaparicion;
     ImageView whatsapp;
     CargandoDialog cargandoDialog = new CargandoDialog(PublicarDesaparicion.this);
+    ImageButton info;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.publicar_desaparicion);
+
+        info = findViewById(R.id.info_publicar_desaparicion);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PublicarDesaparicion.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_instrucciones,null);
+                builder.setCancelable(true);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                TextView txt = view.findViewById(R.id.instrucciones_texto);
+                txt.setText("Titulo:\n" +
+                        "\n" +
+                        "En ese apartado debes poner un titulo corto, breve y claro para tu publicación.\n" +
+                        "\n" +
+                        "Descripción breve:\n" +
+                        "\n" +
+                        "En ese apartado debes poner el resumen breve de tu publicación, esta es muy importante ya que sera la primera descripción que el publico observará.\n" +
+                        "\n" +
+                        "Subir imágenes:\n" +
+                        "\n" +
+                        "Debes subir como mínimo 1 imagen para que tu publicación sea aprobada.\n" +
+                        "\n" +
+                        "Recompensa:\n" +
+                        "\n" +
+                        "En ese apartado debe poner la recompensa que dará en caso de que alguien encuentre lo que se le desapareció, sino desea dar una recompensa, puede escribir “No hay recompensa” o algo similar.\n" +
+                        "\n" +
+                        "Ultimo lugar:\n" +
+                        "\n" +
+                        "En ese apartado debe poner la ultima vez donde vio lo que se le desapareció\n" +
+                        "\n" +
+                        "Descripción detallada:\n" +
+                        "\n" +
+                        "En ese apartado debes explicar tu publicación de manera detallada para que el lector tenga más información de tu desaparición.");
+                Button btnEntendido = view.findViewById(R.id.btentiendo);
+                btnEntendido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
 
         whatsapp = findViewById(R.id.whatsapp_publicar_desaparicion);
         whatsapp.setOnClickListener(new View.OnClickListener() {
